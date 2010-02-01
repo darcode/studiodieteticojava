@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18-gen-2010 14.51.23 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Fattura" table="fattura" catalog="studiodietetico">
+        <id name="idFattura" type="java.lang.Integer">
+            <column name="idFattura" />
+            <generator class="identity" />
+        </id>
+        <property name="importo" type="double">
+            <column name="Importo" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="acconto" type="java.lang.Double">
+            <column name="Acconto" precision="22" scale="0" />
+        </property>
+        <property name="importoSconto" type="java.lang.Double">
+            <column name="ImportoSconto" precision="22" scale="0" />
+        </property>
+        <property name="note" type="string">
+            <column name="Note" length="65535" />
+        </property>
+        <property name="descrizione" type="string">
+            <column name="Descrizione" length="300" not-null="true" />
+        </property>
+        <property name="data" type="timestamp">
+            <column name="Data" length="19" not-null="true" />
+        </property>
+        <set name="visitas" inverse="true" lazy="true" table="visita" fetch="select">
+            <key>
+                <column name="FK_Fattura" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Visita" />
+        </set>
+    </class>
+</hibernate-mapping>

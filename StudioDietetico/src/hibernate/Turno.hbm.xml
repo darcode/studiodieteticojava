@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Turno" table="turno" catalog="studiodietetico">
+        <id name="idTurno" type="java.lang.Integer">
+            <column name="idTurno" />
+            <generator class="identity" />
+        </id>
+        <property name="oraInizio" type="time">
+            <column name="OraInizio" length="8" not-null="true" />
+        </property>
+        <property name="oraFine" type="time">
+            <column name="OraFine" length="8" not-null="true" />
+        </property>
+        <set name="prestaziones" inverse="true" lazy="true" table="prestazione" fetch="select">
+            <key>
+                <column name="idTurno" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Prestazione" />
+        </set>
+    </class>
+</hibernate-mapping>

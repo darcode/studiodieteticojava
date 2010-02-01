@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+	<table-filter match-schema="studiodietetico" match-name=".*" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="abitudinialimentari" />
+	<table-filter match-catalog="studiodietetico" match-name="alimento" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="assunzionebevande" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="attivitafisica" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="composizione" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="condizione" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="costituzione" />
+	<table-filter match-catalog="studiodietetico" match-name="dieta" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="esameclinico" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="farmacoassunto" />
+	<table-filter match-catalog="studiodietetico" match-name="fattura" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="ingrediente" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="intervento" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="intolleranzaallergia" />
+	<table-filter match-catalog="studiodietetico" match-name="malattia" />
+	<table-filter match-catalog="studiodietetico" match-name="medico" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="misurazione" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="modalitapastofuori" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="parametroantropometrico" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="parametroesame" />
+	<table-filter match-catalog="studiodietetico" match-name="pasto" />
+	<table-filter match-catalog="studiodietetico" match-name="paziente" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="personalizzazionegiornata" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="prenotazione" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="prestazione" />
+	<table-filter match-catalog="studiodietetico" match-name="referto" />
+	<table-filter match-catalog="studiodietetico" match-name="ricetta" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="rilevamento" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="risultatoanalisi" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="schemadietetico" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="specifichedieta" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="tipologiabevanda" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="tipologiadietaspeciale" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="tipologiaintervento" />
+	<table-filter match-catalog="studiodietetico"
+		match-name="tipologiavisita" />
+	<table-filter match-catalog="studiodietetico" match-name="turno" />
+	<table-filter match-catalog="studiodietetico" match-name="visita" />
+	<table catalog="studiodietetico" name="intolleranzaallergia">
+		<column name="FlagIntAll" jdbc-type=''></column>
+		<column name="Sostanza" jdbc-type=''></column>
+		<column name="AlimentoPrincipale" jdbc-type=''></column>
+		<column name="Derivati" jdbc-type=''></column>
+		<column name="Grado" jdbc-type=''></column>
+		<column name="EffettiCollaterali" jdbc-type=''></column>
+		<column name="FK1_Paziente" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="tipologiavisita">
+		<column name="Tipologia" jdbc-type=''></column>
+		<column name="CostoVisita" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="medico">
+		<column name="CodiceFiscale" jdbc-type=''></column>
+		<column name="Cognome" jdbc-type=''></column>
+		<column name="Nome" jdbc-type=''></column>
+		<column name="DataNascita" jdbc-type=''></column>
+		<column name="Sesso" jdbc-type=''></column>
+		<column name="Indirizzo" jdbc-type=''></column>
+		<column name="Citta" jdbc-type=''></column>
+		<column name="CAP" jdbc-type=''></column>
+		<column name="Provincia" jdbc-type=''></column>
+		<column name="Specializzazione" jdbc-type=''></column>
+		<column name="Telefono1" jdbc-type=''></column>
+		<column name="Telefono2" jdbc-type=''></column>
+		<column name="Email" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="attivitafisica">
+		<column name="Nome" jdbc-type=''></column>
+		<column name="Descrizione" jdbc-type=''></column>
+		<column name="Durata" jdbc-type=''></column>
+		<column name="FrequenzaSettimanale" jdbc-type=''></column>
+		<column name="FK2_Paziente" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="parametroesame">
+		<column name="Nome" jdbc-type=''></column>
+		<column name="Descrizione" jdbc-type=''></column>
+		<column name="MinUomo" jdbc-type=''></column>
+		<column name="MaxUomo" jdbc-type=''></column>
+		<column name="MinDonna" jdbc-type=''></column>
+		<column name="MaxDonna" jdbc-type=''></column>
+		<column name="MinBambino" jdbc-type=''></column>
+		<column name="MaxBambino" jdbc-type=''></column>
+		<column name="FK_EsameClinico" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="paziente">
+		<column name="Codice Fiscale" jdbc-type=''></column>
+		<column name="Cognome" jdbc-type=''></column>
+		<column name="Nome" jdbc-type=''></column>
+		<column name="DataNascita" jdbc-type=''></column>
+		<column name="Sesso" jdbc-type=''></column>
+		<column name="Indirizzo" jdbc-type=''></column>
+		<column name="Citta" jdbc-type=''></column>
+		<column name="CAP" jdbc-type=''></column>
+		<column name="Provincia" jdbc-type=''></column>
+		<column name="Professione" jdbc-type=''></column>
+		<column name="Telefono1" jdbc-type=''></column>
+		<column name="Telefono2" jdbc-type=''></column>
+		<column name="Email" jdbc-type=''></column>
+		<column name="NumTesseraSanitaria" jdbc-type=''></column>
+		<column name="Note" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="prestazione">
+		<column name="idMedico" jdbc-type=''></column>
+		<column name="DataTurno" jdbc-type=''></column>
+		<column name="idTurno" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="ricetta">
+		<column name="Nome" jdbc-type=''></column>
+		<column name="Procedimento" jdbc-type=''></column>
+		<column name="FK2_Alimento" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="farmacoassunto">
+		<column name="Nome" jdbc-type=''></column>
+		<column name="Descrizione" jdbc-type=''></column>
+		<column name="Dose" jdbc-type=''></column>
+		<column name="Frequenza" jdbc-type=''></column>
+		<column name="PrincipiAttivi" jdbc-type=''></column>
+		<column name="FK3_Paziente" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="condizione">
+		<column name="idPaziente" jdbc-type=''></column>
+		<column name="idMalattia" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="tipologiadietaspeciale">
+		<column name="Nome" jdbc-type=''></column>
+		<column name="Descrizione" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="composizione">
+		<column name="idRicetta" jdbc-type=''></column>
+		<column name="idIngrediente" jdbc-type=''></column>
+		<column name="Quantita" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="intervento">
+		<column name="idPaziente" jdbc-type=''></column>
+		<column name="idTipologiaIntervento" jdbc-type=''></column>
+		<column name="Data" jdbc-type=''></column>
+		<column name="Numero" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="malattia">
+		<column name="Patologia" jdbc-type=''></column>
+		<column name="MalattiaEreditaria" jdbc-type=''></column>
+		<column name="FK_TipologiaDietaSpeciale" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="visita">
+		<column name="DataOraInizio" jdbc-type=''></column>
+		<column name="DataOraFIne" jdbc-type=''></column>
+		<column name="Motivazioni" jdbc-type=''></column>
+		<column name="StatoPagamento" jdbc-type=''></column>
+		<column name="Note" jdbc-type=''></column>
+		<column name="FK_Fattura" jdbc-type=''></column>
+		<column name="FK2_Medico" jdbc-type=''></column>
+		<column name="FK_Prenotazione" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="ingrediente">
+		<column name="Nome" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="costituzione">
+		<column name="idSchemaDietetico" jdbc-type=''></column>
+		<column name="idAlimento" jdbc-type=''></column>
+		<column name="idPasto" jdbc-type=''></column>
+		<column name="Quantita" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="tipologiabevanda">
+		<column name="Nome" jdbc-type=''></column>
+		<column name="Descrizione" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="risultatoanalisi">
+		<column name="Valore" jdbc-type=''></column>
+		<column name="Data" jdbc-type=''></column>
+		<column name="Note" jdbc-type=''></column>
+		<column name="FK_Referto_Paz" jdbc-type=''></column>
+		<column name="FK_Referto_Par" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="rilevamento">
+		<column name="Valore" jdbc-type=''></column>
+		<column name="Data" jdbc-type=''></column>
+		<column name="FK_Misurazione_Paz" jdbc-type=''></column>
+		<column name="FK_Misurazione_Par" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="tipologiaintervento">
+		<column name="Nome" jdbc-type=''></column>
+		<column name="Descrizione" jdbc-type=''></column>
+		<column name="Localizzazione" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="abitudinialimentari">
+		<column name="NumPastiGiorno" jdbc-type=''></column>
+		<column name="PrimaColazione" jdbc-type=''></column>
+		<column name="Integratori" jdbc-type=''></column>
+		<column name="CibiNonGraditi" jdbc-type=''></column>
+		<column name="PreferenzaSchemaDietetico" jdbc-type=''></column>
+		<column name="Note" jdbc-type=''></column>
+		<column name="FK5_Paziente" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="esameclinico">
+		<column name="Nome" jdbc-type=''></column>
+		<column name="Descrizione" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="referto">
+		<column name="idPaziente" jdbc-type=''></column>
+		<column name="idParametroEsame" jdbc-type=''></column>
+		<column name="Osservazioni" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="personalizzazionegiornata">
+		<column name="idSchemaDietetico" jdbc-type=''></column>
+		<column name="idDieta" jdbc-type=''></column>
+		<column name="GiornoCiclo" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="alimento">
+		<column name="Nome" jdbc-type=''></column>
+		<column name="Tipologia" jdbc-type=''></column>
+		<column name="Calorie" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="modalitapastofuori">
+		<column name="Luogo" jdbc-type=''></column>
+		<column name="SpecificaGiorno" jdbc-type=''></column>
+		<column name="FrequenzaGIornaliera" jdbc-type=''></column>
+		<column name="FK_Abitudini" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="specifichedieta">
+		<column name="Kilocalorie" jdbc-type=''></column>
+		<column name="Indicata" jdbc-type=''></column>
+		<column name="ContenutoPresente" jdbc-type=''></column>
+		<column name="ContenutoAssente" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="dieta">
+		<column name="DataInizio" jdbc-type=''></column>
+		<column name="DurataCiclo" jdbc-type=''></column>
+		<column name="NumRipetizCiclo" jdbc-type=''></column>
+		<column name="Note" jdbc-type=''></column>
+		<column name="UlterioriConsigli" jdbc-type=''></column>
+		<column name="FK9_Paziente" jdbc-type=''></column>
+		<column name="FK_SpecificheDieta" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="parametroantropometrico">
+		<column name="Nome" jdbc-type=''></column>
+		<column name="Descrizione" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="schemadietetico">
+		<column name="Descrizione" jdbc-type=''></column>
+		<column name="Note" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="misurazione">
+		<column name="idPaziente" jdbc-type=''></column>
+		<column name="idParametroAntropometrico" jdbc-type=''></column>
+		<column name="Osservazioni" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="pasto">
+		<column name="Nome" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="prenotazione">
+		<column name="idPaziente" jdbc-type=''></column>
+		<column name="idTipologiaVisita" jdbc-type=''></column>
+		<column name="DataOra" jdbc-type=''></column>
+		<column name="Note" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="assunzionebevande">
+		<column name="idAbitudineAlimentare" jdbc-type=''></column>
+		<column name="idTipologiaBevanda" jdbc-type=''></column>
+		<column name="Quantita" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="fattura">
+		<column name="Importo" jdbc-type=''></column>
+		<column name="Acconto" jdbc-type=''></column>
+		<column name="ImportoSconto" jdbc-type=''></column>
+		<column name="Note" jdbc-type=''></column>
+		<column name="Descrizione" jdbc-type=''></column>
+		<column name="Data" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="turno">
+		<column name="OraInizio" jdbc-type=''></column>
+		<column name="OraFine" jdbc-type=''></column>
+		<column name="Nome" jdbc-type=''></column>
+	</table>
+</hibernate-reverse-engineering>

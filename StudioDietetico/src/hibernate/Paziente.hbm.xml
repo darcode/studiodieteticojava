@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Paziente" table="paziente" catalog="studiodietetico">
+        <id name="idPaziente" type="java.lang.Integer">
+            <column name="idPaziente" />
+            <generator class="identity" />
+        </id>
+        <property name="codiceFiscale" type="string">
+            <column name="`Codice Fiscale`" length="16" not-null="true" />
+        </property>
+        <property name="cognome" type="string">
+            <column name="Cognome" length="45" not-null="true" />
+        </property>
+        <property name="nome" type="string">
+            <column name="Nome" length="45" not-null="true" />
+        </property>
+        <property name="dataNascita" type="date">
+            <column name="DataNascita" length="10" not-null="true" />
+        </property>
+        <property name="sesso" type="char">
+            <column name="Sesso" length="1" not-null="true" />
+        </property>
+        <property name="indirizzo" type="string">
+            <column name="Indirizzo" length="45" />
+        </property>
+        <property name="citta" type="string">
+            <column name="Citta" length="45" />
+        </property>
+        <property name="cap" type="string">
+            <column name="CAP" length="5" />
+        </property>
+        <property name="provincia" type="string">
+            <column name="Provincia" length="2" />
+        </property>
+        <property name="professione" type="string">
+            <column name="Professione" length="45" />
+        </property>
+        <property name="telefono1" type="string">
+            <column name="Telefono1" length="20" />
+        </property>
+        <property name="telefono2" type="string">
+            <column name="Telefono2" length="20" />
+        </property>
+        <property name="email" type="string">
+            <column name="Email" length="45" />
+        </property>
+        <property name="numTesseraSanitaria" type="string">
+            <column name="NumTesseraSanitaria" length="20" />
+        </property>
+        <property name="note" type="string">
+            <column name="Note" length="65535" />
+        </property>
+        <set name="attivitafisicas" inverse="true" lazy="true" table="attivitafisica" fetch="select">
+            <key>
+                <column name="FK2_Paziente" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Attivitafisica" />
+        </set>
+        <set name="interventos" inverse="true" lazy="true" table="intervento" fetch="select">
+            <key>
+                <column name="idPaziente" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Intervento" />
+        </set>
+        <set name="intolleranzaallergias" inverse="true" lazy="true" table="intolleranzaallergia" fetch="select">
+            <key>
+                <column name="FK1_Paziente" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Intolleranzaallergia" />
+        </set>
+        <set name="farmacoassuntos" inverse="true" lazy="true" table="farmacoassunto" fetch="select">
+            <key>
+                <column name="FK3_Paziente" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Farmacoassunto" />
+        </set>
+        <set name="malattias" inverse="false" lazy="true" table="condizione" fetch="select">
+            <key>
+                <column name="idPaziente" not-null="true" />
+            </key>
+            <many-to-many entity-name="hibernate.Malattia">
+                <column name="idMalattia" not-null="true" />
+            </many-to-many>
+        </set>
+        <set name="prenotaziones" inverse="true" lazy="true" table="prenotazione" fetch="select">
+            <key>
+                <column name="idPaziente" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Prenotazione" />
+        </set>
+        <set name="abitudinialimentaris" inverse="true" lazy="true" table="abitudinialimentari" fetch="select">
+            <key>
+                <column name="FK5_Paziente" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Abitudinialimentari" />
+        </set>
+        <set name="refertos" inverse="true" lazy="true" table="referto" fetch="select">
+            <key>
+                <column name="idPaziente" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Referto" />
+        </set>
+        <set name="misuraziones" inverse="true" lazy="true" table="misurazione" fetch="select">
+            <key>
+                <column name="idPaziente" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Misurazione" />
+        </set>
+        <set name="dietas" inverse="true" lazy="true" table="dieta" fetch="select">
+            <key>
+                <column name="FK9_Paziente" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Dieta" />
+        </set>
+    </class>
+</hibernate-mapping>

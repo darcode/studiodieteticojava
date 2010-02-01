@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Costituzione" table="costituzione" catalog="studiodietetico">
+        <composite-id name="id" class="hibernate.CostituzioneId">
+            <key-property name="idSchemaDietetico" type="int">
+                <column name="idSchemaDietetico" />
+            </key-property>
+            <key-property name="idAlimento" type="int">
+                <column name="idAlimento" />
+            </key-property>
+            <key-property name="idPasto" type="int">
+                <column name="idPasto" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="pasto" class="hibernate.Pasto" update="false" insert="false" fetch="select">
+            <column name="idPasto" not-null="true" />
+        </many-to-one>
+        <many-to-one name="alimento" class="hibernate.Alimento" update="false" insert="false" fetch="select">
+            <column name="idAlimento" not-null="true" />
+        </many-to-one>
+        <many-to-one name="schemadietetico" class="hibernate.Schemadietetico" update="false" insert="false" fetch="select">
+            <column name="idSchemaDietetico" not-null="true" />
+        </many-to-one>
+        <property name="quantita" type="string">
+            <column name="Quantita" length="50" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

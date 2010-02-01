@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Ricetta" table="ricetta" catalog="studiodietetico">
+        <id name="idRicetta" type="java.lang.Integer">
+            <column name="idRicetta" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="alimento" class="hibernate.Alimento" fetch="select">
+            <column name="FK2_Alimento" />
+        </many-to-one>
+        <property name="nome" type="string">
+            <column name="Nome" length="80" not-null="true" />
+        </property>
+        <property name="procedimento" type="string">
+            <column name="Procedimento" length="65535" not-null="true" />
+        </property>
+        <set name="composiziones" inverse="true" lazy="true" table="composizione" fetch="select">
+            <key>
+                <column name="idRicetta" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Composizione" />
+        </set>
+    </class>
+</hibernate-mapping>

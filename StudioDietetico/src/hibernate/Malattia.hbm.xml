@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Malattia" table="malattia" catalog="studiodietetico">
+        <id name="idMalattia" type="java.lang.Integer">
+            <column name="idMalattia" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="tipologiadietaspeciale" class="hibernate.Tipologiadietaspeciale" fetch="select">
+            <column name="FK_TipologiaDietaSpeciale" />
+        </many-to-one>
+        <property name="patologia" type="string">
+            <column name="Patologia" length="65535" />
+        </property>
+        <property name="malattiaEreditaria" type="java.lang.Boolean">
+            <column name="MalattiaEreditaria" />
+        </property>
+        <set name="pazientes" inverse="true" lazy="true" table="condizione" fetch="select">
+            <key>
+                <column name="idMalattia" not-null="true" />
+            </key>
+            <many-to-many entity-name="hibernate.Paziente">
+                <column name="idPaziente" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Personalizzazionegiornata" table="personalizzazionegiornata" catalog="studiodietetico">
+        <composite-id name="id" class="hibernate.PersonalizzazionegiornataId">
+            <key-property name="idSchemaDietetico" type="int">
+                <column name="idSchemaDietetico" />
+            </key-property>
+            <key-property name="idDieta" type="int">
+                <column name="idDieta" />
+            </key-property>
+            <key-property name="giornoCiclo" type="int">
+                <column name="GiornoCiclo" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="dieta" class="hibernate.Dieta" update="false" insert="false" fetch="select">
+            <column name="idDieta" not-null="true" />
+        </many-to-one>
+        <many-to-one name="schemadietetico" class="hibernate.Schemadietetico" update="false" insert="false" fetch="select">
+            <column name="idSchemaDietetico" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

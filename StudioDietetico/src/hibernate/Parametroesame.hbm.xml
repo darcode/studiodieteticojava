@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Parametroesame" table="parametroesame" catalog="studiodietetico">
+        <id name="idParametroEsame" type="int">
+            <column name="idParametroEsame" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="esameclinico" class="hibernate.Esameclinico" fetch="select">
+            <column name="FK_EsameClinico" not-null="true" />
+        </many-to-one>
+        <property name="nome" type="string">
+            <column name="Nome" length="45" not-null="true" />
+        </property>
+        <property name="descrizione" type="string">
+            <column name="Descrizione" length="45" />
+        </property>
+        <property name="minUomo" type="string">
+            <column name="MinUomo" length="45" />
+        </property>
+        <property name="maxUomo" type="string">
+            <column name="MaxUomo" length="45" />
+        </property>
+        <property name="minDonna" type="string">
+            <column name="MinDonna" length="45" />
+        </property>
+        <property name="maxDonna" type="string">
+            <column name="MaxDonna" length="45" />
+        </property>
+        <property name="minBambino" type="string">
+            <column name="MinBambino" length="45" />
+        </property>
+        <property name="maxBambino" type="string">
+            <column name="MaxBambino" length="45" />
+        </property>
+        <set name="refertos" inverse="true" lazy="true" table="referto" fetch="select">
+            <key>
+                <column name="idParametroEsame" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Referto" />
+        </set>
+    </class>
+</hibernate-mapping>
