@@ -289,15 +289,15 @@ CREATE TABLE `fattura` (
 
 /*!40000 ALTER TABLE `fattura` DISABLE KEYS */;
 INSERT INTO `fattura` (`idFattura`,`Importo`,`Acconto`,`ImportoSconto`,`Note`,`Descrizione`,`Data`) VALUES 
- (5,122,0,0,'ok','fatturadata','2010-01-18 14:53:43'),
- (6,145,0,0,'','fattura2','2010-01-18 15:24:00'),
+ (5,122,0,0,'ok','fatturadata','2010-01-26 15:29:15'),
+ (6,145,0,0,'26gennaio','fattura2','2010-01-26 15:34:25'),
  (7,155,0,0,'fattura3mod','fattura3','2010-01-19 11:50:40'),
  (8,111,0,0,'aa','fattura4','2010-01-19 12:58:28'),
- (9,11,5,1,'fattura5 modificata e aggiornata','fattura5','2010-01-18 19:09:11'),
- (10,100,0,0,'ok','fattura6','2010-01-18 15:24:50'),
+ (9,11,0,0,'fattura5 modificata e aggiornata 26 gennaio','fattura5','2010-01-26 15:31:32'),
+ (10,100,0,0,'ok','fattura6','2010-01-27 11:31:37'),
  (11,200,0,0,'das','fattura7','2010-01-18 16:05:45'),
  (12,111,0,0,'modificata4','fattura4','2010-01-19 11:51:31'),
- (13,113,0,40,'fattura8 con sconto 40','fattura8	','2010-01-18 19:08:11'),
+ (13,113,11,0,'fattura8','fattura8	','2010-01-26 17:04:44'),
  (14,133,0,3,'sconto 3 euro','fattura9','2010-01-18 19:14:25'),
  (15,33,0,0,'19genn1','fatt','2010-01-19 11:28:24'),
  (16,100,40,15,'notefattura19 acconto aumentato, sconto maggiore','fattura19genn','2010-01-19 11:54:25'),
@@ -423,7 +423,7 @@ CREATE TABLE `medico` (
   `Telefono2` varchar(20) default NULL,
   `Email` varchar(45) default NULL,
   PRIMARY KEY  (`idMedico`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `medico`
@@ -431,7 +431,12 @@ CREATE TABLE `medico` (
 
 /*!40000 ALTER TABLE `medico` DISABLE KEYS */;
 INSERT INTO `medico` (`idMedico`,`CodiceFiscale`,`Cognome`,`Nome`,`DataNascita`,`Sesso`,`Indirizzo`,`Citta`,`CAP`,`Provincia`,`Specializzazione`,`Telefono1`,`Telefono2`,`Email`) VALUES 
- (1,'1234567890123456','m','e','1980-02-02','M','asdaddaddas','dasddddddd','5675','ba','dqwwqddqdw','56757567','32424','dk@.it');
+ (1,'1234567890123456','m','e','1980-02-02','M','asdaddaddas','dasddddddd','5675','ba','dqwwqddqdw','56757567','32424','dk@.it'),
+ (3,'adsdsasdadssadsa','med2','med','1910-01-02','M','dasadsdsasd','adadsadsads','21332','aa','aaaaa','31232132','32332','sas'),
+ (4,'adsdsasdadssadsa','med3','med3','1910-01-02','M','dasadsdsasd','adadsadsads','21332','aa','aaaaa','31232132','32332','sas'),
+ (5,'adsdasasdsadsads','med4','nome4','1910-01-01','F','aa','aaa','32434','aa','aaa','aa','aa','aaa'),
+ (6,'adsdasadddffffff','med5','nome5','1910-01-01','F','aa','aaa','32434','aa','aaa','aa','aa','aaa'),
+ (7,'cvvdasadddffffff','med6','nome6','1910-01-01','F','aa','aaa','32434','aa','aaa','aa','aa','aaa');
 /*!40000 ALTER TABLE `medico` ENABLE KEYS */;
 
 
@@ -631,7 +636,7 @@ CREATE TABLE `prenotazione` (
   KEY `FK_TipologiaVisita` USING BTREE (`idTipologiaVisita`),
   CONSTRAINT `FK8_Paziente` FOREIGN KEY (`idPaziente`) REFERENCES `paziente` (`idPaziente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_TipologiaVisita` FOREIGN KEY (`idTipologiaVIsita`) REFERENCES `tipologiavisita` (`idTipologiaVisita`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `prenotazione`
@@ -649,7 +654,16 @@ INSERT INTO `prenotazione` (`idPaziente`,`idTipologiaVisita`,`DataOra`,`Note`,`i
  (4,3,'2011-01-15 10:30:00','15',8),
  (3,1,'2010-01-15 10:30:00','15',9),
  (7,1,'2010-01-19 07:00:00','19gen',10),
- (4,3,'2010-01-19 07:00:00','19gen',11);
+ (4,3,'2010-01-19 07:00:00','19gen',11),
+ (2,3,'2010-02-05 03:02:00','3.02',12),
+ (7,2,'2010-03-11 10:26:00','10:26 orario visita',13),
+ (3,1,'2010-01-29 15:34:00','15:34 ora visita',14),
+ (3,2,'2010-02-27 19:00:00','27 febbraio ore 19 ',15),
+ (5,4,'2010-01-31 17:22:00','22',16),
+ (2,1,'2010-01-26 15:00:00','26 gennaio alle 15',17),
+ (2,2,'2010-01-27 11:30:00','',18),
+ (7,2,'2010-01-27 11:30:00','',19),
+ (5,2,'2010-01-28 12:49:00','aa',20);
 /*!40000 ALTER TABLE `prenotazione` ENABLE KEYS */;
 
 
@@ -674,6 +688,29 @@ CREATE TABLE `prestazione` (
 --
 
 /*!40000 ALTER TABLE `prestazione` DISABLE KEYS */;
+INSERT INTO `prestazione` (`idMedico`,`idTurno`,`DataTurno`) VALUES 
+ (1,11,'2010-01-01'),
+ (1,12,'2010-01-01'),
+ (1,1,'2010-01-03'),
+ (1,4,'2010-03-06'),
+ (1,12,'2010-03-06'),
+ (3,1,'2010-01-01'),
+ (3,10,'2010-01-01'),
+ (3,15,'2010-01-02'),
+ (3,4,'2010-01-08'),
+ (3,16,'2010-04-06'),
+ (3,2,'2010-05-05'),
+ (4,10,'2010-01-01'),
+ (4,15,'2010-01-02'),
+ (4,4,'2010-12-14'),
+ (5,3,'2010-01-01'),
+ (5,11,'2010-01-01'),
+ (5,5,'2010-11-09'),
+ (6,11,'2010-01-01'),
+ (6,2,'2010-02-04'),
+ (6,1,'2010-10-06'),
+ (6,19,'2010-12-18'),
+ (7,3,'2010-03-10');
 /*!40000 ALTER TABLE `prestazione` ENABLE KEYS */;
 
 
@@ -910,14 +947,36 @@ CREATE TABLE `turno` (
   `idTurno` int(11) NOT NULL auto_increment,
   `OraInizio` time NOT NULL,
   `OraFine` time NOT NULL,
+  `Nome` varchar(45) NOT NULL,
   PRIMARY KEY  (`idTurno`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `turno`
 --
 
 /*!40000 ALTER TABLE `turno` DISABLE KEYS */;
+INSERT INTO `turno` (`idTurno`,`OraInizio`,`OraFine`,`Nome`) VALUES 
+ (1,'08:00:00','09:00:00','turno01'),
+ (2,'09:00:00','10:00:00','turno02'),
+ (3,'10:00:00','11:00:00','turno03'),
+ (4,'11:00:00','12:00:00','turno04'),
+ (5,'12:00:00','13:00:00','turno05'),
+ (6,'13:00:00','14:00:00','turno06'),
+ (7,'14:00:00','15:00:00','turno07'),
+ (8,'15:00:00','16:00:00','turno08'),
+ (9,'16:00:00','17:00:00','turno09'),
+ (10,'17:00:00','18:00:00','turno10'),
+ (11,'18:00:00','19:00:00','turno11'),
+ (12,'19:00:00','20:00:00','turno12'),
+ (13,'20:00:00','21:00:00','turno13'),
+ (14,'21:00:00','22:00:00','turno14'),
+ (15,'08:00:00','11:00:00','turno15'),
+ (16,'11:00:00','14:00:00','turno16'),
+ (17,'14:00:00','17:00:00','turno17'),
+ (18,'17:00:00','20:00:00','turno18'),
+ (19,'00:00:00','23:53:00','turnosilletti'),
+ (20,'14:53:00','15:53:00','turno20');
 /*!40000 ALTER TABLE `turno` ENABLE KEYS */;
 
 
@@ -943,7 +1002,7 @@ CREATE TABLE `visita` (
   CONSTRAINT `FK2_Medico` FOREIGN KEY (`FK2_Medico`) REFERENCES `medico` (`idMedico`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_Fattura` FOREIGN KEY (`FK_Fattura`) REFERENCES `fattura` (`idFattura`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_Prenotazione` FOREIGN KEY (`FK_Prenotazione`) REFERENCES `prenotazione` (`idPrenotazione`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `visita`
@@ -960,7 +1019,11 @@ INSERT INTO `visita` (`idVisita`,`DataOraInizio`,`DataOraFIne`,`Motivazioni`,`St
  (7,'2009-01-19 02:00:00','2009-01-19 03:00:00','a','d','d',18,1,10),
  (8,'2009-01-19 01:00:00','2009-01-19 01:02:00','d','ss','nottr',12,1,10),
  (9,'2009-01-19 04:00:00','2009-01-19 09:00:00','motiv	','pagam','',16,1,10),
- (10,'2009-01-04 01:00:00','2009-01-04 01:00:00','aa','a','aaaaa',8,1,11);
+ (10,'2009-01-04 01:00:00','2009-01-04 01:00:00','aa','a','aaaaa',8,1,11),
+ (11,'2010-01-26 15:40:00','2010-01-26 17:48:00','sadsadassad','asadsadsadsd','adasaadwqdwqdqwq',9,1,17),
+ (12,'2010-01-26 07:05:00','2010-01-26 08:00:00','mot	','sadas','dalle 7 alle 8',6,1,17),
+ (13,'2010-01-26 14:03:00','2010-01-26 17:03:00','mah	','pagato','dasdasdas',13,1,17),
+ (14,'2010-01-27 11:40:00','2010-01-27 12:31:00','controllo	','completato','',10,1,18);
 /*!40000 ALTER TABLE `visita` ENABLE KEYS */;
 
 
