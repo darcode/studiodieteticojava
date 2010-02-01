@@ -1,5 +1,7 @@
 package grafici;
 
+import java.lang.reflect.Array;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.MessageBox;
@@ -7,6 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class GraficiComposite extends Composite {
 
+	protected static String[] mesi = new String[]{"Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"};
 	public GraficiComposite(Composite parent, int style) {
 		super(parent, style);
 	}
