@@ -142,15 +142,14 @@ public class MedicoDAO extends BaseDAO {
 		return ris;
 
 	}
-	public static List<Object> getPrestazioni(int anno) {
+	public static ArrayList<Object> getPrestazioni(int anno) {
 		begin();
 		try {
 			Query q = getSession().createQuery(
-					"FROM Prestazione pr join pr.medico md where YEAR(pr.DataTurno) = " + anno);
-			List<Object> pr = (List<Object>) q.list();
+					"FROM Prestazione pr join pr.medico md where YEAR(pr.id.dataTurno) = " + anno);
+			List pr =  q.list();
 			commit();
-			System.out.println("fatto:" + pr.size());
-			return pr;
+			return (ArrayList<Object>)pr;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

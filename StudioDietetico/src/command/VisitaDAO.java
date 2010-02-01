@@ -164,6 +164,7 @@ public class VisitaDAO extends BaseDAO {
 							"FROM Visita vs join Prenotazione pr on vs.fk_prenotazione = pr.idPrenotazione ");
 			int totale = q1.list().size();
 			percentuale = (perTipologia == 0) ? 0 : (totale / perTipologia);
+			System.out.println("percentuale:"  + percentuale);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
