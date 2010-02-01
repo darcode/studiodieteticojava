@@ -46,7 +46,7 @@ public class StatisticheMainForm extends ListComposite {
 		public void handleEvent(Event event) {
 
 			filtroShell = new Shell(SWT.BORDER | SWT.DIALOG_TRIM);
-			filtroShell.setText("Filtro - Attenzione, non � annullabile!");
+			filtroShell.setText("Filtro - Attenzione, non e' annullabile!");
 			filtroShell.setBounds(100, 100, 200, 200);
 			filtroShell.setLayout(new GridLayout(2, false));
 			filtroShell.setLayoutData(new GridData(SWT.FILL));
