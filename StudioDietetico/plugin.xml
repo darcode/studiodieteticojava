@@ -325,6 +325,18 @@
             name="DynamicQuery"
             restorable="true">
       </view>
+      <view
+            class="studiodietetico.InserisciRicettaView"
+            id="StudioDietetico.InserisciRicettaView"
+            name="Inserisci Ricetta"
+            restorable="true">
+      </view>
+      <view
+            class="studiodietetico.InserisciDietaView"
+            id="StudioDietetico.InserisciDietaView"
+            name="Inserisci Dieta"
+            restorable="true">
+      </view>
    </extension>
    <extension
          id="product"
