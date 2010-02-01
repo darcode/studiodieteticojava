@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Specifichedieta" table="specifichedieta" catalog="studiodietetico">
+        <id name="idSpecificheDieta" type="java.lang.Integer">
+            <column name="idSpecificheDieta" />
+            <generator class="identity" />
+        </id>
+        <property name="kilocalorie" type="int">
+            <column name="Kilocalorie" not-null="true" />
+        </property>
+        <property name="indicata" type="string">
+            <column name="Indicata" length="65535" not-null="true" />
+        </property>
+        <property name="contenutoPresente" type="string">
+            <column name="ContenutoPresente" length="65535" />
+        </property>
+        <property name="contenutoAssente" type="string">
+            <column name="ContenutoAssente" length="65535" />
+        </property>
+        <set name="dietas" inverse="true" lazy="true" table="dieta" fetch="select">
+            <key>
+                <column name="FK_SpecificheDieta" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Dieta" />
+        </set>
+    </class>
+</hibernate-mapping>

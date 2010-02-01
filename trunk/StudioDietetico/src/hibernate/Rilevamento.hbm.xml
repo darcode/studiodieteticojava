@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Rilevamento" table="rilevamento" catalog="studiodietetico">
+        <id name="idRilevamento" type="java.lang.Integer">
+            <column name="idRilevamento" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="misurazione" class="hibernate.Misurazione" fetch="select">
+            <column name="FK_Misurazione_Paz" not-null="true" />
+            <column name="FK_Misurazione_Par" not-null="true" />
+        </many-to-one>
+        <property name="valore" type="string">
+            <column name="Valore" length="45" not-null="true" />
+        </property>
+        <property name="data" type="date">
+            <column name="Data" length="10" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

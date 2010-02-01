@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.password"></property>
+        <property name="hibernate.connection.pool_size">100</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/studiodietetico</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.transaction.flush_before_completion">true</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.c3p0.max_size">20</property>
+        <property name="hibernate.c3p0.min_size">0</property>
+        <property name="hibernate.c3p0.timeout">1800</property>
+        <property name="hibernate.c3p0.max_statements">100</property>
+        <property name="hibernate.c3p0.idle_test_period">0</property>
+        <property name="hibernate.c3p0.acquire_increment">2</property>
+        
+        <mapping resource="hibernate/Abitudinialimentari.hbm.xml"/>
+        <mapping resource="hibernate/Alimento.hbm.xml"/>
+        <mapping resource="hibernate/Assunzionebevande.hbm.xml"/>
+        <mapping resource="hibernate/Attivitafisica.hbm.xml"/>
+        <mapping resource="hibernate/Composizione.hbm.xml"/>
+        <mapping resource="hibernate/Costituzione.hbm.xml"/>
+        <mapping resource="hibernate/Dieta.hbm.xml"/>
+        <mapping resource="hibernate/Esameclinico.hbm.xml"/>
+        <mapping resource="hibernate/Farmacoassunto.hbm.xml"/>
+        <mapping resource="hibernate/Fattura.hbm.xml"/>
+        <mapping resource="hibernate/Ingrediente.hbm.xml"/>
+        <mapping resource="hibernate/Intervento.hbm.xml"/>
+        <mapping resource="hibernate/Intolleranzaallergia.hbm.xml"/>
+        <mapping resource="hibernate/Malattia.hbm.xml"/>
+        <mapping resource="hibernate/Medico.hbm.xml"/>
+        <mapping resource="hibernate/Misurazione.hbm.xml"/>
+        <mapping resource="hibernate/Modalitapastofuori.hbm.xml"/>
+        <mapping resource="hibernate/Parametroantropometrico.hbm.xml"/>
+        <mapping resource="hibernate/ParametroEsame.hbm.xml"/>
+        <mapping resource="hibernate/Pasto.hbm.xml"/>
+        <mapping resource="hibernate/Paziente.hbm.xml"/>
+        <mapping resource="hibernate/Personalizzazionegiornata.hbm.xml"/>
+        <mapping resource="hibernate/Prenotazione.hbm.xml"/>
+        <mapping resource="hibernate/Prestazione.hbm.xml"/>
+        <mapping resource="hibernate/Referto.hbm.xml"/>
+        <mapping resource="hibernate/Ricetta.hbm.xml"/>
+        <mapping resource="hibernate/Rilevamento.hbm.xml"/>
+        <mapping resource="hibernate/Risultatoanalisi.hbm.xml"/>
+        <mapping resource="hibernate/Schemadietetico.hbm.xml"/>
+        <mapping resource="hibernate/Specifichedieta.hbm.xml"/>
+        <mapping resource="hibernate/Tipologiabevanda.hbm.xml"/>
+        <mapping resource="hibernate/Tipologiadietaspeciale.hbm.xml"/>
+        <mapping resource="hibernate/Tipologiaintervento.hbm.xml"/>
+        <mapping resource="hibernate/Tipologiavisita.hbm.xml"/>
+        <mapping resource="hibernate/Turno.hbm.xml"/>
+        <mapping resource="hibernate/Visita.hbm.xml"/>
+        
+    </session-factory>
+</hibernate-configuration>

@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Medico" table="medico" catalog="studiodietetico">
+        <id name="idMedico" type="java.lang.Integer">
+            <column name="idMedico" />
+            <generator class="identity" />
+        </id>
+        <property name="codiceFiscale" type="string">
+            <column name="CodiceFiscale" length="16" not-null="true" />
+        </property>
+        <property name="cognome" type="string">
+            <column name="Cognome" length="45" not-null="true" />
+        </property>
+        <property name="nome" type="string">
+            <column name="Nome" length="45" not-null="true" />
+        </property>
+        <property name="dataNascita" type="date">
+            <column name="DataNascita" length="10" not-null="true" />
+        </property>
+        <property name="sesso" type="char">
+            <column name="Sesso" length="1" not-null="true" />
+        </property>
+        <property name="indirizzo" type="string">
+            <column name="Indirizzo" length="45" />
+        </property>
+        <property name="citta" type="string">
+            <column name="Citta" length="45" />
+        </property>
+        <property name="cap" type="string">
+            <column name="CAP" length="5" />
+        </property>
+        <property name="provincia" type="string">
+            <column name="Provincia" length="2" />
+        </property>
+        <property name="specializzazione" type="string">
+            <column name="Specializzazione" length="45" not-null="true" />
+        </property>
+        <property name="telefono1" type="string">
+            <column name="Telefono1" length="20" />
+        </property>
+        <property name="telefono2" type="string">
+            <column name="Telefono2" length="20" />
+        </property>
+        <property name="email" type="string">
+            <column name="Email" length="45" />
+        </property>
+        <set name="prestaziones" inverse="true" lazy="true" table="prestazione" fetch="select">
+            <key>
+                <column name="idMedico" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Prestazione" />
+        </set>
+        <set name="visitas" inverse="true" lazy="true" table="visita" fetch="select">
+            <key>
+                <column name="FK2_Medico" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Visita" />
+        </set>
+    </class>
+</hibernate-mapping>

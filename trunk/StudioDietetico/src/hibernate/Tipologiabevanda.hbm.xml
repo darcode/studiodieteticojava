@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Tipologiabevanda" table="tipologiabevanda" catalog="studiodietetico">
+        <id name="idTipologiaBevanda" type="java.lang.Integer">
+            <column name="idTipologiaBevanda" />
+            <generator class="identity" />
+        </id>
+        <property name="nome" type="string">
+            <column name="Nome" length="45" not-null="true" />
+        </property>
+        <property name="descrizione" type="string">
+            <column name="Descrizione" length="45" />
+        </property>
+        <set name="assunzionebevandes" inverse="true" lazy="true" table="assunzionebevande" fetch="select">
+            <key>
+                <column name="idTipologiaBevanda" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Assunzionebevande" />
+        </set>
+    </class>
+</hibernate-mapping>

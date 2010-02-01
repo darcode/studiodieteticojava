@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Referto" table="referto" catalog="studiodietetico">
+        <composite-id name="id" class="hibernate.RefertoId">
+            <key-property name="idPaziente" type="int">
+                <column name="idPaziente" />
+            </key-property>
+            <key-property name="idParametroEsame" type="int">
+                <column name="idParametroEsame" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="parametroesame" class="hibernate.Parametroesame" update="false" insert="false" fetch="select">
+            <column name="idParametroEsame" not-null="true" />
+        </many-to-one>
+        <many-to-one name="paziente" class="hibernate.Paziente" update="false" insert="false" fetch="select">
+            <column name="idPaziente" not-null="true" />
+        </many-to-one>
+        <property name="osservazioni" type="string">
+            <column name="Osservazioni" length="65535" />
+        </property>
+        <set name="risultatoanalisis" inverse="true" lazy="true" table="risultatoanalisi" fetch="select">
+            <key>
+                <column name="FK_Referto_Paz" not-null="true" />
+                <column name="FK_Referto_Par" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Risultatoanalisi" />
+        </set>
+    </class>
+</hibernate-mapping>

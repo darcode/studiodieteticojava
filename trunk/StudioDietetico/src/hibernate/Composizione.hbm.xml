@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Composizione" table="composizione" catalog="studiodietetico">
+        <composite-id name="id" class="hibernate.ComposizioneId">
+            <key-property name="idRicetta" type="int">
+                <column name="idRicetta" />
+            </key-property>
+            <key-property name="idIngrediente" type="int">
+                <column name="idIngrediente" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="ricetta" class="hibernate.Ricetta" update="false" insert="false" fetch="select">
+            <column name="idRicetta" not-null="true" />
+        </many-to-one>
+        <many-to-one name="ingrediente" class="hibernate.Ingrediente" update="false" insert="false" fetch="select">
+            <column name="idIngrediente" not-null="true" />
+        </many-to-one>
+        <property name="quantita" type="string">
+            <column name="Quantita" length="50" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

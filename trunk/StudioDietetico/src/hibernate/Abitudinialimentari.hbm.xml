@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Abitudinialimentari" table="abitudinialimentari" catalog="studiodietetico">
+        <id name="idAbitudiniAlimentari" type="java.lang.Integer">
+            <column name="idAbitudiniAlimentari" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="paziente" class="hibernate.Paziente" fetch="select">
+            <column name="FK5_Paziente" not-null="true" />
+        </many-to-one>
+        <property name="numPastiGiorno" type="int">
+            <column name="NumPastiGiorno" not-null="true" />
+        </property>
+        <property name="primaColazione" type="boolean">
+            <column name="PrimaColazione" not-null="true" />
+        </property>
+        <property name="integratori" type="string">
+            <column name="Integratori" length="65535" />
+        </property>
+        <property name="cibiNonGraditi" type="string">
+            <column name="CibiNonGraditi" length="65535" />
+        </property>
+        <property name="preferenzaSchemaDietetico" type="string">
+            <column name="PreferenzaSchemaDietetico" length="65535" />
+        </property>
+        <property name="note" type="string">
+            <column name="Note" length="65535" />
+        </property>
+        <set name="modalitapastofuoris" inverse="true" lazy="true" table="modalitapastofuori" fetch="select">
+            <key>
+                <column name="FK_Abitudini" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Modalitapastofuori" />
+        </set>
+        <set name="assunzionebevandes" inverse="true" lazy="true" table="assunzionebevande" fetch="select">
+            <key>
+                <column name="idAbitudineAlimentare" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Assunzionebevande" />
+        </set>
+    </class>
+</hibernate-mapping>

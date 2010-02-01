@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Prestazione" table="prestazione" catalog="studiodietetico">
+        <composite-id name="id" class="hibernate.PrestazioneId">
+            <key-property name="idMedico" type="int">
+                <column name="idMedico" />
+            </key-property>
+            <key-property name="dataTurno" type="date">
+                <column name="DataTurno" length="10" />
+            </key-property>
+            <key-property name="idTurno" type="int">
+                <column name="idTurno" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="turno" class="hibernate.Turno" update="false" insert="false" fetch="select">
+            <column name="idTurno" not-null="true" />
+        </many-to-one>
+        <many-to-one name="medico" class="hibernate.Medico" update="false" insert="false" fetch="select">
+            <column name="idMedico" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

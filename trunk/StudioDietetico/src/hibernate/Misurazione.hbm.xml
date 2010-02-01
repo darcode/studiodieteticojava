@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Misurazione" table="misurazione" catalog="studiodietetico">
+        <composite-id name="id" class="hibernate.MisurazioneId">
+            <key-property name="idPaziente" type="int">
+                <column name="idPaziente" />
+            </key-property>
+            <key-property name="idParametroAntropometrico" type="int">
+                <column name="idParametroAntropometrico" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="parametroantropometrico" class="hibernate.Parametroantropometrico" update="false" insert="false" fetch="select">
+            <column name="idParametroAntropometrico" not-null="true" />
+        </many-to-one>
+        <many-to-one name="paziente" class="hibernate.Paziente" update="false" insert="false" fetch="select">
+            <column name="idPaziente" not-null="true" />
+        </many-to-one>
+        <property name="osservazioni" type="string">
+            <column name="Osservazioni" length="65535" />
+        </property>
+        <set name="rilevamentos" inverse="true" lazy="true" table="rilevamento" fetch="select">
+            <key>
+                <column name="FK_Misurazione_Paz" not-null="true" />
+                <column name="FK_Misurazione_Par" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Rilevamento" />
+        </set>
+    </class>
+</hibernate-mapping>

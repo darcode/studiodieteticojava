@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Prenotazione" table="prenotazione" catalog="studiodietetico">
+        <id name="idPrenotazione" type="java.lang.Integer">
+            <column name="idPrenotazione" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="tipologiavisita" class="hibernate.Tipologiavisita" fetch="select">
+            <column name="idTipologiaVisita" not-null="true" />
+        </many-to-one>
+        <many-to-one name="paziente" class="hibernate.Paziente" fetch="select">
+            <column name="idPaziente" not-null="true" />
+        </many-to-one>
+        <property name="dataOra" type="timestamp">
+            <column name="DataOra" length="19" not-null="true" />
+        </property>
+        <property name="note" type="string">
+            <column name="Note" length="65535" />
+        </property>
+        <set name="visitas" inverse="true" lazy="true" table="visita" fetch="select">
+            <key>
+                <column name="FK_Prenotazione" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Visita" />
+        </set>
+    </class>
+</hibernate-mapping>

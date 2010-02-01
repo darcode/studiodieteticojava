@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Ingrediente" table="ingrediente" catalog="studiodietetico">
+        <id name="idIngrediente" type="java.lang.Integer">
+            <column name="idIngrediente" />
+            <generator class="identity" />
+        </id>
+        <property name="nome" type="string">
+            <column name="Nome" length="60" not-null="true" />
+        </property>
+        <set name="composiziones" inverse="true" lazy="true" table="composizione" fetch="select">
+            <key>
+                <column name="idIngrediente" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Composizione" />
+        </set>
+    </class>
+</hibernate-mapping>
