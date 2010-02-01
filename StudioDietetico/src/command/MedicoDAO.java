@@ -1,15 +1,19 @@
 package command;
 
 import hibernate.Medico;
-import hibernate.Prenotazione;
 import hibernate.Prestazione;
+import hibernate.PrestazioneId;
+import hibernate.Turno;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.swt.widgets.DateTime;
 import org.hibernate.Query;
+
+import service.Utils;
 
 public class MedicoDAO extends BaseDAO {
 	public MedicoDAO() {
@@ -43,16 +47,84 @@ public class MedicoDAO extends BaseDAO {
 		close();
 	}
 
-	public static List<Medico> getMedici() {
+	public static ArrayList<Medico> getMedici() {
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Medico m ORDER BY m.cognome");
-		List<Medico> medici = (List<Medico>) q.list();
+		ArrayList<Medico> medici = (ArrayList<Medico>) q.list();
 		commit();
 		return medici;
 
 	}
+	
+	public static ArrayList<Turno> getTurni(){
+		getSession();
+		begin();
+		Query q = getSession().createQuery("FROM Turno t ORDER BY t.nome");
+		ArrayList<Turno> turni = (ArrayList<Turno>) q.list();
+		commit();
+		return turni;
+	}
+	
+	public static ArrayList<Prestazione> getTurniMediciByMese(int mese){
+		getSession();
+		begin();
+		Date now = new Date();
+		String dataTurnoInizioString = ""+(now.getYear()+1900)+"-"+mese+"-01";
+		String dataTurnoFineString = ""+(now.getYear()+1900)+"-"+mese+"-31";
+		//String formato = "yyyy-MM-dd";
+		//Date dn = Utils.convertStringToDate(dataTurnoString, formato);
+		Query q = getSession().createQuery("FROM Prestazione p WHERE p.id.dataTurno BETWEEN'"+dataTurnoInizioString+"' AND '"+dataTurnoFineString+"'");
+		ArrayList<Prestazione> turniMediciMese = (ArrayList<Prestazione>) q.list();
+		commit();
+		return turniMediciMese;
+	}
 
+	public void RegistraTurno(String nome, Date oraInizio, Date oraFine){
+		getSession();
+		begin();
+		Turno turno = new Turno();
+		turno.setNome(nome);
+		turno.setOraInizio(oraInizio);
+		turno.setOraFine(oraFine);
+		getSession().saveOrUpdate(turno);
+		commit();
+		close();
+	}
+	
+	public void RegistraTurnoMedico(Medico medico, Turno turno, Date dataTurno){
+		getSession();
+		begin();
+		Prestazione pr = new Prestazione();
+		pr.setMedico(medico);
+		pr.setTurno(turno);
+		PrestazioneId prId = new PrestazioneId();
+		prId.setIdMedico(medico.getIdMedico());
+		prId.setIdTurno(turno.getIdTurno());
+		prId.setDataTurno(dataTurno);
+		pr.setId(prId);
+		getSession().saveOrUpdate(pr);
+		commit();
+		close();
+	}
+
+	public void RimuoviTurnoMedico (Medico medico, Date dataTurno){
+		getSession();
+		begin();
+		String dataTurnoString = ""+(dataTurno.getYear()+1900)+"-"+(dataTurno.getMonth()+1)+"-"+dataTurno.getDate();
+		//String formato = "yyyy-MM-dd";
+		//Date dn = Utils.convertStringToDate(dataTurnoString, formato);
+		Query q = getSession().createQuery("FROM Prestazione p WHERE p.id.dataTurno='"+dataTurnoString+"' AND p.medico.idMedico="+medico.getIdMedico());
+		ArrayList<Prestazione> turniMedico = (ArrayList<Prestazione>) q.list();
+		for (int i = 0; i < turniMedico.size(); i++) {
+			begin();
+			Prestazione prestaz = new Prestazione();
+			prestaz = (Prestazione) turniMedico.get(i);
+			getSession().delete(prestaz);	
+			commit();
+		}		
+	}
+	
 	public static ArrayList<HashMap<String, String>> getMediciForStatistics() {
 		getSession();
 		begin();

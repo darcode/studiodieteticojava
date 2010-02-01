@@ -11,6 +11,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.jface.viewers.ListViewer;
@@ -21,12 +23,16 @@ import command.VisitaDAO;
 
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
 
 import service.Utils;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.graphics.Point;
 
 public class PrenotaVisitaView extends ViewPart {
 
@@ -56,6 +62,9 @@ public class PrenotaVisitaView extends ViewPart {
 	private ArrayList<Paziente> paz;  //  @jve:decl-index=0:
 	private ArrayList<Tipologiavisita> tv;  //  @jve:decl-index=0:
 	private Group groupDataPrenotazione = null;
+	private Button buttonSelezionaData = null;
+	private Shell ShellCalendario = null;  //  @jve:decl-index=0:visual-constraint="80,420"
+	private Date dn = null;
 	public static final String VIEW_ID = "StudioDietetico.prenotavisita";
 	public PrenotaVisitaView() {
 		// TODO Auto-generated constructor stub
@@ -76,36 +85,48 @@ public class PrenotaVisitaView extends ViewPart {
         labelTipolVisitPrenot.setText("Seleziona la tipologia di visita:");
         createComboTipologVisita();
         labelDataPrenotVisita = new Label(top, SWT.WRAP);
-        labelDataPrenotVisita.setBounds(new Rectangle(13, 163, 83, 33));
-        labelDataPrenotVisita.setText("Data visita (gg/mm/aaaa):");
-        createComboGiornoVisita();
-        createComboMeseVisita();
-        createComboAnnoVisita();
-        labelOraVisita = new Label(top, SWT.NONE);
+        labelDataPrenotVisita.setBounds(new Rectangle(13, 167, 79, 27));
+        labelDataPrenotVisita.setText("Data visita :");
+        //createComboGiornoVisita();
+        //createComboMeseVisita();
+        //createComboAnnoVisita();
+        /*labelOraVisita = new Label(top, SWT.NONE);
         labelOraVisita.setBounds(new Rectangle(14, 206, 63, 19));
-        labelOraVisita.setText("Ora visita:");
-        createComboOraVisita();
-        createComboOraMinVisita();
+        labelOraVisita.setText("Ora visita:");*/
+        //createComboOraVisita();
+        //createComboOraMinVisita();
         labelNote = new Label(top, SWT.NONE);
-        labelNote.setBounds(new Rectangle(15, 248, 36, 19));
+        labelNote.setBounds(new Rectangle(15, 210, 36, 19));
         labelNote.setText("Note:");
         textAreaNote = new Text(top, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-        textAreaNote.setBounds(new Rectangle(63, 248, 286, 57));
+        textAreaNote.setBounds(new Rectangle(63, 208, 288, 103));
         buttonPrenotaVisita = new Button(top, SWT.NONE);
         buttonPrenotaVisita.setBounds(new Rectangle(290, 320, 115, 25));
         buttonPrenotaVisita.setText("Prenota visita");
-        createGroupDataPrenotazione();
+        //createGroupDataPrenotazione();
+        buttonSelezionaData = new Button(top, SWT.NONE);
+        buttonSelezionaData.setBounds(new Rectangle(101, 166, 161, 27));
+        buttonSelezionaData.setText("Seleziona la data della visita");
+        buttonSelezionaData
+        		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+        			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+        				createShellCalendario();
+        				ShellCalendario.open();
+        				System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
+        			}
+        		});
         buttonPrenotaVisita
         		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
         			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
         				//String dateString = comboAnnoVisita.getText()+"-"+comboMeseVisita.getText()+"-"+comboGiornoVisita.getText();
         				//String formato = "yyyy-MM-dd";
-        				String dateString = comboAnnoVisita.getText()+"-"+comboMeseVisita.getText()+"-"+comboGiornoVisita.getText()+" "+comboOraVisita.getText()+":"+comboOraMinVisita.getText()+":00";
+        				/*String dateString = comboAnnoVisita.getText()+"-"+comboMeseVisita.getText()+"-"+comboGiornoVisita.getText()+" "+comboOraVisita.getText()+":"+comboOraMinVisita.getText()+":00";
         				String formato = "yyyy-MM-dd HH:mm:ss";
-        				Date dn = Utils.convertStringToDate(dateString, formato);   
+        				Date dn = Utils.convertStringToDate(dateString, formato);*/   
         				Tipologiavisita tipovisita = tv.get(comboTipologVisita.getSelectionIndex());
         				Paziente paziente = paz.get(listPazienti.getSelectionIndex());
         				VisitaDAO v = new VisitaDAO();
+        				dn = createShellCalendario();
         				//int pazsel = listPazienti.getFocusIndex();
         				v.prenotaVisita(paziente, tipovisita, dn, textAreaNote.getText());
         				System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
@@ -150,7 +171,7 @@ public class PrenotaVisitaView extends ViewPart {
 	 * This method initializes comboGiornoVisita	
 	 *
 	 */
-	private void createComboGiornoVisita() {
+/*	private void createComboGiornoVisita() {
 		comboGiornoVisita = new Combo(top, SWT.READ_ONLY);
 		comboGiornoVisita.setBounds(new Rectangle(104, 163, 73, 18));
 		for (int i = 1; i < 32; i++) {
@@ -159,13 +180,13 @@ public class PrenotaVisitaView extends ViewPart {
 		//comboGiornoVisita.setItems(new String [] {"01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"});
 		comboGiornoVisita.setText(comboGiornoVisita.getItem(0));
 		comboViewer2 = new ComboViewer(comboGiornoVisita);
-	}
+	}*/
 
 	/**
 	 * This method initializes comboMeseVisita	
 	 *
 	 */
-	private void createComboMeseVisita() {
+/*	private void createComboMeseVisita() {
 		comboMeseVisita = new Combo(top, SWT.READ_ONLY);
 		comboMeseVisita.setBounds(new Rectangle(184, 163, 65, 23));
 		for (int i = 1; i < 13; i++) {
@@ -174,13 +195,13 @@ public class PrenotaVisitaView extends ViewPart {
 		//comboMeseVisita.setItems(new String [] {"01","02","03","04","05","06","07","08","09","10","11","12"});
 		comboMeseVisita.setText(comboMeseVisita.getItem(0));
 		comboViewer3 = new ComboViewer(comboMeseVisita);
-	}
+	}*/
 
 	/**
 	 * This method initializes comboAnnoVisita	
 	 *
 	 */
-	private void createComboAnnoVisita() {
+/*	private void createComboAnnoVisita() {
 		comboAnnoVisita = new Combo(top, SWT.READ_ONLY);
 		comboAnnoVisita.setBounds(new Rectangle(257, 163, 80, 23));
 		Date now = new Date();
@@ -190,46 +211,100 @@ public class PrenotaVisitaView extends ViewPart {
 		//comboAnnoVisita.setItems(new String [] {"2009","2010","2011","2012","2013","2014","2015"});
 		comboAnnoVisita.setText(comboAnnoVisita.getItem(0));
 		comboViewer4 = new ComboViewer(comboAnnoVisita);
-	}
+	}*/
 
 	/**
 	 * This method initializes comboOraVisita	
 	 *
 	 */
-	private void createComboOraVisita() {
+/*	private void createComboOraVisita() {
 		comboOraVisita = new Combo(top, SWT.READ_ONLY);
 		comboOraVisita.setBounds(new Rectangle(90, 206, 58, 23));
 		comboOraVisita.setItems(new String [] {"01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"});
 		comboOraVisita.setText(comboOraVisita.getItem(0));
 		comboViewer5 = new ComboViewer(comboOraVisita);
-	}
+	}*/
 
 	/**
 	 * This method initializes comboOraMinVisita	
 	 *
 	 */
-	private void createComboOraMinVisita() {
+/*	private void createComboOraMinVisita() {
 		comboOraMinVisita = new Combo(top, SWT.READ_ONLY);
 		comboOraMinVisita.setBounds(new Rectangle(159, 206, 67, 23));
-		comboOraMinVisita.setItems(new String [] {"00","01","02","03","04","05","06","07","08","09",
-				"10","11","12","13","14","15","16","17","18","19",
-				"20","21","22","23","24","25","26","27","28","29",
-				"30","31","32","33","34","35","36","37","38","39",
-				"40","41","42","43","44","45","46","47","48","49",
-				"50","51","52","53","54","55","56","57","58","59",});
+		for (int i = 0; i < 60; i++) {
+			comboOraMinVisita.add(""+i);
+		}
 		comboOraMinVisita.setText(comboOraMinVisita.getItem(0));
 		comboViewer6 = new ComboViewer(comboOraMinVisita);
-	}
+	}*/
 
 	/**
 	 * This method initializes groupDataPrenotazione	
 	 *
 	 */
-	private void createGroupDataPrenotazione() {
+/*	private void createGroupDataPrenotazione() {
 		groupDataPrenotazione = new Group(top, SWT.NONE);
 		groupDataPrenotazione.setLayout(new GridLayout());
 		groupDataPrenotazione.setText("Data e ora prenotazione");
 		groupDataPrenotazione.setBounds(new Rectangle(8, 145, 342, 92));
+	}*/
+
+	/**
+	 * This method initializes ShellCalendario	
+	 *
+	 */
+	private Date createShellCalendario() {
+		ShellCalendario = new Shell();
+		ShellCalendario.setLayout(new GridLayout());
+		ShellCalendario.setSize(new Point(269, 293));
+		ShellCalendario.setText("Seleziona la data");
+		final DateTime calendar = new DateTime (ShellCalendario, SWT.CALENDAR | SWT.BORDER);
+		//final DateTime date = new DateTime (ShellCalendario, SWT.DATE | SWT.SHORT);
+		final DateTime time = new DateTime (ShellCalendario, SWT.TIME | SWT.SHORT);
+		new Label (ShellCalendario, SWT.NONE);
+		//new Label (ShellCalendario, SWT.NONE);
+		Button ok = new Button (ShellCalendario, SWT.PUSH);
+		ok.setText ("OK");
+		ok.setLayoutData(new GridData (SWT.FILL, SWT.CENTER, false, false));
+		ok.addSelectionListener (new SelectionAdapter () {
+			public void widgetSelected (SelectionEvent e) {
+				System.out.println ("Calendar date selected (MM/DD/YYYY) = " + (calendar.getMonth () + 1) + "/" + calendar.getDay () + "/" + calendar.getYear ());
+				//System.out.println ("Date selected (MM/YYYY) = " + (date.getMonth () + 1) + "/" + date.getYear ());
+				System.out.println ("Time selected (HH:MM) = " + time.getHours () + ":" + (time.getMinutes () < 10 ? "0" : "") + time.getMinutes ());
+				
+				String dateString = calendar.getYear ()+"-"+(calendar.getMonth () + 1)+"-"+calendar.getDay ()+" "+time.getHours () +":"+(time.getMinutes () < 10 ? "0" : "") + time.getMinutes ()+":00";
+				String formato = "yyyy-MM-dd HH:mm:ss";
+				dn = Utils.convertStringToDate(dateString, formato);   
+				
+				ShellCalendario.close ();
+			}
+		});
+
+		//ShellCalendario.open();
+		
+		return dn ;
+	}
+
+	/*
+	 * Temporary main generation 
+	 */
+	public static void main(String[] args) {
+		// before you run this, make sure to set up the following in
+		// the launch configuration (Arguments->VM Arguments) for the correct SWT lib. path
+		// the following is a windows example,
+		// -Djava.library.path="installation_directory\plugins\org.eclipse.swt.win32_3.0.1\os\win32\x86"
+		/*org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display
+				.getDefault();
+		PrenotaVisitaView test = new PrenotaVisitaView();
+		test.createShellCalendario();
+		test.ShellCalendario.open();
+	
+		while (!test.ShellCalendario.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+		display.dispose();*/
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10,450,372"

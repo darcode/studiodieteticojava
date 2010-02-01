@@ -171,6 +171,11 @@
 		<column name="MalattiaEreditaria" jdbc-type=''></column>
 		<column name="FK_TipologiaDietaSpeciale" jdbc-type=''></column>
 	</table>
+	<table catalog="studiodietetico" name="turno">
+		<column name="OraInizio" jdbc-type=''></column>
+		<column name="OraFine" jdbc-type=''></column>
+		<column name="Nome" jdbc-type=''></column>
+	</table>
 	<table catalog="studiodietetico" name="visita">
 		<column name="DataOraInizio" jdbc-type=''></column>
 		<column name="DataOraFIne" jdbc-type=''></column>
@@ -277,6 +282,14 @@
 	<table catalog="studiodietetico" name="pasto">
 		<column name="Nome" jdbc-type=''></column>
 	</table>
+	<table catalog="studiodietetico" name="fattura">
+		<column name="Importo" jdbc-type=''></column>
+		<column name="Acconto" jdbc-type=''></column>
+		<column name="ImportoSconto" jdbc-type=''></column>
+		<column name="Note" jdbc-type=''></column>
+		<column name="Descrizione" jdbc-type=''></column>
+		<column name="Data" jdbc-type=''></column>
+	</table>
 	<table catalog="studiodietetico" name="prenotazione">
 		<column name="idPaziente" jdbc-type=''></column>
 		<column name="idTipologiaVisita" jdbc-type=''></column>
@@ -287,18 +300,5 @@
 		<column name="idAbitudineAlimentare" jdbc-type=''></column>
 		<column name="idTipologiaBevanda" jdbc-type=''></column>
 		<column name="Quantita" jdbc-type=''></column>
-	</table>
-	<table catalog="studiodietetico" name="fattura">
-		<column name="Importo" jdbc-type=''></column>
-		<column name="Acconto" jdbc-type=''></column>
-		<column name="ImportoSconto" jdbc-type=''></column>
-		<column name="Note" jdbc-type=''></column>
-		<column name="Descrizione" jdbc-type=''></column>
-		<column name="Data" jdbc-type=''></column>
-	</table>
-	<table catalog="studiodietetico" name="turno">
-		<column name="OraInizio" jdbc-type=''></column>
-		<column name="OraFine" jdbc-type=''></column>
-		<column name="Nome" jdbc-type=''></column>
 	</table>
 </hibernate-reverse-engineering>

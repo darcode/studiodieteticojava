@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -46,7 +47,6 @@ public class RegistraVisitaView extends ViewPart {
 	private Label labelSelezMedico = null;
 	private Combo comboMedicoVisita = null;
 	private ComboViewer comboViewer1 = null;
-	private Label labelDataVisita = null;
 	private Combo comboGiornoVisita = null;
 	private Combo comboMeseVisita = null;
 	private Combo comboAnnoVisita = null;
@@ -59,7 +59,6 @@ public class RegistraVisitaView extends ViewPart {
 	private Label labelMotivazioni = null;
 	private Text textAreaMotivazioni = null;
 	private Label labelStatoPagamento = null;
-	private Text textStatoPagamento = null;
 	private Label labelNote = null;
 	private Text textAreaNote = null;
 	private Label labelFattura = null;
@@ -102,7 +101,7 @@ public class RegistraVisitaView extends ViewPart {
 	private Fattura fatturaSelezionata = null;
 	private Label labelFatturaAssociata = null;
 	final ArrayList<Prenotazione> prenotazioniOdierne = new ArrayList<Prenotazione>();  //  @jve:decl-index=0:
-	
+	private Combo comboStatoPagamento = null;
 	public RegistraVisitaView() {
 		// TODO Auto-generated constructor stub
 	}
@@ -117,7 +116,7 @@ public class RegistraVisitaView extends ViewPart {
         labelSelezPrenotaz.setText("* Seleziona la prenotazione per la data odierna:");
         createComboPrenotazOdierne();
         textAreaInfoPrenotazione = new Text(top, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-        textAreaInfoPrenotazione.setBounds(new Rectangle(161, 50, 294, 82));
+        textAreaInfoPrenotazione.setBounds(new Rectangle(161, 50, 308, 82));
         textAreaInfoPrenotazione.setEditable(false);
         labelInfoPrenotazione = new Label(top, SWT.WRAP);
         labelInfoPrenotazione.setBounds(new Rectangle(10, 50, 143, 39));
@@ -126,39 +125,36 @@ public class RegistraVisitaView extends ViewPart {
         labelSelezMedico.setBounds(new Rectangle(10, 142, 144, 32));
         labelSelezMedico.setText("* Seleziona il medico che ha effettuato la visita:");
         createComboMedicoVisita();
-        labelDataVisita = new Label(top, SWT.NONE);
-        labelDataVisita.setBounds(new Rectangle(10, 195, 123, 18));
-        labelDataVisita.setText("* Data della visita:");
-        createComboGiornoVisita();
-        createComboMeseVisita();
-        createComboAnnoVisita();
+        //createComboMeseVisita();
+        //createComboAnnoVisita();
         labelOraInizioVisita = new Label(top, SWT.NONE);
-        labelOraInizioVisita.setBounds(new Rectangle(10, 225, 117, 20));
+        labelOraInizioVisita.setBounds(new Rectangle(10, 200, 117, 20));
         labelOraInizioVisita.setText("* Ora inizio visita:");
-        createComboOraInizioVisita();
-        createComboOraMinInizioVisita();
+        final DateTime timeInizioVisita = new DateTime(top, SWT.TIME | SWT.SHORT);
+        timeInizioVisita.setBounds(130, 200, 70, 20);
+        //createComboOraInizioVisita();
+        //createComboOraMinInizioVisita();
         labelOraFineVisita = new Label(top, SWT.NONE);
-        labelOraFineVisita.setBounds(new Rectangle(10, 262, 115, 18));
+        labelOraFineVisita.setBounds(new Rectangle(10, 230, 117, 20));
         labelOraFineVisita.setText("* Ora fine visita:");
-        createComboOraFineVisita();
-        createComboOraMinFineVisita();
+        final DateTime timeFineVisita = new DateTime(top, SWT.TIME | SWT.SHORT);
+        timeFineVisita.setBounds(130, 230, 70, 20);
+        //createComboOraFineVisita();
+        //createComboOraMinFineVisita();
         labelMotivazioni = new Label(top, SWT.NONE);
-        labelMotivazioni.setBounds(new Rectangle(10, 295, 129, 22));
+        labelMotivazioni.setBounds(new Rectangle(10, 275, 129, 22));
         labelMotivazioni.setText("Motivazioni della visita:");
         textAreaMotivazioni = new Text(top, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-        textAreaMotivazioni.setBounds(new Rectangle(165, 294, 330, 55));
+        textAreaMotivazioni.setBounds(new Rectangle(165, 274, 330, 55));
         //textAreaMotivazioni.setTextLimit(300);
         labelStatoPagamento = new Label(top, SWT.NONE);
-        labelStatoPagamento.setBounds(new Rectangle(10, 360, 108, 21));
+        labelStatoPagamento.setBounds(new Rectangle(10, 340, 108, 21));
         labelStatoPagamento.setText("* Stato pagamento:");
-        textStatoPagamento = new Text(top, SWT.BORDER);
-        textStatoPagamento.setBounds(new Rectangle(134, 360, 307, 21));
-        textStatoPagamento.setTextLimit(45);
         labelNote = new Label(top, SWT.NONE);
-        labelNote.setBounds(new Rectangle(12, 394, 41, 17));
+        labelNote.setBounds(new Rectangle(12, 375, 41, 17));
         labelNote.setText("Note:");
         textAreaNote = new Text(top, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-        textAreaNote.setBounds(new Rectangle(76, 392, 336, 62));
+        textAreaNote.setBounds(new Rectangle(76, 374, 364, 83));
         //textAreaNote.setTextLimit(300);
         labelFattura = new Label(top, SWT.WRAP);
         labelFattura.setBounds(new Rectangle(12, 464, 191, 37));
@@ -190,6 +186,7 @@ public class RegistraVisitaView extends ViewPart {
         labelFatturaAssociata.setBounds(new Rectangle(15, 644, 332, 18));
         labelFatturaAssociata.setText("Fattura correttamente associata alla visita. Registrare la visita");
         labelFatturaAssociata.setVisible(false);
+        createComboStatoPagamento();
         buttonAssociaFattura
         		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
         			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -201,11 +198,16 @@ public class RegistraVisitaView extends ViewPart {
         buttonRegistraVisita
         		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
         			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-        				String dateInizioString = comboAnnoVisita.getText()+"-"+comboMeseVisita.getText()+"-"+comboGiornoVisita.getText()+" "+comboOraInizioVisita.getText()+":"+comboOraMinInizioVisita.getText()+":00";
+        				//String dateInizioString = comboAnnoVisita.getText()+"-"+comboMeseVisita.getText()+"-"+comboGiornoVisita.getText()+" "+comboOraInizioVisita.getText()+":"+comboOraMinInizioVisita.getText()+":00";
         				String formato = "yyyy-MM-dd HH:mm:ss";
-        				Date dataInizioVisita = Utils.convertStringToDate(dateInizioString, formato);   
-        				String dateFineString = comboAnnoVisita.getText()+"-"+comboMeseVisita.getText()+"-"+comboGiornoVisita.getText()+" "+comboOraFineVisita.getText()+":"+comboOraMinFineVisita.getText()+":00";
-        				Date dataFineVisita = Utils.convertStringToDate(dateFineString, formato);   
+        				Date now = new Date();
+        				//String meseInt = ((now.getMonth()+1) < 10 ? "0" : "") + (now.getMonth()+1);
+        				String dataInizioString =  Integer.toString(now.getYear()+1900)+"-"+((now.getMonth()+1) < 10 ? "0" : "") + (now.getMonth()+1)+"-"+Integer.toString(now.getDate())+" "+timeInizioVisita.getHours()+":"+(timeInizioVisita.getMinutes () < 10 ? "0" : "") + timeInizioVisita.getMinutes ()+":00";
+        				String dataFineString =  Integer.toString(now.getYear()+1900)+"-"+((now.getMonth()+1) < 10 ? "0" : "") + (now.getMonth()+1)+"-"+Integer.toString(now.getDate())+" "+timeFineVisita.getHours()+":"+(timeFineVisita.getMinutes () < 10 ? "0" : "") + timeFineVisita.getMinutes ()+":00";
+        				System.out.println(dataInizioString+"____"+dataFineString);
+        				Date dataInizioVisita = Utils.convertStringToDate(dataInizioString, formato);   
+        				//String dateFineString = comboAnnoVisita.getText()+"-"+comboMeseVisita.getText()+"-"+comboGiornoVisita.getText()+" "+comboOraFineVisita.getText()+":"+comboOraMinFineVisita.getText()+":00";
+        				Date dataFineVisita = Utils.convertStringToDate(dataFineString, formato);   
         				Prenotazione pren = prenotazioniOdierne.get(comboPrenotazOdierne.getSelectionIndex());
         				int idPren = pren.getIdPrenotazione();
         				Prenotazione prenotazione = VisitaDAO.getPrenotazioneByID(idPren);
@@ -214,9 +216,9 @@ public class RegistraVisitaView extends ViewPart {
         				if (fatturaSelezionata==null) {
         					FatturaDAO f = new FatturaDAO();
         					Fattura fattura = f.getFatturaByID(idFatt);
-        					visita.registraVisita(dataInizioVisita, dataFineVisita, textAreaMotivazioni.getText(), textStatoPagamento.getText(), textAreaNote.getText(), fattura, medico, prenotazione);
+        					visita.registraVisita(dataInizioVisita, dataFineVisita, textAreaMotivazioni.getText(), comboStatoPagamento.getText(), textAreaNote.getText(), fattura, medico, prenotazione);
 						} else {
-							visita.registraVisita(dataInizioVisita, dataFineVisita, textAreaMotivazioni.getText(), textStatoPagamento.getText(), textAreaNote.getText(), fatturaSelezionata, medico, prenotazione);
+							visita.registraVisita(dataInizioVisita, dataFineVisita, textAreaMotivazioni.getText(), comboStatoPagamento.getText(), textAreaNote.getText(), fatturaSelezionata, medico, prenotazione);
 						}
         				
         				System.out.println("visita registrata"); // TODO Auto-generated Event stub widgetSelected()
@@ -290,7 +292,7 @@ public class RegistraVisitaView extends ViewPart {
 															"Data di nascita paziente: "+prenotazioniOdierne.get(selez).getPaziente().getDataNascita()+"\n"+
 															"Codice fiscale paziente: "+prenotazioniOdierne.get(selez).getPaziente().getCodiceFiscale()+"\n"+
 															"Indirizzo paziente: "+prenotazioniOdierne.get(selez).getPaziente().getCitta()+"  "+prenotazioniOdierne.get(selez).getPaziente().getIndirizzo()+"\n"+
-															"Tessera sanitaria paziente: "+prenotazioniOdierne.get(selez).getPaziente().getNumTesseraSanitaria()+"\n"+
+															"Tessera sanitaria paziente: "+prenotazioniOdierne.get(selez).getPaziente().getNumTesseraSanitaria()+"\n\n"+
 															"Tipologia visita prenotata: "+prenotazioniOdierne.get(selez).getTipologiavisita().getTipologia()+"\n"+
 															"Costo visita prenotata: "+prenotazioniOdierne.get(selez).getTipologiavisita().getCostoVisita()+"\n"+
 															"Data e ora prenotazione: "+prenotazioniOdierne.get(selez).getDataOra()+"\n"+
@@ -311,7 +313,7 @@ public class RegistraVisitaView extends ViewPart {
 	 */
 	private void createComboMedicoVisita() {
 		comboMedicoVisita = new Combo(top, SWT.READ_ONLY);
-		comboMedicoVisita.setBounds(new Rectangle(165, 146, 172, 26));
+		comboMedicoVisita.setBounds(new Rectangle(165, 147, 209, 22));
 		comboViewer1 = new ComboViewer(comboMedicoVisita);
 		medici = (ArrayList<Medico>) MedicoDAO.getMedici();
 		ArrayList<String> med = new ArrayList<String>();
@@ -369,18 +371,18 @@ public class RegistraVisitaView extends ViewPart {
 	 * This method initializes comboOraInizioVisita	
 	 *
 	 */
-	private void createComboOraInizioVisita() {
+/*	private void createComboOraInizioVisita() {
 		comboOraInizioVisita = new Combo(top, SWT.READ_ONLY);
 		comboOraInizioVisita.setBounds(new Rectangle(165, 223, 72, 24));
 		comboOraInizioVisita.setItems(new String [] {"01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"});
 		comboOraInizioVisita.setText(comboOraInizioVisita.getItem(0));
-	}
+	}*/
 
 	/**
 	 * This method initializes comboOraMinInizioVisita	
 	 *
 	 */
-	private void createComboOraMinInizioVisita() {
+/*	private void createComboOraMinInizioVisita() {
 		comboOraMinInizioVisita = new Combo(top, SWT.READ_ONLY);
 		comboOraMinInizioVisita.setBounds(new Rectangle(254, 223, 72, 23));
 		comboOraMinInizioVisita.setItems(new String [] {"00","01","02","03","04","05","06","07","08","09",
@@ -390,24 +392,24 @@ public class RegistraVisitaView extends ViewPart {
 				"40","41","42","43","44","45","46","47","48","49",
 				"50","51","52","53","54","55","56","57","58","59",});
 		comboOraMinInizioVisita.setText(comboOraMinInizioVisita.getItem(0));
-	}
+	}*/
 
 	/**
 	 * This method initializes comboOraFineVisita	
 	 *
 	 */
-	private void createComboOraFineVisita() {
+/*	private void createComboOraFineVisita() {
 		comboOraFineVisita = new Combo(top, SWT.READ_ONLY);
 		comboOraFineVisita.setBounds(new Rectangle(165, 259, 72, 22));
 		comboOraFineVisita.setItems(new String [] {"01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"});
 		comboOraFineVisita.setText(comboOraFineVisita.getItem(0));
-	}
+	}*/
 
 	/**
 	 * This method initializes comboOraMinFineVisita	
 	 *
 	 */
-	private void createComboOraMinFineVisita() {
+/*	private void createComboOraMinFineVisita() {
 		comboOraMinFineVisita = new Combo(top, SWT.READ_ONLY);
 		comboOraMinFineVisita.setBounds(new Rectangle(254, 260, 72, 22));
 		comboOraMinFineVisita.setItems(new String [] {"00","01","02","03","04","05","06","07","08","09",
@@ -417,7 +419,7 @@ public class RegistraVisitaView extends ViewPart {
 				"40","41","42","43","44","45","46","47","48","49",
 				"50","51","52","53","54","55","56","57","58","59",});
 		comboOraMinFineVisita.setText(comboOraMinFineVisita.getItem(0));
-	}
+	}*/
 
 	/**
 	 * This method initializes sShellNuovaFattura	
@@ -568,7 +570,7 @@ public class RegistraVisitaView extends ViewPart {
 	private void createGroupImportoAcconto() {
 		groupImportoAcconto = new Group(compositeAcconto, SWT.NONE);
 		//groupImportoAcconto.setLayout(new GridLayout());
-		groupImportoAcconto.setText("Stato pagamento");
+		groupImportoAcconto.setText("Stato pagamento fattura");
 		groupImportoAcconto.setBounds(new Rectangle(3, 0, 240, 110));
 	}
 
@@ -592,8 +594,8 @@ public class RegistraVisitaView extends ViewPart {
 		//compositeAcconto.setLayout(new GridLayout());
 		compositeAcconto.setBounds(new Rectangle(7, 49, 246, 117));
 		labelImportoPagato = new Label(compositeAcconto, SWT.WRAP);
-		labelImportoPagato.setBounds(new Rectangle(10, 15, 112, 32));
-		labelImportoPagato.setText("L'importo è stato pagato totalmente?");
+		labelImportoPagato.setBounds(new Rectangle(10, 15, 115, 45));
+		labelImportoPagato.setText("L'importo della fattura è stato pagato totalmente?");
 		radioButtonImportoSi = new Button(compositeAcconto, SWT.RADIO);
 		radioButtonImportoSi.setBounds(new Rectangle(140, 20, 38, 20));
 		radioButtonImportoSi.setText("Si");
@@ -615,11 +617,11 @@ public class RegistraVisitaView extends ViewPart {
 			}
 		});
 		labelAcconto = new Label(compositeAcconto, SWT.WRAP);
-		labelAcconto.setBounds(new Rectangle(10, 60, 102, 34));
-		labelAcconto.setText("Importo acconto versato (euro):");
+		labelAcconto.setBounds(new Rectangle(10, 70, 118, 32));
+		labelAcconto.setText("Importo versato (euro):");
 		labelAcconto.setVisible(false);
 		textImportoAcconto = new Text(compositeAcconto, SWT.BORDER);
-		textImportoAcconto.setBounds(new Rectangle(130, 63, 90, 30));
+		textImportoAcconto.setBounds(new Rectangle(130, 72, 83, 21));
 		textImportoAcconto.setVisible(false);
 		createGroupImportoAcconto();
 	}
@@ -632,7 +634,18 @@ public class RegistraVisitaView extends ViewPart {
 		groupDataVisita = new Group(top, SWT.NONE);
 		groupDataVisita.setLayout(new GridLayout());
 		groupDataVisita.setText("Data della visita");
-		groupDataVisita.setBounds(new Rectangle(7, 176, 490, 113));
+		groupDataVisita.setBounds(new Rectangle(7, 176, 300, 85));
+	}
+
+	/**
+	 * This method initializes comboStatoPagamento	
+	 *
+	 */
+	private void createComboStatoPagamento() {
+		comboStatoPagamento = new Combo(top, SWT.READ_ONLY);
+		comboStatoPagamento.setBounds(new Rectangle(135, 340, 223, 21));
+		comboStatoPagamento.setItems(new String [] {"completato","non completato"});
+		comboStatoPagamento.select(0);
 	}
 
 	/*

@@ -104,11 +104,13 @@ public class RegistraMedicoView extends ViewPart {
         labelCAPMed.setText("CAP");
         textCAPMed = new Text(top, SWT.BORDER);
         textCAPMed.setBounds(new Rectangle(233, 182, 76, 21));
+        textCAPMed.setTextLimit(5);
         labelProvMed = new Label(top, SWT.NONE);
         labelProvMed.setBounds(new Rectangle(10, 179, 51, 21));
         labelProvMed.setText("Provincia");
         textProvMed = new Text(top, SWT.BORDER);
         textProvMed.setBounds(new Rectangle(73, 180, 72, 18));
+        textProvMed.setTextLimit(2);
         labelSpecMed = new Label(top, SWT.NONE);
         labelSpecMed.setBounds(new Rectangle(9, 204, 93, 21));
         labelSpecMed.setText("Specializzazione");

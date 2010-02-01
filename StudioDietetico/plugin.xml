@@ -252,7 +252,7 @@
             id="StudioDietetico.PrenotaVisitaView"
             name="Prenota visita">
       </view>
-      <view
+	  <view
             allowMultiple="true"
             class="studiodietetico.RegistraMedicoView"
             id="StudioDietetico.RegistraMedicoView"
@@ -283,11 +283,12 @@
             name="Risultato Analisi">
       </view>
       <view
+			allowMultiple="true"
             class="studiodietetico.RegistraVisitaView"
             id="StudioDietetico.RegistraVisitaView"
             name="Registra Visita">
       </view>
-      <view
+	  <view
             allowMultiple="true"
             class="statistics.StatisticheView"
             id="StatisticheViewID"
@@ -307,18 +308,12 @@
             restorable="true">
       </view>
       <view
-            class="studiodietetico.RegistraPazienteView"
-            id="StudioDietetico.registrapaziente"
-            name="Nuovo Paziente"
+            class="studiodietetico.TurniMediciView"
+            id="StudioDietetico.TurniMediciView"
+            name="Turni medici"
             restorable="true">
       </view>
-      <view
-            class="studiodietetico.PrenotaVisitaView"
-            id="StudioDietetico.prenotavisita"
-            name="Prenota Visita"
-            restorable="true">
-      </view>
-      <view
+	  <view
             class="statistics.StatisticheGraficiView"
             id="GraficiViewID"
             name="Statistiche Automatiche"
@@ -345,3 +340,4 @@
    </extension>
 
 </plugin>
+
