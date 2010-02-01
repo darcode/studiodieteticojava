@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.ResourceBundle;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.*;
 import org.eclipse.ui.part.ViewPart;
 
@@ -136,5 +139,9 @@ public class Utils {
 		String prima = field.substring(0, 1).toUpperCase();
 		field = prima.concat(field.substring(1, field.length()));
 		return field;
+	}
+	
+	public static Color getStandardWhiteColor() {
+		return Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
 	}
 }
