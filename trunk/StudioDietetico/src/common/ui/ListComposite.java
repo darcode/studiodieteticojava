@@ -16,7 +16,7 @@ public class ListComposite extends Composite {
 		super(parent, style);
 	}
 
-	protected void riempiTabellaEntita(Table table, ArrayList<Object> lista) {
+	protected void riempiTabellaEntità(Table table, ArrayList<Object> lista) {
 		if (!lista.isEmpty()) {
 			ArrayList<String> colonne = GenericBean.getFieldsNamesPerQuery(lista.get(0));
 			for (String item : colonne) {

@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
+<?xml version="1.0"?> 
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 28-gen-2010 12.14.27 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="hibernate.Turno" table="turno" catalog="studiodietetico">
         <id name="idTurno" type="java.lang.Integer">
@@ -13,6 +13,9 @@
         </property>
         <property name="oraFine" type="time">
             <column name="OraFine" length="8" not-null="true" />
+        </property>
+        <property name="nome" type="string">
+            <column name="Nome" length="45" not-null="true" />
         </property>
         <set name="prestaziones" inverse="true" lazy="true" table="prestazione" fetch="select">
             <key>

@@ -59,8 +59,9 @@ public class RegistraPazienteView extends ViewPart {
 	private Text textAreaNotePaz = null;
 	private Button buttonRegistraPaz = null;
 
-	public static final String VIEW_ID = "StudioDietetico.registrapaziente"; 
+	public static final String VIEW_ID = "StudioDietetico.registrapaziente";
 	public RegistraPazienteView() {
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -112,11 +113,13 @@ public class RegistraPazienteView extends ViewPart {
         labelCAP.setText("CAP");
         textCAP = new Text(top, SWT.BORDER);
         textCAP.setBounds(new Rectangle(312, 156, 76, 21));
+        textCAP.setTextLimit(5);
         labelProvincia = new Label(top, SWT.NONE);
         labelProvincia.setBounds(new Rectangle(10, 179, 51, 21));
         labelProvincia.setText("Provincia");
         textProvincia = new Text(top, SWT.BORDER);
         textProvincia.setBounds(new Rectangle(73, 180, 72, 18));
+        textProvincia.setTextLimit(2);
         labelProfessPaz = new Label(top, SWT.NONE);
         labelProfessPaz.setBounds(new Rectangle(9, 204, 67, 21));
         labelProfessPaz.setText("Professione");
