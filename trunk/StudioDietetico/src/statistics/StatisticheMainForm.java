@@ -46,7 +46,7 @@ public class StatisticheMainForm extends ListComposite {
 		public void handleEvent(Event event) {
 
 			filtroShell = new Shell(SWT.BORDER | SWT.DIALOG_TRIM);
-			filtroShell.setText("Filtro - Attenzione, non è annullabile!");
+			filtroShell.setText("Filtro - Attenzione, non ï¿½ annullabile!");
 			filtroShell.setBounds(100, 100, 200, 200);
 			filtroShell.setLayout(new GridLayout(2, false));
 			filtroShell.setLayoutData(new GridData(SWT.FILL));
@@ -100,7 +100,7 @@ public class StatisticheMainForm extends ListComposite {
 	public StatisticheMainForm(Composite parent, int style) {
 		super(parent, style);
 
-		// riempio l'hash map delle entità che voglio permettere di usare
+		// riempio l'hash map delle entitï¿½ che voglio permettere di usare
 		classi = StatisticheUtils.getEntitaSelezionabili();
 
 		// this.setBackground(Utils.getStandardBackgroundColor());
@@ -321,11 +321,11 @@ public class StatisticheMainForm extends ListComposite {
 		TableColumn colonnaEncodeSel = new TableColumn(tableEntitaSel, SWT.LEFT);
 		colonnaEncodeSel.setWidth(0);
 		colonnaEncodeSel.setText("CODE");
-		TableColumn colonnaEntitàSel = new TableColumn(tableEntitaSel, SWT.LEFT);
-		colonnaEntitàSel.setWidth(200);
-		colonnaEntitàSel.setText("Entità selezionate");
+		TableColumn colonnaEntitaSel = new TableColumn(tableEntitaSel, SWT.LEFT);
+		colonnaEntitaSel.setWidth(200);
+		colonnaEntitaSel.setText("Entitï¿½ selezionate");
 		tableEntitaSel.setHeaderVisible(true);
-		tableEntitaSel.setToolTipText("Seleziona una entità da eliminare");
+		tableEntitaSel.setToolTipText("Seleziona una entitï¿½ da eliminare");
 		tableEntitaSel.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 
@@ -395,11 +395,11 @@ public class StatisticheMainForm extends ListComposite {
 		TableColumn colonnaEncode = new TableColumn(tableEntita, SWT.LEFT);
 		colonnaEncode.setWidth(0);
 		colonnaEncode.setText("ID");
-		TableColumn colonnaEntità = new TableColumn(tableEntita, SWT.LEFT);
-		colonnaEntità.setWidth(200);
-		colonnaEntità.setText("Entità utilizzabili");
+		TableColumn colonnaEntita = new TableColumn(tableEntita, SWT.LEFT);
+		colonnaEntita.setWidth(200);
+		colonnaEntita.setText("Entitï¿½ utilizzabili");
 		tableEntita.setHeaderVisible(true);
-		tableEntita.setToolTipText("Seleziona una entità da aggiungere");
+		tableEntita.setToolTipText("Seleziona una entitï¿½ da aggiungere");
 		for (String item : classi.keySet()) {
 			TableItem tblItem = new TableItem(tableEntita, SWT.NONE);
 			tblItem.setText(new String[] { item, item });
@@ -420,7 +420,7 @@ public class StatisticheMainForm extends ListComposite {
 		tableCampi.setLayoutData(gdTableCampi);
 		TableColumn colonnaEntita = new TableColumn(tableCampi, SWT.LEFT);
 		colonnaEntita.setWidth(90);
-		colonnaEntita.setText("Entità");
+		colonnaEntita.setText("Entitï¿½");
 		// TableColumn colonnaID = new TableColumn(tableCampi, SWT.CENTER);
 		// colonnaID.setWidth(0);
 		// colonnaID.setText("ID");
@@ -486,9 +486,9 @@ public class StatisticheMainForm extends ListComposite {
 	}
 
 	private void createOperazioneCampo(String operaz, String campo,
-			String entità) {
+			String entita) {
 		TableItem tblItem = new TableItem(tableFunct, SWT.NONE);
-		tblItem.setText(new String[] { entità, operaz,
+		tblItem.setText(new String[] { entita, operaz,
 				operaz + "(" + campo + ")" });
 	}
 
