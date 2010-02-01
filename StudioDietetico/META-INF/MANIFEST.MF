@@ -13,7 +13,6 @@ Import-Package: hibernate,
 Export-Package: command,hibernate,
  org.hibernate
 Bundle-ClassPath: src/,
- .,
  lib/required/antlr-2.7.6.jar,
  lib/required/commons-collections-3.1.jar,
  lib/required/dom4j-1.6.1.jar,
