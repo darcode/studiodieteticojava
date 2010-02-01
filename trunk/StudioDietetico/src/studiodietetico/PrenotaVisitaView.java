@@ -24,6 +24,7 @@ import command.VisitaDAO;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
 
@@ -255,7 +256,7 @@ public class PrenotaVisitaView extends ViewPart {
 	 *
 	 */
 	private Date createShellCalendario() {
-		ShellCalendario = new Shell();
+		ShellCalendario = new Shell(Display.getCurrent(), SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
 		ShellCalendario.setLayout(new GridLayout());
 		ShellCalendario.setSize(new Point(269, 293));
 		ShellCalendario.setText("Seleziona la data");
