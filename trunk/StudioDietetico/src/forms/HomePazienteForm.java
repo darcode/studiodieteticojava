@@ -29,14 +29,14 @@ public class HomePazienteForm extends ListComposite {
 	}
 
 	private Composite top = null;
-	private Table listElencoPazienti = null;
+	private static Table listElencoPazienti = null;
 	private Label labelSelPaz = null;
 	private Button buttonInsNewPaz = null;
 	private Button buttonPrenota = null;
 	private Button buttonAnagrafica = null;
 	private Button buttonVisualizzaDieta = null;
 	private Button buttonAnamnesi = null;
-	private ArrayList<Object> paz; // @jve:decl-index=0:
+	private static ArrayList<Object> paz; // @jve:decl-index=0:
 
 	private void initialize(Composite parent) {
 		GridData gdForm = new GridData(SWT.BORDER);
@@ -71,8 +71,7 @@ public class HomePazienteForm extends ListComposite {
 		top.setLayout(new GridLayout(4, true));
 		top.setLayoutData(gdTop);
 		labelSelPaz = new Label(top, SWT.NONE);
-		labelSelPaz
-				.setText("Selezonare il paziente dalla lista o inserirne uno nuovo");
+		labelSelPaz.setText("Selezonare il paziente dalla lista");
 
 		labelSelPaz.setLayoutData(gdFiller);
 		
@@ -138,7 +137,7 @@ public class HomePazienteForm extends ListComposite {
 
 	}
 
-	public Paziente getPazienteSelezionato() {
+	public static Paziente getPazienteSelezionato() {
 		Paziente paziente = (Paziente) paz.get(listElencoPazienti
 				.getSelectionIndex());
 		return paziente;
