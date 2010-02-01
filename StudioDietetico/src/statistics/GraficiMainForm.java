@@ -33,7 +33,6 @@ public class GraficiMainForm extends ListComposite {
 
 	private static final int INDEX_PRENOTAZ_TEMPO = 0;
 	private static final int INDEX_PRENOTAZ_VISITA = 1;
-	private Combo comboTipoGrafo;
 	private Combo comboFunzioni;
 	private Composite compGrafico;
 	private Button pazienteButton;
@@ -50,7 +49,7 @@ public class GraficiMainForm extends ListComposite {
 		gdForm.verticalAlignment = SWT.FILL;
 		gdForm.grabExcessVerticalSpace = true;
 		this.setLayoutData(gdForm);
-		GridLayout glForm = new GridLayout(3, true);
+		GridLayout glForm = new GridLayout(2, true);
 		this.setLayout(glForm);
 		Color white = Utils.getStandardWhiteColor();
 		this.setBackground(white);
@@ -70,11 +69,11 @@ public class GraficiMainForm extends ListComposite {
 		lbl.setBackground(white);
 		lbl.setLayoutData(gdLbl);
 		lbl.setFont(Utils.getFont("Arial", 13, SWT.BOLD));
-		Label lbl1 = new Label(this, SWT.NONE | SWT.BOLD);
-		lbl1.setText("SELEZIONE IL TIPO DI GRAFICO:");
-		lbl1.setBackground(white);
-		lbl1.setLayoutData(gdLbl);
-		lbl1.setFont(Utils.getFont("Arial", 13, SWT.BOLD));
+//		Label lbl1 = new Label(this, SWT.NONE | SWT.BOLD);
+//		lbl1.setText("SELEZIONE IL TIPO DI GRAFICO:");
+//		lbl1.setBackground(white);
+//		lbl1.setLayoutData(gdLbl);
+//		lbl1.setFont(Utils.getFont("Arial", 13, SWT.BOLD));
 
 		Composite cmp1 = new Composite(this, SWT.BORDER);
 		GridData gdCmp1 = new GridData();
@@ -112,25 +111,16 @@ public class GraficiMainForm extends ListComposite {
 		comboFunzioni.setEnabled(false);
 		comboFunzioni.setLayoutData(gdCmp1);
 		comboFunzioni.setFont(Utils.getFont("Arial", 12, SWT.BOLD));
-		comboTipoGrafo = new Combo(this, SWT.NONE);
-		comboTipoGrafo.setLayoutData(gdCmp1);
-		comboTipoGrafo.removeAll();
-		comboTipoGrafo.add("  A BARRE", 0);
-		comboTipoGrafo.add("  A TORTA", 1);
-		comboTipoGrafo.add("  SERIE TEMPORALE", 2);
-		comboTipoGrafo.select(0);
-		comboTipoGrafo.setFont(Utils.getFont("Arial", 12, SWT.BOLD));
 		fattureButton.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				comboFunzioni.removeAll();
-				comboFunzioni.add("N° fatture per tipo visita per mese");
-				comboFunzioni.add("Fatturato per tipo visita nel tempo");
-				comboFunzioni.add("Fatturato per tipo visita nel tempo %");
+				comboFunzioni.add("N° fatture per mese");
+				comboFunzioni.add("Fatturati nel mese");
+				comboFunzioni.add("Fatturato nel tempo ");
 				comboFunzioni.setEnabled(true);
 				comboFunzioni.select(0);
-				comboTipoGrafo.setEnabled(false);
 			}
 
 			@Override
@@ -149,7 +139,6 @@ public class GraficiMainForm extends ListComposite {
 				comboFunzioni.add("Distribuzione prenotazioni nell'anno");
 				comboFunzioni.setEnabled(true);
 				comboFunzioni.select(0);
-				comboTipoGrafo.setEnabled(false);
 			}
 
 			@Override
@@ -172,7 +161,6 @@ public class GraficiMainForm extends ListComposite {
 				comboFunzioni.add("Allergie pazienti, per età e per sesso");
 				comboFunzioni.setEnabled(true);
 				comboFunzioni.select(0);
-				comboTipoGrafo.setEnabled(true);
 			}
 
 			@Override
@@ -190,7 +178,6 @@ public class GraficiMainForm extends ListComposite {
 				comboFunzioni.add("Prestazioni medico per mese (TORTA)");
 				comboFunzioni.select(0);
 				comboFunzioni.setEnabled(true);
-				comboTipoGrafo.setEnabled(false);
 			}
 
 			@Override
@@ -203,7 +190,7 @@ public class GraficiMainForm extends ListComposite {
 		Button disegna = new Button(this, SWT.NONE);
 		disegna.setText("DISEGNA GRAFICO");
 		GridData gdDis = new GridData();
-		gdDis.horizontalSpan = 3;
+		gdDis.horizontalSpan = 2;
 		gdDis.horizontalAlignment = SWT.CENTER;
 		disegna.setLayoutData(gdDis);
 		disegna.setFont(Utils.getFont("Arial", 14, SWT.BOLD));
@@ -235,73 +222,68 @@ public class GraficiMainForm extends ListComposite {
 		shell.setLayout(new GridLayout(1, false));
 		shell.setLayoutData(new GridData(SWT.FILL));
 		shell.setSize(1000, 550);
-		// if (fattureButton.getSelection())
-		// disegnaGrafico(0);
-		// else if (pazienteButton.getSelection())
-		// disegnaGrafico(1);
-		// else if (prenotazioniButton.getSelection())
-		// disegnaGrafico(2);
-		// else
-		// disegnaGrafico(3);
 		// fatture
 		if (areaFunzionale == 0) {
-			if (comboTipoGrafo.getSelectionIndex() == 0) {
+			System.out.println("fatture");
+			if (comboFunzioni.getSelectionIndex() == 0) {
 				FattureBarChart chart = new FattureBarChart(comboFunzioni
-						.getText(), shell, SWT.BORDER, comboFunzioni
-						.getSelectionIndex());
-			} else if (comboTipoGrafo.getSelectionIndex() == 1) {
+						.getText(), shell, SWT.BORDER, 0);
+			} else if (comboFunzioni.getSelectionIndex() == 1) {
 				FatturePieChart chart = new FatturePieChart(comboFunzioni
-						.getText(), shell, SWT.BORDER, comboFunzioni
-						.getSelectionIndex());
-			} else if (comboTipoGrafo.getSelectionIndex() == 2) {
+						.getText(), shell, SWT.BORDER, 0);
+			} else if (comboFunzioni.getSelectionIndex() == 2) {
 				FattureTimeSeriesChart chart = new FattureTimeSeriesChart(
 						comboFunzioni.getText(), shell, SWT.BORDER,
-						comboFunzioni.getSelectionIndex());
+						0);
 			}
 		}
 		// pazienti
-		else if (areaFunzionale == 1) {
-			if (comboTipoGrafo.getSelectionIndex() == 0) {
-				PazientiBarChart chart = new PazientiBarChart(comboFunzioni
-						.getText(), shell, SWT.BORDER, comboFunzioni
-						.getSelectionIndex());
-			} else if (comboTipoGrafo.getSelectionIndex() == 1) {
-				PazientiPieChart chart = new PazientiPieChart(comboFunzioni
-						.getText(), shell, SWT.BORDER, comboFunzioni
-						.getSelectionIndex());
-			} else if (comboTipoGrafo.getSelectionIndex() == 2) {
-				PazientiTimeSeriesChart chart = new PazientiTimeSeriesChart(
-						comboFunzioni.getText(), shell, SWT.BORDER,
-						comboFunzioni.getSelectionIndex());
-			}
-		}
+//		else if (areaFunzionale == 1) {
+//			if (comboFunzioni
+//					.getSelectionIndex()) == 0) {
+//				PazientiBarChart chart = new PazientiBarChart(comboFunzioni
+//						.getText(), shell, SWT.BORDER, comboFunzioni
+//						.getSelectionIndex());
+//			} else if (comboTipoGrafo.getSelectionIndex() == 1) {
+//				PazientiPieChart chart = new PazientiPieChart(comboFunzioni
+//						.getText(), shell, SWT.BORDER, comboFunzioni
+//						.getSelectionIndex());
+//			} else if (comboTipoGrafo.getSelectionIndex() == 2) {
+//				PazientiTimeSeriesChart chart = new PazientiTimeSeriesChart(
+//						comboFunzioni.getText(), shell, SWT.BORDER,
+//						comboFunzioni.getSelectionIndex());
+//			}
+//		}
 		// PRENOTAZIONI
 		else if (areaFunzionale == 2) {
-			if (comboTipoGrafo.getSelectionIndex() == 0) {
+			if (comboFunzioni
+					.getSelectionIndex() == 0) {
 				PrenotazioniBarChart chart = new PrenotazioniBarChart(
-						comboFunzioni.getText(), shell, SWT.BORDER,
-						0);
-			} else if (comboTipoGrafo.getSelectionIndex() == 1) {
+						comboFunzioni.getText(), shell, SWT.BORDER, 0);
+			} else if (comboFunzioni
+					.getSelectionIndex() == 1) {
 				PrenotazioniPieChart chart = new PrenotazioniPieChart(
-						comboFunzioni.getText(), shell, SWT.BORDER,
-						1);
-			} else if (comboTipoGrafo.getSelectionIndex() == 2) {
+						comboFunzioni.getText(), shell, SWT.BORDER, 1);
+			} else if (comboFunzioni
+					.getSelectionIndex() == 2) {
 				PrenotazioneTimeSeriesChart chart = new PrenotazioneTimeSeriesChart(
-						comboFunzioni.getText(), shell, SWT.BORDER,
-						2);
+						comboFunzioni.getText(), shell, SWT.BORDER, 2);
 			}
 		}
 		// /medici
 		else {
-			if (comboFunzioni.getSelectionIndex() == 1) {
+			if (comboFunzioni
+					.getSelectionIndex() == 1) {
 				MediciBarChart chart = new MediciBarChart(comboFunzioni
 						.getText(), shell, SWT.BORDER, 1);
-			} else if (comboFunzioni.getSelectionIndex() == 1) {
+			} else if (comboFunzioni
+					.getSelectionIndex() == 2) {
 				MediciPieChart chart = new MediciPieChart(comboFunzioni
 						.getText(), shell, SWT.BORDER, 1);
-			} else if (comboTipoGrafo.getSelectionIndex() == 0) {
+			} else if (comboFunzioni
+					.getSelectionIndex() == 0) {
 				MediciTimeSeriesChart chart = new MediciTimeSeriesChart(
-						comboFunzioni.getText(), shell, SWT.BORDER,2);
+						comboFunzioni.getText(), shell, SWT.BORDER, 2);
 			}
 
 		}
