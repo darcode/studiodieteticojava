@@ -1,5 +1,8 @@
 package studiodietetico;
 
+import forms.HomePazienteForm;
+import hibernate.Attivitafisica;
+import hibernate.Intervento;
 import hibernate.Paziente;
 import hibernate.Tipologiaintervento;
 
@@ -17,6 +20,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
@@ -38,24 +43,31 @@ import org.eclipse.swt.layout.GridLayout;
 import service.RegistraIntervento;
 import service.Utils;
 import studiodietetico.HomePazienteView;
+import org.eclipse.swt.widgets.Table;
+import common.ui.ListComposite;
 
 public class AnamnesiView extends ViewPart {
-
-	private Label labelNome = null;
+	
+	//GENERALE
+	private Label labelPaziente = null;  //  @jve:decl-index=0:visual-constraint="9,-39"
+	private Text textPaziente = null;  //  @jve:decl-index=0:visual-constraint="630,11"
+	private Paziente pazSelHome;
+	private CTabFolder cTabFolderAnamnesi = null;
+	
+	//INTERVENTI
+	private Label labelNomeInt = null;
 	private Text textNomeInt = null;
 	private Label labelDescrInt = null;
 	private Text textAreaDescrInt = null;
 	private Label labelLocalizzazione = null;
 	private Text textAreaLocalizzazione = null;
-	private Group groupIns = null;
-	private Button buttonConferma = null;
-	private Label labelPaziente = null;  //  @jve:decl-index=0:visual-constraint="9,-39"
-	private Text textPaziente = null;  //  @jve:decl-index=0:visual-constraint="630,11"
+	//private Group groupInsInt = null;
+	private Button buttonInsertNewInt = null;
 	private Label labelSceltaInt = null;
-	private List listInterventi = null;  //  @jve:decl-index=0:visual-constraint="735,0"
-	private Button buttonIns = null;
-	private List listOk = null;
-	private Button buttonOk = null;
+	private List listInterventi = null;  
+	private Button buttonAddIntSel = null;
+	private List listIntSel = null;
+	private Button buttonConfermaInt = null;
 	private Label labelNumInt = null;
 	private Spinner spinnerNumInt = null;
 	private Label labelData = null;
@@ -63,7 +75,19 @@ public class AnamnesiView extends ViewPart {
 	private Combo cComboMese = null;
 	private Combo cComboAnno = null;
 	private Button buttonInsInt = null;
-	private Group groupInt = null;
+	private Button buttonModificaInt = null;
+	private Button buttonEliminaInt = null;
+	private Shell sShellNumData = null;  //  @jve:decl-index=0:visual-constraint="304,231"
+	private Button buttonOKNumData = null;
+	private Set<String> setInt = new HashSet<String>();
+	private ArrayList<Tipologiaintervento> listInterventiDB;  //  @jve:decl-index=0:
+	private Tipologiaintervento interventoSelez;  
+	private ArrayList<RegistraIntervento> listaInterventiRegistrati = new ArrayList<RegistraIntervento>();  //  @jve:decl-index=0:
+	private ArrayList<Intervento> listIntervPazDB;
+	private Shell sShellInserimentoInterventi = null;  //  @jve:decl-index=0:visual-constraint="-20,0"
+	private Group groupInserimentoInt = null;
+	//ALLERGIE
+	private Group groupAllergie = null;
 	private Button radioButtonInt = null;
 	private Button radioButtonAll = null;
 	private Label labelSostanza = null;
@@ -75,27 +99,65 @@ public class AnamnesiView extends ViewPart {
 	private Label labelGrado = null;
 	private Label labelEffColl = null;
 	private Text textAreaEffColl = null;
-	private Button buttonOkInt = null;
+	private Button buttonConfermaAll = null;
 	private Text textGrado = null;
-	private CTabFolder cTabFolderAnamnesi = null;
-	private Set<String> setInt = new HashSet<String>();  //  @jve:decl-index=0:
-	private ArrayList<Tipologiaintervento> listInterventiDB;  //  @jve:decl-index=0:
-	private ArrayList<Tipologiaintervento> assNewIntervSel = new ArrayList<Tipologiaintervento>();  //  @jve:decl-index=0:
-	Tipologiaintervento interventoSelez;  //  @jve:decl-index=0:
-	private Shell sShellNumData = null;  //  @jve:decl-index=0:visual-constraint="7,437"
-	private Button buttonOK = null;
-	private ArrayList<RegistraIntervento> listaInterventiRegistrati = new ArrayList<RegistraIntervento>();  //  @jve:decl-index=0:
+	//ATTIVITA' FISICA
+	private Group groupAttFisica = null;
+	private Label labelAttFisSel = null;
+	private List textAreaAttFis = null;
+	private Button buttonVaiAttFis = null;
+	private List textAreaAttFisSel = null;
+	private Label labelNomeAttFis = null;
+	private Text textNomeAttFis = null;
+	private Label labelDescAttFis = null;
+	private Text textAreaDescAttFis = null;
+	private Button buttonAggiornaListaAttFis = null;
+	private Group groupInsAttFis = null;
+	private Button buttonInsNewAttFis = null;
+	private Label labelDurataAttFis = null;
+	private Text textDurataAttFis = null;
+	private Label labelFrequenzaAttFis = null;
+	private Spinner spinnerFrequenzaAttFis = null;
+	private Button buttonConfermaAttFis = null;
+	private Shell sShellInsAttFis = null; 
+	//private static ArrayList<Object> sport;
+	//private Table tableSportPerPaziente = null;
+	private Group groupVisualizzazioneSport = null;
+	private AnamnesiViewTableSport tableSport;
+	private ArrayList<String> listSport;
+	private Shell SShellDurFreq = null;
+	private Shell sShellProva = null;  //  @jve:decl-index=0:visual-constraint="-23,476"
+	private Button buttonOKFreqDur = null;
 	
-	public static final String VIEW_ID = "StudioDietetico.anamnesi"; 
+	public static final String VIEW_ID = "StudioDietetico.anamnesi";
+	
+	
+	
 	public AnamnesiView() {}
 
+	//-----------------------------------------GENERALE-------------------------------------------------------------
+	@Override
+	public void setFocus() {}
+	
 	@Override
 	public void createPartControl(Composite parent) {
-        //createCTabFolderAnamnesi();
-
+		
 		cTabFolderAnamnesi = new CTabFolder(parent, SWT.TOP);
 		cTabFolderAnamnesi.setBounds(new Rectangle(3, 2, 609, 366));
 		
+		//Visualizzazione del paziente selezionato
+		labelPaziente = new Label(cTabFolderAnamnesi, SWT.NONE);
+		labelPaziente.setBounds(new Rectangle(14, 30, 82, 24));
+		labelPaziente.setText("Paziente");
+		textPaziente = new Text(cTabFolderAnamnesi, SWT.BORDER);
+		textPaziente.setBounds(new Rectangle(106, 30, 263, 31));
+		textPaziente.setEnabled(false);
+		pazSelHome = PazienteDAO.getPazienti().get(3);
+		//pazSelHome = HomePazienteForm.getPazienteSelezionato();
+		String dataNascPazSel = pazSelHome.getDataNascita().getDay()+"/"+pazSelHome.getDataNascita().getMonth()+"/"+pazSelHome.getDataNascita().getYear();
+		textPaziente.setText(pazSelHome.getCognome()+"   "+pazSelHome.getNome()+"   "+dataNascPazSel);
+		
+		//creazione tabItem
 		CTabItem itemInt = new CTabItem(cTabFolderAnamnesi, SWT.NONE);
 	    itemInt.setText("Interventi");
 	    {
@@ -105,7 +167,7 @@ public class AnamnesiView extends ViewPart {
 	    } // fine tab interventi
 	    
 	    CTabItem itemAll = new CTabItem(cTabFolderAnamnesi, SWT.NONE);
-	    itemAll.setText("Allergie/intolleranze");
+	    itemAll.setText("Allergie/Intolleranze");
 	    {
 	    	Composite comp2 = new Composite(cTabFolderAnamnesi, SWT.TRANSPARENT);
 			itemAll.setControl(comp2);
@@ -113,88 +175,180 @@ public class AnamnesiView extends ViewPart {
 			
 	    } // fine tab allergie
 	    
+	    CTabItem itemAttFisica = new CTabItem(cTabFolderAnamnesi, SWT.NONE);
+	    itemAttFisica.setText("Attività Fisica");
+	    {
+	    	Composite comp3 = new Composite(cTabFolderAnamnesi, SWT.TRANSPARENT);
+	    	itemAttFisica.setControl(comp3);
+			//createGroupAll(comp3);
+			
+	    } // fine tab attività fisica
 	    
-        
-		//Visualizzazione del paziente
-		labelPaziente = new Label(cTabFolderAnamnesi, SWT.NONE);
-		labelPaziente.setBounds(new Rectangle(14, 30, 82, 24));
-		labelPaziente.setText("Paziente");
-		textPaziente = new Text(cTabFolderAnamnesi, SWT.BORDER);
-		textPaziente.setBounds(new Rectangle(106, 30, 263, 31));
-		textPaziente.setEnabled(false);
-		
+	    createSShellProva();
+		sShellProva.open();
 	}
-			
-			
+	
+	
+	
+	//-----------------------------------------INTERVENTI-------------------------------------------------------------
+	/**
+	 * Crea gli oggetti contenuti nel tab degli interventi
+	 * @param comp1 composite nella quale inserire gii oggetti
+	 */
 	public void createTabInterventi(Composite comp1) {
 		interventoSelez = new Tipologiaintervento();
 		labelSceltaInt = new Label(comp1, SWT.NONE);
 		labelSceltaInt.setBounds(new Rectangle(13, 63, 397, 21));
-		labelSceltaInt.setText("Selezionare un intervento dalla lista o inserire uno nuovo se non presente");
+		labelSceltaInt.setText("Selezionare un intervento");
 		listInterventi = new List(comp1, SWT.READ_ONLY | SWT.V_SCROLL | SWT.WRAP);
-		listInterventi.setBounds(new Rectangle(13, 91, 231, 71));
-		buttonIns = new Button(comp1, SWT.NONE);
-		buttonIns.setBounds(new Rectangle(274, 113, 78, 26));
-		buttonIns.setText(">>");
-		buttonIns.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		listInterventi.setBounds(new Rectangle(13, 91, 330, 115));
+		listInterventi
+		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				
-				interventoSelez = listInterventiDB.get(listInterventi.getSelectionIndex());
-				assNewIntervSel.add(interventoSelez);
-
-				for (String iSel : listInterventi.getSelection()) {
-					if(setInt.add(iSel))
-						listOk.add(iSel);
-				}
-				
-				//paziente
-				PazienteDAO paz = new PazienteDAO();
-				Paziente paziente = new Paziente();
-				HomePazienteView homeP = new HomePazienteView();
-				//paziente = homeP.getPazienteSelezionato();
-				paziente = PazienteDAO.getPazienti().get(3);
-				
-				createSShellNumData(paziente,interventoSelez);
-				
-				listInterventi.deselectAll();
+				buttonAddIntSel.setEnabled(true);
 			}
 		});
-		listOk = new List(comp1, SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
-		listOk.setBounds(new Rectangle(367, 91, 231, 71));
+		buttonAddIntSel = new Button(comp1, SWT.NONE);
+		buttonAddIntSel.setBounds(new Rectangle(350, 113, 70, 30));//350, 90, 70, 30
+		buttonAddIntSel.setText(">>");
+		buttonAddIntSel.setEnabled(false);
+		buttonAddIntSel.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				interventoSelez = listInterventiDB.get(listInterventi.getSelectionIndex());
+				//paziente
+				//PazienteDAO paz = new PazienteDAO();
+				//Paziente paziente = new Paziente();
+				//HomePazienteView homeP = new HomePazienteView();
+				//paziente = homeP.getPazienteSelezionato();
+				//paziente = PazienteDAO.getPazienti().get(3);
+				
+				createSShellNumData(pazSelHome,interventoSelez);
+				
+				//listInterventi.deselectAll();
+			}
+		});
 		
-		
+		listIntSel = new List(comp1, SWT.READ_ONLY | SWT.V_SCROLL | SWT.WRAP);
+		listIntSel.setBounds(new Rectangle(430, 91, 330, 115));
+		listIntSel
+		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				buttonModificaInt.setEnabled(true);
+				buttonEliminaInt.setEnabled(true);
+			}
+		});
+		//listIntSel.addListener(SWT., listener)
 		
 		buttonInsInt = new Button(comp1, SWT.NONE);
-		buttonInsInt.setBounds(new Rectangle(429, 60, 171, 22));
-		buttonInsInt.setText("Inserimento nuovo intervento");
+		buttonInsInt.setBounds(new Rectangle(13, 208, 98, 21));
+		buttonInsInt.setText("Inserisci nuovo");
 		buttonInsInt
 			.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				groupIns.setVisible(true);
+				createSShellInserimentoInterventi();
 			}
 		});
 		
-		buttonOk = new Button(comp1, SWT.NONE);
-		buttonOk.setBounds(new Rectangle(424, 183, 120, 28));
-		buttonOk.setText("Conferma");
-		buttonOk
+		/*buttonModificaInt = new Button(comp1, SWT.NONE);
+		buttonModificaInt.setBounds(new Rectangle(430, 208, 70, 21));
+		buttonModificaInt.setText("Modifica");
+		buttonModificaInt.setEnabled(false);
+		buttonModificaInt
+			.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				openSShellNumData(pazSelHome);
+			}
+		});*/
+		buttonEliminaInt = new Button(comp1, SWT.NONE);
+		buttonEliminaInt.setBounds(new Rectangle(500, 208, 70, 21));
+		buttonEliminaInt.setText("Elimina");
+		buttonEliminaInt.setEnabled(false);
+		buttonEliminaInt
+			.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				//Inserire messBox
+				//Button conferma del messBox:
+				String interv = listIntSel.getSelection()[0];
+				String nomeIntSel = interv.split("    ")[0].split("  ")[0]; //nome
+		        String descIntSel = interv.split("    ")[0].split("  ")[1]; //desc
+		        String locIntSel = interv.split("    ")[0].split("  ")[2]; //loc
+		        int numIntSel = Integer.parseInt(interv.split("    ")[1].split("Num: ")[1]); //num
+		        int giornoIntSel = Integer.parseInt(interv.split("    ")[2].split("Data: ")[1].split("/")[0]); //giorno
+		        int meseIntSel = Integer.parseInt(interv.split("    ")[2].split("Data: ")[1].split("/")[1]); //mese
+		        int annoIntSel = Integer.parseInt(interv.split("    ")[2].split("Data: ")[1].split("/")[2]); //anno
+				
+				for (int i = 0; i < listaInterventiRegistrati.size(); i++) {
+		        //while (listaInterventiRegistrati.) {
+					
+				//}
+					int numReg = listaInterventiRegistrati.get(i).getNumInterventi();
+					Date dataReg = listaInterventiRegistrati.get(i).getDataIntervento();
+					Paziente pazReg = listaInterventiRegistrati.get(i).getPaziente();
+					String nomeIntReg = listaInterventiRegistrati.get(i).getTipoIntervento().getNome();
+					String descrIntReg = listaInterventiRegistrati.get(i).getTipoIntervento().getDescrizione();
+					String locIntReg = listaInterventiRegistrati.get(i).getTipoIntervento().getLocalizzazione();
+					
+					if (nomeIntSel.equals(nomeIntReg) && descIntSel.equals(descrIntReg) && locIntSel.equals(locIntReg)
+							&& numIntSel==numReg && giornoIntSel==dataReg.getDay() && meseIntSel==dataReg.getMonth()
+							&& annoIntSel==dataReg.getYear() && pazReg.getIdPaziente()==pazSelHome.getIdPaziente()) {
+						listaInterventiRegistrati.remove(i);
+					}
+				}
+				
+				//pazSelHome
+			}
+		});
+		
+		
+		
+		buttonConfermaInt = new Button(comp1, SWT.NONE);
+		buttonConfermaInt.setBounds(new Rectangle(636, 230, 94, 31)); //636, 266, 94, 31
+		buttonConfermaInt.setText("Conferma");
+		buttonConfermaInt.setEnabled(false);
+		buttonConfermaInt
 			.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				AnamnesiDAO interv = new AnamnesiDAO();				
+				int numOld = 0, numNew = 0;
+				boolean presente = false;
 				System.out.println("Size listaReg: "+listaInterventiRegistrati.size());
+				listIntervPazDB = new ArrayList<Intervento>();
+				listIntervPazDB = interv.getInterventiPaz();
+				//prima verifica se è presente nel db una coppia paz-tipoint uguale
 				for (int j = 0; j < listaInterventiRegistrati.size(); j++) {
-					interv.registraIntervento(listaInterventiRegistrati.get(j).getPaziente(),listaInterventiRegistrati.get(j).getTipoIntervento(),
-							listaInterventiRegistrati.get(j).getDataIntervento(), listaInterventiRegistrati.get(j).getNumInterventi());
-				//System.out.println("listaReg.paz: " + listaInterventiRegistrati.get(j).getPaziente().getCodiceFiscale());
+					numOld = 0;
+					presente = false;
+					if(listIntervPazDB.size() > 0) {
+						for (int k = 0; k < listIntervPazDB.size(); k++) {
+							if (listaInterventiRegistrati.get(j).getPaziente().getIdPaziente().equals(listIntervPazDB.get(k).getPaziente().getIdPaziente())	&& 
+								listaInterventiRegistrati.get(j).getTipoIntervento().getIdTipologiaIntervento().equals(listIntervPazDB.get(k).getTipologiaintervento().getIdTipologiaIntervento())) {
+								presente = true;
+								numOld = listIntervPazDB.get(k).getNumero();
+							}
+						}
+					}
+					if (presente) { //se è presente aggiorna quello esistente
+						numNew = numOld + listaInterventiRegistrati.get(j).getNumInterventi();
+						interv.aggiornaNumero(listaInterventiRegistrati.get(j).getPaziente(),listaInterventiRegistrati.get(j).getTipoIntervento(),
+								listaInterventiRegistrati.get(j).getDataIntervento(),numNew);
+					} else {  // altrimenti inserisce uno nuovo
+						interv.registraIntervento(listaInterventiRegistrati.get(j).getPaziente(),listaInterventiRegistrati.get(j).getTipoIntervento(),
+								listaInterventiRegistrati.get(j).getDataIntervento(), listaInterventiRegistrati.get(j).getNumInterventi());
+					}
 				}
+				
+				listaInterventiRegistrati.clear();
+				listIntervPazDB.clear();
 				
 			}
 		});
 		
-		createGroupInsInt(comp1);
 		aggiornaListInterventi();
 	}
 	
+	/**
+	 * Aggliorna l'oggetto list con gli interventi presenti nel db
+	 */
 	public void aggiornaListInterventi() {
 		listInterventiDB = new ArrayList<Tipologiaintervento>(); 
 		AnamnesiDAO interv = new AnamnesiDAO();
@@ -209,39 +363,47 @@ public class AnamnesiView extends ViewPart {
 		listInterventi.setItems(intArray);
 	}
 
-	@Override
-	public void setFocus() {
-		// TODO Auto-generated method stub
-	}
-
 	/**
-	 * This method initializes groupIns	
+	 * This method initializes sShellInserimentoInterventi	
 	 *
 	 */
-	private void createGroupInsInt(Composite comp) {
-		groupIns = new Group(comp, SWT.NONE);
-		groupIns.setText("Inserimento nuovo intervento");
-		groupIns.setBounds(new Rectangle(19, 231, 581, 199));
+	private void createSShellInserimentoInterventi() {
+		sShellInserimentoInterventi = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		//sShellInserimentoInterventi.setLayout(new GridLayout());
+		sShellInserimentoInterventi.setText("Inserimento Nuovo Intervento");
+		sShellInserimentoInterventi.setSize(new Point(796, 226));
+		createGroupInserimentoInt();
+		sShellInserimentoInterventi.open();
+	}
+	
+	/**
+	 * Crea il gruppo degli oggetti per inserire nuovi interventi, prima di collegarli al paziente
+	 */
+	private void createGroupInserimentoInt() {
+		groupInserimentoInt = new Group(sShellInserimentoInterventi, SWT.NONE);
+		//groupInserimentoInt.setLayout(new GridLayout());
+		groupInserimentoInt.setText("Inserimento nuovo interevento");
+		groupInserimentoInt.setBounds(new Rectangle(5, 3, 772, 180));
 		
-		labelNome = new Label(groupIns, SWT.NONE);
-		labelNome.setBounds(new Rectangle(10, 23, 170, 20));
-		labelNome.setText("*Indicare il nome dell'intervento");
-		textNomeInt = new Text(groupIns, SWT.NONE);
-		textNomeInt.setBounds(new Rectangle(209, 23, 200, 18));
-		labelDescrInt = new Label(groupIns, SWT.NONE);
+		labelNomeInt = new Label(groupInserimentoInt, SWT.NONE);
+		labelNomeInt.setBounds(new Rectangle(10, 23, 170, 20));
+		labelNomeInt.setText("*Indicare il nome dell'intervento");
+		textNomeInt = new Text(groupInserimentoInt, SWT.NONE);
+		textNomeInt.setBounds(new Rectangle(209, 23, 360, 18));
+		labelDescrInt = new Label(groupInserimentoInt, SWT.NONE);
 		labelDescrInt.setBounds(new Rectangle(10, 50, 170, 20));
 		labelDescrInt.setText("Inserire una breve descrizione");
-		textAreaDescrInt = new Text(groupIns, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textAreaDescrInt.setBounds(new Rectangle(209, 50, 360, 40));
-		labelLocalizzazione = new Label(groupIns, SWT.NONE);
+		textAreaDescrInt = new Text(groupInserimentoInt, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaDescrInt.setBounds(new Rectangle(209, 50, 545, 40));
+		labelLocalizzazione = new Label(groupInserimentoInt, SWT.NONE);
 		labelLocalizzazione.setBounds(new Rectangle(10, 100, 170, 20));
 		labelLocalizzazione.setText("*Zona interessata");
-		textAreaLocalizzazione = new Text(groupIns, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textAreaLocalizzazione.setBounds(new Rectangle(209, 100, 360, 40));
-		buttonConferma = new Button(groupIns, SWT.NONE);
-		buttonConferma.setBounds(new Rectangle(32, 150, 503, 28));
-		buttonConferma.setText("Aggiorna lista interventi");
-		buttonConferma.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		textAreaLocalizzazione = new Text(groupInserimentoInt, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaLocalizzazione.setBounds(new Rectangle(209, 100, 544, 40));
+		buttonInsertNewInt = new Button(groupInserimentoInt, SWT.NONE);
+		buttonInsertNewInt.setBounds(new Rectangle(10, 150, 748, 28));
+		buttonInsertNewInt.setText("Aggiorna lista interventi");
+		buttonInsertNewInt.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				AnamnesiDAO interv = new AnamnesiDAO();
 				interv.registraTipoIntervento(textNomeInt.getText(), textAreaDescrInt.getText(), textAreaLocalizzazione.getText());
@@ -252,53 +414,123 @@ public class AnamnesiView extends ViewPart {
 				//listInterventi.add(textNomeInt.getText()+"  "+textAreaDescrInt.getText()+"  "+textAreaLocalizzazione.getText());
 			}
 		});
-		
-		groupIns.setVisible(false);
 	}
-
+	
 	/**
-	 * This method initializes groupInt	
-	 *
+	 * Permette di inserire il numero e la data degli interventi
+	 */
+	private void createSShellNumData(final Paziente paziente, final Tipologiaintervento tipoIntervento) {
+		sShellNumData = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		sShellNumData.setLayout(null);
+		sShellNumData.setText("Informazioni intervento");
+		sShellNumData.setSize(new Point(614, 150));
+		//numero
+		labelNumInt = new Label(sShellNumData, SWT.NONE);
+		labelNumInt.setBounds(new Rectangle(20, 10, 380, 19));
+		labelNumInt.setText("* Inserire il numero di volte in cui si è sottoposto allo stesso intervento");
+		spinnerNumInt = new Spinner(sShellNumData, SWT.READ_ONLY);
+		spinnerNumInt.setBounds(new Rectangle(430, 10, 50, 19));
+		spinnerNumInt.setMinimum(1);
+		//data
+		labelData = new Label(sShellNumData, SWT.NONE);
+		labelData.setBounds(new Rectangle(20, 40, 150, 21));
+		labelData.setText("Data dell'ultimo intervento");
+		// crea combo giorno
+		cComboGG = new Combo(sShellNumData, SWT.READ_ONLY);
+		cComboGG.setBounds(new Rectangle(190, 40, 48, 23));
+		cComboGG.setItems(new String [] {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"});
+		cComboGG.setText(cComboGG.getItem(0));
+		//crea combo mese
+		cComboMese = new Combo(sShellNumData, SWT.READ_ONLY);
+		cComboMese.setBounds(new Rectangle(250, 40, 48, 25));
+		cComboMese.setItems(new String [] {"1","2","3","4","5","6","7","8","9","10","11","12"});
+		cComboMese.setText(cComboMese.getItem(0));
+		// crea combo anno
+		cComboAnno = new Combo(sShellNumData, SWT.READ_ONLY);
+		cComboAnno.setBounds(new Rectangle(310, 40, 83, 23));
+		Date now = new Date();
+		for (int i = 1910; i < (now.getYear()+1901); i++) {
+			cComboAnno.add(""+i);
+		}
+		cComboAnno.setText(cComboAnno.getItem(0));
+		buttonOKNumData = new Button(sShellNumData, SWT.NONE);
+		buttonOKNumData.setBounds(new Rectangle(410, 76, 94, 28));
+		buttonOKNumData.setText("Conferma");
+		buttonOKNumData.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				int numInt = 0;
+				Date dataInt;
+				RegistraIntervento intReg = new RegistraIntervento();
+				//numero
+				numInt = spinnerNumInt.getSelection();
+				//data
+				String dateString = cComboAnno.getText()+"-"+cComboMese.getText()+"-"+cComboGG.getText();
+				String formato = "yyyy-MM-dd";
+				dataInt = Utils.convertStringToDate(dateString, formato);
+			
+				intReg.setPaziente(paziente);
+				intReg.setTipoIntervento(tipoIntervento);
+				intReg.setDataIntervento(dataInt);
+				intReg.setNumInterventi(numInt);
+				listaInterventiRegistrati.add(intReg);
+				
+				//Visualizzazione degli interventi selezionati
+				for (String iSel : listInterventi.getSelection()) {
+					if(setInt.add(iSel))
+						listIntSel.add(iSel + "    Num: "+numInt+"    Data: "+cComboGG.getText()+"/"+cComboMese.getText()+"/"+cComboAnno.getText());
+				}
+				listInterventi.deselectAll();
+				buttonConfermaInt.setEnabled(true);
+				sShellNumData.close();
+			}
+		});
+		sShellNumData.open();
+	}
+	
+	
+	//-----------------------------------------ALLERGIE/INTOLLERANZE-------------------------------------------------------------
+	/**
+	 * Crea il gruppo degli oggetti per inserire allergie/intolleranze collegate al paziente
 	 */
 	private void createGroupAll(Composite comp) {
-		groupInt = new Group(comp, SWT.NONE);
-		groupInt.setText("Indicare eventuali intolleranze o allergie");
-		groupInt.setBounds(new Rectangle(20, 63, 490, 162));
-		radioButtonInt = new Button(groupInt, SWT.RADIO);
+		groupAllergie = new Group(comp, SWT.NONE);
+		groupAllergie.setText("Indicare eventuali intolleranze o allergie");
+		groupAllergie.setBounds(new Rectangle(20, 63, 490, 162));
+		radioButtonInt = new Button(groupAllergie, SWT.RADIO);
 		radioButtonInt.setBounds(new Rectangle(10, 21, 85, 20));
 		radioButtonInt.setText("Intolleranza");
-		radioButtonAll = new Button(groupInt, SWT.RADIO);
+		radioButtonAll = new Button(groupAllergie, SWT.RADIO);
 		radioButtonAll.setBounds(new Rectangle(117, 21, 71, 20));
 		radioButtonAll.setText("Allergia");
-		labelSostanza = new Label(groupInt, SWT.NONE);
+		labelSostanza = new Label(groupAllergie, SWT.NONE);
 		labelSostanza.setBounds(new Rectangle(10, 50, 61, 20));
 		labelSostanza.setText("Sostanza");
-		textSost = new Text(groupInt, SWT.BORDER);
+		textSost = new Text(groupAllergie, SWT.BORDER);
 		textSost.setBounds(new Rectangle(75, 50, 120, 20));
-		labelAlPrinc = new Label(groupInt, SWT.NONE);
+		labelAlPrinc = new Label(groupAllergie, SWT.NONE);
 		labelAlPrinc.setBounds(new Rectangle(205, 50, 110, 20));
 		labelAlPrinc.setText("Alimento principale");
-		textAlPrinc = new Text(groupInt, SWT.BORDER);
+		textAlPrinc = new Text(groupAllergie, SWT.BORDER);
 		textAlPrinc.setBounds(new Rectangle(325, 50, 160, 20));
-		labelDerivati = new Label(groupInt, SWT.NONE);
+		labelDerivati = new Label(groupAllergie, SWT.NONE);
 		labelDerivati.setBounds(new Rectangle(10, 77, 50, 20));
 		labelDerivati.setText("Derivati");
-		textAreaDerivati = new Text(groupInt, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL );
+		textAreaDerivati = new Text(groupAllergie, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL );
 		textAreaDerivati.setBounds(new Rectangle(70, 78, 160, 44));
-		labelGrado = new Label(groupInt, SWT.NONE);
+		labelGrado = new Label(groupAllergie, SWT.NONE);
 		labelGrado.setBounds(new Rectangle(206, 21, 114, 20));
 		labelGrado.setText("Grado di intolleranza");
-		labelEffColl = new Label(groupInt, SWT.NONE);
+		labelEffColl = new Label(groupAllergie, SWT.NONE);
 		labelEffColl.setBounds(new Rectangle(239, 78, 87, 20));
 		labelEffColl.setText("Effetti collaterali");
-		textAreaEffColl = new Text(groupInt, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaEffColl = new Text(groupAllergie, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		textAreaEffColl.setBounds(new Rectangle(334, 81, 150, 49));
-		buttonOkInt = new Button(groupInt, SWT.NONE);
-		buttonOkInt.setBounds(new Rectangle(405, 135, 79, 22));
-		buttonOkInt.setText("Conferma");
-		textGrado = new Text(groupInt, SWT.BORDER);
+		buttonConfermaAll = new Button(groupAllergie, SWT.NONE);
+		buttonConfermaAll.setBounds(new Rectangle(405, 135, 79, 22));
+		buttonConfermaAll.setText("Conferma");
+		textGrado = new Text(groupAllergie, SWT.BORDER);
 		textGrado.setBounds(new Rectangle(332, 21, 152, 20));
-		buttonOkInt.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		buttonConfermaAll.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				AnamnesiDAO an = new AnamnesiDAO();
 				String flag = "";
@@ -317,81 +549,227 @@ public class AnamnesiView extends ViewPart {
 	});
 	}
 
+	
+
+	
+//-----------------------------------------ATTIVITA' FISICA-------------------------------------------------------------	
 	/**
-	 * This method initializes sShellNumData	
+	 * sShellProva da inserire nel tab	
 	 *
 	 */
-	private void createSShellNumData(final Paziente paziente, final Tipologiaintervento tipoIntervento) {
-		sShellNumData = new Shell();
-		sShellNumData.setLayout(null);
-		sShellNumData.setText("Informazioni intervento");
-		sShellNumData.setSize(new Point(614, 150));
-		//numero
-		labelNumInt = new Label(sShellNumData, SWT.NONE);
-		labelNumInt.setBounds(new Rectangle(20, 10, 380, 19));
-		labelNumInt.setText("Inserire il numero di volte in cui si è sottoposto allo stesso intervento");
-		spinnerNumInt = new Spinner(sShellNumData, SWT.NONE);
-		spinnerNumInt.setBounds(new Rectangle(430, 10, 50, 19));
-		//data
-		labelData = new Label(sShellNumData, SWT.NONE);
-		labelData.setBounds(new Rectangle(20, 40, 91, 21));
-		labelData.setText("Data dell'ultimo intervento");
-		// crea combo giorno
-		cComboGG = new Combo(sShellNumData, SWT.READ_ONLY);
-		cComboGG.setBounds(new Rectangle(123, 40, 48, 23));
-		cComboGG.setItems(new String [] {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"});
-		cComboGG.setText(cComboGG.getItem(0));
-		//crea combo mese
-		cComboMese = new Combo(sShellNumData, SWT.READ_ONLY);
-		cComboMese.setBounds(new Rectangle(189, 40, 48, 25));
-		cComboMese.setItems(new String [] {"1","2","3","4","5","6","7","8","9","10","11","12"});
-		cComboMese.setText(cComboMese.getItem(0));
-		// crea combo anno
-		cComboAnno = new Combo(sShellNumData, SWT.READ_ONLY);
-		cComboAnno.setBounds(new Rectangle(254, 40, 83, 23));
-		Date now = new Date();
-		for (int i = 1910; i < (now.getYear()+1901); i++) {
-			cComboAnno.add(""+i);
-		}
-		cComboAnno.setText(cComboAnno.getItem(0));
-		buttonOK = new Button(sShellNumData, SWT.NONE);
-		buttonOK.setBounds(new Rectangle(410, 76, 94, 28));
-		buttonOK.setText("Conferma");
-		buttonOK.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+	private void createSShellProva() {
+		sShellProva = new Shell();
+		//sShellProva.setLayout(new GridLayout());
+		sShellProva.setText("Shell prova");
+		createGroupAttFisica();
+		createGroupVisualizzazioneSport();
+		sShellProva.setSize(new Point(810, 592));
+
+		
+	}
+
+	/**
+	 * Crea tutto il contenuto del tab in groupAttFisica
+	 */
+	private void createGroupAttFisica() {
+		groupAttFisica = new Group(sShellProva, SWT.NONE);
+		//groupAttFisica.setLayout(new GridLayout());
+		groupAttFisica.setText("Attività Fisica");
+		groupAttFisica.setBounds(new Rectangle(14, 2, 772, 309));
+		labelAttFisSel = new Label(groupAttFisica, SWT.NONE);
+		labelAttFisSel.setBounds(new Rectangle(15, 31, 200, 27));
+		labelAttFisSel.setText("Selezionare lo sport seguito");
+		textAreaAttFis = new List(groupAttFisica, SWT.WRAP | SWT.V_SCROLL);
+		textAreaAttFis.setBounds(new Rectangle(15, 60, 330, 115));
+		textAreaAttFis
+		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				int numInt = 0, num = 0;
-				Date dataInt;
-				numInt = spinnerNumInt.getSelection();
-				RegistraIntervento intReg = new RegistraIntervento();
-				//data
-				String dateString = cComboAnno.getText()+"-"+cComboMese.getText()+"-"+cComboGG.getText();
-				String formato = "yyyy-MM-dd";
-				dataInt = Utils.convertStringToDate(dateString, formato);
-				
-				//for (RegistraIntervento iReg : listaInterventiRegistrati) {
-				//	System.out.println("Paz: "+iReg.getPaziente().equals(paziente));
-				//	System.out.println("TipoInt: "+iReg.getTipoIntervento().equals(tipoIntervento));
-				//	if(iReg.getPaziente().equals(paziente)) {
-				//		if (iReg.getTipoIntervento().equals(tipoIntervento)) {
-							//numInt = numInt + iReg.getNumInterventi();
-							//iReg.setNumInterventi(numInt);
-							//listaInterventiRegistrati.add(iReg);
-					//	}
-				//	} else {
-						//System.out.println("Entrato nell'else");
-						
-						intReg.setPaziente(paziente);
-						intReg.setTipoIntervento(tipoIntervento);
-						intReg.setDataIntervento(dataInt);
-						intReg.setNumInterventi(numInt);
-						listaInterventiRegistrati.add(intReg);
-					//}
-				//}
-				
-				sShellNumData.close();
+				buttonVaiAttFis.setEnabled(true);
 			}
 		});
-		sShellNumData.open();
+		buttonVaiAttFis = new Button(groupAttFisica, SWT.NONE);
+		buttonVaiAttFis.setBounds(new Rectangle(350, 90, 70, 30));
+		buttonVaiAttFis.setEnabled(false);
+		buttonVaiAttFis.setText(">>");
+		buttonVaiAttFis
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						for (String sportSel : textAreaAttFis.getSelection()) {
+							textAreaAttFisSel.add(sportSel);
+						}
+						textAreaAttFis.deselectAll();
+						createSShellDurFreq();
+					}
+				});
+		textAreaAttFisSel = new List(groupAttFisica, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaAttFisSel.setBounds(new Rectangle(430, 60, 330, 115));
+		textAreaAttFisSel
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
+					}
+				});
+		
+				
+		buttonInsNewAttFis = new Button(groupAttFisica, SWT.NONE);
+		buttonInsNewAttFis.setBounds(new Rectangle(15, 179, 98, 21));
+		buttonInsNewAttFis.setText("Inserisci nuovo");
+		buttonInsNewAttFis
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						createSShellInsAttFis();
+					}
+				});
+		
+		buttonConfermaAttFis = new Button(groupAttFisica, SWT.NONE);
+		buttonConfermaAttFis.setBounds(new Rectangle(636, 266, 94, 31));
+		buttonConfermaAttFis.setText("Conferma");
+		
+		//aggiorna la lista con gli sport presenti nel db
+		AnamnesiDAO am = new AnamnesiDAO();
+		ArrayList<Attivitafisica> elencoSport = new ArrayList<Attivitafisica>();
+		ArrayList<String> listAF = new ArrayList<String>();
+		elencoSport = am.getSport();
+		
+		for (Attivitafisica sport : elencoSport) {
+			listAF.add(sport.getNome()+"    "+sport.getDescrizione());
+		}
+		String[] listAFString = (String[]) listAF.toArray((new String[0]));
+		textAreaAttFis.setItems(listAFString);
+	}
+
+	/**
+	 * Crea il contenuto per l'inserimento di un nuovo sport in groupInsAttFis	
+	 *
+	 */
+	private void createGroupInsAttFis() {
+		groupInsAttFis = new Group(sShellInsAttFis, SWT.NONE);
+		groupInsAttFis.setBounds(new Rectangle(4, 8, 774, 167));
+		groupInsAttFis.setText("Inserimento nuovo sport");
+		labelNomeAttFis = new Label(groupInsAttFis, SWT.NONE);
+		labelNomeAttFis.setBounds(new Rectangle(10, 30, 45, 25));
+		labelNomeAttFis.setText("* Nome");
+		textNomeAttFis = new Text(groupInsAttFis, SWT.BORDER);
+		textNomeAttFis.setBounds(new Rectangle(10, 60, 220, 25));
+		labelDescAttFis = new Label(groupInsAttFis, SWT.NONE);
+		labelDescAttFis.setBounds(new Rectangle(255, 30, 81, 24));
+		labelDescAttFis.setText("Descrizione");
+		textAreaDescAttFis = new Text(groupInsAttFis, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaDescAttFis.setBounds(new Rectangle(256, 60, 483, 60));
+		buttonAggiornaListaAttFis = new Button(groupInsAttFis, SWT.NONE);
+		buttonAggiornaListaAttFis.setBounds(new Rectangle(4, 135, 764, 27));
+		buttonAggiornaListaAttFis.setText("Aggiorna elenco attività fisiche");
+		buttonAggiornaListaAttFis.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				textAreaAttFis.add(textNomeAttFis.getText()+"    "+textAreaDescAttFis.getText());
+				sShellInsAttFis.close();
+			}
+		});
+	}
+
+	/**
+	 * Crea sShellInsAttFis per l'inserimento di un nuovo sport
+	 */
+	private void createSShellInsAttFis() {
+		sShellInsAttFis = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		//sShellInsAttFis.setLayout(new GridLayout());
+		sShellInsAttFis.setText("Inserimento Nuovo Sport");
+		sShellInsAttFis.setSize(new Point(800, 215));
+		createGroupInsAttFis();
+		sShellInsAttFis.open();
+	}
+
+	/**
+	 * This method initializes groupVisualizzazioneSport	
+	 */
+	private void createGroupVisualizzazioneSport() {
+		groupVisualizzazioneSport = new Group(sShellProva, SWT.NONE);
+		//groupVisualizzazioneSport.setLayout(new GridLayout());
+		groupVisualizzazioneSport.setText("Attività fisica del paziente");
+		groupVisualizzazioneSport.setBounds(new Rectangle(15, 324, 770, 226));
+		tableSport = new AnamnesiViewTableSport(groupVisualizzazioneSport, SWT.BORDER, pazSelHome);
+		tableSport.setLayout(new GridLayout(1, true));
+		tableSport.setBackground(Utils.getStandardWhiteColor());
+	}	
+	
+	/**
+	 * Permette di inserire la durata e la frequenza settimanale degli sport
+	 */
+	private void createSShellDurFreq() {
+		SShellDurFreq = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		SShellDurFreq.setLayout(null);
+		SShellDurFreq.setText("Informazioni sport");
+		SShellDurFreq.setSize(new Point(614, 150));
+		//durata
+		labelDurataAttFis = new Label(SShellDurFreq, SWT.NONE);
+		labelDurataAttFis.setBounds(new Rectangle(15, 210, 91, 26));
+		labelDurataAttFis.setText("Inserire la durata");
+		textDurataAttFis = new Text(SShellDurFreq, SWT.BORDER);
+		textDurataAttFis.setBounds(new Rectangle(120, 210, 324, 26));
+		//frequenza
+		labelFrequenzaAttFis = new Label(SShellDurFreq, SWT.NONE);
+		labelFrequenzaAttFis.setBounds(new Rectangle(15, 245, 195, 26));
+		labelFrequenzaAttFis.setText("* Selezionare la frequenza settimanale ");
+		spinnerFrequenzaAttFis = new Spinner(SShellDurFreq, SWT.READ_ONLY);
+		spinnerFrequenzaAttFis.setBounds(new Rectangle(227, 245, 60, 24));
+		spinnerFrequenzaAttFis.setMinimum(1);
+		
+		buttonOKFreqDur = new Button(SShellDurFreq, SWT.NONE);
+		buttonOKFreqDur.setBounds(new Rectangle(410, 76, 94, 28));
+		buttonOKFreqDur.setText("Conferma");
+		buttonOKFreqDur.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				int freq = 0;
+				//Date dataInt;
+				//RegistraIntervento intReg = new RegistraIntervento();
+				
+				//frequenza
+				freq = spinnerFrequenzaAttFis.getSelection();
+				//durata
+				String durata = textDurataAttFis.getText();
+			
+				/*intReg.setPaziente(paziente);
+				//intReg.setTipoIntervento(tipoIntervento);
+				//intReg.setDataIntervento(dataInt);
+				//intReg.setNumInterventi(numInt);
+				//listaInterventiRegistrati.add(intReg);
+				
+				//Visualizzazione degli interventi selezionati
+				for (String iSel : listInterventi.getSelection()) {
+					if(setInt.add(iSel))
+						listIntSel.add(iSel + "    Num: "+numInt+"    Data: "+cComboGG.getText()+"/"+cComboMese.getText()+"/"+cComboAnno.getText());
+				}
+				listInterventi.deselectAll();
+				buttonConfermaInt.setEnabled(true);
+				sShellNumData.close();*/
+			}
+		});
+		SShellDurFreq.open();
+	}
+		
+
+}
+
+class AnamnesiViewTableSport extends ListComposite {
+
+	public AnamnesiViewTableSport(Composite parent, int style, Paziente pazSelHome) {
+		super(parent, style);
+		//initialize(parent, pazSelHome);
+	}
+	
+	private Table tableSportPerPaziente = null;
+	private static ArrayList<Object> sport;
+	
+	public void initialize(Composite comp, Paziente pazSelHome) {
+		tableSportPerPaziente = new Table(comp, SWT.FILL | SWT.BORDER
+				| SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
+		tableSportPerPaziente.setHeaderVisible(true);
+		tableSportPerPaziente.setLinesVisible(true);
+		tableSportPerPaziente.setBounds(new Rectangle(36, 596, 628, 226));
+		tableSportPerPaziente.setLayout(new GridLayout(1, true));
+		sport = AnamnesiDAO.getSportPazPerLista(pazSelHome);
+		riempiTabellaEntita(tableSportPerPaziente, sport);
+		tableSportPerPaziente.getColumn(0).setWidth(0);
 	}
 
 }
