@@ -70,6 +70,7 @@ import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import command.FatturaDAO;
 import command.VisitaDAO;
 
 /**
@@ -134,62 +135,30 @@ public class FattureBarChart extends GraficiComposite {
 		// fatture per tipologlia visita per mese
 		if (tipo == 0) {
 			// Tipologia visita
-			ArrayList<Tipologiavisita> tipiVisite = VisitaDAO
-					.getTipologVisita();
-			String[] righe = new String[tipiVisite.size()];
-			int i = 0;
-			for (Tipologiavisita item : tipiVisite) {
-				righe[i] = item.getTipologia();
-				i++;
-			}
-
-			// prenotazioni
-
-			for (String tipologia : righe) {
-				dataset.addValue(VisitaDAO
-						.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite
-								.indexOf(tipologia), 1), "Gennaio", tipologia);
-				dataset.addValue(VisitaDAO
-						.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite
-								.indexOf(tipologia), 2), "Febbraio", tipologia);
-				dataset.addValue(VisitaDAO
-						.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite
-								.indexOf(tipologia), 3), "Marzo", tipologia);
-				dataset.addValue(VisitaDAO
-						.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite
-								.indexOf(tipologia), 4), "Aprile", tipologia);
-				dataset.addValue(VisitaDAO
-						.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite
-								.indexOf(tipologia), 5), "Maggio", tipologia);
-				dataset.addValue(VisitaDAO
-						.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite
-								.indexOf(tipologia), 6), "Giugno", tipologia);
-				dataset.addValue(VisitaDAO
-						.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite
-								.indexOf(tipologia), 7), "Luglio", tipologia);
-				dataset.addValue(VisitaDAO
-						.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite
-								.indexOf(tipologia), 8), "Agosto", tipologia);
-				dataset
-						.addValue(VisitaDAO
-								.getPrenotazioniNumberPerTipologiaNelMese(
-										tipiVisite.indexOf(tipologia), 9),
-								"Settembre", tipologia);
-				dataset.addValue(VisitaDAO
-						.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite
-								.indexOf(tipologia), 10), "Ottobre", tipologia);
-				dataset
-						.addValue(VisitaDAO
-								.getPrenotazioniNumberPerTipologiaNelMese(
-										tipiVisite.indexOf(tipologia), 11),
-								"Novembre", tipologia);
-				dataset
-						.addValue(VisitaDAO
-								.getPrenotazioniNumberPerTipologiaNelMese(
-										tipiVisite.indexOf(tipologia), 12),
-								"Dicembre", tipologia);
-
-			}
+			dataset.addValue(FatturaDAO.getNumFattureMese(1), "Gennaio",
+					"Fattura");
+			dataset.addValue(FatturaDAO.getNumFattureMese(2), "Febbraio",
+					"Fattura");
+			dataset.addValue(FatturaDAO.getNumFattureMese(3), "Marzo",
+					"Fattura");
+			dataset.addValue(FatturaDAO.getNumFattureMese(4), "Aprile",
+					"Fattura");
+			dataset.addValue(FatturaDAO.getNumFattureMese(5), "Maggio",
+					"Fattura");
+			dataset.addValue(FatturaDAO.getNumFattureMese(6), "Giugno",
+					"Fattura");
+			dataset.addValue(FatturaDAO.getNumFattureMese(7), "Luglio",
+					"Fattura");
+			dataset.addValue(FatturaDAO.getNumFattureMese(8), "Agosto",
+					"Fattura");
+			dataset.addValue(FatturaDAO.getNumFattureMese(9), "Settembre",
+					"Fattura");
+			dataset.addValue(FatturaDAO.getNumFattureMese(10), "Ottobre",
+					"Fattura");
+			dataset.addValue(FatturaDAO.getNumFattureMese(11), "Novembre",
+					"Fattura");
+			dataset.addValue(FatturaDAO.getNumFattureMese(12), "Dicembre",
+					"Fattura");
 		} else {
 			alertGraficoNonDisp();
 		}
@@ -211,7 +180,7 @@ public class FattureBarChart extends GraficiComposite {
 		// create the chart...
 		JFreeChart chart = ChartFactory.createBarChart(titolo, // chart
 				// title
-				"Tipologia", // domain axis label
+				"", // domain axis label
 				"Occorrenze", // range axis label
 				dataset, // data
 				PlotOrientation.VERTICAL, // orientation

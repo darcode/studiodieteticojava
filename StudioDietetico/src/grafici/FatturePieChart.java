@@ -45,6 +45,7 @@ import hibernate.Tipologiavisita;
 
 import java.awt.Frame;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JPanel;
 
@@ -61,16 +62,20 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
+import org.jfree.date.DateUtilities;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
+import com.toedter.calendar.DateUtil;
+
+import command.FatturaDAO;
 import command.VisitaDAO;
 
 /**
  * A simple demonstration application showing how to create a pie chart using
  * data from a {@link DefaultPieDataset}.
  */
-public class FatturePieChart extends Composite {
+public class FatturePieChart extends GraficiComposite {
 	private static String titolo;
 
 	/**
@@ -79,8 +84,7 @@ public class FatturePieChart extends Composite {
 	 * @param title
 	 *            the frame title.
 	 */
-	public FatturePieChart(String title, Composite parent, int style,
-			int tipo) {
+	public FatturePieChart(String title, Composite parent, int style, int tipo) {
 		super(parent, style);
 		titolo = title;
 		Composite cmp = new Composite(this, SWT.FILL | SWT.EMBEDDED);
@@ -114,17 +118,15 @@ public class FatturePieChart extends Composite {
 	 */
 	private static PieDataset createDataset(int tipo) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
-
-		// Tipologia visita
-		ArrayList<Tipologiavisita> tipiVisite = VisitaDAO.getTipologVisita();
-
-		for (Tipologiavisita tipologia : tipiVisite) {
-			Double percentuale = new Double(VisitaDAO
-					.getPrenotazioniNumberPerTipologia(tipologia
-							.getIdTipologiaVisita()));
-			dataset.setValue(tipologia.getTipologia(), percentuale);
+		System.out.println("Data set");
+		try {
+			for (int i = 1; i < 13; i++) {
+				Double importo = new Double(FatturaDAO.getFatturatoMese(i));
+				dataset.setValue(mesi[i-1] + ":" + importo, importo);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
 		return dataset;
 	}
 

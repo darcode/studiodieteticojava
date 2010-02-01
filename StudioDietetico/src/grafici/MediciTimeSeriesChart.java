@@ -41,11 +41,14 @@
 
 package grafici;
 
-import hibernate.Prenotazione;
+import hibernate.Prestazione;
 
 import java.awt.Color;
 import java.awt.Frame;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 import javax.swing.JPanel;
 
@@ -64,31 +67,30 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.Day;
-import org.jfree.data.time.Month;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RectangleInsets;
-import org.jfree.ui.RefineryUtilities;
 
 import command.MedicoDAO;
-import command.VisitaDAO;
 
 /**
- * An example of a time series chart.  For the most part, default settings are
+ * An example of a time series chart. For the most part, default settings are
  * used, except that the renderer is modified to show filled shapes (as well as
  * lines) at each data point.
  */
 public class MediciTimeSeriesChart extends GraficiComposite {
 	private static String titolo;
-    /**
-     * A demonstration application showing how to create a simple time series
-     * chart.  This example uses monthly data.
-     *
-     * @param title  the frame title.
-     */
-    public MediciTimeSeriesChart(String title, Composite parent, int style, int tipo) {
+
+	/**
+	 * A demonstration application showing how to create a simple time series
+	 * chart. This example uses monthly data.
+	 * 
+	 * @param title
+	 *            the frame title.
+	 */
+	public MediciTimeSeriesChart(String title, Composite parent, int style,
+			int tipo) {
 		super(parent, style);
 
 		Label titolo = new Label(this, SWT.NONE);
@@ -103,7 +105,7 @@ public class MediciTimeSeriesChart extends GraficiComposite {
 		gdCmp.grabExcessHorizontalSpace = true;
 		gdCmp.grabExcessVerticalSpace = true;
 		cmp.setLayoutData(gdCmp);
-		cmp.setLayout(new GridLayout(1,false));
+		cmp.setLayout(new GridLayout(1, false));
 		JPanel chartPanel = createDemoPanel(tipo);
 		Frame graphFrame = SWT_AWT.new_Frame(cmp);
 		graphFrame.add(chartPanel);
@@ -119,86 +121,91 @@ public class MediciTimeSeriesChart extends GraficiComposite {
 		this.setLayout(new GridLayout(1, false));
 	}
 
-    /**
-     * Creates a chart.
-     *
-     * @param dataset  a dataset.
-     *
-     * @return A chart.
-     */
-    private static JFreeChart createChart(XYDataset dataset) {
+	/**
+	 * Creates a chart.
+	 * 
+	 * @param dataset
+	 *            a dataset.
+	 * 
+	 * @return A chart.
+	 */
+	private static JFreeChart createChart(XYDataset dataset) {
 
-        JFreeChart chart = ChartFactory.createTimeSeriesChart(
-            "Legal & General Unit Trust Prices",  // title
-            "Date",             // x-axis label
-            "Price Per Unit",   // y-axis label
-            dataset,            // data
-            true,               // create legend?
-            true,               // generate tooltips?
-            false               // generate URLs?
-        );
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(
+				titolo, // title
+				"Date", // x-axis label
+				"Occorrenze", // y-axis label
+				dataset, // data
+				true, // create legend?
+				true, // generate tooltips?
+				false // generate URLs?
+				);
 
-        chart.setBackgroundPaint(Color.white);
+		chart.setBackgroundPaint(Color.white);
 
-        XYPlot plot = (XYPlot) chart.getPlot();
-        plot.setBackgroundPaint(Color.lightGray);
-        plot.setDomainGridlinePaint(Color.white);
-        plot.setRangeGridlinePaint(Color.white);
-        plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
-        plot.setDomainCrosshairVisible(true);
-        plot.setRangeCrosshairVisible(true);
+		XYPlot plot = (XYPlot) chart.getPlot();
+		plot.setBackgroundPaint(Color.lightGray);
+		plot.setDomainGridlinePaint(Color.white);
+		plot.setRangeGridlinePaint(Color.white);
+		plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
+		plot.setDomainCrosshairVisible(true);
+		plot.setRangeCrosshairVisible(true);
 
-        XYItemRenderer r = plot.getRenderer();
-        if (r instanceof XYLineAndShapeRenderer) {
-            XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) r;
-            renderer.setBaseShapesVisible(true);
-            renderer.setBaseShapesFilled(true);
-            renderer.setDrawSeriesLineAsPath(true);
-        }
+		XYItemRenderer r = plot.getRenderer();
+		if (r instanceof XYLineAndShapeRenderer) {
+			XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) r;
+			renderer.setBaseShapesVisible(true);
+			renderer.setBaseShapesFilled(true);
+			renderer.setDrawSeriesLineAsPath(true);
+		}
 
-        DateAxis axis = (DateAxis) plot.getDomainAxis();
-        axis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
+		DateAxis axis = (DateAxis) plot.getDomainAxis();
+		axis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
 
-        return chart;
+		return chart;
 
-    }
+	}
 
-    /**
-     * Creates a dataset, consisting of two series of monthly data.
-     *
-     * @return The dataset.
-     */
-    private static XYDataset createDataset(int tipo) {
+	/**
+	 * Creates a dataset, consisting of two series of monthly data.
+	 * 
+	 * @return The dataset.
+	 */
+	private static XYDataset createDataset(int tipo) {
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
-			System.out.println("medico time graph");
-			// anno 2010
+		System.out.println("medico time graph");
+		// anno 2010
+		try {
 			TimeSeries s1 = new TimeSeries("2010");
 			for (Object item : MedicoDAO.getPrestazioni(2010)) {
-				System.out.println(item.getClass() + "-" + item.toString());
-//				if (s1.getDataItem(new Day(item.getDataOra())) == null)
-//					s1.addOrUpdate(new Day(item.getDataOra()), 1);
-//				else
-//					s1.addOrUpdate(new Day(item.getDataOra()),
-//							s1.getDataItem(new Day(item.getDataOra()))
-//									.getValue().intValue() + 1);
+				Prestazione item1 = (Prestazione)((Object[])item)[0];
+				if (s1.getDataItem(new Day(item1.getId().getDataTurno())) == null)
+					s1.addOrUpdate(new Day(item1.getId().getDataTurno()), 1);
+				else
+					s1.addOrUpdate(new Day(item1.getId().getDataTurno()), s1
+							.getDataItem(new Day(item1.getId().getDataTurno()))
+							.getValue().intValue() + 1);
 
 			}
 			dataset.addSeries(s1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return dataset;
 
 	}
 
-    /**
-     * Creates a panel for the demo (used by SuperDemo.java).
-     *
-     * @return A panel.
-     */
-    public static JPanel createDemoPanel(int tipo) {
-        JFreeChart chart = createChart(createDataset(tipo));
-        ChartPanel panel = new ChartPanel(chart);
-        panel.setFillZoomRectangle(true);
-        panel.setMouseWheelEnabled(true);
-        return panel;
-    }
+	/**
+	 * Creates a panel for the demo (used by SuperDemo.java).
+	 * 
+	 * @return A panel.
+	 */
+	public static JPanel createDemoPanel(int tipo) {
+		JFreeChart chart = createChart(createDataset(tipo));
+		ChartPanel panel = new ChartPanel(chart);
+		panel.setFillZoomRectangle(true);
+		panel.setMouseWheelEnabled(true);
+		return panel;
+	}
 
 }
