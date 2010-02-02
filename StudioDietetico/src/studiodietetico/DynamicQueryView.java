@@ -8,8 +8,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 
@@ -19,14 +17,10 @@ import org.eclipse.swt.widgets.Label;
 
 import command.DynamicQueryDAO;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.graphics.Point;
 
 public class DynamicQueryView extends ViewPart{
@@ -56,11 +50,9 @@ public class DynamicQueryView extends ViewPart{
         tree.setHeaderVisible(true);        
         tree.setBounds(new Rectangle(0, 52, 469, 415));
         tree.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
-        	public void mouseDoubleClick(org.eclipse.swt.events.MouseEvent e) {
-        		
+        	public void mouseDoubleClick(org.eclipse.swt.events.MouseEvent e) {        		
         		//check se è selezionato e se è foglia
-        		TreeItem[] arr = tree.getSelection();
-        		
+        		TreeItem[] arr = tree.getSelection();        		
         		if (arr[0] != null) {
         			TreeItem item = arr[0];
         			if (!item.getText().substring(0, 1).equals(item.getText().substring(0, 1).toUpperCase())) {
@@ -89,9 +81,12 @@ public class DynamicQueryView extends ViewPart{
         tableColumn2.setWidth(60);
         TableColumn tableColumn3 = new TableColumn(table, SWT.NONE);
         tableColumn3.setWidth(60);
-        TreeColumn col1 = new TreeColumn(tree, SWT.LEFT);
-        col1.setText("Filtro");
-        col1.setWidth(200);
+        TreeColumn colFiltro = new TreeColumn(tree, SWT.CENTER);
+        colFiltro.setText("Filtro");
+        colFiltro.setWidth(200);
+        TreeColumn colValore = new TreeColumn(tree, SWT.CENTER);
+        colValore.setText("Valore");
+        colValore.setWidth(200);
 	}
 
 	@Override
@@ -136,7 +131,6 @@ public class DynamicQueryView extends ViewPart{
 	 */
 	private void createSShell(final TreeItem item) {
 		sShell = new Shell();
-//		sShell.setLayout(new GridLayout());
 		sShell.setSize(new Point(290, 204));
 		button1 = new Button(sShell, SWT.NONE);
 		button1.setText("Ok");
@@ -151,7 +145,7 @@ public class DynamicQueryView extends ViewPart{
 		label1.setText(item.getText());
 		button1.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				item.setText(item.getText()+" = "+text.getText());
+				item.setText(new String[] {item.getText(),text.getText()});
 				sShell.close();
 			}
 		});
