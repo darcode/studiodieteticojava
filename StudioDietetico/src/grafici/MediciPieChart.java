@@ -64,6 +64,7 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
+import command.MedicoDAO;
 import command.VisitaDAO;
 
 /**
@@ -119,8 +120,8 @@ public class MediciPieChart extends Composite {
 		ArrayList<Tipologiavisita> tipiVisite = VisitaDAO.getTipologVisita();
 
 		for (Tipologiavisita tipologia : tipiVisite) {
-			Double percentuale = new Double(VisitaDAO
-					.getPrenotazioniNumberPerTipologia(tipologia
+			Double percentuale = new Double(MedicoDAO
+					.getPrestazioniNmrPerTipologia(tipologia
 							.getIdTipologiaVisita()));
 			dataset.setValue(tipologia.getTipologia(), percentuale);
 		}

@@ -146,19 +146,19 @@ public class PrenotazioniBarChart extends Composite {
 
 			// prenotazioni
 
-			for (String tipologia : righe) {
-				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite.indexOf(tipologia),1), "Gennaio", tipologia);
-				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite.indexOf(tipologia),2), "Febbraio", tipologia);
-				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite.indexOf(tipologia),3), "Marzo", tipologia);
-				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite.indexOf(tipologia),4), "Aprile", tipologia);
-				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite.indexOf(tipologia),5), "Maggio", tipologia);
-				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite.indexOf(tipologia),6), "Giugno", tipologia);
-				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite.indexOf(tipologia),7), "Luglio", tipologia);
-				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite.indexOf(tipologia),8), "Agosto", tipologia);
-				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite.indexOf(tipologia),9), "Settembre", tipologia);
-				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite.indexOf(tipologia),10), "Ottobre", tipologia);
-				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite.indexOf(tipologia),11), "Novembre", tipologia);
-				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipiVisite.indexOf(tipologia),12), "Dicembre", tipologia);
+			for (Tipologiavisita tipologia : tipiVisite) {
+				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipologia.getIdTipologiaVisita(),1), "Gennaio", tipologia.getTipologia());
+				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipologia.getIdTipologiaVisita(),2), "Febbraio",tipologia.getTipologia());
+				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipologia.getIdTipologiaVisita(),3), "Marzo", tipologia.getTipologia());
+				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipologia.getIdTipologiaVisita(),4), "Aprile", tipologia.getTipologia());
+				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipologia.getIdTipologiaVisita(),5), "Maggio", tipologia.getTipologia());
+				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipologia.getIdTipologiaVisita(),6), "Giugno", tipologia.getTipologia());
+				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipologia.getIdTipologiaVisita(),7), "Luglio", tipologia.getTipologia());
+				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipologia.getIdTipologiaVisita(),8), "Agosto", tipologia.getTipologia());
+				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipologia.getIdTipologiaVisita(),9), "Settembre", tipologia.getTipologia());
+				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipologia.getIdTipologiaVisita(),10), "Ottobre", tipologia.getTipologia());
+				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipologia.getIdTipologiaVisita(),11), "Novembre", tipologia.getTipologia());
+				dataset.addValue(VisitaDAO.getPrenotazioniNumberPerTipologiaNelMese(tipologia.getIdTipologiaVisita(),12), "Dicembre", tipologia.getTipologia());
 				
 			}
 		}

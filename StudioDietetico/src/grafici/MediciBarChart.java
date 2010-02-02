@@ -40,6 +40,7 @@
 
 package grafici;
 
+import hibernate.Medico;
 import hibernate.Tipologiavisita;
 
 import java.awt.Color;
@@ -70,6 +71,7 @@ import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import command.MedicoDAO;
 import command.VisitaDAO;
 
 /**
@@ -89,8 +91,7 @@ public class MediciBarChart extends Composite {
 	 * @param title
 	 *            the frame title.
 	 */
-	public MediciBarChart(String title, Composite parent, int style,
-			int tipo) {
+	public MediciBarChart(String title, Composite parent, int style, int tipo) {
 		super(parent, style);
 		try {
 			this.titolo = title;
@@ -132,36 +133,38 @@ public class MediciBarChart extends Composite {
 	 */
 	private static CategoryDataset createDataset(int tipo) {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-//		if (tipo == 0) {
-			// Tipologia visita
-			ArrayList<Tipologiavisita> tipiVisite = VisitaDAO
-					.getTipologVisita();
-			String[] righe = new String[tipiVisite.size()];
-			int i = 0;
-			for (Tipologiavisita item : tipiVisite) {
-				righe[i] = item.getTipologia();
-				i++;
+		ArrayList<Medico> medici = MedicoDAO.getMedici();
+		try {
+			for (Medico item : medici) {
+				dataset.addValue(MedicoDAO.getNumPrestazioniMedico(item
+						.getIdMedico(), 1), "Gennaio", item.getCognome());
+				dataset.addValue(MedicoDAO.getNumPrestazioniMedico(item
+						.getIdMedico(), 2), "Febbraio", item.getCognome());
+				dataset.addValue(MedicoDAO.getNumPrestazioniMedico(item
+						.getIdMedico(), 3), "Marzo", item.getCognome());
+				dataset.addValue(MedicoDAO.getNumPrestazioniMedico(item
+						.getIdMedico(), 4), "Aprile", item.getCognome());
+				dataset.addValue(MedicoDAO.getNumPrestazioniMedico(item
+						.getIdMedico(), 5), "Maggio", item.getCognome());
+				dataset.addValue(MedicoDAO.getNumPrestazioniMedico(item
+						.getIdMedico(), 6), "Giugno", item.getCognome());
+				dataset.addValue(MedicoDAO.getNumPrestazioniMedico(item
+						.getIdMedico(), 7), "Luglio", item.getCognome());
+				dataset.addValue(MedicoDAO.getNumPrestazioniMedico(item
+						.getIdMedico(), 8), "Agosto", item.getCognome());
+				dataset.addValue(MedicoDAO.getNumPrestazioniMedico(item
+						.getIdMedico(), 9), "Settembre", item.getCognome());
+				dataset.addValue(MedicoDAO.getNumPrestazioniMedico(item
+						.getIdMedico(), 10), "Ottobre", item.getCognome());
+				dataset.addValue(MedicoDAO.getNumPrestazioniMedico(item
+						.getIdMedico(), 11), "Novembre", item.getCognome());
+				dataset.addValue(MedicoDAO.getNumPrestazioniMedico(item
+						.getIdMedico(), 12), "Dicembre", item.getCognome());
 			}
-
-			// Data
-			String category1 = "Category 1";
-			String category2 = "Category 2";
-			String category3 = "Category 3";
-			String category4 = "Category 4";
-			String category5 = "Category 5";
-
-			// prenotazioni
-
-			for (String tipologia : righe) {
-				dataset.addValue(1.0, tipologia, category1);
-				dataset.addValue(4.0, tipologia, category2);
-				dataset.addValue(3.0, tipologia, category3);
-				dataset.addValue(5.0, tipologia, category4);
-				dataset.addValue(5.0, tipologia, category5);
-			}
-//		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return dataset;
-
 	}
 
 	/**

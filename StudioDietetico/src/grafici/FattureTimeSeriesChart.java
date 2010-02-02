@@ -41,9 +41,13 @@
 
 package grafici;
 
+import hibernate.Fattura;
+
 import java.awt.Color;
 import java.awt.Frame;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JPanel;
 
@@ -65,26 +69,29 @@ import org.jfree.data.time.Month;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RectangleInsets;
-import org.jfree.ui.RefineryUtilities;
+
+import command.FatturaDAO;
 
 /**
- * An example of a time series chart.  For the most part, default settings are
+ * An example of a time series chart. For the most part, default settings are
  * used, except that the renderer is modified to show filled shapes (as well as
  * lines) at each data point.
  */
-public class FattureTimeSeriesChart extends Composite {
+public class FattureTimeSeriesChart extends GraficiComposite {
 	private static String titolo;
-    /**
-     * A demonstration application showing how to create a simple time series
-     * chart.  This example uses monthly data.
-     *
-     * @param title  the frame title.
-     */
-    public FattureTimeSeriesChart(String title, Composite parent, int style, int tipo) {
-		super(parent, style);
 
+	/**
+	 * A demonstration application showing how to create a simple time series
+	 * chart. This example uses monthly data.
+	 * 
+	 * @param title
+	 *            the frame title.
+	 */
+	public FattureTimeSeriesChart(String title, Composite parent, int style,
+			int tipo) {
+		super(parent, style);
+		System.out.println(2);
 		Label titolo = new Label(this, SWT.NONE);
 		titolo.setFont(new Font(titolo.getDisplay(), "arial", 15, SWT.BOLD));
 		titolo.setText(title);
@@ -97,8 +104,8 @@ public class FattureTimeSeriesChart extends Composite {
 		gdCmp.grabExcessHorizontalSpace = true;
 		gdCmp.grabExcessVerticalSpace = true;
 		cmp.setLayoutData(gdCmp);
-		cmp.setLayout(new GridLayout(1,false));
-		JPanel chartPanel = createDemoPanel(tipo);
+		cmp.setLayout(new GridLayout(1, false));
+		JPanel chartPanel = createPanel(tipo);
 		Frame graphFrame = SWT_AWT.new_Frame(cmp);
 		graphFrame.add(chartPanel);
 		graphFrame.pack();
@@ -113,89 +120,83 @@ public class FattureTimeSeriesChart extends Composite {
 		this.setLayout(new GridLayout(1, false));
 	}
 
-    /**
-     * Creates a chart.
-     *
-     * @param dataset  a dataset.
-     *
-     * @return A chart.
-     */
-    private static JFreeChart createChart(XYDataset dataset) {
+	/**
+	 * Creates a chart.
+	 * 
+	 * @param dataset
+	 *            a dataset.
+	 * 
+	 * @return A chart.
+	 */
+	private static JFreeChart createChart(XYDataset dataset) {
 
-        JFreeChart chart = ChartFactory.createTimeSeriesChart(
-            "Legal & General Unit Trust Prices",  // title
-            "Date",             // x-axis label
-            "Price Per Unit",   // y-axis label
-            dataset,            // data
-            true,               // create legend?
-            true,               // generate tooltips?
-            false               // generate URLs?
-        );
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(titolo, // title
+				"Date", // x-axis label
+				"Quantità", // y-axis label
+				dataset, // data
+				true, // create legend?
+				true, // generate tooltips?
+				false // generate URLs?
+				);
 
-        chart.setBackgroundPaint(Color.white);
+		chart.setBackgroundPaint(Color.white);
 
-        XYPlot plot = (XYPlot) chart.getPlot();
-        plot.setBackgroundPaint(Color.lightGray);
-        plot.setDomainGridlinePaint(Color.white);
-        plot.setRangeGridlinePaint(Color.white);
-        plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
-        plot.setDomainCrosshairVisible(true);
-        plot.setRangeCrosshairVisible(true);
+		XYPlot plot = (XYPlot) chart.getPlot();
+		plot.setBackgroundPaint(Color.lightGray);
+		plot.setDomainGridlinePaint(Color.white);
+		plot.setRangeGridlinePaint(Color.white);
+		plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
+		plot.setDomainCrosshairVisible(true);
+		plot.setRangeCrosshairVisible(true);
 
-        XYItemRenderer r = plot.getRenderer();
-        if (r instanceof XYLineAndShapeRenderer) {
-            XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) r;
-            renderer.setBaseShapesVisible(true);
-            renderer.setBaseShapesFilled(true);
-            renderer.setDrawSeriesLineAsPath(true);
-        }
+		XYItemRenderer r = plot.getRenderer();
+		if (r instanceof XYLineAndShapeRenderer) {
+			XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) r;
+			renderer.setBaseShapesVisible(true);
+			renderer.setBaseShapesFilled(true);
+			renderer.setDrawSeriesLineAsPath(true);
+		}
 
-        DateAxis axis = (DateAxis) plot.getDomainAxis();
-        axis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
+		DateAxis axis = (DateAxis) plot.getDomainAxis();
+		axis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
 
-        return chart;
+		return chart;
 
-    }
+	}
 
-    /**
-     * Creates a dataset, consisting of two series of monthly data.
-     *
-     * @return The dataset.
-     */
-    private static XYDataset createDataset(int tipo) {
+	/**
+	 * Creates a dataset, consisting of two series of monthly data.
+	 * 
+	 * @return The dataset.
+	 */
+	private static XYDataset createDataset(int tipo) {
+		TimeSeriesCollection dataset = new TimeSeriesCollection();
+		ArrayList<Fattura> list = FatturaDAO.getFatture();
+		try {
+			for (Fattura item : list) {
+				TimeSeries s1 = new TimeSeries("Serie");
+				s1.add(new Month(item.getData().getMonth() + 1, item.getData()
+						.getYear() + 1900), item.getImporto());
+				dataset.addSeries(s1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dataset;
 
-        TimeSeries s1 = new TimeSeries(titolo);
-        s1.add(new Month(2, 2001), 181.8);
+	}
 
-        TimeSeries s2 = new TimeSeries("aaa");
-        s2.add(new Month(2, 2001), 129.6);
-        // ******************************************************************
-        //  More than 150 demo applications are included with the JFreeChart
-        //  Developer Guide...for more information, see:
-        //
-        //  >   http://www.object-refinery.com/jfreechart/guide.html
-        //
-        // ******************************************************************
-
-        TimeSeriesCollection dataset = new TimeSeriesCollection();
-        dataset.addSeries(s1);
-        dataset.addSeries(s2);
-
-        return dataset;
-
-    }
-
-    /**
-     * Creates a panel for the demo (used by SuperDemo.java).
-     *
-     * @return A panel.
-     */
-    public static JPanel createDemoPanel(int tipo) {
-        JFreeChart chart = createChart(createDataset(tipo));
-        ChartPanel panel = new ChartPanel(chart);
-        panel.setFillZoomRectangle(true);
-        panel.setMouseWheelEnabled(true);
-        return panel;
-    }
+	/**
+	 * Creates a panel for the demo (used by SuperDemo.java).
+	 * 
+	 * @return A panel.
+	 */
+	public static JPanel createPanel(int tipo) {
+		JFreeChart chart = createChart(createDataset(tipo));
+		ChartPanel panel = new ChartPanel(chart);
+		panel.setFillZoomRectangle(true);
+		panel.setMouseWheelEnabled(true);
+		return panel;
+	}
 
 }

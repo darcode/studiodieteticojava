@@ -131,13 +131,14 @@ public class VisitaDAO extends BaseDAO {
 	public static double getPrenotazioniNumberPerTipologiaNelMese(
 			Integer tipologiaId, int mese) {
 		begin();
-		int valore = 0;
+		int perTipologia = 0;
 		try {
 			Query q = getSession().createQuery(
 					"FROM Prenotazione pr where tipologiavisita = '"
 							+ tipologiaId + "' and MONTH(pr.dataOra) = '"
 							+ mese + "'");
-			int perTipologia = q.list().size();
+			System.out.println(q.getQueryString());
+			perTipologia = q.list().size();
 			// Query q1 = getSession()
 			// .createQuery(
 			// "FROM Visita vs join Prenotazione pr on vs.fk_prenotazione = pr.idPrenotazione ");
@@ -146,7 +147,7 @@ public class VisitaDAO extends BaseDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return valore;
+		return perTipologia;
 
 	}
 
