@@ -19,6 +19,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -130,6 +131,7 @@ public class AnamnesiView extends ViewPart {
 	private Button buttonOKFreqDur = null;
 	
 	public static final String VIEW_ID = "StudioDietetico.anamnesi";
+	private Shell sShellMessElimina = null;  //  @jve:decl-index=0:visual-constraint="308,396"
 	
 	
 	
@@ -233,7 +235,7 @@ public class AnamnesiView extends ViewPart {
 		listIntSel
 		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				buttonModificaInt.setEnabled(true);
+				//buttonModificaInt.setEnabled(true);
 				buttonEliminaInt.setEnabled(true);
 			}
 		});
@@ -260,42 +262,25 @@ public class AnamnesiView extends ViewPart {
 			}
 		});*/
 		buttonEliminaInt = new Button(comp1, SWT.NONE);
-		buttonEliminaInt.setBounds(new Rectangle(500, 208, 70, 21));
+		buttonEliminaInt.setBounds(new Rectangle(430, 208, 70, 21));
 		buttonEliminaInt.setText("Elimina");
 		buttonEliminaInt.setEnabled(false);
 		buttonEliminaInt
 			.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				//Inserire messBox
-				//Button conferma del messBox:
-				String interv = listIntSel.getSelection()[0];
-				String nomeIntSel = interv.split("    ")[0].split("  ")[0]; //nome
-		        String descIntSel = interv.split("    ")[0].split("  ")[1]; //desc
-		        String locIntSel = interv.split("    ")[0].split("  ")[2]; //loc
-		        int numIntSel = Integer.parseInt(interv.split("    ")[1].split("Num: ")[1]); //num
-		        int giornoIntSel = Integer.parseInt(interv.split("    ")[2].split("Data: ")[1].split("/")[0]); //giorno
-		        int meseIntSel = Integer.parseInt(interv.split("    ")[2].split("Data: ")[1].split("/")[1]); //mese
-		        int annoIntSel = Integer.parseInt(interv.split("    ")[2].split("Data: ")[1].split("/")[2]); //anno
-				
-				for (int i = 0; i < listaInterventiRegistrati.size(); i++) {
-		        //while (listaInterventiRegistrati.) {
-					
-				//}
-					int numReg = listaInterventiRegistrati.get(i).getNumInterventi();
-					Date dataReg = listaInterventiRegistrati.get(i).getDataIntervento();
-					Paziente pazReg = listaInterventiRegistrati.get(i).getPaziente();
-					String nomeIntReg = listaInterventiRegistrati.get(i).getTipoIntervento().getNome();
-					String descrIntReg = listaInterventiRegistrati.get(i).getTipoIntervento().getDescrizione();
-					String locIntReg = listaInterventiRegistrati.get(i).getTipoIntervento().getLocalizzazione();
-					
-					if (nomeIntSel.equals(nomeIntReg) && descIntSel.equals(descrIntReg) && locIntSel.equals(locIntReg)
-							&& numIntSel==numReg && giornoIntSel==dataReg.getDay() && meseIntSel==dataReg.getMonth()
-							&& annoIntSel==dataReg.getYear() && pazReg.getIdPaziente()==pazSelHome.getIdPaziente()) {
-						listaInterventiRegistrati.remove(i);
+				createSShellMessElimina();
+				MessageBox messageBox = new MessageBox(sShellMessElimina, SWT.OK|SWT.CANCEL | SWT.ICON_ERROR);
+				messageBox.setMessage("Sei sicuro di voler eliminare questo elemento?");
+				messageBox.setText("Conferma eliminazione");
+				if (messageBox.open() == SWT.OK) {
+					listaInterventiRegistrati.remove(listIntSel.getSelectionIndex());	
+					listIntSel.remove(listIntSel.getSelectionIndex());
+					if (listIntSel.getItemCount()==0) {
+						buttonConfermaInt.setEnabled(false);
+						buttonEliminaInt.setEnabled(false);
 					}
 				}
-				
-				//pazSelHome
 			}
 		});
 		
@@ -746,7 +731,17 @@ public class AnamnesiView extends ViewPart {
 		});
 		SShellDurFreq.open();
 	}
-		
+
+	/**
+	 * This method initializes sShellMessElimina	
+	 *
+	 */
+	private void createSShellMessElimina() {
+		sShellMessElimina = new Shell();
+		sShellMessElimina.setLayout(new GridLayout());
+		sShellMessElimina.setText("Conferma eliminazione");
+		sShellMessElimina.setSize(new Point(377, 72));
+	}
 
 }
 
