@@ -2,6 +2,7 @@ package studiodietetico;
 
 import hibernate.Medico;
 import hibernate.Paziente;
+import hibernate.Prenotazione;
 import hibernate.Tipologiavisita;
 
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ public class PrenotaVisitaView extends ViewPart {
 	private Shell ShellCalendario = null;  //  @jve:decl-index=0:visual-constraint="80,420"
 	private Date dn = null;
 	public static final String VIEW_ID = "StudioDietetico.prenotavisita";
+	private Text textAreaPrenotazioniOdierne = null;
 	public PrenotaVisitaView() {
 		// TODO Auto-generated constructor stub
 	}
@@ -106,8 +108,8 @@ public class PrenotaVisitaView extends ViewPart {
         buttonPrenotaVisita.setText("Prenota visita");
         //createGroupDataPrenotazione();
         buttonSelezionaData = new Button(top, SWT.NONE);
-        buttonSelezionaData.setBounds(new Rectangle(101, 166, 161, 27));
-        buttonSelezionaData.setText("Seleziona la data della visita");
+        buttonSelezionaData.setBounds(new Rectangle(101, 166, 189, 27));
+        buttonSelezionaData.setText("Seleziona la data e l'ora della visita");
         buttonSelezionaData
         		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
         			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -256,14 +258,34 @@ public class PrenotaVisitaView extends ViewPart {
 	 *
 	 */
 	private Date createShellCalendario() {
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gridData.heightHint = 32;
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
 		ShellCalendario = new Shell(Display.getCurrent(), SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		ShellCalendario.setText("Seleziona data e ora");
 		ShellCalendario.setLayout(new GridLayout());
-		ShellCalendario.setSize(new Point(269, 293));
-		ShellCalendario.setText("Seleziona la data");
+		ShellCalendario.setSize(new Point(270, 300));
 		final DateTime calendar = new DateTime (ShellCalendario, SWT.CALENDAR | SWT.BORDER);
 		//final DateTime date = new DateTime (ShellCalendario, SWT.DATE | SWT.SHORT);
+		calendar.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				ArrayList<Prenotazione> prenotGiorno = VisitaDAO.getPrenotazioniGiorno(calendar.getYear (), (calendar.getMonth () + 1), calendar.getDay ());
+				textAreaPrenotazioniOdierne.setText("N. di prenotazioni per il "+calendar.getDay ()+"/"+(calendar.getMonth () + 1)+"/"+calendar.getYear ()+" = "+ prenotGiorno.size()+"\n");
+				for (Prenotazione prenotazione : prenotGiorno) {
+					textAreaPrenotazioniOdierne.append("ore: "+prenotazione.getDataOra().getHours()+":"+ (prenotazione.getDataOra().getMinutes() < 10 ? "0" : "") + prenotazione.getDataOra().getMinutes()+"  -paziente: "+prenotazione.getPaziente().getCognome()+" "+prenotazione.getPaziente().getNome()+"\n");
+				}
+				textAreaPrenotazioniOdierne.setTopIndex(0);
+				System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
+			}
+			public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
+			}
+		});
 		final DateTime time = new DateTime (ShellCalendario, SWT.TIME | SWT.SHORT);
-		new Label (ShellCalendario, SWT.NONE);
+		textAreaPrenotazioniOdierne = new Text(ShellCalendario, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
+		textAreaPrenotazioniOdierne.setEditable(false);
+		textAreaPrenotazioniOdierne.setLayoutData(gridData);
+		//new Label (ShellCalendario, SWT.NONE);
 		//new Label (ShellCalendario, SWT.NONE);
 		Button ok = new Button (ShellCalendario, SWT.PUSH);
 		ok.setText ("OK");
@@ -273,11 +295,9 @@ public class PrenotaVisitaView extends ViewPart {
 				System.out.println ("Calendar date selected (MM/DD/YYYY) = " + (calendar.getMonth () + 1) + "/" + calendar.getDay () + "/" + calendar.getYear ());
 				//System.out.println ("Date selected (MM/YYYY) = " + (date.getMonth () + 1) + "/" + date.getYear ());
 				System.out.println ("Time selected (HH:MM) = " + time.getHours () + ":" + (time.getMinutes () < 10 ? "0" : "") + time.getMinutes ());
-				
 				String dateString = calendar.getYear ()+"-"+(calendar.getMonth () + 1)+"-"+calendar.getDay ()+" "+time.getHours () +":"+(time.getMinutes () < 10 ? "0" : "") + time.getMinutes ()+":00";
 				String formato = "yyyy-MM-dd HH:mm:ss";
 				dn = Utils.convertStringToDate(dateString, formato);   
-				
 				ShellCalendario.close ();
 			}
 		});
