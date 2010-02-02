@@ -89,6 +89,7 @@ public class AnamnesiView extends ViewPart {
 	private Group groupInserimentoInt = null;
 	//ALLERGIE
 	private Group groupAllergie = null;
+	private Label labelIntAll = null;
 	private Button radioButtonInt = null;
 	private Button radioButtonAll = null;
 	private Label labelSostanza = null;
@@ -168,14 +169,15 @@ public class AnamnesiView extends ViewPart {
 	    	createTabInterventi(comp1);
 	    } // fine tab interventi
 	    
+	    
 	    CTabItem itemAll = new CTabItem(cTabFolderAnamnesi, SWT.NONE);
 	    itemAll.setText("Allergie/Intolleranze");
 	    {
 	    	Composite comp2 = new Composite(cTabFolderAnamnesi, SWT.TRANSPARENT);
 			itemAll.setControl(comp2);
 			createGroupAll(comp2);
-			
 	    } // fine tab allergie
+	    
 	    
 	    CTabItem itemAttFisica = new CTabItem(cTabFolderAnamnesi, SWT.NONE);
 	    itemAttFisica.setText("Attività Fisica");
@@ -479,42 +481,52 @@ public class AnamnesiView extends ViewPart {
 	 */
 	private void createGroupAll(Composite comp) {
 		groupAllergie = new Group(comp, SWT.NONE);
-		groupAllergie.setText("Indicare eventuali intolleranze o allergie");
-		groupAllergie.setBounds(new Rectangle(20, 63, 490, 162));
+		groupAllergie.setText("Inserimento eventuali intolleranze o allergie");
+		groupAllergie.setBounds(new Rectangle(20, 63, 1000, 400));
+		labelIntAll = new Label(groupAllergie, SWT.NONE);
+		labelIntAll.setText("Indicare se si tratta di intolleranza o allergia");
+		labelIntAll.setBounds(new Rectangle(20, 40, 250, 20));
 		radioButtonInt = new Button(groupAllergie, SWT.RADIO);
-		radioButtonInt.setBounds(new Rectangle(10, 21, 85, 20));
+		radioButtonInt.setBounds(new Rectangle(280, 40, 85, 20));
 		radioButtonInt.setText("Intolleranza");
 		radioButtonAll = new Button(groupAllergie, SWT.RADIO);
-		radioButtonAll.setBounds(new Rectangle(117, 21, 71, 20));
+		radioButtonAll.setBounds(new Rectangle(390, 40, 71, 20));
 		radioButtonAll.setText("Allergia");
+		
+		labelGrado = new Label(groupAllergie, SWT.NONE);
+		labelGrado.setBounds(new Rectangle(20, 80, 210, 20));
+		labelGrado.setText("Indicare il grado di intolleranza/allergia");
+		textGrado = new Text(groupAllergie, SWT.BORDER);
+		textGrado.setBounds(new Rectangle(250, 80, 300, 20));
+		
 		labelSostanza = new Label(groupAllergie, SWT.NONE);
-		labelSostanza.setBounds(new Rectangle(10, 50, 61, 20));
-		labelSostanza.setText("Sostanza");
+		labelSostanza.setBounds(new Rectangle(20, 110, 61, 20));
+		labelSostanza.setText("*Sostanza");
 		textSost = new Text(groupAllergie, SWT.BORDER);
-		textSost.setBounds(new Rectangle(75, 50, 120, 20));
+		textSost.setBounds(new Rectangle(80, 110, 400, 40));
+		
 		labelAlPrinc = new Label(groupAllergie, SWT.NONE);
-		labelAlPrinc.setBounds(new Rectangle(205, 50, 110, 20));
-		labelAlPrinc.setText("Alimento principale");
+		labelAlPrinc.setBounds(new Rectangle(20, 160, 120, 20));
+		labelAlPrinc.setText("*Alimento principale");
 		textAlPrinc = new Text(groupAllergie, SWT.BORDER);
-		textAlPrinc.setBounds(new Rectangle(325, 50, 160, 20));
+		textAlPrinc.setBounds(new Rectangle(140, 160, 400, 40));
+		
 		labelDerivati = new Label(groupAllergie, SWT.NONE);
-		labelDerivati.setBounds(new Rectangle(10, 77, 50, 20));
+		labelDerivati.setBounds(new Rectangle(20, 210, 50, 20));
 		labelDerivati.setText("Derivati");
 		textAreaDerivati = new Text(groupAllergie, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL );
-		textAreaDerivati.setBounds(new Rectangle(70, 78, 160, 44));
-		labelGrado = new Label(groupAllergie, SWT.NONE);
-		labelGrado.setBounds(new Rectangle(206, 21, 114, 20));
-		labelGrado.setText("Grado di intolleranza");
+		textAreaDerivati.setBounds(new Rectangle(80, 210, 400, 60));
+		
 		labelEffColl = new Label(groupAllergie, SWT.NONE);
-		labelEffColl.setBounds(new Rectangle(239, 78, 87, 20));
+		labelEffColl.setBounds(new Rectangle(20, 290, 120, 20));
 		labelEffColl.setText("Effetti collaterali");
 		textAreaEffColl = new Text(groupAllergie, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textAreaEffColl.setBounds(new Rectangle(334, 81, 150, 49));
+		textAreaEffColl.setBounds(new Rectangle(150, 290, 400, 60));
+		
 		buttonConfermaAll = new Button(groupAllergie, SWT.NONE);
-		buttonConfermaAll.setBounds(new Rectangle(405, 135, 79, 22));
+		buttonConfermaAll.setBounds(new Rectangle(600, 370, 80, 25));
 		buttonConfermaAll.setText("Conferma");
-		textGrado = new Text(groupAllergie, SWT.BORDER);
-		textGrado.setBounds(new Rectangle(332, 21, 152, 20));
+		
 		buttonConfermaAll.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				AnamnesiDAO an = new AnamnesiDAO();
