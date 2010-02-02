@@ -4,11 +4,14 @@ import hibernate.Medico;
 import hibernate.Prestazione;
 import hibernate.PrestazioneId;
 import hibernate.Turno;
+import hibernate.Visita;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.swt.widgets.DateTime;
 import org.hibernate.Query;
@@ -56,8 +59,8 @@ public class MedicoDAO extends BaseDAO {
 		return medici;
 
 	}
-	
-	public static ArrayList<Turno> getTurni(){
+
+	public static ArrayList<Turno> getTurni() {
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Turno t ORDER BY t.nome");
@@ -65,22 +68,28 @@ public class MedicoDAO extends BaseDAO {
 		commit();
 		return turni;
 	}
-	
-	public static ArrayList<Prestazione> getTurniMediciByMese(int mese){
+
+	public static ArrayList<Prestazione> getTurniMediciByMese(int mese) {
 		getSession();
 		begin();
 		Date now = new Date();
-		String dataTurnoInizioString = ""+(now.getYear()+1900)+"-"+mese+"-01";
-		String dataTurnoFineString = ""+(now.getYear()+1900)+"-"+mese+"-31";
-		//String formato = "yyyy-MM-dd";
-		//Date dn = Utils.convertStringToDate(dataTurnoString, formato);
-		Query q = getSession().createQuery("FROM Prestazione p WHERE p.id.dataTurno BETWEEN'"+dataTurnoInizioString+"' AND '"+dataTurnoFineString+"'");
-		ArrayList<Prestazione> turniMediciMese = (ArrayList<Prestazione>) q.list();
+		String dataTurnoInizioString = "" + (now.getYear() + 1900) + "-" + mese
+				+ "-01";
+		String dataTurnoFineString = "" + (now.getYear() + 1900) + "-" + mese
+				+ "-31";
+		// String formato = "yyyy-MM-dd";
+		// Date dn = Utils.convertStringToDate(dataTurnoString, formato);
+		Query q = getSession().createQuery(
+				"FROM Prestazione p WHERE p.id.dataTurno BETWEEN'"
+						+ dataTurnoInizioString + "' AND '"
+						+ dataTurnoFineString + "'");
+		ArrayList<Prestazione> turniMediciMese = (ArrayList<Prestazione>) q
+				.list();
 		commit();
 		return turniMediciMese;
 	}
 
-	public void RegistraTurno(String nome, Date oraInizio, Date oraFine){
+	public void RegistraTurno(String nome, Date oraInizio, Date oraFine) {
 		getSession();
 		begin();
 		Turno turno = new Turno();
@@ -91,8 +100,8 @@ public class MedicoDAO extends BaseDAO {
 		commit();
 		close();
 	}
-	
-	public void RegistraTurnoMedico(Medico medico, Turno turno, Date dataTurno){
+
+	public void RegistraTurnoMedico(Medico medico, Turno turno, Date dataTurno) {
 		getSession();
 		begin();
 		Prestazione pr = new Prestazione();
@@ -108,23 +117,26 @@ public class MedicoDAO extends BaseDAO {
 		close();
 	}
 
-	public void RimuoviTurnoMedico (Medico medico, Date dataTurno){
+	public void RimuoviTurnoMedico(Medico medico, Date dataTurno) {
 		getSession();
 		begin();
-		String dataTurnoString = ""+(dataTurno.getYear()+1900)+"-"+(dataTurno.getMonth()+1)+"-"+dataTurno.getDate();
-		//String formato = "yyyy-MM-dd";
-		//Date dn = Utils.convertStringToDate(dataTurnoString, formato);
-		Query q = getSession().createQuery("FROM Prestazione p WHERE p.id.dataTurno='"+dataTurnoString+"' AND p.medico.idMedico="+medico.getIdMedico());
+		String dataTurnoString = "" + (dataTurno.getYear() + 1900) + "-"
+				+ (dataTurno.getMonth() + 1) + "-" + dataTurno.getDate();
+		// String formato = "yyyy-MM-dd";
+		// Date dn = Utils.convertStringToDate(dataTurnoString, formato);
+		Query q = getSession().createQuery(
+				"FROM Prestazione p WHERE p.id.dataTurno='" + dataTurnoString
+						+ "' AND p.medico.idMedico=" + medico.getIdMedico());
 		ArrayList<Prestazione> turniMedico = (ArrayList<Prestazione>) q.list();
 		for (int i = 0; i < turniMedico.size(); i++) {
 			begin();
 			Prestazione prestaz = new Prestazione();
 			prestaz = (Prestazione) turniMedico.get(i);
-			getSession().delete(prestaz);	
+			getSession().delete(prestaz);
 			commit();
-		}		
+		}
 	}
-	
+
 	public static ArrayList<HashMap<String, String>> getMediciForStatistics() {
 		getSession();
 		begin();
@@ -142,20 +154,62 @@ public class MedicoDAO extends BaseDAO {
 		return ris;
 
 	}
+
 	public static ArrayList<Object> getPrestazioni(int anno) {
 		begin();
 		try {
 			Query q = getSession().createQuery(
-					"FROM Prestazione pr join pr.medico md where YEAR(pr.id.dataTurno) = " + anno);
-			List pr =  q.list();
+					"FROM Prestazione pr join pr.medico md where YEAR(pr.id.dataTurno) = "
+							+ anno);
+			List pr = q.list();
 			commit();
-			return (ArrayList<Object>)pr;
+			return (ArrayList<Object>) pr;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 
 	}
-	
+
+	public static double getPrestazioniNmrPerTipologia(Integer tipologiaId) {
+		begin();
+		int percentuale = 0;
+		try {
+			Query q = getSession().createQuery("FROM Medico me ");
+
+			int perTipologia = 0;
+			for (Medico item : (ArrayList<Medico>) q.list()) {
+				Iterator<Set> it = item.getVisitas().iterator();
+				while (it.hasNext()) {
+					if (((Visita) it.next()).getPrenotazione()
+							.getTipologiavisita().getIdTipologiaVisita() == tipologiaId)
+						perTipologia++;
+				}
+			}
+			Query q1 = getSession().createQuery("FROM Visita vs where vs.prenotazione.tipologiavisita.idTipologiaVisita =  " + tipologiaId);
+			int totale = q1.list().size();
+			percentuale = (perTipologia == 0) ? 0 : (totale / perTipologia);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return percentuale;
+
+	}
+
+	public static int getNumPrestazioniMedico(int medico, int mese) {
+		begin();
+		try {
+			Query q = getSession().createQuery(
+					"FROM Prestazione pr where pr.medico.idMedico = " + medico
+							+ " and MONTH(pr.id.dataTurno) = " + mese);
+			List pr = q.list();
+			commit();
+			return pr.size();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+
+	}
 
 }

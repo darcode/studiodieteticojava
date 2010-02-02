@@ -169,13 +169,6 @@ public class PazientiTimeSeriesChart extends Composite {
 
         TimeSeries s2 = new TimeSeries("aaa");
         s2.add(new Month(2, 2001), 129.6);
-        // ******************************************************************
-        //  More than 150 demo applications are included with the JFreeChart
-        //  Developer Guide...for more information, see:
-        //
-        //  >   http://www.object-refinery.com/jfreechart/guide.html
-        //
-        // ******************************************************************
 
         TimeSeriesCollection dataset = new TimeSeriesCollection();
         dataset.addSeries(s1);

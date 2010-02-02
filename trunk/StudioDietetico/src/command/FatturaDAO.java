@@ -34,10 +34,12 @@ public class FatturaDAO extends BaseDAO {
 	}
 
 	public static ArrayList<Fattura> getFatture() {
+		System.out.println("getFatture");
 		begin();
 		Query q = getSession()
 				.createQuery("FROM Fattura fat ORDER BY fat.data");
 		ArrayList<Fattura> fatture = (ArrayList<Fattura>) q.list();
+		System.out.println("n fatture"+fatture.size());
 		commit();
 		return fatture;
 

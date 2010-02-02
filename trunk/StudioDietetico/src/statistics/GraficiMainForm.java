@@ -69,11 +69,11 @@ public class GraficiMainForm extends ListComposite {
 		lbl.setBackground(white);
 		lbl.setLayoutData(gdLbl);
 		lbl.setFont(Utils.getFont("Arial", 13, SWT.BOLD));
-//		Label lbl1 = new Label(this, SWT.NONE | SWT.BOLD);
-//		lbl1.setText("SELEZIONE IL TIPO DI GRAFICO:");
-//		lbl1.setBackground(white);
-//		lbl1.setLayoutData(gdLbl);
-//		lbl1.setFont(Utils.getFont("Arial", 13, SWT.BOLD));
+		// Label lbl1 = new Label(this, SWT.NONE | SWT.BOLD);
+		// lbl1.setText("SELEZIONE IL TIPO DI GRAFICO:");
+		// lbl1.setBackground(white);
+		// lbl1.setLayoutData(gdLbl);
+		// lbl1.setFont(Utils.getFont("Arial", 13, SWT.BOLD));
 
 		Composite cmp1 = new Composite(this, SWT.BORDER);
 		GridData gdCmp1 = new GridData();
@@ -116,9 +116,9 @@ public class GraficiMainForm extends ListComposite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				comboFunzioni.removeAll();
-				comboFunzioni.add("N° fatture per mese");
-				comboFunzioni.add("Fatturati nel mese");
-				comboFunzioni.add("Fatturato nel tempo ");
+				comboFunzioni.add("N° fatture per mese (BARRE)");
+				comboFunzioni.add("Fatturati nel mese (TORTA)");
+				comboFunzioni.add("Fatturato nel tempo (SERIE TEMPORALE)");
 				comboFunzioni.setEnabled(true);
 				comboFunzioni.select(0);
 			}
@@ -134,9 +134,9 @@ public class GraficiMainForm extends ListComposite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				comboFunzioni.removeAll();
-				comboFunzioni.add("N° prenotazioni per tipo visita nell'anno");
-				comboFunzioni.add("N° prenotazioni per tipo visita");
-				comboFunzioni.add("Distribuzione prenotazioni nell'anno");
+				comboFunzioni.add("N° prenotazioni per tipo visita nell'anno (BARRE)");
+				comboFunzioni.add("N° prenotazioni per tipo visita (TORTA)");
+				comboFunzioni.add("Distribuzione prenotazioni nell'anno (SERIE TEMPORALE)");
 				comboFunzioni.setEnabled(true);
 				comboFunzioni.select(0);
 			}
@@ -173,9 +173,9 @@ public class GraficiMainForm extends ListComposite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				comboFunzioni.removeAll();
-				comboFunzioni.add("Prestazioni medici anno in corso");
-				comboFunzioni.add("Prestazioni medico per mese(BARRE)");
-				comboFunzioni.add("Prestazioni medico per mese (TORTA)");
+				comboFunzioni.add("Prestazioni medico per mese (BARRE)");
+				comboFunzioni.add("Prestazioni medici per tipo visita (TORTA)");
+				comboFunzioni.add("Prestazioni medici anno in corso (SERIE TEMPORALE)");
 				comboFunzioni.select(0);
 				comboFunzioni.setEnabled(true);
 			}
@@ -224,7 +224,6 @@ public class GraficiMainForm extends ListComposite {
 		shell.setSize(1000, 550);
 		// fatture
 		if (areaFunzionale == 0) {
-			System.out.println("fatture");
 			if (comboFunzioni.getSelectionIndex() == 0) {
 				FattureBarChart chart = new FattureBarChart(comboFunzioni
 						.getText(), shell, SWT.BORDER, 0);
@@ -232,61 +231,52 @@ public class GraficiMainForm extends ListComposite {
 				FatturePieChart chart = new FatturePieChart(comboFunzioni
 						.getText(), shell, SWT.BORDER, 0);
 			} else if (comboFunzioni.getSelectionIndex() == 2) {
+				System.out.println("s");
 				FattureTimeSeriesChart chart = new FattureTimeSeriesChart(
-						comboFunzioni.getText(), shell, SWT.BORDER,
-						0);
+						comboFunzioni.getText(), shell, SWT.BORDER, 0);
 			}
 		}
 		// pazienti
-//		else if (areaFunzionale == 1) {
-//			if (comboFunzioni
-//					.getSelectionIndex()) == 0) {
-//				PazientiBarChart chart = new PazientiBarChart(comboFunzioni
-//						.getText(), shell, SWT.BORDER, comboFunzioni
-//						.getSelectionIndex());
-//			} else if (comboTipoGrafo.getSelectionIndex() == 1) {
-//				PazientiPieChart chart = new PazientiPieChart(comboFunzioni
-//						.getText(), shell, SWT.BORDER, comboFunzioni
-//						.getSelectionIndex());
-//			} else if (comboTipoGrafo.getSelectionIndex() == 2) {
-//				PazientiTimeSeriesChart chart = new PazientiTimeSeriesChart(
-//						comboFunzioni.getText(), shell, SWT.BORDER,
-//						comboFunzioni.getSelectionIndex());
-//			}
-//		}
+		else if (areaFunzionale == 1) {
+			if (comboFunzioni.getSelectionIndex() == 0) {
+				PazientiBarChart chart = new PazientiBarChart(comboFunzioni
+						.getText(), shell, SWT.BORDER, 0);
+			} else if (comboFunzioni.getSelectionIndex() == 1) {
+				PazientiPieChart chart = new PazientiPieChart(comboFunzioni
+						.getText(), shell, SWT.BORDER, 0);
+			} else if (comboFunzioni.getSelectionIndex() == 2) {
+				PazientiTimeSeriesChart chart = new PazientiTimeSeriesChart(
+						comboFunzioni.getText(), shell, SWT.BORDER, 0);
+			}
+		}
 		// PRENOTAZIONI
 		else if (areaFunzionale == 2) {
-			if (comboFunzioni
-					.getSelectionIndex() == 0) {
+			if (comboFunzioni.getSelectionIndex() == 0) {
 				PrenotazioniBarChart chart = new PrenotazioniBarChart(
 						comboFunzioni.getText(), shell, SWT.BORDER, 0);
-			} else if (comboFunzioni
-					.getSelectionIndex() == 1) {
+			} else if (comboFunzioni.getSelectionIndex() == 1) {
 				PrenotazioniPieChart chart = new PrenotazioniPieChart(
 						comboFunzioni.getText(), shell, SWT.BORDER, 1);
-			} else if (comboFunzioni
-					.getSelectionIndex() == 2) {
+			} else if (comboFunzioni.getSelectionIndex() == 2) {
 				PrenotazioneTimeSeriesChart chart = new PrenotazioneTimeSeriesChart(
 						comboFunzioni.getText(), shell, SWT.BORDER, 2);
 			}
 		}
 		// /medici
 		else {
-			if (comboFunzioni
-					.getSelectionIndex() == 1) {
+			if (comboFunzioni.getSelectionIndex() == 0) {
 				MediciBarChart chart = new MediciBarChart(comboFunzioni
 						.getText(), shell, SWT.BORDER, 1);
-			} else if (comboFunzioni
-					.getSelectionIndex() == 2) {
+			} else if (comboFunzioni.getSelectionIndex() == 1) {
 				MediciPieChart chart = new MediciPieChart(comboFunzioni
 						.getText(), shell, SWT.BORDER, 1);
-			} else if (comboFunzioni
-					.getSelectionIndex() == 0) {
+			} else if (comboFunzioni.getSelectionIndex() == 2) {
 				MediciTimeSeriesChart chart = new MediciTimeSeriesChart(
 						comboFunzioni.getText(), shell, SWT.BORDER, 2);
 			}
 
 		}
+		System.out.println("shell open");
 		shell.open();
 	}
 
