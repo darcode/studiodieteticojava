@@ -2,7 +2,9 @@ package forms;
 
 import hibernate.Paziente;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
@@ -10,8 +12,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
 import service.Utils;
 import studiodietetico.AnamnesiView;
@@ -144,12 +150,79 @@ public class HomePazienteForm extends ListComposite {
 		// + ((Paziente)paziente).getDataNascita() + ")");
 		// }
 		// String[] pazientiArray = (String[]) p.toArray((new String[0]));
+		
+		
+		//ordinamento
+		Listener sortListener = new Listener() {
+	        public void handleEvent(Event e) {
+	            TableItem[] items = listElencoPazienti.getItems();
+	            Collator collator = Collator.getInstance(Locale.getDefault());
+	            TableColumn column = (TableColumn)e.widget;
+	            /*int index = 0;
+	            if(column == columnNome){
+	            	index = 0;
+	            }else if (column == columnTipologia) {
+	            	index = 1;
+				}else if (column == columnCalorie) {
+					index = 2;
+				}else if (column == columnIdAlimento) {
+					index = 3;
+				}*/
+	            String value1 = null;
+	            String value2 = null;
+	            //int valueInt1 = 0;
+	            //int valueInt2 = 0;
+	            for (int i = 1; i < items.length; i++) {
+	                //if((index==0)||(index==1)) {
+	                	value1 = items[i].getText(1);
+	                	for (int j = 0; j < i; j++){
+		                    value2 = items[j].getText(2);
+		                    if (collator.compare(value1, value2) < 0) {
+		                        String[] values = {items[i].getText(0), items[i].getText(1), items[i].getText(2), items[i].getText(3),
+		                        		items[i].getText(4), items[i].getText(5), items[i].getText(6),items[i].getText(7), items[i].getText(8),
+		                        		items[i].getText(9), items[i].getText(10), items[i].getText(11), items[i].getText(12), items[i].getText(13), items[i].getText(14)};
+		                        items[i].dispose();
+		                        TableItem item = new TableItem(listElencoPazienti, SWT.NONE, j);
+		                        item.setText(values);
+		                        items = listElencoPazienti.getItems();
+		                        break;
+		                    }
+		                }
+	            }
+	                /*}else{
+	                	if(items[i].getText(index).equals(""))
+	                		valueInt1=Integer.MAX_VALUE;
+	                	else
+	                		valueInt1 = Integer.parseInt(items[i].getText(index));
+	                	  for (int j = 0; j < i; j++){
+	                		  if(items[j].getText(index).equals(""))
+	                			  valueInt2=Integer.MAX_VALUE;
+	                		  else
+	                			  valueInt2 = Integer.parseInt(items[j].getText(index));
+			                    if (valueInt1 < valueInt2) {
+			                        String[] values = {items[i].getText(0), items[i].getText(1), items[i].getText(2), items[i].getText(3)};
+			                        items[i].dispose();
+			                        TableItem item = new TableItem(tableAlimenti, SWT.NONE, j);
+			                        item.setText(values);
+			                        items = tableAlimenti.getItems();
+			                        break;
+			                    }
+			                }
+	                }*/
+	                	
+	              
+	            
+	        listElencoPazienti.setSortColumn(column);
+	        }
+	    };
+	    listElencoPazienti.getColumn(2).addListener(SWT.Selection, sortListener);
+	    //listElencoPazienti.getColumn(1).addListener(SWT.Selection, sortListener);
+	    //listElencoPazienti.getColumn(3).addListener(SWT.Selection, sortListener);
 
 	}
 
 	public static Paziente getPazienteSelezionato() {
-		Paziente paziente = (Paziente) paz.get(listElencoPazienti
-				.getSelectionIndex());
+		Paziente paziente = (Paziente) paz.get(listElencoPazienti.getSelectionIndex());
 		return paziente;
 	}
 }
