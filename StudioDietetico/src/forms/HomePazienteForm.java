@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Table;
 
 import service.Utils;
 import studiodietetico.AnamnesiView;
+import studiodietetico.InserisciDietaView;
 import studiodietetico.PrenotaVisitaView;
 import studiodietetico.RegistraPazienteView;
 
@@ -37,6 +38,7 @@ public class HomePazienteForm extends ListComposite {
 	private Button buttonVisualizzaDieta = null;
 	private Button buttonAnamnesi = null;
 	private static ArrayList<Object> paz; // @jve:decl-index=0:
+	private Button buttonInsDieta = null;
 
 	private void initialize(Composite parent) {
 		GridData gdForm = new GridData(SWT.BORDER);
@@ -104,6 +106,14 @@ public class HomePazienteForm extends ListComposite {
 		buttonVisualizzaDieta.setText("Visualizza Dieta");
 		buttonAnamnesi = new Button(top, SWT.NONE);
 		buttonAnamnesi.setText("Gestione Anamnesi");
+		buttonInsDieta = new Button(top, SWT.NONE);
+		buttonInsDieta.setText("Inserisci dieta");
+		buttonInsDieta
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						Utils.showView(InserisciDietaView.VIEW_ID);
+					}
+				});
 		buttonAnamnesi
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(
