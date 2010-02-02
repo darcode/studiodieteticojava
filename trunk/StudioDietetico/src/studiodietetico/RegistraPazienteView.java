@@ -59,7 +59,9 @@ public class RegistraPazienteView extends ViewPart {
 	private Text textAreaNotePaz = null;
 	private Button buttonRegistraPaz = null;
 
-	public static final String VIEW_ID = "StudioDietetico.registrapaziente";
+	//public static final String VIEW_ID = "StudioDietetico.registrapaziente";
+	public static final String VIEW_ID = "StudioDietetico.RegistraPazienteView";
+	
 	public RegistraPazienteView() {
 		// TODO Auto-generated constructor stub
 	}
