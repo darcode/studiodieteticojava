@@ -88,6 +88,11 @@
             id="StudioDietetico.CommandGrafici"
             name="CommandGrafici">
       </command>
+      <command
+            categoryId="StudioDietetico.category1"
+            id="StudioDietetico.CommandDinamiche"
+            name="CommandDinamiche">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -138,6 +143,10 @@
       <handler
             class="handler.MenuGraficiHandler"
             commandId="StudioDietetico.CommandGrafici">
+      </handler>
+      <handler
+            class="handler.MenuDinamicheHandler"
+            commandId="StudioDietetico.CommandDinamiche">
       </handler>
    </extension>
    <extension
@@ -226,6 +235,12 @@
                         commandId="StudioDietetico.CommandGrafici"
                         icon="icons/Stats-32.png"
                         label="Statistiche Automatiche"
+                        style="push">
+                  </command>
+                  <command
+                        commandId="StudioDietetico.CommandDinamiche"
+                        icon="icons/image201002020010_2.png.jpg"
+                        label="Interrogazioni Dinamiche"
                         style="push">
                   </command>
          </menu>
