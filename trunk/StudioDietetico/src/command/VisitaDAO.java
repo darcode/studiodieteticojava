@@ -187,4 +187,20 @@ public class VisitaDAO extends BaseDAO {
 		return null;
 
 	}
+	
+	public static ArrayList<Prenotazione> getPrenotazioniGiorno(int anno, int mese, int giorno) {
+		begin();
+		try {
+			Query q = getSession().createQuery(
+					"FROM Prenotazione pr where YEAR(pr.dataOra) = " + anno +" AND MONTH(pr.dataOra)= " + mese + " AND DAY(pr.dataOra)= "+ giorno);
+			ArrayList<Prenotazione> pr = (ArrayList<Prenotazione>) q.list();
+			commit();
+			//System.out.println("numero prenotazioni per il giorno selezionato:" + pr.size());
+			return pr;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
 }
