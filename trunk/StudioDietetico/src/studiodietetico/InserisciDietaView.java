@@ -1,5 +1,6 @@
 package studiodietetico;
 
+import forms.HomePazienteForm;
 import hibernate.Dieta;
 import hibernate.Specifichedieta;
 
@@ -32,14 +33,21 @@ import org.eclipse.swt.widgets.List;
 
 import antlr.Utils;
 import command.DietaDAO;
+import command.IngredienteDAO;
+import command.PazienteDAO;
 import service.GiornoDieta;
 import service.StrutAlimento;
 import service.StrutPasto;
 
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 public class InserisciDietaView extends ViewPart {
+	
+	private Label labelPaziente = null;  //  @jve:decl-index=0:visual-constraint="9,-39"
+	private Text textPaziente = null;
 
 	private Composite top = null;
 	private Group groupDieta = null;
@@ -49,7 +57,6 @@ public class InserisciDietaView extends ViewPart {
 	private Label lNote = null;
 	private Text textNote = null;
 	private Label lTipoDieta = null;
-	private Combo comboDietaSpec = null;
 	private Button bAddNuovaDietaSpec = null;
 	private ArrayList<GiornoDieta> giorniDieta = null;  //  @jve:decl-index=0:
 	private Shell shellIns = null;
@@ -64,6 +71,7 @@ public class InserisciDietaView extends ViewPart {
 	private final Font fontList = new Font(Display.getCurrent(),"Arial",10,SWT.BOLD);
 	private DietaDAO dieta = new DietaDAO();  //  @jve:decl-index=0:
 	//private ArrayList<StrutAlimento> alimentiDB = null;
+	private Shell shellMsg = null;
 	private Text textShellIns2;
 	private Shell shellInsertAlimento = null;  //  @jve:decl-index=0:visual-constraint="1018,119"
 	private Button bInsNewAlimento = null;
@@ -73,7 +81,7 @@ public class InserisciDietaView extends ViewPart {
 	private Text textShellInsAlimento1 = null;
 	private Label lShellInsAlimento3 = null;
 	private Spinner spinCalorie = null;
-	private Shell shellInsSchemaDietetico = null;  //  @jve:decl-index=0:visual-constraint="18,562"
+	private Shell shellInsSchemaDietetico = null;  //  @jve:decl-index=0:visual-constraint="6,795"
 	private Group groupSchemaDieta = null;
 	private Label lDescrizione = null;
 	private Text textDescrizione = null;
@@ -98,11 +106,7 @@ public class InserisciDietaView extends ViewPart {
 	private Table tableAlimenti = null;
 	private Table tableAlimenti1 = null;
 	private Button bCreaSchema = null;
-	private Label lMod = null;
-	private Button radioButton = null;
-	private Button radioButton1 = null;
 	private Table tableSchemiDiete = null;
-	private Button bModificaSchema = null;
 	private Label lSelezSchema = null;
 	private StyledText textVisSchema = null;
 	private Button bAddDesc = null;
@@ -110,7 +114,25 @@ public class InserisciDietaView extends ViewPart {
 	private Button bConfSchema = null;
 	private ArrayList<StrutAlimento> arrAlimenti = null;  //  @jve:decl-index=0:
 	private DateTime calendar = null;
-	private Button bConfermaSchemaSel = null;
+	private Label lMod = null;
+	private Button radioButton = null;
+	private Button radioButton1 = null;
+	private Table tableTipoDieta = null;
+	private Button buttonInserisci = null;
+	private Shell sShellSpecificheDieta = null;  //  @jve:decl-index=0:visual-constraint="6,1263"
+	private Group groupSpecificheDieta = null;
+	private Label labelKilocal = null;
+	private Spinner spinKilocal = null;
+	private Label labelContAssente = null;
+	private Text textContAssente = null;
+	private Label labelContPresente = null;
+	private Text textContPresente = null;
+	private Text textIndicata = null;
+	private Label labelIndicata = null;
+	private Button buttonInsNewSpecDieta = null;
+	private Integer idTipoDieta = null;
+	
+	 public static final String VIEW_ID = "StudioDietetico.InserisciDietaView";
 	
 	public InserisciDietaView() {
 		giorniDieta = new ArrayList<GiornoDieta>();
@@ -120,7 +142,17 @@ public class InserisciDietaView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		top = new Composite(parent, SWT.NONE);
-		// TODO Auto-generated method stub
+		
+		//Visualizzazione del paziente selezionato
+		labelPaziente = new Label(top, SWT.NONE);
+		labelPaziente.setBounds(new Rectangle(14, 10, 82, 24));
+		labelPaziente.setText("Paziente");
+		textPaziente = new Text(top, SWT.BORDER);
+		textPaziente.setBounds(new Rectangle(106, 10, 263, 31));
+		textPaziente.setEnabled(false);
+		textPaziente.setText(HomePazienteForm.getPazienteSelezionato().getCognome()+"   "+
+				HomePazienteForm.getPazienteSelezionato().getNome()+"   "+
+				HomePazienteForm.getPazienteSelezionato().getDataNascita());
 
 		createGroupDieta();
 	}
@@ -140,55 +172,50 @@ public class InserisciDietaView extends ViewPart {
 		groupDieta = new Group(top, SWT.NONE);
 		groupDieta.setLayout(null);
 		groupDieta.setText("Dieta");
-		groupDieta.setBounds(new Rectangle(11, 8, 950, 409));
+		groupDieta.setBounds(new Rectangle(11, 50, 816, 517));
 		textConsigli = new Text(groupDieta, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-		textConsigli.setBounds(new Rectangle(420, 141, 246, 61));
+		textConsigli.setBounds(new Rectangle(138, 416, 293, 57));
 		lDataInizio = new Label(groupDieta, SWT.NONE);
-		lDataInizio.setBounds(new Rectangle(12, 35, 73, 13));
-		lDataInizio.setText("Data inizio");
+		lDataInizio.setBounds(new Rectangle(16, 34, 73, 13));
+		lDataInizio.setText("*Data inizio");
 		calendar = new DateTime (groupDieta, SWT.NONE | SWT.CALENDAR | SWT.BORDER);
-		calendar.setBounds(new Rectangle(14, 55, 165, 144));
+		calendar.setBounds(new Rectangle(18, 54, 165, 144));
 		lConsigli = new Label(groupDieta, SWT.NONE);
-		lConsigli.setBounds(new Rectangle(417, 121, 139, 13));
+		lConsigli.setBounds(new Rectangle(135, 396, 139, 13));
 		lConsigli.setText("Consigli per il paziente");
 		lNote = new Label(groupDieta, SWT.NONE);
-		lNote.setBounds(new Rectangle(688, 125, 60, 13));
+		lNote.setBounds(new Rectangle(440, 401, 60, 13));
 		lNote.setText("Note dieta");
 		textNote = new Text(groupDieta, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-		textNote.setBounds(new Rectangle(689, 142, 243, 60));
+		textNote.setBounds(new Rectangle(442, 417, 347, 57));
 		lTipoDieta = new Label(groupDieta, SWT.NONE);
-		lTipoDieta.setBounds(new Rectangle(227, 41, 130, 13));
-		lTipoDieta.setText("Specifica tipo dieta speciale");
-		createComboDietaSpec();
+		lTipoDieta.setBounds(new Rectangle(224, 40, 130, 13));
+		lTipoDieta.setText("*Seleziona tipo dieta");
 		bAddNuovaDietaSpec = new Button(groupDieta, SWT.NONE);
-		bAddNuovaDietaSpec.setBounds(new Rectangle(606, 59, 117, 23));
-		bAddNuovaDietaSpec.setText("Gestione diete speciali");
+		bAddNuovaDietaSpec.setBounds(new Rectangle(673, 52, 71, 23));
+		bAddNuovaDietaSpec.setText("Crea nuovo");
+		bAddNuovaDietaSpec
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						createSShellSpecificheDieta();
+					}
+				});
 		spinCicli = new Spinner(groupDieta, SWT.NONE);
 		spinCicli.setMaximum(50);
 		spinCicli.setMinimum(1);
 		Font fontSpin = new Font(Display.getCurrent(),"Arial",14,SWT.BOLD);
 		spinCicli.setFont(fontSpin);
-		spinCicli.setBounds(new Rectangle(226, 142, 51, 24));
+		spinCicli.setBounds(new Rectangle(20, 419, 51, 24));
 		lNCicli = new Label(groupDieta, SWT.NONE);
-		lNCicli.setBounds(new Rectangle(226, 122, 67, 13));
-		lNCicli.setText("Numero Cicli");
+		lNCicli.setBounds(new Rectangle(17, 395, 108, 13));
+		lNCicli.setText("*Numero cicli schema");
 		bCreaSchema = new Button(groupDieta, SWT.NONE);
-		bCreaSchema.setBounds(new Rectangle(844, 271, 88, 23));
-		bCreaSchema.setText("Crea nuovo");
-		lMod = new Label(groupDieta, SWT.NONE);
-		lMod.setBounds(new Rectangle(319, 124, 40, 13));
-		lMod.setText("Modalità");
-		radioButton = new Button(groupDieta, SWT.RADIO);
-		radioButton.setBounds(new Rectangle(319, 142, 77, 16));
-		radioButton.setText("Settimanale");
-		radioButton.setSelection(true);
-		radioButton1 = new Button(groupDieta, SWT.RADIO);
-		radioButton1.setBounds(new Rectangle(315, 159, 90, 16));
-		radioButton1.setText("Personalizzata");
+		bCreaSchema.setBounds(new Rectangle(670, 234, 125, 23));
+		bCreaSchema.setText("Crea nuovo / Conferma");
 		tableSchemiDiete = new Table(groupDieta, SWT.NONE | SWT.FULL_SELECTION | SWT.V_SCROLL);
 		tableSchemiDiete.setHeaderVisible(true);
 		tableSchemiDiete.setLinesVisible(true);
-		tableSchemiDiete.setBounds(new Rectangle(11, 248, 238, 149));
+		tableSchemiDiete.setBounds(new Rectangle(20, 230, 207, 149));
 	
 		final TableColumn columnId = new TableColumn(tableSchemiDiete, SWT.NONE);
 		columnId.setText("Id Dieta");
@@ -229,24 +256,117 @@ public class InserisciDietaView extends ViewPart {
 		
 		
 		
-		bModificaSchema = new Button(groupDieta, SWT.NONE);
-		bModificaSchema.setBounds(new Rectangle(845, 299, 85, 23));
-		bModificaSchema.setText("Modifica");
 		lSelezSchema = new Label(groupDieta, SWT.NONE);
-		lSelezSchema.setBounds(new Rectangle(8, 232, 228, 13));
-		lSelezSchema.setText("Schemi dietetici esistenti");
+		lSelezSchema.setBounds(new Rectangle(17, 208, 155, 13));
+		lSelezSchema.setText("*Seleziona schema dietetico");
 		textVisSchema = new StyledText(groupDieta, SWT.NONE | SWT.V_SCROLL | SWT.READ_ONLY);
-		textVisSchema.setBounds(new Rectangle(268, 246, 572, 151));
+		textVisSchema.setBounds(new Rectangle(230, 231, 438, 149));
 		textVisSchema.setEditable(false);
-		bConfermaSchemaSel = new Button(groupDieta, SWT.NONE);
-		bConfermaSchemaSel.setBounds(new Rectangle(846, 246, 86, 23));
-		bConfermaSchemaSel.setText("Usa schema");
+		tableTipoDieta = new Table(groupDieta, SWT.NONE | SWT.FULL_SELECTION | SWT.V_SCROLL);
+		tableTipoDieta.setHeaderVisible(true);
+		tableTipoDieta.setLinesVisible(true);
+		tableTipoDieta.setBounds(new Rectangle(229, 54, 439, 137));
+		tableTipoDieta
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					
+
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						TableItem itemSel = tableTipoDieta.getSelection()[0];
+						idTipoDieta = Integer.parseInt(itemSel.getText(0));
+					}
+				});
+		buttonInserisci = new Button(groupDieta, SWT.NONE);
+		buttonInserisci.setBounds(new Rectangle(694, 483, 116, 32));
+		buttonInserisci.setText("Inserisci");
+		buttonInserisci
+		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				shellMsg = new Shell();
+				boolean inserisci = true;
+				if (Integer.parseInt(spinCicli.getText())==0 | tableTipoDieta.getSelectionCount()==0 | tableSchemiDiete.getSelectionCount()==0) {
+					inserisci = false;
+				}
+
+				if (inserisci) {
+					String data = calendar.getYear()+"-"+(calendar.getMonth()+1)+"-"+calendar.getDay();
+					String formato = "yyyy-MM-dd";
+					Date inizioDieta = new Date();
+					inizioDieta = service.Utils.convertStringToDate(data, formato);
+					Specifichedieta specifichedieta = dieta.getSpecificheDieta(Integer.parseInt(tableTipoDieta.getSelection()[0].getText(0)));
+					ArrayList<GiornoDieta> arrGiorni = dieta.getSchemiDieta(Integer.parseInt(tableSchemiDiete.getSelection()[0].getText(0)));
+					dieta.inserisciDieta(arrGiorni, HomePazienteForm.getPazienteSelezionato(), inizioDieta, textNote.getText(), arrGiorni.size(), Integer.parseInt(spinCicli.getText()),
+							specifichedieta, textConsigli.getText());
+				}else{
+					messageBox = new MessageBox(shellMsg,
+							SWT.OK |
+							SWT.ICON_ERROR);
+					messageBox.setMessage("Attenzione completare tutti i campi obbligatori (*)");	
+					messageBox.open();		
+
+				}
+
+
+			}
+
+		});
+		final TableColumn columnIdTipoDieta = new TableColumn(tableTipoDieta, SWT.NONE);
+		columnIdTipoDieta.setText("Id");
+		final TableColumn columnKilocal = new TableColumn(tableTipoDieta, SWT.NONE);
+		columnKilocal.setText("Kilocalorie");
+		final TableColumn columnIndicata = new TableColumn(tableTipoDieta, SWT.NONE);
+		columnIndicata.setText("Indicazioni");
+		final TableColumn columnContPres = new TableColumn(tableTipoDieta, SWT.NONE);
+		columnContPres.setText("Contenuto presente");
+		final TableColumn columnContAss = new TableColumn(tableTipoDieta, SWT.NONE);
+		columnContAss.setText("Contenuto assente");
+		
+		
+		final TableColumn [] columns3 = tableTipoDieta.getColumns ();
+		aggiornaTipoDiete();
+		for (int i=0; i<columns3.length; i++) columns3[i].pack();
+
+		
+		
+		
+		
 		bCreaSchema.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-			createShellInsSchemaDietetico();	
+				shellMsg = new Shell();
+				boolean inserisci = true;
+				if (Integer.parseInt(spinCicli.getText())==0 | tableTipoDieta.getSelectionCount()==0) {
+					inserisci = false;
+				}
+
+				if (inserisci) {
+					createShellInsSchemaDietetico();
+				}else{
+					messageBox = new MessageBox(shellMsg,
+							SWT.OK |
+							SWT.ICON_ERROR);
+					messageBox.setMessage("Attenzione completare tutti i campi obbligatori (*)");	
+					messageBox.open();		
+
+				}
+					
 			}
 		});
 	
+	}
+
+	private void aggiornaTipoDiete() {
+		TableItem itemSchema = null;
+		//TODO
+		ArrayList<Specifichedieta> tipoDiete = new ArrayList<Specifichedieta>();
+		tipoDiete = dieta.getSpecificheDieta();
+		for (Specifichedieta tipodieta : tipoDiete) {
+			itemSchema = new TableItem(tableTipoDieta, SWT.NULL);
+			itemSchema.setText(0, ""+tipodieta.getIdSpecificheDieta());
+			itemSchema.setText(1, ""+tipodieta.getKilocalorie());
+			itemSchema.setText(2, tipodieta.getContenutoPresente());
+			itemSchema.setText(3, tipodieta.getContenutoAssente());
+
+		}
+		
 	}
 
 	private void aggiornaDiete() {
@@ -262,15 +382,6 @@ public class InserisciDietaView extends ViewPart {
 			itemSchema.setText(3, dieta.getPaziente().getCognome()+" "+dieta.getPaziente().getNome());
 
 		}
-	}
-
-	/**
-	 * This method initializes comboDietaSpec	
-	 *
-	 */
-	private void createComboDietaSpec() {
-		comboDietaSpec = new Combo(groupDieta, SWT.NONE);
-		comboDietaSpec.setBounds(new Rectangle(228, 59, 373, 21));
 	}
 
 	/**
@@ -351,7 +462,7 @@ public class InserisciDietaView extends ViewPart {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				if(!textShellInsAlimento.getText().equals("")) {
 					//StrutAlimento ali = new StrutAlimento(textShellInsAlimento.getText(), textShellInsAlimento1.getText(), spinCalorie.getDigits());
-					dieta.insAlimento(textShellInsAlimento.getText(), textShellInsAlimento1.getText(), spinCalorie.getDigits());
+					dieta.insAlimento(textShellInsAlimento.getText(), textShellInsAlimento1.getText(), Integer.parseInt(spinCalorie.getText()));
 					textShellInsAlimento.setText("");
 					textShellInsAlimento1.setText("");
 					spinCalorie.setDigits(0);
@@ -511,10 +622,10 @@ public class InserisciDietaView extends ViewPart {
 		    tableAlimenti.setSortColumn(columnNome);
 		    tableAlimenti.setSortDirection(SWT.UP);
 		lDescrizione = new Label(groupSchemaDieta, SWT.NONE);
-		lDescrizione.setBounds(new Rectangle(12, 263, 88, 13));
+		lDescrizione.setBounds(new Rectangle(11, 279, 88, 13));
 		lDescrizione.setText("Descrizione");
 		textDescrizione = new Text(groupSchemaDieta, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-		textDescrizione.setBounds(new Rectangle(13, 284, 377, 47));
+		textDescrizione.setBounds(new Rectangle(12, 300, 377, 47));
 		listGiorni = new List(groupSchemaDieta, SWT.NONE | SWT.V_SCROLL);
 		listGiorni.setBounds(new Rectangle(13, 45, 135, 179));
 		listGiorni.setFont(new Font(Display.getCurrent(), "Arial", 10, SWT.BOLD));
@@ -732,9 +843,9 @@ public class InserisciDietaView extends ViewPart {
 		lQuant.setBounds(new Rectangle(597, 27, 49, 13));
 		lQuant.setText("Quantità");
 		textNoteSchema = new Text(groupSchemaDieta, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-		textNoteSchema.setBounds(new Rectangle(399, 285, 369, 47));
+		textNoteSchema.setBounds(new Rectangle(398, 301, 369, 47));
 		lNoteSchema = new Label(groupSchemaDieta, SWT.NONE);
-		lNoteSchema.setBounds(new Rectangle(398, 266, 123, 13));
+		lNoteSchema.setBounds(new Rectangle(397, 282, 123, 13));
 		lNoteSchema.setText("Note schema dietetico");
 		bAddPasto = new Button(groupSchemaDieta, SWT.NONE);
 		bAddPasto.setBounds(new Rectangle(160, 228, 23, 23));
@@ -772,15 +883,25 @@ public class InserisciDietaView extends ViewPart {
 		bDelNewAlim.setBounds(new Rectangle(685, 228, 23, 23));
 		bDelNewAlim.setText("-");
 		bAddDesc = new Button(groupSchemaDieta, SWT.NONE);
-		bAddDesc.setBounds(new Rectangle(15, 330, 112, 23));
+		bAddDesc.setBounds(new Rectangle(14, 346, 112, 23));
 		bAddDesc.setText("Aggiungi descrizione");
 		bAddNote = new Button(groupSchemaDieta, SWT.NONE);
-		bAddNote.setBounds(new Rectangle(399, 334, 109, 23));
+		bAddNote.setBounds(new Rectangle(398, 350, 109, 23));
 		bAddNote.setText("Aggiungi nota");
 		bAddNote.setEnabled(false);
 		bConfSchema = new Button(groupSchemaDieta, SWT.NONE);
-		bConfSchema.setBounds(new Rectangle(381, 376, 132, 29));
+		bConfSchema.setBounds(new Rectangle(782, 375, 132, 29));
 		bConfSchema.setText("Conferma");
+		lMod = new Label(groupSchemaDieta, SWT.NONE);
+		lMod.setBounds(new Rectangle(231, 243, 40, 13));
+		lMod.setText("Modalità");
+		radioButton = new Button(groupSchemaDieta, SWT.RADIO);
+		radioButton.setBounds(new Rectangle(64, 247, 77, 16));
+		radioButton.setText("Settimanale");
+		radioButton.setSelection(true);
+		radioButton1 = new Button(groupSchemaDieta, SWT.RADIO);
+		radioButton1.setBounds(new Rectangle(64, 232, 90, 16));
+		radioButton1.setText("Personalizzata");
 		bConfSchema.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				//TODO INSERIRE CONTROLLI VARI PER DIETA
@@ -789,12 +910,8 @@ public class InserisciDietaView extends ViewPart {
 				String formato = "yyyy-MM-dd";
 				Date inizioDieta = new Date();
 				inizioDieta = service.Utils.convertStringToDate(data, formato);
-				Specifichedieta specifichedieta = new Specifichedieta();
-				specifichedieta.setContenutoAssente("pane");
-				specifichedieta.setContenutoPresente("pasta");
-				specifichedieta.setIndicata("Tutti");
-				specifichedieta.setKilocalorie(123);
-				dieta.inserisciDieta(giorniDieta, inizioDieta, textNote.getText(), giorniDieta.size(), spinCicli.getDigits(),
+				Specifichedieta specifichedieta = dieta.getSpecificheDieta(Integer.parseInt(tableTipoDieta.getSelection()[0].getText(0)));
+				dieta.inserisciDieta(giorniDieta, HomePazienteForm.getPazienteSelezionato(), inizioDieta, textNote.getText(), giorniDieta.size(), Integer.parseInt(spinCicli.getText()),
 						specifichedieta, textConsigli.getText());
 			}
 		});
@@ -820,6 +937,64 @@ public class InserisciDietaView extends ViewPart {
 		});
 	}
 
+	/**
+	 * This method initializes sShellSpecificheDieta	
+	 *
+	 */
+	private void createSShellSpecificheDieta() {
+		sShellSpecificheDieta = new Shell(Display.getCurrent(),
+				SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		sShellSpecificheDieta.setLayout(null);
+		createGroupSpecificheDieta();
+		sShellSpecificheDieta.setSize(new Point(369, 395));
+		sShellSpecificheDieta.setText("Inserisci nuova specifica dieta");
+		sShellSpecificheDieta.open();
+	}
+
+	/**
+	 * This method initializes groupSpecificheDieta	
+	 *
+	 */
+	private void createGroupSpecificheDieta() {
+		groupSpecificheDieta = new Group(sShellSpecificheDieta, SWT.NONE);
+		groupSpecificheDieta.setLayout(null);
+		groupSpecificheDieta.setBounds(new Rectangle(5, 5, 351, 341));
+		labelKilocal = new Label(groupSpecificheDieta, SWT.NONE);
+		labelKilocal.setText("Kilocalorie");
+		labelKilocal.setBounds(new Rectangle(8, 280, 70, 13));
+		spinKilocal = new Spinner(groupSpecificheDieta, SWT.NONE);
+		spinKilocal.setFont(new Font(Display.getCurrent(), "Arial", 14, SWT.BOLD));
+		spinKilocal.setMaximum(10000);
+		spinKilocal.setMinimum(1);
+		spinKilocal.setBounds(new Rectangle(9, 299, 49, 22));
+		labelContAssente = new Label(groupSpecificheDieta, SWT.NONE);
+		labelContAssente.setBounds(new Rectangle(8, 12, 144, 13));
+		labelContAssente.setText("Contenuto assente");
+		textContAssente = new Text(groupSpecificheDieta, SWT.BORDER | SWT.MULTI);
+		textContAssente.setBounds(new Rectangle(8, 30, 319, 63));
+		labelContPresente = new Label(groupSpecificheDieta, SWT.NONE);
+		labelContPresente.setBounds(new Rectangle(8, 104, 148, 16));
+		labelContPresente.setText("Contenuto presente");
+		textContPresente = new Text(groupSpecificheDieta, SWT.BORDER | SWT.MULTI);
+		textContPresente.setBounds(new Rectangle(9, 122, 319, 63));
+		textIndicata = new Text(groupSpecificheDieta, SWT.BORDER | SWT.MULTI);
+		textIndicata.setBounds(new Rectangle(9, 207, 319, 63));
+		labelIndicata = new Label(groupSpecificheDieta, SWT.NONE);
+		labelIndicata.setBounds(new Rectangle(9, 193, 97, 13));
+		labelIndicata.setText("Indicazioni");
+		buttonInsNewSpecDieta = new Button(groupSpecificheDieta, SWT.NONE);
+		buttonInsNewSpecDieta.setBounds(new Rectangle(225, 295, 102, 23));
+		buttonInsNewSpecDieta.setText("Inserisci");
+		buttonInsNewSpecDieta
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						dieta.inserisciSpecificheDieta(textContAssente.getText(), textContPresente.getText(), textIndicata.getText(), Integer.parseInt(spinKilocal.getText()));
+						aggiornaTipoDiete();
+					}
+				});
+	}
 
 
-}  //  @jve:decl-index=0:visual-constraint="2,10,1009,502"
+
+
+}  //  @jve:decl-index=0:visual-constraint="2,10,853,606"
