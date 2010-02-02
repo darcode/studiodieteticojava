@@ -1,6 +1,7 @@
 package command;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -42,7 +43,7 @@ public class DynamicQueryDAO extends BaseDAO{
 		return results;
 	}
 	
-	public void espandiAlbero(String nomeClasse, String pathClasse, TreeItem radice, HashSet<String> nodiVisitati) {
+	public void espandiAlbero(String nomeClasse, String pathClasse, TreeItem radice, HashSet<String> nodiVisitati, Tree inizioAlbero) {
 		// istanzia classe dinamicamente
 		Class classSelected = null;
 		try {
@@ -99,7 +100,7 @@ public class DynamicQueryDAO extends BaseDAO{
 					if (!nodiVisitati.contains(currentPath)) {
 						TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 						sottoRadice.setText(testo);
-						espandiAlbero(testo, currentPath, sottoRadice, nodiVisitati);
+						espandiAlbero(testo, currentPath, sottoRadice, nodiVisitati, inizioAlbero);
 					}					
 				} else if (!nodiVisitati.contains(currField.getDeclaringClass().toString())) {
 					// hashSet					
@@ -108,7 +109,7 @@ public class DynamicQueryDAO extends BaseDAO{
 					if (!nodiVisitati.contains("hibernate." + testo)) {
 						TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 						sottoRadice.setText(testo);
-						espandiAlbero(testo, "hibernate." + testo, sottoRadice, nodiVisitati);
+						espandiAlbero(testo, "hibernate." + testo, sottoRadice, nodiVisitati, inizioAlbero);
 					}					
 				}
 				fieldClasse.remove(currField);
