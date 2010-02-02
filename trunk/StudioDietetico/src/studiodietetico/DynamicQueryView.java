@@ -16,6 +16,12 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Label;
 
 import command.DynamicQueryDAO;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.graphics.Point;
 
 public class DynamicQueryView extends ViewPart{
 
@@ -24,6 +30,10 @@ public class DynamicQueryView extends ViewPart{
 	private Combo comboSelezioneEntita = null;
 	private Label labelSelezioneEntita = null;
 	private HashSet<String> nodiVisitati = new HashSet<String>();
+	private Button button = null;
+	private Table table = null;
+	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="39,566"
+	private Button button1 = null;
 
 	public DynamicQueryView() {
 		// TODO Auto-generated constructor stub
@@ -35,17 +45,36 @@ public class DynamicQueryView extends ViewPart{
         tree = new Tree(top, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
         tree.setLayout(new FillLayout());
         tree.setHeaderVisible(true);        
-        tree.setBounds(new Rectangle(0, 52, 357, 258));
+        tree.setBounds(new Rectangle(0, 52, 469, 415));
+        tree.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
+        	public void mouseDoubleClick(org.eclipse.swt.events.MouseEvent e) {
+        		//check se è selezionato e se è foglia
+        		createSShell();
+        		sShell.open();
+        	}
+        });
         createComboSelezioneEntita();
         labelSelezioneEntita = new Label(top, SWT.NONE);
-        labelSelezioneEntita.setBounds(new Rectangle(-1, 5, 228, 13));
-        labelSelezioneEntita.setText("Selezionare l'entita' che si vuole ricercare:");
+        labelSelezioneEntita.setBounds(new Rectangle(-1, 5, 278, 13));
+        labelSelezioneEntita.setText("Selezionare l' entita' che si vuole ricercare:");
+        button = new Button(top, SWT.NONE);
+        button.setBounds(new Rectangle(445, 5, 44, 27));
+        button.setText("Vai");
+        table = new Table(top, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+        table.setHeaderVisible(true);
+        table.setLinesVisible(true);
+        table.setBounds(new Rectangle(487, 53, 582, 416));
+        TableColumn tableColumn = new TableColumn(table, SWT.NONE);
+        tableColumn.setWidth(60);
+        TableColumn tableColumn1 = new TableColumn(table, SWT.NONE);
+        tableColumn1.setWidth(60);
+        TableColumn tableColumn2 = new TableColumn(table, SWT.NONE);
+        tableColumn2.setWidth(60);
+        TableColumn tableColumn3 = new TableColumn(table, SWT.NONE);
+        tableColumn3.setWidth(60);
         TreeColumn col1 = new TreeColumn(tree, SWT.LEFT);
         col1.setText("Filtro");
         col1.setWidth(200);
-        TreeColumn col2 = new TreeColumn(tree, SWT.CENTER);
-        col2.setText("Valore");
-        col2.setWidth(200);
 	}
 
 	@Override
@@ -58,7 +87,7 @@ public class DynamicQueryView extends ViewPart{
 	 */
 	private void createComboSelezioneEntita() {
 		comboSelezioneEntita = new Combo(top, SWT.NONE);
-		comboSelezioneEntita.setBounds(new Rectangle(227, 2, 132, 21));
+		comboSelezioneEntita.setBounds(new Rectangle(295, 4, 132, 21));
 		for(int i=0; i<Costanti.entita.length; i++){
 			comboSelezioneEntita.add(Costanti.entita[i][0]);			
 		}
@@ -75,12 +104,29 @@ public class DynamicQueryView extends ViewPart{
 						radice.setText(new String[] {nomeClasse});
 						nodiVisitati.clear();	
 						DynamicQueryDAO dynDao = new DynamicQueryDAO(pathClasse);
-						dynDao.espandiAlbero(nomeClasse, pathClasse, radice, nodiVisitati);
+						dynDao.espandiAlbero(nomeClasse, pathClasse, radice, nodiVisitati, tree);
 //						dynDao.executeDynQuery(filtroQuery);
 					}
 					public void widgetDefaultSelected(
 							org.eclipse.swt.events.SelectionEvent e) {
 					}
 				});
-	}	
-}
+	}
+
+	/**
+	 * This method initializes sShell	
+	 *
+	 */
+	private void createSShell() {
+		sShell = new Shell();
+		sShell.setLayout(new GridLayout());
+		sShell.setSize(new Point(290, 204));
+		button1 = new Button(sShell, SWT.NONE);
+		button1.setText("inserisci valore");
+		button1.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				sShell.close();
+			}
+		});
+	}
+}  //  @jve:decl-index=0:visual-constraint="-1,6,1051,526"
