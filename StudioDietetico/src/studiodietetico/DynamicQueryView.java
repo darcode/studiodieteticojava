@@ -32,11 +32,12 @@ public class DynamicQueryView extends ViewPart{
 	private HashSet<String> nodiVisitati = new HashSet<String>();
 	private Button button = null;
 	private Table table = null;
-	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="398,565"
-	private Button button1 = null;
+	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="398,602"
+	private Button buttonOk = null;
 	private Label label = null;
 	private Text text = null;
 	private Label label1 = null;
+	private Button buttonCancella = null;
 
 	public DynamicQueryView() {
 		// TODO Auto-generated constructor stub
@@ -131,19 +132,28 @@ public class DynamicQueryView extends ViewPart{
 	 */
 	private void createSShell(final TreeItem item) {
 		sShell = new Shell();
-		sShell.setSize(new Point(290, 204));
-		button1 = new Button(sShell, SWT.NONE);
-		button1.setText("Ok");
-		button1.setBounds(new Rectangle(87, 132, 106, 27));
+		sShell.setSize(new Point(290, 167));
+		buttonOk = new Button(sShell, SWT.NONE);
+		buttonOk.setText("Ok");
+		buttonOk.setBounds(new Rectangle(139, 109, 106, 27));
 		label = new Label(sShell, SWT.NONE);
-		label.setBounds(new Rectangle(87, 12, 117, 34));
+		label.setBounds(new Rectangle(87, 9, 117, 34));
 		label.setText("Inserisci il valore");
 		text = new Text(sShell, SWT.BORDER);
-		text.setBounds(new Rectangle(139, 81, 75, 25));
+		text.setBounds(new Rectangle(152, 56, 113, 25));
 		label1 = new Label(sShell, SWT.NONE);
-		label1.setBounds(new Rectangle(51, 87, 34, 15));
+		label1.setBounds(new Rectangle(17, 59, 121, 22));
 		label1.setText(item.getText());
-		button1.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		buttonCancella = new Button(sShell, SWT.NONE);
+		buttonCancella.setBounds(new Rectangle(43, 107, 90, 27));
+		buttonCancella.setText("Cancella");
+		buttonCancella.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						item.setText(new String[] {item.getText(), ""});						
+						sShell.close();
+					}
+				});
+		buttonOk.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				item.setText(new String[] {item.getText(),text.getText()});
 				sShell.close();
