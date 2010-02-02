@@ -39,7 +39,7 @@ public class DynamicQueryView extends ViewPart{
         createComboSelezioneEntita();
         labelSelezioneEntita = new Label(top, SWT.NONE);
         labelSelezioneEntita.setBounds(new Rectangle(-1, 5, 228, 13));
-        labelSelezioneEntita.setText("Selezionare l'entità che si vuole ricercare:");
+        labelSelezioneEntita.setText("Selezionare l'entita' che si vuole ricercare:");
         TreeColumn col1 = new TreeColumn(tree, SWT.LEFT);
         col1.setText("Filtro");
         col1.setWidth(200);
@@ -69,13 +69,13 @@ public class DynamicQueryView extends ViewPart{
 						int index = comboSelezioneEntita.getSelectionIndex();
 						String nomeClasse = Costanti.entita[index][0];
 						String pathClasse = Costanti.entita[index][1];
-						//inserisco il nodo radice (nome della classe/entità selezionata)
+						//inserisco il nodo radice (nome della classe/entitï¿½ selezionata)
 						tree.removeAll();
 					    TreeItem radice = new TreeItem(tree, SWT.NONE);
 						radice.setText(new String[] {nomeClasse});
 						nodiVisitati.clear();	
 						DynamicQueryDAO dynDao = new DynamicQueryDAO(pathClasse);
-//						dynDao.espandiAlbero(nomeClasse, pathClasse, radice, nodiVisitati);
+						dynDao.espandiAlbero(nomeClasse, pathClasse, radice, nodiVisitati);
 //						dynDao.executeDynQuery(filtroQuery);
 					}
 					public void widgetDefaultSelected(
