@@ -268,18 +268,10 @@ public class DietaDAO extends BaseDAO{
 		return arrRes;	
 	}
 
-	public void inserisciDieta(ArrayList<GiornoDieta> gioniDieta, Date dataInizio, String note, 
+	public void inserisciDieta(ArrayList<GiornoDieta> gioniDieta, Paziente paziente, Date dataInizio, String note, 
 			int durataCiclo, int numRipetizCiclo, Specifichedieta specifichedieta, String ulterioriConsigli) {
 
-		//getSession();
-
-
-		begin();
-		Criteria criteria = getSession().createCriteria(hibernate.Paziente.class);
-		criteria.add( Restrictions.eq("idPaziente", 2));	
-		List<Paziente> ris = (List<Paziente>)criteria.list();
-		commit();
-		//close();
+		
 
 		Schemadietetico schema;
 		Personalizzazionegiornata giornata;
@@ -304,7 +296,7 @@ public class DietaDAO extends BaseDAO{
 		begin();
 		dieta.setSpecifichedieta(specifichedieta);
 		dieta.setUlterioriConsigli(ulterioriConsigli);
-		dieta.setPaziente(ris.get(0));
+		dieta.setPaziente(paziente);
 		getSession().saveOrUpdate(dieta);
 		commit();
 
@@ -393,7 +385,7 @@ public class DietaDAO extends BaseDAO{
 	}
 
 	public Specifichedieta getSpecificheDieta(int idSpecificheDieta){
-		Criteria criteria = getSession().createCriteria(hibernate.Costituzione.class);
+		Criteria criteria = getSession().createCriteria(hibernate.Specifichedieta.class);
 		criteria.add( Restrictions.eq("idSpecificheDieta", idSpecificheDieta));
 		begin();
 		List<Specifichedieta> ris = (List<Specifichedieta>)criteria.list();
@@ -433,5 +425,18 @@ public class DietaDAO extends BaseDAO{
 
 		return ris;
 		
+	}
+
+	public ArrayList<Specifichedieta> getSpecificheDieta() {
+		Criteria criteria = getSession().createCriteria(hibernate.Specifichedieta.class);
+		//criteria.add( Restrictions.eq("idSpecificheDieta", idSpecificheDieta));
+		begin();
+		ArrayList<Specifichedieta> ris = (ArrayList<Specifichedieta>)criteria.list();
+		//System.out.println(ris.size());
+
+		commit();
+		//close();
+
+		return ris;
 	}
 }
