@@ -39,7 +39,7 @@
         <mapping resource="hibernate/Misurazione.hbm.xml"/>
         <mapping resource="hibernate/Modalitapastofuori.hbm.xml"/>
         <mapping resource="hibernate/Parametroantropometrico.hbm.xml"/>
-        <mapping resource="hibernate/ParametroEsame.hbm.xml"/>
+        <mapping resource="hibernate/Parametroesame.hbm.xml"/>
         <mapping resource="hibernate/Pasto.hbm.xml"/>
         <mapping resource="hibernate/Paziente.hbm.xml"/>
         <mapping resource="hibernate/Personalizzazionegiornata.hbm.xml"/>
