@@ -439,4 +439,17 @@ public class DietaDAO extends BaseDAO{
 
 		return ris;
 	}
+
+	public Alimento getAlimento(int aliId) {
+		Criteria criteria = getSession().createCriteria(hibernate.Alimento.class);
+		criteria.add( Restrictions.eq("idAlimento", aliId));
+		begin();
+		ArrayList<Alimento> ris = (ArrayList<Alimento>)criteria.list();
+		//System.out.println(ris.size());
+
+		commit();
+		close();
+
+		return ris.get(0);
+	}
 }
