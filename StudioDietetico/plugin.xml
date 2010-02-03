@@ -352,6 +352,12 @@
             name="Inserisci Dieta"
             restorable="true">
       </view>
+      <view
+            class="security.LoginView"
+            id="LoginViewID"
+            name="Registrazione"
+            restorable="true">
+      </view>
    </extension>
    <extension
          id="product"
