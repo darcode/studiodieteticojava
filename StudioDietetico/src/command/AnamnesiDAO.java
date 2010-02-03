@@ -126,10 +126,10 @@ public class AnamnesiDAO extends BaseDAO{
 	public static ArrayList<Object> getSportPazPerLista(Paziente paz) {
 		getSession();
 		begin();
-		Query q = getSession().createQuery("FROM Attivitafisica af WHERE paziente="+paz/*+" ORDER BY af.nome"*/);
+		Query q = getSession().createQuery("FROM Attivitafisica af WHERE paziente="+paz.getIdPaziente()/*+" ORDER BY af.nome"*/);
 		ArrayList<Object> sport = (ArrayList<Object>)q.list();
+		commit();
 		return sport;
-
 	}
 	
 	public ArrayList<Attivitafisica> getSport(){
