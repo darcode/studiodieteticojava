@@ -17,7 +17,7 @@ public class Perspective implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(false);
 		layout.setFixed(true);
 
-		layout.addView(ICommonConstants.HomePazienteView, IPageLayout.TOP,
+		layout.addView(ICommonConstants.loginViewID, IPageLayout.TOP,
 				0.99f, editorArea);
 	}
 }
