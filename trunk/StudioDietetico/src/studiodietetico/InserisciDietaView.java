@@ -666,7 +666,7 @@ public class InserisciDietaView extends ViewPart {
 		lGiorni = new Label(groupSchemaDieta, SWT.NONE);
 		lGiorni.setBounds(new Rectangle(12, 27, 90, 13));
 		lGiorni.setText("Seleziona giorno");
-		listPasti = new List(groupSchemaDieta, SWT.NONE | SWT.MULTI | SWT.V_SCROLL);
+		listPasti = new List(groupSchemaDieta, SWT.NONE | SWT.V_SCROLL);
 		listPasti.setBounds(new Rectangle(160, 45, 135, 179));
 		listPasti.setFont(new Font(Display.getCurrent(), "Arial", 10, SWT.BOLD));
 		listPasti.setEnabled(false);
@@ -960,36 +960,57 @@ public class InserisciDietaView extends ViewPart {
 		groupSpecificheDieta.setLayout(null);
 		groupSpecificheDieta.setBounds(new Rectangle(5, 5, 351, 341));
 		labelKilocal = new Label(groupSpecificheDieta, SWT.NONE);
-		labelKilocal.setText("Kilocalorie");
+		labelKilocal.setText("*Kilocalorie");
 		labelKilocal.setBounds(new Rectangle(8, 280, 70, 13));
 		spinKilocal = new Spinner(groupSpecificheDieta, SWT.NONE);
 		spinKilocal.setFont(new Font(Display.getCurrent(), "Arial", 14, SWT.BOLD));
 		spinKilocal.setMaximum(10000);
-		spinKilocal.setMinimum(1);
-		spinKilocal.setBounds(new Rectangle(9, 299, 49, 22));
+		spinKilocal.setMinimum(0);
+		spinKilocal.setBounds(new Rectangle(9, 299, 115, 22));
 		labelContAssente = new Label(groupSpecificheDieta, SWT.NONE);
-		labelContAssente.setBounds(new Rectangle(8, 12, 144, 13));
+		labelContAssente.setBounds(new Rectangle(10, 100, 144, 13));
 		labelContAssente.setText("Contenuto assente");
 		textContAssente = new Text(groupSpecificheDieta, SWT.BORDER | SWT.MULTI);
-		textContAssente.setBounds(new Rectangle(8, 30, 319, 63));
+		textContAssente.setBounds(new Rectangle(10, 118, 319, 63));
 		labelContPresente = new Label(groupSpecificheDieta, SWT.NONE);
-		labelContPresente.setBounds(new Rectangle(8, 104, 148, 16));
+		labelContPresente.setBounds(new Rectangle(10, 192, 148, 16));
 		labelContPresente.setText("Contenuto presente");
 		textContPresente = new Text(groupSpecificheDieta, SWT.BORDER | SWT.MULTI);
-		textContPresente.setBounds(new Rectangle(9, 122, 319, 63));
+		textContPresente.setBounds(new Rectangle(11, 210, 319, 63));
 		textIndicata = new Text(groupSpecificheDieta, SWT.BORDER | SWT.MULTI);
-		textIndicata.setBounds(new Rectangle(9, 207, 319, 63));
+		textIndicata.setBounds(new Rectangle(12, 29, 319, 63));
 		labelIndicata = new Label(groupSpecificheDieta, SWT.NONE);
-		labelIndicata.setBounds(new Rectangle(9, 193, 97, 13));
-		labelIndicata.setText("Indicazioni");
+		labelIndicata.setBounds(new Rectangle(12, 15, 97, 13));
+		labelIndicata.setText("*Indicazioni");
 		buttonInsNewSpecDieta = new Button(groupSpecificheDieta, SWT.NONE);
 		buttonInsNewSpecDieta.setBounds(new Rectangle(225, 295, 102, 23));
 		buttonInsNewSpecDieta.setText("Inserisci");
 		buttonInsNewSpecDieta
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						dieta.inserisciSpecificheDieta(textContAssente.getText(), textContPresente.getText(), textIndicata.getText(), Integer.parseInt(spinKilocal.getText()));
-						aggiornaTipoDiete();
+						int kilocal = Integer.parseInt(spinKilocal.getText());
+					
+						shellMsg = new Shell();
+						boolean inserisci = true;
+						if (kilocal==0 | textIndicata.getText().equals("")) {
+							inserisci = false;
+						}
+
+						if (inserisci) {
+							dieta.inserisciSpecificheDieta(textContAssente.getText(), textContPresente.getText(), textIndicata.getText(), kilocal);
+							textContAssente.setText("");
+							textContPresente.setText("");
+							textIndicata.setText("");
+							sShellSpecificheDieta.close();
+							aggiornaTipoDiete();
+						}else{
+							messageBox = new MessageBox(shellMsg,
+									SWT.OK |
+									SWT.ICON_ERROR);
+							messageBox.setMessage("Attenzione completare tutti i campi obbligatori (*)");	
+							messageBox.open();	
+						
+					}
 					}
 				});
 	}
