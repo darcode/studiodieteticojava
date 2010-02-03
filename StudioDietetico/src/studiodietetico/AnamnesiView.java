@@ -39,6 +39,7 @@ import command.PazienteDAO;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 
 import service.RegistraIntervento;
@@ -684,9 +685,16 @@ public class AnamnesiView extends ViewPart {
 		//groupVisualizzazioneSport.setLayout(new GridLayout());
 		groupVisualizzazioneSport.setText("Attività fisica del paziente");
 		groupVisualizzazioneSport.setBounds(new Rectangle(15, 324, 770, 226));
+		
+		
 		tableSport = new AnamnesiViewTableSport(groupVisualizzazioneSport, SWT.BORDER, pazSelHome);
 		tableSport.setLayout(new GridLayout(1, true));
 		tableSport.setBackground(Utils.getStandardWhiteColor());
+		
+		/*form = new HomePazienteForm(parent, SWT.BORDER);
+		form.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		form.setLayout(new GridLayout(1, true));
+		form.setBackground(Utils.getStandardWhiteColor());*/
 	}	
 	
 	/**
@@ -699,21 +707,24 @@ public class AnamnesiView extends ViewPart {
 		SShellDurFreq.setSize(new Point(614, 150));
 		//durata
 		labelDurataAttFis = new Label(SShellDurFreq, SWT.NONE);
-		labelDurataAttFis.setBounds(new Rectangle(15, 210, 91, 26));
+		labelDurataAttFis.setBounds(new Rectangle(10, 9, 100, 20));
 		labelDurataAttFis.setText("Inserire la durata");
 		textDurataAttFis = new Text(SShellDurFreq, SWT.BORDER);
-		textDurataAttFis.setBounds(new Rectangle(120, 210, 324, 26));
+		textDurataAttFis.setBounds(new Rectangle(120, 9, 324, 20));
 		//frequenza
 		labelFrequenzaAttFis = new Label(SShellDurFreq, SWT.NONE);
-		labelFrequenzaAttFis.setBounds(new Rectangle(15, 245, 195, 26));
+		labelFrequenzaAttFis.setBounds(new Rectangle(10, 50, 200, 20));
 		labelFrequenzaAttFis.setText("* Selezionare la frequenza settimanale ");
 		spinnerFrequenzaAttFis = new Spinner(SShellDurFreq, SWT.READ_ONLY);
-		spinnerFrequenzaAttFis.setBounds(new Rectangle(227, 245, 60, 24));
+		spinnerFrequenzaAttFis.setBounds(new Rectangle(230, 50, 60, 20));
 		spinnerFrequenzaAttFis.setMinimum(1);
 		
 		buttonOKFreqDur = new Button(SShellDurFreq, SWT.NONE);
-		buttonOKFreqDur.setBounds(new Rectangle(410, 76, 94, 28));
+		buttonOKFreqDur.setBounds(new Rectangle(400, 76, 94, 28));
 		buttonOKFreqDur.setText("Conferma");
+		/*labelProvaAttFis = new Label(SShellDurFreq, SWT.NONE);
+		labelProvaAttFis.setBounds(new Rectangle(7, 9, 211, 19));
+		labelProvaAttFis.setText("Label");*/
 		buttonOKFreqDur.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				int freq = 0;
@@ -724,6 +735,7 @@ public class AnamnesiView extends ViewPart {
 				freq = spinnerFrequenzaAttFis.getSelection();
 				//durata
 				String durata = textDurataAttFis.getText();
+				textAreaAttFisSel.add(""+textAreaAttFis.getSelection()+"   Freq: "+freq+"   Durata: "+durata);
 			
 				/*intReg.setPaziente(paziente);
 				//intReg.setTipoIntervento(tipoIntervento);
@@ -772,11 +784,12 @@ class AnamnesiViewTableSport extends ListComposite {
 				| SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
 		tableSportPerPaziente.setHeaderVisible(true);
 		tableSportPerPaziente.setLinesVisible(true);
-		tableSportPerPaziente.setBounds(new Rectangle(36, 596, 628, 226));
+		//tableSportPerPaziente.setBounds(new Rectangle(36, 596, 628, 226));
 		tableSportPerPaziente.setLayout(new GridLayout(1, true));
 		sport = AnamnesiDAO.getSportPazPerLista(pazSelHome);
+		System.out.println("N sport: "+sport.size());
 		riempiTabellaEntita(tableSportPerPaziente, sport);
+		System.out.println("N colonne: "+tableSportPerPaziente.getColumnCount());
 		tableSportPerPaziente.getColumn(0).setWidth(0);
 	}
-
 }
