@@ -28,7 +28,8 @@ public interface ICommonConstants {
 	public static final String medicoDetailViewID = "MedicoDetailViewID";
 	public static final String statisticheViewID = "StatisticheViewID";
 	public static final String graficiViewID = "GraficiViewID";
-
+	public static final String loginViewID = "LoginViewID";
+	
 	public static final String EsameClinicoView = "StudioDietetico.EsameClinicoView";
 	public static final String ParametroAntropometricoView = "StudioDietetico.ParametroAntropometricoView";
 	public static final String PrenotaVisitaView = "StudioDietetico.PrenotaVisitaView";
