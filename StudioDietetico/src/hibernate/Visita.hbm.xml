@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 4-feb-2010 12.32.13 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="hibernate.Visita" table="visita" catalog="studiodietetico">
         <id name="idVisita" type="java.lang.Integer">
@@ -12,7 +12,7 @@
             <column name="FK_Prenotazione" not-null="true" />
         </many-to-one>
         <many-to-one name="fattura" class="hibernate.Fattura" fetch="select">
-            <column name="FK_Fattura" not-null="true" />
+            <column name="FK_Fattura" />
         </many-to-one>
         <many-to-one name="medico" class="hibernate.Medico" fetch="select">
             <column name="FK2_Medico" not-null="true" />
@@ -21,13 +21,13 @@
             <column name="DataOraInizio" length="19" not-null="true" />
         </property>
         <property name="dataOraFine" type="timestamp">
-            <column name="DataOraFIne" length="19" not-null="true" />
+            <column name="DataOraFine" length="19" not-null="true" />
         </property>
         <property name="motivazioni" type="string">
             <column name="Motivazioni" length="65535" />
         </property>
         <property name="statoPagamento" type="string">
-            <column name="StatoPagamento" length="45" not-null="true" />
+            <column name="StatoPagamento" length="45" />
         </property>
         <property name="note" type="string">
             <column name="Note" length="65535" />

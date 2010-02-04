@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 4-feb-2010 12.32.13 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="hibernate.Tipologiadietaspeciale" table="tipologiadietaspeciale" catalog="studiodietetico">
         <id name="idTipologiaDietaSpeciale" type="java.lang.Integer">

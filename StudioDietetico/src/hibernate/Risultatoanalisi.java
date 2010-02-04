@@ -1,6 +1,6 @@
 package hibernate;
 
-// Generated 23-gen-2010 18.34.29 by Hibernate Tools 3.2.4.GA
+// Generated 4-feb-2010 12.32.12 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 

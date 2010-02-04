@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 4-feb-2010 12.32.13 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="hibernate.Dieta" table="dieta" catalog="studiodietetico">
         <id name="idDieta" type="java.lang.Integer">
@@ -11,29 +11,29 @@
         <many-to-one name="specifichedieta" class="hibernate.Specifichedieta" fetch="select">
             <column name="FK_SpecificheDieta" not-null="true" />
         </many-to-one>
-        <many-to-one name="paziente" class="hibernate.Paziente" fetch="select">
-            <column name="FK9_Paziente" not-null="true" />
-        </many-to-one>
-        <property name="dataInizio" type="date">
-            <column name="DataInizio" length="10" not-null="true" />
+        <property name="nome" type="string">
+            <column name="Nome" length="100" not-null="true" />
         </property>
         <property name="durataCiclo" type="int">
             <column name="DurataCiclo" not-null="true" />
         </property>
-        <property name="numRipetizCiclo" type="int">
-            <column name="NumRipetizCiclo" not-null="true" />
-        </property>
         <property name="note" type="string">
             <column name="Note" length="65535" />
         </property>
-        <property name="ulterioriConsigli" type="string">
-            <column name="UlterioriConsigli" length="65535" />
+        <property name="dietaStandard" type="java.lang.Boolean">
+            <column name="dietaStandard" />
         </property>
         <set name="personalizzazionegiornatas" inverse="true" lazy="true" table="personalizzazionegiornata" fetch="select">
             <key>
                 <column name="idDieta" not-null="true" />
             </key>
             <one-to-many class="hibernate.Personalizzazionegiornata" />
+        </set>
+        <set name="prescriziones" inverse="true" lazy="true" table="prescrizione" fetch="select">
+            <key>
+                <column name="FK_Dieta" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Prescrizione" />
         </set>
     </class>
 </hibernate-mapping>
