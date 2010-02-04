@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 4-feb-2010 12.32.13 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="hibernate.Prescrizione" table="prescrizione" catalog="studiodietetico">
+        <id name="idPrescrizione" type="java.lang.Integer">
+            <column name="idPrescrizione" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="paziente" class="hibernate.Paziente" fetch="select">
+            <column name="FK_Paziente" not-null="true" />
+        </many-to-one>
+        <many-to-one name="dieta" class="hibernate.Dieta" fetch="select">
+            <column name="FK_Dieta" not-null="true" />
+        </many-to-one>
+        <property name="dataInizio" type="date">
+            <column name="dataInizio" length="10" not-null="true" />
+        </property>
+        <property name="numRipetizCiclo" type="int">
+            <column name="NumRipetizCiclo" not-null="true" />
+        </property>
+        <property name="note" type="string">
+            <column name="Note" length="65535" />
+        </property>
+    </class>
+</hibernate-mapping>

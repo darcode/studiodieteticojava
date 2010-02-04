@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 14-gen-2010 20.26.43 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 4-feb-2010 12.32.13 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="hibernate.Paziente" table="paziente" catalog="studiodietetico">
         <id name="idPaziente" type="java.lang.Integer">
@@ -71,6 +71,12 @@
             </key>
             <one-to-many class="hibernate.Intolleranzaallergia" />
         </set>
+        <set name="prescriziones" inverse="true" lazy="true" table="prescrizione" fetch="select">
+            <key>
+                <column name="FK_Paziente" not-null="true" />
+            </key>
+            <one-to-many class="hibernate.Prescrizione" />
+        </set>
         <set name="farmacoassuntos" inverse="true" lazy="true" table="farmacoassunto" fetch="select">
             <key>
                 <column name="FK3_Paziente" not-null="true" />
@@ -108,12 +114,6 @@
                 <column name="idPaziente" not-null="true" />
             </key>
             <one-to-many class="hibernate.Misurazione" />
-        </set>
-        <set name="dietas" inverse="true" lazy="true" table="dieta" fetch="select">
-            <key>
-                <column name="FK9_Paziente" not-null="true" />
-            </key>
-            <one-to-many class="hibernate.Dieta" />
         </set>
     </class>
 </hibernate-mapping>
