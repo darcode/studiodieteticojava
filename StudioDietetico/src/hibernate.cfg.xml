@@ -44,6 +44,7 @@
         <mapping resource="hibernate/Paziente.hbm.xml"/>
         <mapping resource="hibernate/Personalizzazionegiornata.hbm.xml"/>
         <mapping resource="hibernate/Prenotazione.hbm.xml"/>
+        <mapping resource="hibernate/Prescrizione.hbm.xml"/>
         <mapping resource="hibernate/Prestazione.hbm.xml"/>
         <mapping resource="hibernate/Referto.hbm.xml"/>
         <mapping resource="hibernate/Ricetta.hbm.xml"/>

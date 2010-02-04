@@ -2,70 +2,111 @@
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
 
 <hibernate-reverse-engineering>
-	<table-filter match-schema="studiodietetico" match-name=".*" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="abitudinialimentari" />
-	<table-filter match-catalog="studiodietetico" match-name="alimento" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="assunzionebevande" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="attivitafisica" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="composizione" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="condizione" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="costituzione" />
-	<table-filter match-catalog="studiodietetico" match-name="dieta" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="esameclinico" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="farmacoassunto" />
-	<table-filter match-catalog="studiodietetico" match-name="fattura" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="ingrediente" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="intervento" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="intolleranzaallergia" />
-	<table-filter match-catalog="studiodietetico" match-name="malattia" />
-	<table-filter match-catalog="studiodietetico" match-name="medico" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="misurazione" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="modalitapastofuori" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="parametroantropometrico" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="parametroesame" />
-	<table-filter match-catalog="studiodietetico" match-name="pasto" />
-	<table-filter match-catalog="studiodietetico" match-name="paziente" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="personalizzazionegiornata" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="prenotazione" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="prestazione" />
-	<table-filter match-catalog="studiodietetico" match-name="referto" />
-	<table-filter match-catalog="studiodietetico" match-name="ricetta" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="rilevamento" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="risultatoanalisi" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="schemadietetico" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="specifichedieta" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="tipologiabevanda" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="tipologiadietaspeciale" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="tipologiaintervento" />
-	<table-filter match-catalog="studiodietetico"
-		match-name="tipologiavisita" />
-	<table-filter match-catalog="studiodietetico" match-name="turno" />
-	<table-filter match-catalog="studiodietetico" match-name="visita" />
+	<table-filter match-schema="studiodietetico" match-name=".*"></table-filter>
+	<table-filter match-name="abitudinialimentari"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="alimento"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="assunzionebevande"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="attivitafisica"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="composizione"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="condizione"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="costituzione"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="dieta" match-catalog="studiodietetico"></table-filter>
+	<table-filter match-name="esameclinico"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="farmacoassunto"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="fattura"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="ingrediente"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="intervento"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="intolleranzaallergia"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="malattia"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="medico" match-catalog="studiodietetico"></table-filter>
+	<table-filter match-name="misurazione"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="modalitapastofuori"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="parametroantropometrico"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="parametroesame"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="pasto" match-catalog="studiodietetico"></table-filter>
+	<table-filter match-name="paziente"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="personalizzazionegiornata"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="prenotazione"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="prescrizione"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="prestazione"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="referto"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="ricetta"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="rilevamento"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="risultatoanalisi"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="schemadietetico"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="specifichedieta"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="tipologiabevanda"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="tipologiadietaspeciale"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="tipologiaintervento"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="tipologiavisita"
+		match-catalog="studiodietetico">
+	</table-filter>
+	<table-filter match-name="turno" match-catalog="studiodietetico"></table-filter>
+	<table-filter match-name="visita" match-catalog="studiodietetico"></table-filter>
 	<table catalog="studiodietetico" name="intolleranzaallergia">
 		<column name="FlagIntAll" jdbc-type=''></column>
 		<column name="Sostanza" jdbc-type=''></column>
@@ -178,7 +219,7 @@
 	</table>
 	<table catalog="studiodietetico" name="visita">
 		<column name="DataOraInizio" jdbc-type=''></column>
-		<column name="DataOraFIne" jdbc-type=''></column>
+		<column name="DataOraFine" jdbc-type=''></column>
 		<column name="Motivazioni" jdbc-type=''></column>
 		<column name="StatoPagamento" jdbc-type=''></column>
 		<column name="Note" jdbc-type=''></column>
@@ -245,6 +286,13 @@
 		<column name="Tipologia" jdbc-type=''></column>
 		<column name="Calorie" jdbc-type=''></column>
 	</table>
+	<table catalog="studiodietetico" name="prescrizione">
+		<column name="dataInizio" jdbc-type=''></column>
+		<column name="NumRipetizCiclo" jdbc-type=''></column>
+		<column name="Note" jdbc-type=''></column>
+		<column name="FK_Paziente" jdbc-type=''></column>
+		<column name="FK_Dieta" jdbc-type=''></column>
+	</table>
 	<table catalog="studiodietetico" name="modalitapastofuori">
 		<column name="Luogo" jdbc-type=''></column>
 		<column name="SpecificaGiorno" jdbc-type=''></column>
@@ -258,12 +306,10 @@
 		<column name="ContenutoAssente" jdbc-type=''></column>
 	</table>
 	<table catalog="studiodietetico" name="dieta">
-		<column name="DataInizio" jdbc-type=''></column>
+		<column name="Nome" jdbc-type=''></column>
 		<column name="DurataCiclo" jdbc-type=''></column>
-		<column name="NumRipetizCiclo" jdbc-type=''></column>
 		<column name="Note" jdbc-type=''></column>
-		<column name="UlterioriConsigli" jdbc-type=''></column>
-		<column name="FK9_Paziente" jdbc-type=''></column>
+		<column name="dietaStandard" jdbc-type=''></column>
 		<column name="FK_SpecificheDieta" jdbc-type=''></column>
 	</table>
 	<table catalog="studiodietetico" name="parametroantropometrico">
