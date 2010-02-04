@@ -199,17 +199,13 @@ CREATE TABLE `costituzione` (
 DROP TABLE IF EXISTS `dieta`;
 CREATE TABLE `dieta` (
   `idDieta` int(11) NOT NULL auto_increment,
-  `DataInizio` date NOT NULL,
+  `Nome` varchar(100) NOT NULL,
   `DurataCiclo` int(11) NOT NULL,
-  `NumRipetizCiclo` int(11) NOT NULL,
   `Note` text,
-  `UlterioriConsigli` text,
-  `FK9_Paziente` int(11) NOT NULL,
+  `dietaStandard` tinyint(1) default NULL,
   `FK_SpecificheDieta` int(11) NOT NULL,
   PRIMARY KEY  (`idDieta`),
-  KEY `FK9_Paziente` (`FK9_Paziente`),
   KEY `FK_SpecificheDieta` (`FK_SpecificheDieta`),
-  CONSTRAINT `FK9_Paziente` FOREIGN KEY (`FK9_Paziente`) REFERENCES `paziente` (`idPaziente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_SpecificheDieta` FOREIGN KEY (`FK_SpecificheDieta`) REFERENCES `specifichedieta` (`idSpecificheDieta`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -546,13 +542,19 @@ CREATE TABLE `pasto` (
   `idPasto` int(11) NOT NULL auto_increment,
   `Nome` varchar(45) NOT NULL,
   PRIMARY KEY  (`idPasto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `pasto`
 --
 
 /*!40000 ALTER TABLE `pasto` DISABLE KEYS */;
+INSERT INTO `pasto` (`idPasto`,`Nome`) VALUES 
+ (1,'Colazione'),
+ (2,'Spuntino mattutino'),
+ (3,'Pranzo'),
+ (4,'Spuntino pomeridiano'),
+ (5,'Cena');
 /*!40000 ALTER TABLE `pasto` ENABLE KEYS */;
 
 
@@ -636,7 +638,7 @@ CREATE TABLE `prenotazione` (
   KEY `FK_TipologiaVisita1` USING BTREE (`idTipologiaVisita`),
   CONSTRAINT `FK8_Paziente` FOREIGN KEY (`idPaziente`) REFERENCES `paziente` (`idPaziente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_TipologiaVisita` FOREIGN KEY (`idTipologiaVIsita`) REFERENCES `tipologiavisita` (`idTipologiaVisita`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `prenotazione`
@@ -663,8 +665,36 @@ INSERT INTO `prenotazione` (`idPaziente`,`idTipologiaVisita`,`DataOra`,`Note`,`i
  (2,1,'2010-01-26 15:00:00','26 gennaio alle 15',17),
  (2,2,'2010-01-27 11:30:00','',18),
  (7,2,'2010-01-27 11:30:00','',19),
- (5,2,'2010-01-28 12:49:00','aa',20);
+ (5,2,'2010-01-28 12:49:00','aa',20),
+ (6,2,'2010-02-02 17:18:00','2febb',21);
 /*!40000 ALTER TABLE `prenotazione` ENABLE KEYS */;
+
+
+--
+-- Definition of table `prescrizione`
+--
+
+DROP TABLE IF EXISTS `prescrizione`;
+CREATE TABLE `prescrizione` (
+  `idPrescrizione` int(10) unsigned NOT NULL auto_increment,
+  `dataInizio` date NOT NULL,
+  `NumRipetizCiclo` int(10) unsigned NOT NULL,
+  `Note` text,
+  `FK_Paziente` int(11) NOT NULL,
+  `FK_Dieta` int(11) NOT NULL,
+  PRIMARY KEY  (`idPrescrizione`),
+  KEY `FK_prescrizione_dieta` (`FK_Dieta`),
+  KEY `FK_prescrizione_paziente` (`FK_Paziente`),
+  CONSTRAINT `FK_prescrizione_dieta` FOREIGN KEY (`FK_Dieta`) REFERENCES `dieta` (`idDieta`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_prescrizione_paziente` FOREIGN KEY (`FK_Paziente`) REFERENCES `paziente` (`idPaziente`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `prescrizione`
+--
+
+/*!40000 ALTER TABLE `prescrizione` DISABLE KEYS */;
+/*!40000 ALTER TABLE `prescrizione` ENABLE KEYS */;
 
 
 --
@@ -820,13 +850,21 @@ CREATE TABLE `schemadietetico` (
   `Descrizione` text NOT NULL,
   `Note` text,
   PRIMARY KEY  (`idSchemaDietetico`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `schemadietetico`
 --
 
 /*!40000 ALTER TABLE `schemadietetico` DISABLE KEYS */;
+INSERT INTO `schemadietetico` (`idSchemaDietetico`,`Descrizione`,`Note`) VALUES 
+ (1,'',''),
+ (2,'',''),
+ (3,'',''),
+ (4,'',''),
+ (5,'',''),
+ (6,'',''),
+ (7,'','');
 /*!40000 ALTER TABLE `schemadietetico` ENABLE KEYS */;
 
 
@@ -842,13 +880,15 @@ CREATE TABLE `specifichedieta` (
   `ContenutoPresente` text,
   `ContenutoAssente` text,
   PRIMARY KEY  (`idSpecificheDieta`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `specifichedieta`
 --
 
 /*!40000 ALTER TABLE `specifichedieta` DISABLE KEYS */;
+INSERT INTO `specifichedieta` (`idSpecificheDieta`,`Kilocalorie`,`Indicata`,`ContenutoPresente`,`ContenutoAssente`) VALUES 
+ (1,10,'llkok','dsfds','adszd<');
 /*!40000 ALTER TABLE `specifichedieta` ENABLE KEYS */;
 
 
@@ -988,11 +1028,11 @@ DROP TABLE IF EXISTS `visita`;
 CREATE TABLE `visita` (
   `idVisita` int(11) NOT NULL auto_increment,
   `DataOraInizio` datetime NOT NULL,
-  `DataOraFIne` datetime NOT NULL,
+  `DataOraFine` datetime NOT NULL,
   `Motivazioni` text,
-  `StatoPagamento` varchar(45) NOT NULL,
+  `StatoPagamento` varchar(45) default NULL,
   `Note` text,
-  `FK_Fattura` int(11) NOT NULL,
+  `FK_Fattura` int(11) default NULL,
   `FK2_Medico` int(11) NOT NULL,
   `FK_Prenotazione` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`idVisita`),
@@ -1009,7 +1049,7 @@ CREATE TABLE `visita` (
 --
 
 /*!40000 ALTER TABLE `visita` DISABLE KEYS */;
-INSERT INTO `visita` (`idVisita`,`DataOraInizio`,`DataOraFIne`,`Motivazioni`,`StatoPagamento`,`Note`,`FK_Fattura`,`FK2_Medico`,`FK_Prenotazione`) VALUES 
+INSERT INTO `visita` (`idVisita`,`DataOraInizio`,`DataOraFine`,`Motivazioni`,`StatoPagamento`,`Note`,`FK_Fattura`,`FK2_Medico`,`FK_Prenotazione`) VALUES 
  (1,'2009-01-19 17:00:00','2009-01-19 21:00:00','motivazion	','pagamento','note',16,1,4),
  (2,'2009-01-19 20:00:00','2009-01-19 22:00:00','asdaadsdasds','ddd','ddddddd',17,1,5),
  (3,'2009-01-19 01:00:00','2009-01-19 02:00:00','aa','aa','',15,1,5),
