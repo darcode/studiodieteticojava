@@ -34,6 +34,9 @@
 	<table-filter match-name="fattura"
 		match-catalog="studiodietetico">
 	</table-filter>
+	<table-filter match-name="funzione"
+		match-catalog="studiodietetico">
+	</table-filter>
 	<table-filter match-name="ingrediente"
 		match-catalog="studiodietetico">
 	</table-filter>
@@ -87,6 +90,10 @@
 	<table-filter match-name="risultatoanalisi"
 		match-catalog="studiodietetico">
 	</table-filter>
+	<table-filter match-name="ruolo" match-catalog="studiodietetico"></table-filter>
+	<table-filter match-name="ruolo_funzione"
+		match-catalog="studiodietetico">
+	</table-filter>
 	<table-filter match-name="schemadietetico"
 		match-catalog="studiodietetico">
 	</table-filter>
@@ -106,6 +113,7 @@
 		match-catalog="studiodietetico">
 	</table-filter>
 	<table-filter match-name="turno" match-catalog="studiodietetico"></table-filter>
+	<table-filter match-name="utente" match-catalog="studiodietetico"></table-filter>
 	<table-filter match-name="visita" match-catalog="studiodietetico"></table-filter>
 	<table catalog="studiodietetico" name="intolleranzaallergia">
 		<column name="FlagIntAll" jdbc-type=''></column>
@@ -180,6 +188,9 @@
 		<column name="Procedimento" jdbc-type=''></column>
 		<column name="FK2_Alimento" jdbc-type=''></column>
 	</table>
+	<table catalog="studiodietetico" name="funzione">
+		<column name="Descrizione" jdbc-type=''></column>
+	</table>
 	<table catalog="studiodietetico" name="farmacoassunto">
 		<column name="Nome" jdbc-type=''></column>
 		<column name="Descrizione" jdbc-type=''></column>
@@ -240,6 +251,10 @@
 		<column name="Nome" jdbc-type=''></column>
 		<column name="Descrizione" jdbc-type=''></column>
 	</table>
+	<table catalog="studiodietetico" name="ruolo_funzione">
+		<column name="idRuolo" jdbc-type=''></column>
+		<column name="idFunzione" jdbc-type=''></column>
+	</table>
 	<table catalog="studiodietetico" name="risultatoanalisi">
 		<column name="Valore" jdbc-type=''></column>
 		<column name="Data" jdbc-type=''></column>
@@ -280,6 +295,14 @@
 		<column name="idSchemaDietetico" jdbc-type=''></column>
 		<column name="idDieta" jdbc-type=''></column>
 		<column name="GiornoCiclo" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="utente">
+		<column name="nomeUtente" jdbc-type=''></column>
+		<column name="password" jdbc-type=''></column>
+		<column name="idRuolo" jdbc-type=''></column>
+	</table>
+	<table catalog="studiodietetico" name="ruolo">
+		<column name="descrizione" jdbc-type=''></column>
 	</table>
 	<table catalog="studiodietetico" name="alimento">
 		<column name="Nome" jdbc-type=''></column>
