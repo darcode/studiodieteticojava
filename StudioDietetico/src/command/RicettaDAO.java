@@ -20,7 +20,7 @@ import org.hibernate.cfg.Configuration;
 
 public class RicettaDAO extends BaseDAO {
 
-	public Ricetta inserisciNuovaRicetta(String nome, String procedimento){
+	public Ricetta inserisciNuovaRicetta(String nome, String procedimento, Alimento alimento){
 		
 		//close();
 		getSession();
@@ -29,6 +29,7 @@ public class RicettaDAO extends BaseDAO {
 		
 		ric.setNome(nome);
 		ric.setProcedimento(procedimento);
+		ric.setAlimento(alimento);
 		getSession().saveOrUpdate(ric);
 		commit();
 		close();
