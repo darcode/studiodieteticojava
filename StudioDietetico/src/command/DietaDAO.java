@@ -268,8 +268,8 @@ public class DietaDAO extends BaseDAO{
 		return arrRes;	
 	}
 
-	public void inserisciDieta(ArrayList<GiornoDieta> gioniDieta, Paziente paziente, Date dataInizio, String note, 
-			int durataCiclo, int numRipetizCiclo, Specifichedieta specifichedieta, String ulterioriConsigli) {
+	public void inserisciDieta(ArrayList<GiornoDieta> gioniDieta, String nomeDieta, String note, 
+			boolean dietaStandard, Specifichedieta specifichedieta) {
 
 		
 
@@ -286,17 +286,13 @@ public class DietaDAO extends BaseDAO{
 		commit();
 
 		Dieta dieta = new Dieta();
-		dieta.setDataInizio(dataInizio);
-		dieta.setDurataCiclo(durataCiclo);
-		dieta.setNumRipetizCiclo(numRipetizCiclo);
+		dieta.setDietaStandard(dietaStandard);
+		dieta.setDurataCiclo(gioniDieta.size());
 		dieta.setNote(note);
-		//dieta.setDurataCiclo(durataCiclo);
-		dieta.setNumRipetizCiclo(numRipetizCiclo);	
+		dieta.setNome(nomeDieta);
 		//close();
 		begin();
 		dieta.setSpecifichedieta(specifichedieta);
-		dieta.setUlterioriConsigli(ulterioriConsigli);
-		dieta.setPaziente(paziente);
 		getSession().saveOrUpdate(dieta);
 		commit();
 
