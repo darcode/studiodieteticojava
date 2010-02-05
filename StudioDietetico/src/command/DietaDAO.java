@@ -10,6 +10,7 @@ import hibernate.Pasto;
 import hibernate.Paziente;
 import hibernate.Personalizzazionegiornata;
 import hibernate.PersonalizzazionegiornataId;
+import hibernate.Prescrizione;
 import hibernate.Schemadietetico;
 import hibernate.Specifichedieta;
 import hibernate.Tipologiaintervento;
@@ -266,6 +267,21 @@ public class DietaDAO extends BaseDAO{
 		//close();
 
 		return arrRes;	
+	}
+	
+	
+	public void inserisciPrescrizione(Date dataInizio, int numRipCiclo, String note, Paziente paziente, Dieta dieta){
+		Prescrizione prescrizione = new Prescrizione();
+		prescrizione.setDataInizio(dataInizio);
+		prescrizione.setNumRipetizCiclo(numRipCiclo);
+		prescrizione.setNote(note);
+		prescrizione.setPaziente(paziente);
+		prescrizione.setDieta(dieta);
+		begin();
+		getSession().saveOrUpdate(prescrizione);
+		commit();
+		close();
+		
 	}
 
 	public void inserisciDieta(ArrayList<GiornoDieta> gioniDieta, String nomeDieta, String note, 
