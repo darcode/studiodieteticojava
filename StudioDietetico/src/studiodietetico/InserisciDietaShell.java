@@ -35,16 +35,12 @@ import service.StrutPasto;
 
 public class InserisciDietaShell {
 
-	
-	private Shell shellIns = null;
 	private MessageBox messageBox = null;  //  @jve:decl-index=0:
 	private Shell shellInsertPasto = null;  //  @jve:decl-index=0:visual-constraint="1016,17"
 	private Button button = null;
 	private Text textShellIns = null;
 	private Label lShellIns = null;
 	private int nGiorni = 0;
-	private final Font fontList = new Font(Display.getCurrent(),"Arial",10,SWT.BOLD);
-	private Text textShellIns2;
 	private Shell shellInsertAlimento = null;  //  @jve:decl-index=0:visual-constraint="1018,119"
 	private Button bInsNewAlimento = null;
 	private Text textShellInsAlimento = null;
