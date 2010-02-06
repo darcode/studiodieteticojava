@@ -41,14 +41,7 @@ public class InserisciDietaShell {
 	private Text textShellIns = null;
 	private Label lShellIns = null;
 	private int nGiorni = 0;
-	private Shell shellInsertAlimento = null;  //  @jve:decl-index=0:visual-constraint="1018,119"
-	private Button bInsNewAlimento = null;
-	private Text textShellInsAlimento = null;
-	private Label lShellInsAlimento = null;
-	private Label lShellInsAlimento1 = null;
-	private Text textShellInsAlimento1 = null;
-	private Label lShellInsAlimento3 = null;
-	private Spinner spinCalorie = null;
+
 	private Shell shellInsSchemaDietetico = null;  //  @jve:decl-index=0:visual-constraint="10,4"
 	private Group groupSchemaDieta = null;
 	private Label lDescrizione = null;
@@ -71,7 +64,7 @@ public class InserisciDietaShell {
 	private Button bDelPasto = null;
 	private Button bAddNewAlim = null;
 	private Button bDelNewAlim = null;
-	private Table tableAlimenti = null;
+	private static Table tableAlimenti = null;
 	private Table tableAlimenti1 = null;
 	private Button bAddDesc = null;
 	private Button bAddNote = null;
@@ -85,7 +78,7 @@ public class InserisciDietaShell {
 	private Text textNomeDieta = null;
 	private Button checkBoxStandard = null;
 	private ArrayList<GiornoDieta> giorniDieta = null;  //  @jve:decl-index=0:
-	private DietaDAO dieta = null;
+	private static DietaDAO dieta = null;
 	private Table tableTipoDieta = null;
 	private Button bAddNuovaDietaSpec = null;
 	private Label lTipoDieta = null;
@@ -108,11 +101,7 @@ public class InserisciDietaShell {
 		dieta = new DietaDAO();
 		giorniDieta = new ArrayList<GiornoDieta>();
 	}
-	public static void main (String[] args){
-		InserisciDietaShell shell = new InserisciDietaShell();
-		shell.createShellInsSchemaDietetico();
-		
-	}
+
 	
 	public void createShellInsSchemaDietetico() {
 		//Display display = new Display();
@@ -124,14 +113,14 @@ public class InserisciDietaShell {
 		shellInsSchemaDietetico.setText("Inserisci nuovo Schema Dietetico");
 		shellInsSchemaDietetico.setSize(new Point(942, 718));
 		shellInsSchemaDietetico.open();
-		while (!shellInsSchemaDietetico.isDisposed()) {
-		      if (!Display.getCurrent().readAndDispatch())
-		    	  Display.getCurrent().sleep();
+	/*	while (!shellInsSchemaDietetico.isDisposed()) {
+		      if (!display.readAndDispatch())
+		    	  display.sleep();
 		    }
-		Display.getCurrent().dispose();
+		display.dispose();*/
 	}
 	
-	private void aggiornaAlimenti() {
+	public static void aggiornaAlimenti() {
 		tableAlimenti.removeAll();
 		StrutAlimento stAli;
 		ArrayList<StrutAlimento> arrStrutAli = dieta.getAlimentiObj();
@@ -520,7 +509,9 @@ public class InserisciDietaShell {
 	bAddNewAlim.setText("+");
 	bAddNewAlim.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 		public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-			createShellInsertAlimento();
+			InserisciAlimentoShell insAlimento = new InserisciAlimentoShell();
+			insAlimento.createShellInsertAlimento("dieta");
+			aggiornaAlimenti();
 		}
 	});
 	bDelNewAlim = new Button(groupSchemaDieta, SWT.NONE);
@@ -666,52 +657,6 @@ public class InserisciDietaShell {
 	}
 
 
-	/**
-	 * This method initializes shellInsertAlimento	
-	 *
-	 */
-	private void createShellInsertAlimento() {
-		shellInsertAlimento = new Shell(Display.getCurrent(), SWT.APPLICATION_MODAL
-				| SWT.SHELL_TRIM);
-		shellInsertAlimento.setLayout(null);
-		shellInsertAlimento.setText("Inserisci nuovo Alimento");
-		shellInsertAlimento.setSize(new Point(330, 204));
-		bInsNewAlimento = new Button(shellInsertAlimento, SWT.NONE);
-		bInsNewAlimento.setBounds(new Rectangle(250, 143, 66, 23));
-		bInsNewAlimento.setText("Inserisci");
-		bInsNewAlimento
-		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				if(!textShellInsAlimento.getText().equals("")) {
-					//StrutAlimento ali = new StrutAlimento(textShellInsAlimento.getText(), textShellInsAlimento1.getText(), spinCalorie.getDigits());
-					dieta.insAlimento(textShellInsAlimento.getText(), textShellInsAlimento1.getText(), Integer.parseInt(spinCalorie.getText()));
-					textShellInsAlimento.setText("");
-					textShellInsAlimento1.setText("");
-					spinCalorie.setDigits(0);
-					//listAlimenti.setItems(dieta.getAlimenti());
-					aggiornaAlimenti();
-					//alimentiDB.add(ali);
-					//shellInsertAlimento.close();
-				}
-			}
-		});
-		textShellInsAlimento = new Text(shellInsertAlimento, SWT.BORDER);
-		textShellInsAlimento.setBounds(new Rectangle(17, 26, 218, 19));
-		lShellInsAlimento = new Label(shellInsertAlimento, SWT.NONE);
-		lShellInsAlimento.setBounds(new Rectangle(16, 9, 165, 13));
-		lShellInsAlimento.setText("Inserisci nome alimento");
-		lShellInsAlimento1 = new Label(shellInsertAlimento, SWT.NONE);
-		lShellInsAlimento1.setBounds(new Rectangle(15, 58, 125, 13));
-		lShellInsAlimento1.setText("Inserisci tipologia alimento");
-		textShellInsAlimento1 = new Text(shellInsertAlimento, SWT.BORDER);
-		textShellInsAlimento1.setBounds(new Rectangle(16, 73, 219, 19));
-		lShellInsAlimento3 = new Label(shellInsertAlimento, SWT.NONE);
-		lShellInsAlimento3.setBounds(new Rectangle(14, 103, 98, 13));
-		lShellInsAlimento3.setText("Inserisci calorie");
-		spinCalorie = new Spinner(shellInsertAlimento, SWT.NONE);
-		spinCalorie.setBounds(new Rectangle(15, 122, 65, 18));
-		shellInsertAlimento.open();
-	}
 
 	/**
 	 * This method initializes sShellSpecificheDieta	
