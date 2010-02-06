@@ -61,10 +61,18 @@ public class AnamnesiDAO extends BaseDAO{
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Intervento interv");
-		
 		ArrayList<Intervento> interventiPaz = (ArrayList<Intervento>)q.list();
 		commit();
 		return interventiPaz;
+	}
+	
+	public static ArrayList<Object> getInterventiPazPerLista(Paziente paz) {
+		getSession();
+		begin();
+		Query q = getSession().createQuery("FROM Intervento i WHERE paziente="+paz.getIdPaziente()/*+" ORDER BY af.nome"*/);
+		ArrayList<Object> interventi = (ArrayList<Object>)q.list();
+		commit();
+		return interventi;
 	}
 	
 	//update studiodietetico.intervento set numero=5 where idPaziente=4 and idTipologiaIntervento=2;
