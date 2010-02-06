@@ -1,9 +1,12 @@
 package command;
 
 import hibernate.Alimento;
+import hibernate.Composizione;
+import hibernate.ComposizioneId;
 import hibernate.Costituzione;
 import hibernate.CostituzioneId;
 import hibernate.Dieta;
+import hibernate.Ingrediente;
 import hibernate.Intervento;
 import hibernate.InterventoId;
 import hibernate.Pasto;
@@ -11,6 +14,7 @@ import hibernate.Paziente;
 import hibernate.Personalizzazionegiornata;
 import hibernate.PersonalizzazionegiornataId;
 import hibernate.Prescrizione;
+import hibernate.Ricetta;
 import hibernate.Schemadietetico;
 import hibernate.Specifichedieta;
 import hibernate.Tipologiaintervento;
@@ -464,4 +468,122 @@ public class DietaDAO extends BaseDAO{
 
 		return ris.get(0);
 	}
+
+	public Ricetta[] getRicette(Alimento ali) {
+		Criteria criteria = getSession().createCriteria(hibernate.Ricetta.class);
+		criteria.add( Restrictions.eq("alimento", ali));
+		begin();
+		ArrayList<Ricetta> ris = (ArrayList<Ricetta>)criteria.list();
+		commit();
+		close();
+		Ricetta[] ricette = new Ricetta[ris.size()];
+		//System.out.println(ris.size());
+for (int i = 0; i < ris.size(); i++) {
+	ricette[i] = ris.get(i);
+}
+		
+
+		return ricette;
+	}
+
+	public Ricetta getRicetta(int idRicetta) {
+		Criteria criteria = getSession().createCriteria(hibernate.Ricetta.class);
+		criteria.add( Restrictions.eq("idRicetta", idRicetta));
+		begin();
+		ArrayList<Ricetta> ris = (ArrayList<Ricetta>)criteria.list();
+		//System.out.println(ris.size());
+
+		commit();
+		
+
+		return ris.get(0);
+	}
+
+	public String[] getIngredienti(Ricetta ricetta) {
+
+		Criteria criteria = getSession().createCriteria(hibernate.Composizione.class);
+		criteria.add( Restrictions.eq("ricetta", ricetta));
+		begin();
+		ArrayList<Composizione> ris = (ArrayList<Composizione>)criteria.list();
+		commit();
+		
+		String[] ingredienti = new String[ris.size()];
+		for (int i = 0; i < ris.size(); i++) {
+			ingredienti[i] = ris.get(i).getQuantita() +"\t"+ ris.get(i).getIngrediente().getNome();
+		}
+
+
+
+		return ingredienti;
+	}
+	
+	public Ricetta inserisciNuovaRicetta(String nome, String procedimento, Alimento alimento){
+		
+		begin();
+		Ricetta ric = new Ricetta();
+		
+		ric.setNome(nome);
+		ric.setProcedimento(procedimento);
+		ric.setAlimento(alimento);
+		getSession().saveOrUpdate(ric);
+		commit();
+		close();
+		return ric;
+	}
+	
+	public void inserisciComposizione(Ingrediente ingrediente, String quantita, Ricetta ricetta){
+		
+		begin();
+		Composizione comp = new Composizione();
+		ComposizioneId compId = new ComposizioneId();
+		compId.setIdRicetta(ricetta.getIdRicetta());
+		compId.setIdIngrediente(ingrediente.getIdIngrediente());
+		comp.setId(compId);
+		comp.setRicetta(ricetta);
+		comp.setIngrediente(ingrediente);
+		comp.setQuantita(quantita);
+		
+		getSession().saveOrUpdate(comp);
+		commit();
+		close();
+	}
+	
+	public void inserisciIngrediente(String nome){
+		
+		//close();
+		getSession();
+		begin();
+		Ingrediente ing = new Ingrediente();
+		ing.setNome(nome);
+		getSession().saveOrUpdate(ing);
+		commit();
+		close();
+	}
+
+	public Ingrediente getIngrediente(String nome) {
+		begin();
+		Criteria criteria = getSession().createCriteria(hibernate.Ingrediente.class);
+		criteria.add( Restrictions.eq("nome", nome));
+		List<Ingrediente> ingredienti = (List<Ingrediente>)criteria.list();
+		
+		commit();
+		
+		return ingredienti.get(0);
+	}
+	
+	public static String[] getIngredienti() {
+		begin();
+		Query q = getSession().createQuery("FROM Ingrediente i ORDER BY i.nome");
+		List<Ingrediente> ingredienti = (List<Ingrediente>)q.list();
+		List<String> ut = new ArrayList<String>();
+		for (Ingrediente ing : ingredienti) {
+			ut.add(ing.getNome());
+		}
+		String[] ingredientiArray = (String[]) ut.toArray((new String[0]));
+		commit();
+		
+		return ingredientiArray;
+
+	}
+	
 }
