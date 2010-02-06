@@ -17,11 +17,14 @@ import org.eclipse.swt.widgets.Label;
 
 import command.DynamicQueryDAO;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.graphics.Point;
+import org.jdom.Element;
 
 public class DynamicQueryView extends ViewPart{
 
@@ -38,6 +41,7 @@ public class DynamicQueryView extends ViewPart{
 	private Text text = null;
 	private Label label1 = null;
 	private Button buttonCancella = null;
+	DynamicQueryDAO dynDao;
 
 	public DynamicQueryView() {
 		// TODO Auto-generated constructor stub
@@ -46,7 +50,7 @@ public class DynamicQueryView extends ViewPart{
 	@Override
 	public void createPartControl(Composite parent) {
         top = new Composite(parent, SWT.NONE);        
-        tree = new Tree(top, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+        tree = new Tree(top, SWT.CHECK | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
         tree.setLayout(new FillLayout());
         tree.setHeaderVisible(true);        
         tree.setBounds(new Rectangle(0, 52, 469, 415));
@@ -63,6 +67,13 @@ public class DynamicQueryView extends ViewPart{
 				}
         	}
         });
+        tree.addListener (SWT.Selection, new Listener () {
+    		public void handleEvent (Event event) {
+    			if (event.detail == SWT.CHECK) {
+        			System.out.println ("TODO: Raggiungere il nodo checkato controllando (se è una relazione checka tutte le foglie del nodo)");
+				}
+    		}
+    	});
         createComboSelezioneEntita();
         labelSelezioneEntita = new Label(top, SWT.NONE);
         labelSelezioneEntita.setBounds(new Rectangle(-1, 5, 278, 13));
@@ -116,8 +127,15 @@ public class DynamicQueryView extends ViewPart{
 					    TreeItem radice = new TreeItem(tree, SWT.NONE);
 						radice.setText(new String[] {nomeClasse});
 						nodiVisitati.clear();	
-						DynamicQueryDAO dynDao = new DynamicQueryDAO(pathClasse);
-						dynDao.espandiAlbero(nomeClasse, pathClasse, radice, nodiVisitati, tree);
+						
+						Element radiceXml = new Element("radice");
+						radiceXml.setAttribute("path", pathClasse);
+						radiceXml.setAttribute("nome", nomeClasse);
+						;
+						
+						dynDao = new DynamicQueryDAO(pathClasse, nomeClasse, radiceXml);
+						dynDao.espandiAlbero(nomeClasse, pathClasse, radice, nodiVisitati, tree, radiceXml);
+						comboSelezioneEntita.setEnabled(false);
 //						dynDao.executeDynQuery(filtroQuery);
 					}
 					public void widgetDefaultSelected(
