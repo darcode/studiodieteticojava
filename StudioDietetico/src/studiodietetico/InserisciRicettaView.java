@@ -49,7 +49,7 @@ public class InserisciRicettaView extends ViewPart {
 	private MessageBox messageBox = null;
 	private Text textProcedimento = null;
 	private Label lProcedimento = null;
-	private Button bRicetta = null;
+	private Button bConferma = null;
 	private Label lQuant = null;
 	private Text textQuant = null;
 	private Label lSelAlim = null;
@@ -62,6 +62,7 @@ public class InserisciRicettaView extends ViewPart {
 	private Button buttonAnnulla = null;
 	private Button buttonModificaRic = null;
 	private Button buttonCancRic = null;
+	private boolean modifica = false;
 	public InserisciRicettaView() {
 		// TODO Auto-generated constructor stub
 	}
@@ -176,14 +177,15 @@ public class InserisciRicettaView extends ViewPart {
         lProcedimento = new Label(top, SWT.NONE);
         lProcedimento.setBounds(new Rectangle(18, 409, 89, 13));
         lProcedimento.setText("*Procedimento");
-        bRicetta = new Button(top, SWT.NONE);
-        bRicetta.setBounds(new Rectangle(599, 488, 117, 41));
-        bRicetta.setText("Inserisci ricetta");
-        bRicetta.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+        bConferma = new Button(top, SWT.NONE);
+        bConferma.setBounds(new Rectangle(599, 488, 117, 41));
+        bConferma.setText("Conferma");
+        bConferma.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
         	public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 
+        		
         		Ingrediente ing;
-        		Ricetta ric;
+        		Ricetta ric = null;
         	
         		TableItem[] ingRic = tableIngRic.getItems();
         		Alimento ali = new Alimento();
@@ -191,21 +193,30 @@ public class InserisciRicettaView extends ViewPart {
         				textProcedimento.getText().equals("") | tableIngRic.getItemCount()==0) {
         			shellMsg = new Shell();
         			messageBox = new MessageBox(shellMsg,
-						    SWT.OK | 
-						    SWT.ICON_ERROR);
-						 messageBox.setMessage("Completare tutti i campi obbligatori");
-						 messageBox.open();		
+        					SWT.OK | 
+        					SWT.ICON_ERROR);
+        			messageBox.setMessage("Completare tutti i campi obbligatori");
+        			messageBox.open();		
         		}else{
-        		
-        		ali = dieta.getAlimento(Integer.parseInt(tableAlimenti.getSelection()[0].getText(3)));
-        		ric = dieta.inserisciNuovaRicetta(textNome.getText(), textProcedimento.getText(), ali);
-        		for (int i = 0; i < ingRic.length; i++) {
-        			ing = dieta.getIngrediente(ingRic[i].getText(1));
-        			dieta.inserisciComposizione(ing, ingRic[i].getText(0), ric);
-				}
-        		int idAlimento = Integer.parseInt(tableAlimenti.getSelection()[0].getText(3));
-        		aggiornaRicette(idAlimento);
+        			
+        				ali = dieta.getAlimento(Integer.parseInt(tableAlimenti.getSelection()[0].getText(3)));
+        				if(!modifica){
+        					
+        					ric = dieta.inserisciNuovaRicetta(textNome.getText(), textProcedimento.getText(), ali);
+        				}else{
+        					int idRic = Integer.parseInt(tableRicette.getSelection()[0].getText(1));
+        					dieta.cancellaComposizione(dieta.getRicetta(idRic));
+        					ric = dieta.modificaRicetta(idRic, textNome.getText(), textProcedimento.getText(), ali);
+            			}
+        				for (int i = 0; i < ingRic.length; i++) {
+        					ing = dieta.getIngrediente(ingRic[i].getText(1));
+        					dieta.inserisciComposizione(ing, ingRic[i].getText(0), ric);
+        				}
+        				int idAlimento = Integer.parseInt(tableAlimenti.getSelection()[0].getText(3));
+        				aggiornaRicette(idAlimento);
+        			
         		}
+        		modifica = false;
         	}
         });
         lQuant = new Label(top, SWT.NONE);
@@ -267,6 +278,25 @@ public class InserisciRicettaView extends ViewPart {
         buttonModificaRic = new Button(top, SWT.NONE);
         buttonModificaRic.setBounds(new Rectangle(553, 163, 89, 23));
         buttonModificaRic.setText("Modifica");
+        buttonModificaRic
+        		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+        			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+        				modifica=true;
+        				textAddIngrediente.setEnabled(true);
+        				textAddIngrediente.setEnabled(true);
+        				textProcedimento.setEnabled(true);
+        				textQuant.setEnabled(true);
+        				tableIngRic.setEnabled(true);
+        				bAddIngrediente.setEnabled(true);
+        				bConferma.setEnabled(true);
+        				listIngredienti.setEnabled(true);
+        				bAddIngRic.setEnabled(true);
+        				bDelIngRic.setEnabled(true);
+        				tableAlimenti.setEnabled(false);
+        				tableRicette.setEnabled(false);
+        				buttonAnnulla.setEnabled(false);
+        			}
+        		});
         buttonCancRic = new Button(top, SWT.NONE);
         buttonCancRic.setBounds(new Rectangle(644, 163, 89, 23));
         buttonCancRic.setText("Cancella");
@@ -279,7 +309,7 @@ public class InserisciRicettaView extends ViewPart {
         				textQuant.setEnabled(false);
         				tableIngRic.setEnabled(false);
         				bAddIngrediente.setEnabled(false);
-        				bRicetta.setEnabled(false);
+        				bConferma.setEnabled(false);
         				listIngredienti.setEnabled(false);
         				bAddIngRic.setEnabled(false);
         				bDelIngRic.setEnabled(false);
@@ -301,7 +331,7 @@ public class InserisciRicettaView extends ViewPart {
         				textQuant.setEnabled(true);
         				tableIngRic.setEnabled(true);
         				bAddIngrediente.setEnabled(true);
-        				bRicetta.setEnabled(true);
+        				bConferma.setEnabled(true);
         				listIngredienti.setEnabled(true);
         				bAddIngRic.setEnabled(true);
         				bDelIngRic.setEnabled(true);
@@ -429,7 +459,7 @@ public class InserisciRicettaView extends ViewPart {
 		textQuant.setEnabled(false);
 		tableIngRic.setEnabled(false);
 		bAddIngrediente.setEnabled(false);
-		bRicetta.setEnabled(false);
+		bConferma.setEnabled(false);
 		listIngredienti.setEnabled(false);
 		bAddIngRic.setEnabled(false);
 		bDelIngRic.setEnabled(false);
