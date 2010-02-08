@@ -36,11 +36,11 @@ import command.UtenteDAO;
 import common.Utils;
 import common.ui.ListComposite;
 
-public class LoginForm extends ListComposite {
+public class NuovoRuoloForm extends ListComposite {
 
 	private Text password;
 	private Text utente;
-	public LoginForm(Composite parent, int style) {
+	public NuovoRuoloForm(Composite parent, int style) {
 		super(parent, style);
 
 		GridData gdForm = new GridData(SWT.BORDER);
