@@ -93,6 +93,11 @@
             id="StudioDietetico.CommandDinamiche"
             name="CommandDinamiche">
       </command>
+      <command
+            categoryId="StudioDietetico.category1"
+            id="StudioDietetico.CommandRegistrazione"
+            name="CommandRegistrazione">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -148,6 +153,10 @@
             class="handler.MenuDinamicheHandler"
             commandId="StudioDietetico.CommandDinamiche">
       </handler>
+      <handler
+            class="handler.MenuRegistrazioneHandler"
+            commandId="StudioDietetico.CommandRegistrazione">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -185,6 +194,11 @@
                   commandId="StudioDietetico.CommandAnamnesi"
                   icon="icons/symbol-32x32.png"
                   label="Anamnesi"
+                  style="push">
+            </command>
+            <command
+                  commandId="StudioDietetico.CommandRegistrazione"
+                  label="Registrazione"
                   style="push">
             </command>
          </menu>
@@ -355,7 +369,13 @@
       <view
             class="security.LoginView"
             id="LoginViewID"
-            name="Registrazione"
+            name="Login"
+            restorable="true">
+      </view>
+      <view
+            class="security.RegistrazioneView"
+            id="registrazioneViewID"
+            name="Registrati"
             restorable="true">
       </view>
    </extension>

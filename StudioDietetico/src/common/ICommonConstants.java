@@ -29,6 +29,7 @@ public interface ICommonConstants {
 	public static final String statisticheViewID = "StatisticheViewID";
 	public static final String graficiViewID = "GraficiViewID";
 	public static final String loginViewID = "LoginViewID";
+	public static final String registrazioneViewID = "registrazioneViewID";
 	
 	public static final String EsameClinicoView = "StudioDietetico.EsameClinicoView";
 	public static final String ParametroAntropometricoView = "StudioDietetico.ParametroAntropometricoView";
@@ -62,4 +63,17 @@ public interface ICommonConstants {
 	public static String patternDate = "dd/MM/yyyy";
 	public static String patternHour = "HH:mm";
 
+
+	// security - Ruoli
+	public static String RUOLO_AMM_ID = "0";
+	public static String RUOLO_SEGRETARIO_ID = "1";
+	public static String RUOLO_MEDICO_ID = "2";
+	public static String RUOLO_TECNICO_ID = "3";
+	
+
+	public static String RUOLO_AMM = "Amministratore";
+	public static String RUOLO_SEGRETARIO = "Segretario";
+	public static String RUOLO_MEDICO = "Medico";
+	public static String RUOLO_TECNICO = "Tecnico";
+	
 }
