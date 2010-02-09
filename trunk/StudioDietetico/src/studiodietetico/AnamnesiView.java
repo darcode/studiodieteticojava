@@ -622,6 +622,14 @@ public class AnamnesiView extends ViewPart {
 		buttonConfermaAttFis = new Button(groupAttFisica, SWT.NONE);
 		buttonConfermaAttFis.setBounds(new Rectangle(636, 266, 94, 31));
 		buttonConfermaAttFis.setText("Conferma");
+		buttonConfermaAttFis
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						
+						
+					}
+				});
+		
 		
 		//aggiorna la lista con gli sport presenti nel db
 		AnamnesiDAO am = new AnamnesiDAO();
@@ -735,8 +743,9 @@ public class AnamnesiView extends ViewPart {
 				freq = spinnerFrequenzaAttFis.getSelection();
 				//durata
 				String durata = textDurataAttFis.getText();
-				textAreaAttFisSel.add(""+textAreaAttFis.getSelection()+"   Freq: "+freq+"   Durata: "+durata);
-			
+				textAreaAttFisSel.add(textAreaAttFis.getSelection()+"   Freq: "+freq+"   Durata: "+durata);
+				SShellDurFreq.close();
+				
 				/*intReg.setPaziente(paziente);
 				//intReg.setTipoIntervento(tipoIntervento);
 				//intReg.setDataIntervento(dataInt);
