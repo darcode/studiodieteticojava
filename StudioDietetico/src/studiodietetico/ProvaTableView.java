@@ -64,8 +64,8 @@ public class ProvaTableView extends ViewPart {
 		colonna.pack();
 		colonna.setResizable(false);
 		
-		classVis.tableVisualizzazione.getColumn(1).setWidth(0);
-		classVis.tableVisualizzazione.getColumn(2).setWidth(0);		
+		classVis.nascondiColonna(1);
+		classVis.nascondiColonna(2);		
 		classVis.aggiornaCombo();
 		
 		classVis.ordinamentoInteri(classVis.tableVisualizzazione, 4);
