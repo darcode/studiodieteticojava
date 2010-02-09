@@ -44,8 +44,8 @@ public class ProvaTableForm extends ListComposite {
 	private Label labelRicerca;
 	private Text textRicerca = null;
 	private String idShellVisualizzaDettagli;  //  @jve:decl-index=0:
-	private String idShellInserimento="";  //  @jve:decl-index=0:
-	private Shell sShellMessElimina; 
+	private String idShellInserimento;  //  @jve:decl-index=0:
+	private Shell sShellMessElimina;
 	
 	/*public void setIdShellVisualizzaDettagli(String idShellVisualizzaDettagli) {
 		this.idShellVisualizzaDettagli = idShellVisualizzaDettagli;
@@ -164,9 +164,10 @@ public class ProvaTableForm extends ListComposite {
 		messageBox.setText("Conferma cancellazione");
 		if (messageBox.open() == SWT.OK) {
 			tableVisualizzazione.remove(indiceItemSel);
-			//tableVisualizzazione.getSelection()[0].setFont(0, new FontData("Arial", 0, SWT.BOLD));
-			//System.out.println("Index Item cancellato: "+indiceItemSel);
-			
+			System.out.println("Index Item cancellato: "+indiceItemSel);
+			/*for (int i = 0; i < tableVisualizzazione.getColumnCount(); i++) {
+				tableVisualizzazione.getSelection()[indiceItemSel].setFont(i, new Font(getDisplay(), "Arial", 0, SWT.NORMAL));
+			}*/
 			sShellMessElimina.close();
 		}
 	}
