@@ -1,13 +1,9 @@
 package studiodietetico;
 
-import hibernate.Intervento;
-
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Date;
 import java.util.Locale;
-import java.util.Set;
 
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -38,14 +34,13 @@ public class ProvaTableForm extends ListComposite {
 	public Table tableVisualizzazione = null;
 	public Button buttonInsert;
 	public Button buttonElimina;
-	private TableItem riga;
+	private TableItem rigaTableClick;
 	private String idShellVisualizzaDettagli="";  //  @jve:decl-index=0:
 	private CCombo cComboColonne = null;
 	private Label labelRicerca;
 	private Text textRicerca = null;
-	private Set<String> setAttributi = new HashSet<String>();  //  @jve:decl-index=0:
-	//private final int index=0, direction=0;
-
+	
+	
 	public void setIdShellVisualizzaDettagli(String idShellVisualizzaDettagli) {
 		this.idShellVisualizzaDettagli = idShellVisualizzaDettagli;
 	}
@@ -97,7 +92,6 @@ public class ProvaTableForm extends ListComposite {
 		textRicerca.setLayoutData(gridDataRic);
 		//textRicerca.setSize(200, 20);
 		
-		
 		tableVisualizzazione = new Table(top, SWT.FILL | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
 		tableVisualizzazione.setHeaderVisible(true);
 		tableVisualizzazione.setLinesVisible(true);
@@ -106,71 +100,15 @@ public class ProvaTableForm extends ListComposite {
 		tableVisualizzazione
 				.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
 					public void mouseDoubleClick(org.eclipse.swt.events.MouseEvent e) {
-						 //for (int i = 0; i < tableVisualizzazione.getSelectionCount(); i++) {
-							 riga = tableVisualizzazione.getSelection()[0];
-							 //System.out.println("Riga tabella: "+riga.getText());
-							 Utils.showView(idShellVisualizzaDettagli);
+						 rigaTableClick = tableVisualizzazione.getSelection()[0];
+						 Utils.showView(idShellVisualizzaDettagli);
 						//}
 					}
 				});
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		/*Listener sortListener = new Listener() {
-			public void handleEvent(Event e) {
-	        // determine new sort column and direction
-	        TableColumn sortColumn = tableVisualizzazione.getSortColumn();
-System.out.println("sortCol: "+sortColumn.getText());
-	        TableColumn currentColumn = (TableColumn) e.widget;
-	        int dir = tableVisualizzazione.getSortDirection();
-	        if (sortColumn == currentColumn) {
-	          dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
-	        } else {
-	        	tableVisualizzazione.setSortColumn(currentColumn);
-	          dir = SWT.UP;
-	        }
-	        // sort the data based on column and direction
-	        for (int i = 0; i < tableVisualizzazione.getColumnCount(); i++) {
-	        	index = i;
-	        	direction = dir;
-	        	
-			}
-	        
-	        
-	        Arrays.sort(data, new Comparator() {
-	          public int compare(Object arg0, Object arg1) {
-	            int[] a = (int[]) arg0;
-	            int[] b = (int[]) arg1;
-	            if (a[index] == b[index])
-	              return 0;
-	            if (direction == SWT.UP) {
-	              return a[index] < b[index] ? -1 : 1;
-	            }
-	            return a[index] < b[index] ? 1 : -1;
-	          }
-	        });
-	        // update data displayed in table
-	        tableVisualizzazione.setSortDirection(dir);
-	        tableVisualizzazione.clearAll();
-		  }
-	    };*/
-	    //column1.addListener(SWT.Selection, sortListener);*/
-
-		
-		
-		
-		
-		
 		buttonInsert = new Button(top, SWT.NONE);
 		buttonInsert.setText("Inserisci nuovo");
 		buttonInsert.setLayoutData(gridDataButton);
-		
 		
 		buttonElimina = new Button(top, SWT.NONE);
 		buttonElimina.setText("Elimina");
@@ -197,130 +135,210 @@ System.out.println("sortCol: "+sortColumn.getText());
 				//Utils.showView(RegistraPazienteView.VIEW_ID);
 			}
 		});*/
-		
-		ordinamentoItem(tableVisualizzazione);
-		
+		    
+}
+	
+	/**
+	 * Ordinamento crescente e decrescente delle colonne di tipo Integer
+	 * @param tableVis
+	 * @param indiceColonna
+	 */
+	public void ordinamentoInteri(final Table tableVis, final int indiceColonna) {
+		Listener sortListener = new Listener() {
+	        public void handleEvent(Event e) {
+	        	TableColumn sortColumn = tableVis.getSortColumn();
+				int dir = tableVis.getSortDirection();
+	        	TableItem[] items = tableVis.getItems();
+	            TableColumn column = (TableColumn)e.widget; //colonna cliccata
+	            
+	            if(sortColumn==column){
+					dir = dir==SWT.UP ? SWT.DOWN : SWT.UP;
+				} else {
+					tableVis.setSortColumn(column);
+			          dir = SWT.UP;
+				}
+	            
+	            int index = indiceColonna; //indice della colonna sulla quale fare l'ordinamento
+	            int valueInt1 = 0, valueInt2 = 0;
+	            for (int i = 1; i < items.length; i++) {
+	            	if(items[i].getText(index).equals(""))
+	            		valueInt1=Integer.MAX_VALUE;
+	            	else
+	            		valueInt1 = Integer.parseInt(items[i].getText(index));
+	            	for (int j = 0; j < i; j++){
+	            		if(items[j].getText(index).equals(""))
+	            			valueInt2=Integer.MAX_VALUE;
+	            		else
+	            			valueInt2 = Integer.parseInt(items[j].getText(index));
 
-///////////////////////////////////ordinamento///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		/*for(int col = 0; col < tableVisualizzazione.getColumnCount(); col++){
-	    	final int currentColumn= col;
-	    	TableColumn column = tableVisualizzazione.getColumn(col);
-		column.addListener(SWT.Selection, new Listener() {
+	            		if(dir == SWT.DOWN) {
+
+	            			if (valueInt1 < valueInt2) {
+	            				String[] values = new String[tableVis.getColumnCount()];
+	            				for (int k = 0; k < tableVis.getColumnCount(); k++) {
+	            					values[k] = items[i].getText(k);
+	            				}
+	            				items[i].dispose();
+	            				TableItem item = new TableItem(tableVis, SWT.NONE, j);
+	            				item.setText(values);
+	            				items = tableVis.getItems();
+	            				break;
+	            			}
+	            		} else {
+	            			if (valueInt1 > valueInt2) {
+	            				String[] values = new String[tableVis.getColumnCount()];
+	            				for (int k = 0; k < tableVis.getColumnCount(); k++) {
+	            					values[k] = items[i].getText(k);
+	            				}
+	            				items[i].dispose();
+	            				TableItem item = new TableItem(tableVis, SWT.NONE, j);
+	            				item.setText(values);
+	            				items = tableVis.getItems();
+	            				break;
+	            			}
+	            		}
+	            	}
+	            }
+	            tableVis.setSortDirection(dir);
+	            tableVis.setSortColumn(column);
+	        }
+	    };
+	    tableVis.getColumn(indiceColonna).addListener(SWT.Selection, sortListener);   
+	}
+	
+	/**
+	 * Ordinamento crescente e decrescente delle colonne di tipo String
+	 * @param tableVis
+	 * @param indiceColonna
+	 */
+	public void ordinamentoStringhe(final Table tableVis, final int indiceColonna) {
+		Listener sortListener = new Listener() {
 			public void handleEvent(Event e) {
-					
-				TableItem[] items = tableVisualizzazione.getItems();
-					Collator collator = Collator.getInstance(Locale.getDefault());
-					for (int i = 1; i < items.length; i++) {
-						String value1 = items[i].getText(currentColumn);
-						for (int j = 0; j < i; j++){
-							String value2 = items[j].getText(currentColumn);
+				TableColumn sortColumn = tableVis.getSortColumn();
+				int dir = tableVis.getSortDirection();
+				TableItem[] items = tableVis.getItems();
+				Collator collator = Collator.getInstance(Locale.getDefault());
+				TableColumn column = (TableColumn)e.widget; //colonna cliccata
+				
+				if(sortColumn==column){
+					dir = dir==SWT.UP ? SWT.DOWN : SWT.UP;
+				} else {
+					tableVis.setSortColumn(column);
+			          dir = SWT.UP;
+				}
+				
+				int index = indiceColonna; //indice della colonna sulla quale fare l'ordinamento
+				String value1 = null, value2 = null;
+				for (int i = 1; i < items.length; i++) {
+					value1 = items[i].getText(index);
+					for (int j = 0; j < i; j++){
+						value2 = items[j].getText(index);
+						if(dir == SWT.DOWN) {
 							if (collator.compare(value1, value2) < 0) {
-								String[] values = {
-									items[i].getText(0), 
-									items[i].getText(1), 
-									items[i].getText(2),
-									items[i].getText(3)};
-								Object data = items[i].getData();
+								String[] values = new String[tableVis.getColumnCount()];
+								for (int k = 0; k < tableVis.getColumnCount(); k++) {
+									values[k] = items[i].getText(k);
+								}
 								items[i].dispose();
-								TableItem item = new TableItem(tableVisualizzazione, SWT.NONE, j);
+								TableItem item = new TableItem(tableVis, SWT.NONE, j);
 								item.setText(values);
-								item.setData(data);
+								items = tableVis.getItems();
+								break;
+							}	
+						} else {
+							if (collator.compare(value1, value2) > 0) {
+								String[] values = new String[tableVis.getColumnCount()];
+								for (int k = 0; k < tableVis.getColumnCount(); k++) {
+									values[k] = items[i].getText(k);
+								}
+								items[i].dispose();
+								TableItem item = new TableItem(tableVis, SWT.NONE, j);
+								item.setText(values);
+								items = tableVis.getItems();
 								break;
 							}
 						}
 					}
 				}
-			});		      
-		}*/
-		
-		
-/////////////////////////////ordLor///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-	    
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	    
-	    
-	    
-	    
-	    
-}
-	
-	public void ordinamentoItem(final Table tableVis) {
-		Listener sortListener = new Listener() {
-	        public void handleEvent(Event e) {
-	            TableItem[] items = tableVis.getItems();
-	            Collator collator = Collator.getInstance(Locale.getDefault());
-	            TableColumn column = (TableColumn)e.widget;
-	            int index = 4; //provo sulla seconda colonna
-	            
-	            /*if(column == columnNome){
-	            	index = 0;
-	            }else if (column == columnTipologia) {
-	            	index = 1;
-				}else if (column == columnCalorie) {
-					index = 2;
-				}else if (column == columnIdAlimento) {
-					index = 3;
-				}*/
-	            String value1 = null;
-	            String value2 = null;
-	            int valueInt1 = 0;
-	            int valueInt2 = 0;
-	            for (int i = 1; i < items.length; i++) {
-	                //if((index==0)||(index==1)) { //per le string
-	                	/*value1 = items[i].getText(index);
-	                	for (int j = 0; j < i; j++){
-		                    value2 = items[j].getText(index);
-		                    if (collator.compare(value1, value2) < 0) {
-		                        String[] values = {items[i].getText(0), items[i].getText(1), items[i].getText(2)};
-		                        items[i].dispose();
-		                        TableItem item = new TableItem(tableVisualizzazione, SWT.NONE, j);
-		                        item.setText(values);
-		                        items = tableVisualizzazione.getItems();
-		                        break;
-		                    }
-		                }*/
-	              //  }else{ //per i numerici
-	            	System.out.println("item[i] "+items[i].getText(index));
-	                	if(items[i].getText(index).equals(""))
-	                		valueInt1=Integer.MAX_VALUE;
-	                	else
-	                		valueInt1 = Integer.parseInt(items[i].getText(index));
-	                	  for (int j = 0; j < i; j++){
-	                		  if(items[j].getText(index).equals(""))
-	                			  valueInt2=Integer.MAX_VALUE;
-	                		  else
-	                			  valueInt2 = Integer.parseInt(items[j].getText(index));
-			                    if (valueInt1 < valueInt2) {
-			                        String[] values = {items[i].getText(0), items[i].getText(1), items[i].getText(2)
-			                        		, items[i].getText(3), items[i].getText(4), items[i].getText(5)};
-			                        items[i].dispose();
-			                        TableItem item = new TableItem(tableVis, SWT.NONE, j);
-			                        item.setText(values);
-			                        items = tableVis.getItems();
-			                        break;
-			                    }
-			                }
-	                }
-	                	
-	              
-	            //}
-	            tableVis.setSortColumn(column);
-	        }
+				tableVis.setSortDirection(dir);
+				tableVis.setSortColumn(column);
+			}
 	    };
-	    tableVis.getColumn(4).addListener(SWT.Selection, sortListener);
-	    tableVis.getColumn(3).addListener(SWT.Selection, sortListener);
-	    for (int i = 0; i <tableVisualizzazione.getColumnCount(); i++) {
-	    	tableVis.setSortColumn(tableVisualizzazione.getColumn(i));
-		    if (tableVis.getSortDirection()== SWT.UP) {
-		    	tableVis.setSortDirection(SWT.DOWN);
-			} else
-				tableVis.setSortDirection(SWT.UP);
-		}
+	    tableVis.getColumn(indiceColonna).addListener(SWT.Selection, sortListener);
 	}
 	
-	
-	
+	/**
+	 * Ordinamento crescente e decrescente delle colonne di tipo Data
+	 * @param tableVis
+	 * @param indiceColonna
+	 */
+	public void ordinamentoData(final Table tableVis, final int indiceColonna) {
+		Listener sortListener = new Listener() {
+			public void handleEvent(Event e) {
+				TableColumn sortColumn = tableVis.getSortColumn();
+				int dir = tableVis.getSortDirection();
+				TableItem[] items = tableVis.getItems();
+				Collator collator = Collator.getInstance(Locale.getDefault());
+				TableColumn column = (TableColumn)e.widget; //colonna cliccata
+				
+				if(sortColumn==column){
+					dir = dir==SWT.UP ? SWT.DOWN : SWT.UP;
+				} else {
+					tableVis.setSortColumn(column);
+			          dir = SWT.UP;
+				}
+				
+				int index = indiceColonna; //indice della colonna sulla quale fare l'ordinamento
+				String value1, value2, formato="yyyy-MM-dd";
+				Date valueDate1, valueDate2;
+				for (int i = 1; i < items.length; i++) {
+					value1 = items[i].getText(index);
+					valueDate1 = Utils.convertStringToDate(value1, formato);
+					for (int j = 0; j < i; j++){
+						value2 = items[j].getText(index);
+						valueDate2 = Utils.convertStringToDate(value2, formato);
+						if(dir == SWT.DOWN) {
+							System.out.println("Confronto date down: "+valueDate1.compareTo(valueDate2));
+							//if (collator.compare(valueDate1, valueDate2) < 0) {
+							if (valueDate1.compareTo(valueDate2) < 0) {
+								String[] values = new String[tableVis.getColumnCount()];
+								for (int k = 0; k < tableVis.getColumnCount(); k++) {
+									values[k] = items[i].getText(k);
+								}
+								items[i].dispose();
+								TableItem item = new TableItem(tableVis, SWT.NONE, j);
+								item.setText(values);
+								items = tableVis.getItems();
+								break;
+							}	
+						} else {
+							System.out.println("Confronto date up: "+valueDate1.compareTo(valueDate2));
+							if (valueDate1.compareTo(valueDate2) > 0) {
+							//if (collator.compare(valueDate1, valueDate2) > 0) {
+								String[] values = new String[tableVis.getColumnCount()];
+								for (int k = 0; k < tableVis.getColumnCount(); k++) {
+									values[k] = items[i].getText(k);
+								}
+								items[i].dispose();
+								TableItem item = new TableItem(tableVis, SWT.NONE, j);
+								item.setText(values);
+								items = tableVis.getItems();
+								break;
+							}
+						}
+					}
+				}
+				tableVis.setSortDirection(dir);
+				tableVis.setSortColumn(column);
+			}
+	    };
+	    
+	    tableVis.getColumn(indiceColonna).addListener(SWT.Selection, sortListener);
+	}
+
+	/**
+	 * Aggiorna la combo per la ricerca con gli attributi visualizzati nella tabella
+	 */
 	public void aggiornaCombo() {
 		for (TableColumn colonna : tableVisualizzazione.getColumns()) {
 			if (colonna.getWidth()!=0 /*&& !setAttributi.contains(colonna.getText())*/) {
@@ -332,10 +350,10 @@ System.out.println("sortCol: "+sortColumn.getText());
 	}
 
 	public TableItem getRiga() {
-		return riga;
+		return rigaTableClick;
 	}
 
-	public void setRiga(TableItem riga) {
+	/*public void setRiga(TableItem riga) {
 		this.riga = riga;
-	}
+	}*/
 }  //  @jve:decl-index=0:visual-constraint="10,10"
