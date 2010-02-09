@@ -1,5 +1,6 @@
 package studiodietetico;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.eclipse.swt.widgets.Composite;
@@ -25,6 +26,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.graphics.Point;
 import org.jdom.Element;
+import org.eclipse.swt.layout.GridLayout;
 
 public class DynamicQueryView extends ViewPart{
 
@@ -42,6 +44,9 @@ public class DynamicQueryView extends ViewPart{
 	private Label label1 = null;
 	private Button buttonCancella = null;
 	DynamicQueryDAO dynDao;
+	private Shell sShell1 = null;  //  @jve:decl-index=0:visual-constraint="760,595"
+	private Label label2 = null;
+	private Button ok = null;
 
 	public DynamicQueryView() {
 		// TODO Auto-generated constructor stub
@@ -70,14 +75,39 @@ public class DynamicQueryView extends ViewPart{
         tree.addListener (SWT.Selection, new Listener () {
     		public void handleEvent (Event event) {
     			if (event.detail == SWT.CHECK) {
-        			System.out.println ("TODO: Raggiungere il nodo checkato controllando (se è una relazione checka tutte le foglie del nodo)");
+    				TreeItem[] arr = tree.getSelection();   
+    				boolean b = false;
+            		if (arr[0] != null) {
+            			TreeItem item = arr[0];            			
+            			if (item.getText().substring(0, 1).equals(item.getText().substring(0, 1).toUpperCase())) {
+    						TreeItem[] figli = item.getItems();
+    						for (int i = 0; i < figli.length; i++) {
+    							if (!figli[i].getText().substring(0, 1).equals(figli[i].getText().substring(0, 1).toUpperCase())) {
+    								b = true;
+    								if (item.getChecked()) {
+    									figli[i].setChecked(true);
+									} else {
+										figli[i].setChecked(false);
+									}    								
+    							}								
+							}
+						} else {
+							b = true;
+						}
+    				}
+            		if(!b){
+            			createSShell1();
+            			sShell1.open();            			
+            			arr[0].setChecked(false);
+            		}
+    				
 				}
     		}
     	});
         createComboSelezioneEntita();
         labelSelezioneEntita = new Label(top, SWT.NONE);
         labelSelezioneEntita.setBounds(new Rectangle(-1, 5, 278, 13));
-        labelSelezioneEntita.setText("Selezionare l' entita' che si vuole ricercare:");
+        labelSelezioneEntita.setText("Selezionare il contesto da cui partire:");
         button = new Button(top, SWT.NONE);
         button.setBounds(new Rectangle(445, 5, 44, 27));
         button.setText("Vai");
@@ -131,11 +161,13 @@ public class DynamicQueryView extends ViewPart{
 						Element radiceXml = new Element("radice");
 						radiceXml.setAttribute("path", pathClasse);
 						radiceXml.setAttribute("nome", nomeClasse);
-						;
+						radiceXml.setAttribute("check", "no");
+						
 						
 						dynDao = new DynamicQueryDAO(pathClasse, nomeClasse, radiceXml);
 						dynDao.espandiAlbero(nomeClasse, pathClasse, radice, nodiVisitati, tree, radiceXml);
 						comboSelezioneEntita.setEnabled(false);
+//						dynDao.checkSelezionato(ramo, b)
 //						dynDao.executeDynQuery(filtroQuery);
 					}
 					public void widgetDefaultSelected(
@@ -178,4 +210,26 @@ public class DynamicQueryView extends ViewPart{
 			}
 		});
 	}
+
+	/**
+	 * This method initializes sShell1	
+	 *
+	 */
+	private void createSShell1() {
+		sShell1 = new Shell();
+		sShell1.setLayout(null);
+		sShell1.setText("Attenzione");
+		sShell1.setSize(new Point(233, 143));
+		label2 = new Label(sShell1, SWT.NONE | SWT.WRAP);
+		label2.setBounds(new Rectangle(50, 30, 143, 32));
+		label2.setText("Non ci sono elementi per il contesto selezionato");
+		ok = new Button(sShell1, SWT.NONE);
+		ok.setBounds(new Rectangle(98, 84, 36, 27));
+		ok.setText("Ok");
+		ok.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				sShell1.close();
+			}
+		});
+	}	
 }  //  @jve:decl-index=0:visual-constraint="-1,6,1051,526"
