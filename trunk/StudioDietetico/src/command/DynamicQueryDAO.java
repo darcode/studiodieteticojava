@@ -44,8 +44,7 @@ public class DynamicQueryDAO extends BaseDAO{
 		xmlOutputter.setFormat(Format.getPrettyFormat());
 		
 		albero.removeContent();
-		albero.setRootElement(new Element("dynquery"));
-		albero.getRootElement().addContent(radice)	;			
+		albero.setRootElement(radice);		
 		
 		Class c = null;
 		try {
@@ -101,16 +100,19 @@ public class DynamicQueryDAO extends BaseDAO{
 						Element figlio = new Element("foglia");
 						figlio.setAttribute("path", currField.getType().getCanonicalName());
 						figlio.setAttribute("nome", currField.getName());
+						figlio.setAttribute("check", "no");
 						currElement.addContent(figlio);
 					} else if (prim.equals("int")) {
 						Element figlio = new Element("foglia");
 						figlio.setAttribute("path", currField.getType().getCanonicalName());
 						figlio.setAttribute("nome", currField.getName());
+						figlio.setAttribute("check", "no");
 						currElement.addContent(figlio);
 					} else if (prim.equals("double")) {
 						Element figlio = new Element("foglia");
 						figlio.setAttribute("path", currField.getType().getCanonicalName());	
 						figlio.setAttribute("nome", currField.getName());
+						figlio.setAttribute("check", "no");
 						currElement.addContent(figlio);
 					}					
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
@@ -120,12 +122,14 @@ public class DynamicQueryDAO extends BaseDAO{
 					figlio.setAttribute("path", currField.getType().getCanonicalName());
 					currElement.addContent(figlio);
 					figlio.setAttribute("nome", currField.getName());
+					figlio.setAttribute("check", "no");
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 					sottoRadice.setText(currField.getName());
 				} else if (currField.getType().equals(java.lang.Double.class)) {
 					Element figlio = new Element("foglia");
 					figlio.setAttribute("path", currField.getType().getCanonicalName());
 					figlio.setAttribute("nome", currField.getName());
+					figlio.setAttribute("check", "no");
 					currElement.addContent(figlio);
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 					sottoRadice.setText(currField.getName());
@@ -133,6 +137,7 @@ public class DynamicQueryDAO extends BaseDAO{
 					Element figlio = new Element("foglia");
 					figlio.setAttribute("path", currField.getType().getCanonicalName());
 					figlio.setAttribute("nome", currField.getName());
+					figlio.setAttribute("check", "no");
 					currElement.addContent(figlio);
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 					sottoRadice.setText(currField.getName());
@@ -140,6 +145,7 @@ public class DynamicQueryDAO extends BaseDAO{
 					Element figlio = new Element("foglia");
 					figlio.setAttribute("path", currField.getType().getCanonicalName());
 					figlio.setAttribute("nome", currField.getName());
+					figlio.setAttribute("check", "no");
 					currElement.addContent(figlio);
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 					sottoRadice.setText(currField.getName());
@@ -147,22 +153,21 @@ public class DynamicQueryDAO extends BaseDAO{
 					Element figlio = new Element("foglia");
 					figlio.setAttribute("path",currField.getType().getCanonicalName());
 					figlio.setAttribute("nome", currField.getName());
+					figlio.setAttribute("check", "no");
 					currElement.addContent(figlio);
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 					sottoRadice.setText(currField.getName());
 				}
 				// Ricorsione
 				else if (!currField.getType().isInstance(new HashSet<Object>())) {					
-					// nodo del grafo di esplorazione
-					
-					
-					
+					// nodo del grafo di esplorazione					
 					String testo = service.Utils.upperCase(currField.getName());					
 					String currentPath = currField.getType().getCanonicalName();
 					if (!nodiVisitati.contains(currentPath)) {
 						Element figlio = new Element("ramo");
 						figlio.setAttribute("path", currentPath);
 						figlio.setAttribute("nome", testo);
+						figlio.setAttribute("check", "no");
 						currElement.addContent(figlio);						
 						TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 						sottoRadice.setText(testo);
@@ -176,27 +181,58 @@ public class DynamicQueryDAO extends BaseDAO{
 						Element figlio = new Element("ramo");
 						figlio.setAttribute("path", currField.getDeclaringClass().getCanonicalName());
 						figlio.setAttribute("nome", testo);
+						figlio.setAttribute("check", "no");
 						currElement.addContent(figlio);
 						TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 						sottoRadice.setText(testo);
 						espandiAlbero(testo, "hibernate." + testo, sottoRadice, nodiVisitati, inizioAlbero, figlio);
 					}					
 				}
-				FileOutputStream fileOutputStream = null;
-				try {
-					fileOutputStream = new FileOutputStream("dynQuery.xml");
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} 
-				try {
-					xmlOutputter.output(albero, fileOutputStream);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				aggiornaXml();
 				fieldClasse.remove(currField);
 			}
 		}
 	}
+
+	public void checkSelezionato(ArrayList<TreeItem> ramo, boolean b) {
+		//TODO rivedere il metodo
+		TreeItem last = ramo.get(ramo.size());
+		Element current = albero.getRootElement();
+		
+		if(last.getText().equals(current.getAttribute("nome"))){
+			ramo.remove(last);
+			while (ramo.size()>1) {
+				last = ramo.get(ramo.size());
+				current = current.getChild(last.getText());
+			}
+			last = ramo.get(ramo.size());
+			current = current.getChild(last.getText());
+			if (current.getName().equals("foglia")) {				
+				current.setAttribute("check", "si");
+			} else {
+				
+			}
+			aggiornaXml();
+			current = current.getChild(last.getText());
+		} else {
+			System.out.println("errore nella creazione dell'albero");
+		}
+	}
+	
+	private void aggiornaXml(){
+		FileOutputStream fileOutputStream = null;
+		try {
+			fileOutputStream = new FileOutputStream("dynQuery.xml");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		try {
+			xmlOutputter.output(albero, fileOutputStream);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 }

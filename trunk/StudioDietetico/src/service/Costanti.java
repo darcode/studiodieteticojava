@@ -5,7 +5,7 @@ public class Costanti {
 	public static String[][] entita = {
 			{ "Abitudini Alimentari", "hibernate.Abitudinialimentari" },
 			{ "Alimento", "hibernate.Alimento" },
-			{ "Assunzione Bevande", "hibernate.Assunzionebevande" },
+//			{ "Assunzione Bevande", "hibernate.Assunzionebevande" },
 			{ "Attivita fisica", "hibernate.Attivitafisica" },
 			// {"Composizione","hibernate.Composizione"},
 			// {"Costituzione","hibernate.Costituzione"},
