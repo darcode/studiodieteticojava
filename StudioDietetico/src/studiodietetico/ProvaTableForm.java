@@ -15,12 +15,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
 import common.ui.ListComposite;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.graphics.Rectangle;
 
 import service.Utils;
 import org.eclipse.swt.custom.CCombo;
@@ -35,14 +36,19 @@ public class ProvaTableForm extends ListComposite {
 	public Button buttonInsert;
 	public Button buttonElimina;
 	private TableItem rigaTableClick;
-	private String idShellVisualizzaDettagli="";  //  @jve:decl-index=0:
 	private CCombo cComboColonne = null;
 	private Label labelRicerca;
 	private Text textRicerca = null;
-	
+	private String idShellVisualizzaDettagli="";
+	private String idShellInserimento="";
+	private Shell sShellMessElimina; 
 	
 	public void setIdShellVisualizzaDettagli(String idShellVisualizzaDettagli) {
 		this.idShellVisualizzaDettagli = idShellVisualizzaDettagli;
+	}
+	
+	public void setIdShellInserimento(String idShellInserimento) {
+		this.idShellInserimento = idShellInserimento;
 	}
 
 	public ProvaTableForm(Composite parent, int style, ArrayList<Object> listaElementi) {
@@ -55,8 +61,6 @@ public class ProvaTableForm extends ListComposite {
 	 * 
 	 */
 	private void initialize(ArrayList<Object> listaElementi) {
-        
-        
         GridLayout gridLayout = new GridLayout(4, true);
         gridLayout.numColumns = 4;
         
@@ -90,7 +94,6 @@ public class ProvaTableForm extends ListComposite {
 		
 		textRicerca = new Text(top, SWT.BORDER);
 		textRicerca.setLayoutData(gridDataRic);
-		//textRicerca.setSize(200, 20);
 		
 		tableVisualizzazione = new Table(top, SWT.FILL | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
 		tableVisualizzazione.setHeaderVisible(true);
@@ -100,43 +103,88 @@ public class ProvaTableForm extends ListComposite {
 		tableVisualizzazione
 				.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
 					public void mouseDoubleClick(org.eclipse.swt.events.MouseEvent e) {
-						 rigaTableClick = tableVisualizzazione.getSelection()[0];
+						 if(tableVisualizzazione.getSelectionCount()>0)
+							rigaTableClick = tableVisualizzazione.getSelection()[0];
+						 else
+							 rigaTableClick = null;
 						 Utils.showView(idShellVisualizzaDettagli);
-						//}
+						 tableVisualizzazione.deselectAll();
 					}
 				});
 		
 		buttonInsert = new Button(top, SWT.NONE);
 		buttonInsert.setText("Inserisci nuovo");
 		buttonInsert.setLayoutData(gridDataButton);
+		buttonInsert.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				Utils.showView(idShellInserimento);
+			}
+		});
 		
 		buttonElimina = new Button(top, SWT.NONE);
 		buttonElimina.setText("Elimina");
 		buttonElimina.setLayoutData(gridDataButton);
-		
+		buttonElimina.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				//Utils.showView(RegistraPazienteView.VIEW_ID);
+				if(tableVisualizzazione.getSelectionCount()>0) {
+					int indiceItemSel = tableVisualizzazione.getSelectionIndex();
+					//MessageBox con conferma cancellazione
+					createMessConfermaCanc(indiceItemSel);
+				} else {
+					//MessageBox con richiesta dell'elemento da cancellare
+					createMessSelElemCanc(); 
+				}
+			}
+		});
 		
 		riempiTabellaEntita(tableVisualizzazione, listaElementi);
 		for (TableColumn colonna : tableVisualizzazione.getColumns()) {
 			colonna.pack();
 			colonna.setResizable(false);
 		}
+		
 		//nasconde la prima colonna che contiene l'id
-		tableVisualizzazione.getColumn(0).setWidth(0);
-
-		/*buttonInsert.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(
-					org.eclipse.swt.events.SelectionEvent e) {
-				//Utils.showView(RegistraPazienteView.VIEW_ID);
-			}
-		});
-		buttonModifica.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(
-					org.eclipse.swt.events.SelectionEvent e) {
-				//Utils.showView(RegistraPazienteView.VIEW_ID);
-			}
-		});*/
-		    
+		nascondiColonna(0);
 }
+	
+	private void createMessConfermaCanc(int indiceItemSel) {
+		createSShellMessElimina();
+		MessageBox messageBox = new MessageBox(sShellMessElimina, SWT.OK | SWT.CANCEL| SWT.ICON_WARNING);
+		messageBox.setMessage("Sei sicuro di voler eliminare questo elemento?\nLa sua cancellazione comporta la rimozione di:"/*+messElementiCancellati*/);
+		messageBox.setText("Conferma cancellazione");
+		if (messageBox.open() == SWT.OK) {
+			tableVisualizzazione.remove(indiceItemSel);
+			System.out.println("Index Item cancellato: "+indiceItemSel);
+			
+			sShellMessElimina.close();
+		}
+	}
+	
+	private void createMessSelElemCanc() {
+		createSShellMessElimina();
+		MessageBox messageBox = new MessageBox(sShellMessElimina, SWT.OK | SWT.ICON_ERROR);
+		messageBox.setMessage("Selezionare un elemento per cancellarlo!");
+		messageBox.setText("Errore: elemento non selezionato");
+		if (messageBox.open() == SWT.OK) {
+			sShellMessElimina.close();
+		}
+	}
+	
+	private void createSShellMessElimina() {
+		sShellMessElimina = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		sShellMessElimina.setLayout(new GridLayout());
+		//sShellMessElimina.setText("Conferma cancellazione");
+		sShellMessElimina.setSize(new Point(377, 72));
+	}
+	
+	/**
+	 * Nasconde la colonna con indice dato in input
+	 * @param indiceColonna
+	 */
+	public void nascondiColonna(int indiceColonna) {
+		tableVisualizzazione.getColumn(indiceColonna).setWidth(0);
+	}
 	
 	/**
 	 * Ordinamento crescente e decrescente delle colonne di tipo Integer
@@ -278,7 +326,6 @@ public class ProvaTableForm extends ListComposite {
 				TableColumn sortColumn = tableVis.getSortColumn();
 				int dir = tableVis.getSortDirection();
 				TableItem[] items = tableVis.getItems();
-				Collator collator = Collator.getInstance(Locale.getDefault());
 				TableColumn column = (TableColumn)e.widget; //colonna cliccata
 				
 				if(sortColumn==column){
@@ -349,6 +396,10 @@ public class ProvaTableForm extends ListComposite {
 		cComboColonne.pack();
 	}
 
+	/**
+	 * Restituisce l'item sul quale viene cliccato
+	 * @return
+	 */
 	public TableItem getRiga() {
 		return rigaTableClick;
 	}
