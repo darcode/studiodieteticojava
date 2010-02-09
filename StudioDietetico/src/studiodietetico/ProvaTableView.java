@@ -38,46 +38,37 @@ public class ProvaTableView extends ViewPart {
 		pazienteSel = PazienteDAO.getPazienti().get(4);
 		interventiPazList = AnamnesiDAO.getInterventiPazPerLista(pazienteSel);
 		
-		classVis = new ProvaTableForm(parent, SWT.BORDER, interventiPazList);
-		classVis.setIdShellVisualizzaDettagli(AnamnesiView.VIEW_ID);
-		//classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		//Richiama il costruttore della classe Form
+		classVis = new ProvaTableForm(parent, SWT.BORDER, interventiPazList,"","");
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
-		classVis.buttonInsert.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(
-					org.eclipse.swt.events.SelectionEvent e) {
-				Utils.showView(AnamnesiView.VIEW_ID);
-			}
-		});
+		//classVis.setIdShellVisualizzaDettagli(AnamnesiView.VIEW_ID);
+		//classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		classVis.tableVisualizzazione.getColumn(1).setWidth(0);
-		classVis.tableVisualizzazione.getColumn(2).setWidth(0);	
-		TableColumn colonna = new TableColumn(classVis.tableVisualizzazione, SWT.CENTER);
+		//Nasconde le colonne che visualizzano gli id
+		classVis.nascondiColonna(1);
+		classVis.nascondiColonna(2);
+		
+		//Aggiunge la colonna che visualizza il nome dell'intervento
+		TableColumn colonna = new TableColumn(classVis.getTableVisualizzazione(), SWT.CENTER);
 		colonna.setText("Tipo Intervento");
-		
-
+		String nome = "";
+		TableItem itemSel = null;
 		for (int j = 0; j < interventiPazList.size(); j++) {
-			String nome = ((Intervento)interventiPazList.get(j)).getTipologiaintervento().getNome();
-			TableItem itemSel = classVis.tableVisualizzazione.getItem(j);
-			itemSel.setText(classVis.tableVisualizzazione.getColumnCount()-1, nome);
+			nome = ((Intervento)interventiPazList.get(j)).getTipologiaintervento().getNome();
+			itemSel = classVis.getTableVisualizzazione().getItem(j);
+			itemSel.setText(classVis.getTableVisualizzazione().getColumnCount()-1, nome);
 		} 
 		colonna.pack();
 		colonna.setResizable(false);
 		
-		classVis.nascondiColonna(1);
-		classVis.nascondiColonna(2);		
+		//Aggiorna la combo con l'attributo aggiunto
 		classVis.aggiornaCombo();
 		
-		classVis.ordinamentoInteri(classVis.tableVisualizzazione, 4);
-		classVis.ordinamentoStringhe(classVis.tableVisualizzazione, 5);
-		classVis.ordinamentoData(classVis.tableVisualizzazione, 3);		
-			
-		
-		
-		/*paz = PazienteDAO.getPazientiPerLista();
-		riempiTabellaEntita(listElencoPazienti, paz);
-		listElencoPazienti.getColumn(0).setWidth(0);*/
-		
+		//Applica l'ordinamento alle colonne visualizzate
+		classVis.ordinamentoInteri(classVis.getTableVisualizzazione(), 4);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 5);
+		classVis.ordinamentoData(classVis.getTableVisualizzazione(), 3);		
 	}
 
 	@Override
@@ -85,50 +76,3 @@ public class ProvaTableView extends ViewPart {
 		classVis.setFocus();
 	}
 }
-
-
-
-
-/*class ProvaDieta extends ListComposite {
-
-	private Composite top = null;
-	private Table tableVisualizzazione = null;
-	
-	public ProvaDieta(Composite parent, int style) {
-		super(parent, style);
-		initialize(parent);
-	}
-
-	private void initialize(Composite parent) {
-		top = new Composite(parent, SWT.NONE);
-		
-        tableVisualizzazione = new Table(top, SWT.NONE);
-        tableVisualizzazione.setHeaderVisible(true);
-        tableVisualizzazione.setLinesVisible(true);
-        tableVisualizzazione.setBounds(new Rectangle(31, 19, 660, 147));
-		
-	}
-	
-}*/
-
-
-
-
-
-
-
-
-/*public static String getClassName(Object aClass){
-    return aClass.getClass().getSimpleName();
-  }
-  
-  // Tramite l'oggetto di cui non conosco la classe mi faccio restituire i suoi attributi in un array di stringhe
-  
-  public static String[] getStringFields(Object aClass) {
-    Field[] campi = aClass.getClass().getDeclaredFields();
-    String[] campiStringa = new String[campi.length];
-    for (int i = 0; i < campi.length; i++) {
-      campiStringa[i] = campi[i].getName();
-    }
-    return campiStringa;
-  }*/
