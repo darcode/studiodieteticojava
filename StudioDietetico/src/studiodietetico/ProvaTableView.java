@@ -67,7 +67,10 @@ public class ProvaTableView extends ViewPart {
 		classVis.tableVisualizzazione.getColumn(1).setWidth(0);
 		classVis.tableVisualizzazione.getColumn(2).setWidth(0);		
 		classVis.aggiornaCombo();
-				
+		
+		classVis.ordinamentoInteri(classVis.tableVisualizzazione, 4);
+		classVis.ordinamentoStringhe(classVis.tableVisualizzazione, 5);
+		classVis.ordinamentoData(classVis.tableVisualizzazione, 3);		
 			
 		
 		
