@@ -12,6 +12,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -20,6 +21,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
 import common.ui.ListComposite;
+
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Table;
 
@@ -32,27 +36,34 @@ public class ProvaTableForm extends ListComposite {
 
 	private Composite top;
 	private Label labelSelPaz;
-	public Table tableVisualizzazione = null;
-	public Button buttonInsert;
-	public Button buttonElimina;
+	private Table tableVisualizzazione = null;
+	private Button buttonInsert;
+	private Button buttonElimina;
 	private TableItem rigaTableClick;
 	private CCombo cComboColonne = null;
 	private Label labelRicerca;
 	private Text textRicerca = null;
-	private String idShellVisualizzaDettagli="";
-	private String idShellInserimento="";
+	private String idShellVisualizzaDettagli;  //  @jve:decl-index=0:
+	private String idShellInserimento="";  //  @jve:decl-index=0:
 	private Shell sShellMessElimina; 
 	
-	public void setIdShellVisualizzaDettagli(String idShellVisualizzaDettagli) {
+	/*public void setIdShellVisualizzaDettagli(String idShellVisualizzaDettagli) {
 		this.idShellVisualizzaDettagli = idShellVisualizzaDettagli;
 	}
 	
 	public void setIdShellInserimento(String idShellInserimento) {
 		this.idShellInserimento = idShellInserimento;
+	}*/
+	
+	public Table getTableVisualizzazione() {
+		return tableVisualizzazione;
 	}
 
-	public ProvaTableForm(Composite parent, int style, ArrayList<Object> listaElementi) {
+	public ProvaTableForm(Composite parent, int style, ArrayList<Object> listaElementi, String idShellVisDettagli, String idShellIns) {
 		super(parent, style);
+		rigaTableClick=null;
+		idShellVisualizzaDettagli=idShellVisDettagli;
+		idShellInserimento=idShellIns;
 		initialize(listaElementi);
 	}
 
@@ -105,8 +116,6 @@ public class ProvaTableForm extends ListComposite {
 					public void mouseDoubleClick(org.eclipse.swt.events.MouseEvent e) {
 						 if(tableVisualizzazione.getSelectionCount()>0)
 							rigaTableClick = tableVisualizzazione.getSelection()[0];
-						 else
-							 rigaTableClick = null;
 						 Utils.showView(idShellVisualizzaDettagli);
 						 tableVisualizzazione.deselectAll();
 					}
@@ -126,10 +135,10 @@ public class ProvaTableForm extends ListComposite {
 		buttonElimina.setLayoutData(gridDataButton);
 		buttonElimina.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				//Utils.showView(RegistraPazienteView.VIEW_ID);
 				if(tableVisualizzazione.getSelectionCount()>0) {
 					int indiceItemSel = tableVisualizzazione.getSelectionIndex();
 					//MessageBox con conferma cancellazione
+					//TableItem itemSel = tableVisualizzazione.getSelection()[0];
 					createMessConfermaCanc(indiceItemSel);
 				} else {
 					//MessageBox con richiesta dell'elemento da cancellare
@@ -155,7 +164,8 @@ public class ProvaTableForm extends ListComposite {
 		messageBox.setText("Conferma cancellazione");
 		if (messageBox.open() == SWT.OK) {
 			tableVisualizzazione.remove(indiceItemSel);
-			System.out.println("Index Item cancellato: "+indiceItemSel);
+			//tableVisualizzazione.getSelection()[0].setFont(0, new FontData("Arial", 0, SWT.BOLD));
+			//System.out.println("Index Item cancellato: "+indiceItemSel);
 			
 			sShellMessElimina.close();
 		}
@@ -345,8 +355,6 @@ public class ProvaTableForm extends ListComposite {
 						value2 = items[j].getText(index);
 						valueDate2 = Utils.convertStringToDate(value2, formato);
 						if(dir == SWT.DOWN) {
-							System.out.println("Confronto date down: "+valueDate1.compareTo(valueDate2));
-							//if (collator.compare(valueDate1, valueDate2) < 0) {
 							if (valueDate1.compareTo(valueDate2) < 0) {
 								String[] values = new String[tableVis.getColumnCount()];
 								for (int k = 0; k < tableVis.getColumnCount(); k++) {
@@ -359,9 +367,7 @@ public class ProvaTableForm extends ListComposite {
 								break;
 							}	
 						} else {
-							System.out.println("Confronto date up: "+valueDate1.compareTo(valueDate2));
 							if (valueDate1.compareTo(valueDate2) > 0) {
-							//if (collator.compare(valueDate1, valueDate2) > 0) {
 								String[] values = new String[tableVis.getColumnCount()];
 								for (int k = 0; k < tableVis.getColumnCount(); k++) {
 									values[k] = items[i].getText(k);
@@ -379,7 +385,6 @@ public class ProvaTableForm extends ListComposite {
 				tableVis.setSortColumn(column);
 			}
 	    };
-	    
 	    tableVis.getColumn(indiceColonna).addListener(SWT.Selection, sortListener);
 	}
 
