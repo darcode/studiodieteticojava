@@ -31,6 +31,10 @@ import service.Utils;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Text;
 
+import java.util.HashSet;
+import java.util.Set;
+import hibernate.Paziente;
+
 
 public class ProvaTableForm extends ListComposite {
 
@@ -47,6 +51,10 @@ public class ProvaTableForm extends ListComposite {
 	private String idShellInserimento;  //  @jve:decl-index=0:
 	private Shell sShellMessElimina;
 	
+	private Set<String> setAttributi = new HashSet<String>();  //  @jve:decl-index=0:
+	private ArrayList<TableItem> itemTab = null;  //  @jve:decl-index=0:
+	private Paziente pazienteSel;  //  @jve:decl-index=0:
+	private ArrayList<Object> interventiPazList;
 	/*public void setIdShellVisualizzaDettagli(String idShellVisualizzaDettagli) {
 		this.idShellVisualizzaDettagli = idShellVisualizzaDettagli;
 	}
@@ -106,7 +114,35 @@ public class ProvaTableForm extends ListComposite {
 		textRicerca = new Text(top, SWT.BORDER);
 		textRicerca.setLayoutData(gridDataRic);
 		
-		tableVisualizzazione = new Table(top, SWT.FILL | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
+		textRicerca.addModifyListener(new org.eclipse.swt.events.ModifyListener() {
+			public void modifyText(org.eclipse.swt.events.ModifyEvent e) {
+				//riempiTabellaEntita(tableVisualizzazione, listaElementiTable);
+				//initialize(listaElementiTable);
+				//tableVisualizzazione.clear(0, tableVisualizzazione.getItemCount()-1);
+				
+				for (int i = 0; i < itemTab.size(); i++) {
+					TableItem itemSel = tableVisualizzazione.getItem(i);				
+					if ((itemTab.get(i).getText((cComboColonne.getSelectionIndex()+3))).startsWith(textRicerca.getText())) {
+						TableItem newItem = new TableItem(tableVisualizzazione, SWT.NONE);
+						//tableVisualizzazione.remove(i);
+						
+						for (int j = 0; j < tableVisualizzazione.getColumnCount(); j++) {
+							newItem.setText(j, itemTab.get(i).getText(j));
+						}		
+					}
+					else {
+						//set a 0 l'altezza dell'item
+						
+					}
+					
+				}
+				//tableVisualizzazione.remove(0, (itemTab.size()-1));
+				System.out.println("modifyText()"); // TODO Auto-generated Event stub modifyText()
+			}
+		});
+	
+		
+		tableVisualizzazione = new Table(top, SWT.FILL | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI | SWT.VIRTUAL);
 		tableVisualizzazione.setHeaderVisible(true);
 		tableVisualizzazione.setLinesVisible(true);
 		tableVisualizzazione.setLayout(new GridLayout(1, true));
@@ -148,6 +184,13 @@ public class ProvaTableForm extends ListComposite {
 		});
 		
 		riempiTabellaEntita(tableVisualizzazione, listaElementi);
+		
+		//aggiunge nell'array itemTab ogni item nella tabella
+		itemTab = new ArrayList<TableItem>();
+		for (int i = 0; i < tableVisualizzazione.getItems().length; i++) {
+			itemTab.add(tableVisualizzazione.getItems()[i]);
+		}
+		
 		for (TableColumn colonna : tableVisualizzazione.getColumns()) {
 			colonna.pack();
 			colonna.setResizable(false);
