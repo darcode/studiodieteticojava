@@ -375,7 +375,7 @@
       <view
             class="security.RegistrazioneView"
             id="registrazioneViewID"
-            name="Registrati"
+            name="Registra Utente"
             restorable="true">
       </view>
    </extension>
