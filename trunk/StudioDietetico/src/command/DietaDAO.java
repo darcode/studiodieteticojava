@@ -531,6 +531,20 @@ for (int i = 0; i < ris.size(); i++) {
 		return ric;
 	}
 	
+	public Ricetta modificaRicetta(int idRicetta, String nome, String procedimento, Alimento alimento){
+		
+		begin();
+		Ricetta ric = getRicetta(idRicetta);
+		
+		ric.setNome(nome);
+		ric.setProcedimento(procedimento);
+		ric.setAlimento(alimento);
+		getSession().saveOrUpdate(ric);
+		commit();
+		close();
+		return ric;
+	}
+	
 	public void inserisciComposizione(Ingrediente ingrediente, String quantita, Ricetta ricetta){
 		
 		begin();
@@ -544,6 +558,20 @@ for (int i = 0; i < ris.size(); i++) {
 		comp.setQuantita(quantita);
 		
 		getSession().saveOrUpdate(comp);
+		commit();
+		close();
+	}
+	
+	public void cancellaComposizione(Ricetta ricetta){
+		
+		begin();
+		Criteria criteria = getSession().createCriteria(hibernate.Composizione.class);
+		criteria.add( Restrictions.eq("ricetta", ricetta));
+		List<Composizione> comp = (List<Composizione>)criteria.list();
+		commit();
+		for (Composizione composizione : comp) {
+			getSession().delete(composizione);
+		}
 		commit();
 		close();
 	}
