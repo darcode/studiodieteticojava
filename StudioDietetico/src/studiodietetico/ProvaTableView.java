@@ -39,7 +39,7 @@ public class ProvaTableView extends ViewPart {
 		interventiPazList = AnamnesiDAO.getInterventiPazPerLista(pazienteSel);
 		
 		//Richiama il costruttore della classe Form
-		classVis = new ProvaTableForm(parent, SWT.BORDER, interventiPazList,"","");
+		classVis = new ProvaTableForm(parent, SWT.BORDER, interventiPazList);
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
 		//classVis.setIdShellVisualizzaDettagli(AnamnesiView.VIEW_ID);
