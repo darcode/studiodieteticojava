@@ -72,11 +72,11 @@ public class VisitaDAO extends BaseDAO {
 		return tv;
 	}
 
-	public static List<Prenotazione> getPrenotazioni() {
+	public static ArrayList<Prenotazione> getPrenotazioni() {
 		begin();
 		Query q = getSession().createQuery(
 				"FROM Prenotazione pr ORDER BY pr.paziente.cognome");
-		List<Prenotazione> pr = (List<Prenotazione>) q.list();
+		ArrayList<Prenotazione> pr = (ArrayList<Prenotazione>) q.list();
 		commit();
 		return pr;
 
@@ -202,6 +202,16 @@ public class VisitaDAO extends BaseDAO {
 			e.printStackTrace();
 		}
 		return null;
+
+	}
+	
+	public static ArrayList<Visita> getVisite() {
+		begin();
+		Query q = getSession().createQuery(
+				"FROM Visita v ORDER BY v.dataOraInizio");
+		ArrayList<Visita> vis = (ArrayList<Visita>) q.list();
+		commit();
+		return vis;
 
 	}
 }
