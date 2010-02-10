@@ -57,6 +57,9 @@ public class AnamnesiView extends ViewPart {
 	private CTabFolder cTabFolderAnamnesi = null;
 	
 	//INTERVENTI
+	private ProvaTableForm classVis;
+	private ArrayList<Object> interventiPazList;
+	
 	private Label labelNomeInt = null;
 	private Text textNomeInt = null;
 	private Label labelDescrInt = null;
@@ -161,13 +164,24 @@ public class AnamnesiView extends ViewPart {
 		String dataNascPazSel = pazSelHome.getDataNascita().getDay()+"/"+pazSelHome.getDataNascita().getMonth()+"/"+pazSelHome.getDataNascita().getYear();
 		textPaziente.setText(pazSelHome.getCognome()+"   "+pazSelHome.getNome()+"   "+dataNascPazSel);
 		
-		//creazione tabItem
+		//creazione tabItem Interventi
 		CTabItem itemInt = new CTabItem(cTabFolderAnamnesi, SWT.NONE);
 	    itemInt.setText("Interventi");
 	    {
 	    	Composite comp1 = new Composite(cTabFolderAnamnesi, SWT.TRANSPARENT);
 	    	itemInt.setControl(comp1);
-	    	createTabInterventi(comp1);
+	    	
+	    	
+	    	interventiPazList = AnamnesiDAO.getInterventiPazPerLista(pazSelHome);
+			
+			//Richiama il costruttore della classe Form
+			classVis = new ProvaTableForm(comp1, SWT.BORDER, interventiPazList);
+			classVis.setBounds(new Rectangle(6, 40, 800, 632));
+			//classVis.setLayout(new GridLayout(1, true));
+			classVis.setBackground(Utils.getStandardWhiteColor());
+	    	
+	    	
+	    	//createTabInterventi(comp1);
 	    } // fine tab interventi
 	    
 	    
@@ -200,7 +214,7 @@ public class AnamnesiView extends ViewPart {
 	 * Crea gli oggetti contenuti nel tab degli interventi
 	 * @param comp1 composite nella quale inserire gii oggetti
 	 */
-	public void createTabInterventi(Composite comp1) {
+	/*public void createTabInterventi(Composite comp1) {
 		interventoSelez = new Tipologiaintervento();
 		labelSceltaInt = new Label(comp1, SWT.NONE);
 		labelSceltaInt.setBounds(new Rectangle(13, 63, 397, 21));
@@ -220,15 +234,7 @@ public class AnamnesiView extends ViewPart {
 		buttonAddIntSel.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				interventoSelez = listInterventiDB.get(listInterventi.getSelectionIndex());
-				//paziente
-				//PazienteDAO paz = new PazienteDAO();
-				//Paziente paziente = new Paziente();
-				//HomePazienteView homeP = new HomePazienteView();
-				//paziente = homeP.getPazienteSelezionato();
-				//paziente = PazienteDAO.getPazienti().get(3);
-				
 				createSShellNumData(pazSelHome,interventoSelez);
-				
 				//listInterventi.deselectAll();
 			}
 		});
@@ -242,7 +248,6 @@ public class AnamnesiView extends ViewPart {
 				buttonEliminaInt.setEnabled(true);
 			}
 		});
-		//listIntSel.addListener(SWT., listener)
 		
 		buttonInsInt = new Button(comp1, SWT.NONE);
 		buttonInsInt.setBounds(new Rectangle(13, 208, 98, 21));
@@ -253,7 +258,7 @@ public class AnamnesiView extends ViewPart {
 				createSShellInserimentoInterventi();
 			}
 		});
-		
+		*/
 		/*buttonModificaInt = new Button(comp1, SWT.NONE);
 		buttonModificaInt.setBounds(new Rectangle(430, 208, 70, 21));
 		buttonModificaInt.setText("Modifica");
@@ -264,7 +269,7 @@ public class AnamnesiView extends ViewPart {
 				openSShellNumData(pazSelHome);
 			}
 		});*/
-		buttonEliminaInt = new Button(comp1, SWT.NONE);
+		/*buttonEliminaInt = new Button(comp1, SWT.NONE);
 		buttonEliminaInt.setBounds(new Rectangle(430, 208, 70, 21));
 		buttonEliminaInt.setText("Elimina");
 		buttonEliminaInt.setEnabled(false);
@@ -332,6 +337,41 @@ public class AnamnesiView extends ViewPart {
 		});
 		
 		aggiornaListInterventi();
+	}*/
+	
+	public void createTabInterventi(Composite comp1) {
+		interventiPazList = AnamnesiDAO.getInterventiPazPerLista(pazSelHome);
+		
+		//Richiama il costruttore della classe Form
+		classVis = new ProvaTableForm(comp1, SWT.BORDER, interventiPazList);
+		//classVis.setLayout(new GridLayout(1, true));
+		classVis.setBackground(Utils.getStandardWhiteColor());
+		
+		//Nasconde le colonne che visualizzano gli id
+		classVis.nascondiColonna(1);
+		classVis.nascondiColonna(2);
+		
+		//Aggiunge la colonna che visualizza il nome dell'intervento
+		TableColumn colonna = new TableColumn(classVis.getTableVisualizzazione(), SWT.CENTER);
+		colonna.setText("Tipo Intervento");
+		String nome = "";
+		TableItem itemSel = null;
+		for (int j = 0; j < interventiPazList.size(); j++) {
+			nome = ((Intervento)interventiPazList.get(j)).getTipologiaintervento().getNome();
+			itemSel = classVis.getTableVisualizzazione().getItem(j);
+			itemSel.setText(classVis.getTableVisualizzazione().getColumnCount()-1, nome);
+		} 
+		colonna.pack();
+		colonna.setResizable(false);
+		
+		//Aggiorna la combo con l'attributo aggiunto
+		classVis.aggiornaCombo();
+		
+		//Applica l'ordinamento alle colonne visualizzate
+		classVis.ordinamentoInteri(classVis.getTableVisualizzazione(), 4);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 5);
+		classVis.ordinamentoData(classVis.getTableVisualizzazione(), 3);	
+		
 	}
 	
 	/**
