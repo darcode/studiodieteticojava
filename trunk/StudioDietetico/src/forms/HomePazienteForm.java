@@ -74,13 +74,13 @@ public class HomePazienteForm extends ListComposite {
 		gdTop.verticalAlignment = SWT.FILL;
 		gdTop.grabExcessHorizontalSpace = true;
 		gdTop.grabExcessVerticalSpace = true;
-
+		
 		top = new Composite(this, SWT.BORDER);
 		top.setLayout(new GridLayout(4, true));
 		top.setLayoutData(gdTop);
+		
 		labelSelPaz = new Label(top, SWT.NONE);
 		labelSelPaz.setText("Selezonare il paziente dalla lista");
-
 		labelSelPaz.setLayoutData(gdFiller);
 		
 		listElencoPazienti = new Table(top, SWT.FILL | SWT.BORDER
