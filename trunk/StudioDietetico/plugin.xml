@@ -378,6 +378,12 @@
             name="Registra Utente"
             restorable="true">
       </view>
+      <view
+            class="studiodietetico.ProvaAnamnesiView"
+            id="StudioDietetico.ProvaAnamnesiView"
+            name="ProvaAnamnesiView"
+            restorable="true">
+      </view>
    </extension>
    <extension
          id="product"
