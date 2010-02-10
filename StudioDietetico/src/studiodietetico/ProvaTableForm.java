@@ -39,7 +39,7 @@ import hibernate.Paziente;
 public class ProvaTableForm extends ListComposite {
 
 	private Composite top;
-	private Label labelSelPaz;
+	private Label labelSelItem;
 	private Table tableVisualizzazione = null;
 	private Button buttonInsert;
 	private Button buttonElimina;
@@ -67,11 +67,11 @@ public class ProvaTableForm extends ListComposite {
 		return tableVisualizzazione;
 	}
 
-	public ProvaTableForm(Composite parent, int style, ArrayList<Object> listaElementi, String idShellVisDettagli, String idShellIns) {
+	public ProvaTableForm(Composite parent, int style, ArrayList<Object> listaElementi) {
 		super(parent, style);
 		rigaTableClick=null;
-		idShellVisualizzaDettagli=idShellVisDettagli;
-		idShellInserimento=idShellIns;
+		//idShellVisualizzaDettagli=idShellVisDettagli;
+		//idShellInserimento=idShellIns;
 		initialize(listaElementi);
 	}
 
@@ -80,39 +80,50 @@ public class ProvaTableForm extends ListComposite {
 	 * 
 	 */
 	private void initialize(ArrayList<Object> listaElementi) {
-        GridLayout gridLayout = new GridLayout(4, true);
-        gridLayout.numColumns = 4;
-        
-        GridData gridDataLabel = new GridData();
-        gridDataLabel.horizontalSpan = 4;
-        GridData gridDataButton = new GridData();
-        gridDataButton.horizontalSpan = 1;
-        GridData gridDataTable = new GridData();
-        gridDataTable.horizontalSpan = 4;
-        GridData gridDataRic = new GridData();
-        gridDataRic.horizontalSpan = 1;
-        
-        this.setSize(new Point(800, 800));
-        
+		GridData gdForm = new GridData(SWT.BORDER);
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.verticalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		this.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(1, true);
+		this.setLayout(glForm);
+		this.setBackground(common.Utils.getStandardWhiteColor());
+
+		GridData gdFiller = new GridData(SWT.FILL);
+		gdFiller.grabExcessHorizontalSpace = true;
+		gdFiller.horizontalAlignment = SWT.FILL;
+		gdFiller.horizontalSpan = 4;
+
+		GridData gdTbl = new GridData(SWT.FILL);
+		gdTbl.grabExcessHorizontalSpace = true;
+		gdTbl.horizontalAlignment = SWT.FILL;
+		gdTbl.verticalAlignment = SWT.FILL;
+		gdTbl.grabExcessVerticalSpace = true;
+		gdTbl.horizontalSpan = 4;
+		
+		GridData gdTop = new GridData();
+		gdTop.horizontalAlignment = SWT.FILL;
+		gdTop.verticalAlignment = SWT.FILL;
+		gdTop.grabExcessHorizontalSpace = true;
+		gdTop.grabExcessVerticalSpace = true;
+		   
         top = new Composite(this, SWT.BORDER);
-        top.setLocation(new Point(0, 0));
-        top.setLayout(gridLayout);
-        top.setSize(new Point(800, 800));
+        top.setLayout(new GridLayout(4, true));
+        top.setLayoutData(gdTop);
         
-        labelSelPaz = new Label(top, SWT.NONE);
-		labelSelPaz.setText("Selezionare un elemento e scegliere una opzione");
-		labelSelPaz.setLayoutData(gridDataLabel);
-		labelSelPaz.setSize(new Point(265, 15));
+        labelSelItem = new Label(top, SWT.NONE);
+		labelSelItem.setText("Selezionare un elemento e scegliere una opzione");
+		labelSelItem.setLayoutData(gdFiller);
 		
 		labelRicerca = new Label(top, SWT.NONE);
 		labelRicerca.setText("Ricerca");
-		labelRicerca.setLayoutData(gridDataRic);
 		
 		cComboColonne = new CCombo(top, SWT.READ_ONLY);
-		cComboColonne.setLayoutData(gridDataRic);
+		//cComboColonne.setLayoutData(gridDataRic);
 		
 		textRicerca = new Text(top, SWT.BORDER);
-		textRicerca.setLayoutData(gridDataRic);
+		//textRicerca.setLayoutData(gdFiller);
 		
 		textRicerca.addModifyListener(new org.eclipse.swt.events.ModifyListener() {
 			public void modifyText(org.eclipse.swt.events.ModifyEvent e) {
@@ -146,9 +157,8 @@ public class ProvaTableForm extends ListComposite {
 		tableVisualizzazione.setHeaderVisible(true);
 		tableVisualizzazione.setLinesVisible(true);
 		tableVisualizzazione.setLayout(new GridLayout(1, true));
-		tableVisualizzazione.setLayoutData(gridDataTable);
-		tableVisualizzazione
-				.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
+		tableVisualizzazione.setLayoutData(gdTbl);
+		tableVisualizzazione.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
 					public void mouseDoubleClick(org.eclipse.swt.events.MouseEvent e) {
 						 if(tableVisualizzazione.getSelectionCount()>0)
 							rigaTableClick = tableVisualizzazione.getSelection()[0];
@@ -159,7 +169,6 @@ public class ProvaTableForm extends ListComposite {
 		
 		buttonInsert = new Button(top, SWT.NONE);
 		buttonInsert.setText("Inserisci nuovo");
-		buttonInsert.setLayoutData(gridDataButton);
 		buttonInsert.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				Utils.showView(idShellInserimento);
@@ -168,7 +177,6 @@ public class ProvaTableForm extends ListComposite {
 		
 		buttonElimina = new Button(top, SWT.NONE);
 		buttonElimina.setText("Elimina");
-		buttonElimina.setLayoutData(gridDataButton);
 		buttonElimina.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				if(tableVisualizzazione.getSelectionCount()>0) {
