@@ -172,7 +172,7 @@ public class AnamnesiView extends ViewPart {
 	    	itemInt.setControl(comp1);
 	    	
 	    	
-	    	interventiPazList = AnamnesiDAO.getInterventiPazPerLista(pazSelHome);
+	    	interventiPazList = AnamnesiDAO.getInterventiListByPaziente(pazSelHome);
 			
 			//Richiama il costruttore della classe Form
 			classVis = new ProvaTableForm(comp1, SWT.BORDER, interventiPazList);
@@ -340,7 +340,7 @@ public class AnamnesiView extends ViewPart {
 	}*/
 	
 	public void createTabInterventi(Composite comp1) {
-		interventiPazList = AnamnesiDAO.getInterventiPazPerLista(pazSelHome);
+		interventiPazList = AnamnesiDAO.getInterventiListByPaziente(pazSelHome);
 		
 		//Richiama il costruttore della classe Form
 		classVis = new ProvaTableForm(comp1, SWT.BORDER, interventiPazList);
@@ -380,7 +380,7 @@ public class AnamnesiView extends ViewPart {
 	public void aggiornaListInterventi() {
 		listInterventiDB = new ArrayList<Tipologiaintervento>(); 
 		AnamnesiDAO interv = new AnamnesiDAO();
-		listInterventiDB = interv.getInterventi(); //prende tutti gli interventi dal db
+		listInterventiDB = interv.getListTipoInterventi(); //prende tutti gli interventi dal db
 		
 		ArrayList<String> listI = new ArrayList<String>();
 		//prende i dati da visualizzare in listInterventi
@@ -410,7 +410,7 @@ public class AnamnesiView extends ViewPart {
 	private void createGroupInserimentoInt() {
 		groupInserimentoInt = new Group(sShellInserimentoInterventi, SWT.NONE);
 		//groupInserimentoInt.setLayout(new GridLayout());
-		groupInserimentoInt.setText("Inserimento nuovo interevento");
+		groupInserimentoInt.setText("Inserimento nuovo intervento");
 		groupInserimentoInt.setBounds(new Rectangle(5, 3, 772, 180));
 		
 		labelNomeInt = new Label(groupInserimentoInt, SWT.NONE);
@@ -835,7 +835,7 @@ class AnamnesiViewTableSport extends ListComposite {
 		tableSportPerPaziente.setLinesVisible(true);
 		//tableSportPerPaziente.setBounds(new Rectangle(36, 596, 628, 226));
 		tableSportPerPaziente.setLayout(new GridLayout(1, true));
-		sport = AnamnesiDAO.getSportPazPerLista(pazSelHome);
+		sport = AnamnesiDAO.getSportListByPaziente(pazSelHome);
 		System.out.println("N sport: "+sport.size());
 		riempiTabellaEntita(tableSportPerPaziente, sport);
 		System.out.println("N colonne: "+tableSportPerPaziente.getColumnCount());
