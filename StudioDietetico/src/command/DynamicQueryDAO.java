@@ -1,6 +1,11 @@
 package command;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.hibernate.Criteria;
@@ -92,7 +97,7 @@ public class DynamicQueryDAO extends BaseDAO{
 			while (fieldClasse.size() > 0) {
 				Field currField = fieldClasse.get(0);
 				// Passo Base
-				if (currField.getName().contains("id")) {
+				if (currField.getName().startsWith("id")) {
 					// do nothing
 				} else if (currField.getType().isPrimitive()) {
 					String prim = currField.getType().toString();
@@ -171,6 +176,8 @@ public class DynamicQueryDAO extends BaseDAO{
 						currElement.addContent(figlio);						
 						TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 						sottoRadice.setText(testo);
+						sottoRadice.setFont(new Font(Display.getCurrent(), new FontData("Arial", 10 ,SWT.BOLD)));
+						sottoRadice.setForeground(new Color(Display.getCurrent(), 255, 0, 0));
 						espandiAlbero(testo, currentPath, sottoRadice, nodiVisitati, inizioAlbero, figlio);
 					}					
 				} else if (!nodiVisitati.contains(currField.getDeclaringClass().toString())) {
@@ -185,6 +192,9 @@ public class DynamicQueryDAO extends BaseDAO{
 						currElement.addContent(figlio);
 						TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 						sottoRadice.setText(testo);
+//						sottoRadice.setBackground(new Color(Display.getCurrent(), 255, 0, 0));
+						sottoRadice.setFont(new Font(Display.getCurrent(), new FontData("Arial", 10 ,SWT.BOLD)));
+						sottoRadice.setForeground(new Color(Display.getCurrent(), 255, 0, 0));
 						espandiAlbero(testo, "hibernate." + testo, sottoRadice, nodiVisitati, inizioAlbero, figlio);
 					}					
 				}
@@ -194,30 +204,30 @@ public class DynamicQueryDAO extends BaseDAO{
 		}
 	}
 
-	public void checkSelezionato(ArrayList<TreeItem> ramo, boolean b) {
-		//TODO rivedere il metodo
-		TreeItem last = ramo.get(ramo.size());
-		Element current = albero.getRootElement();
-		
-		if(last.getText().equals(current.getAttribute("nome"))){
-			ramo.remove(last);
-			while (ramo.size()>1) {
-				last = ramo.get(ramo.size());
-				current = current.getChild(last.getText());
-			}
-			last = ramo.get(ramo.size());
-			current = current.getChild(last.getText());
-			if (current.getName().equals("foglia")) {				
-				current.setAttribute("check", "si");
-			} else {
-				
-			}
-			aggiornaXml();
-			current = current.getChild(last.getText());
-		} else {
-			System.out.println("errore nella creazione dell'albero");
-		}
-	}
+//	public void checkSelezionato(ArrayList<TreeItem> ramo, boolean b) {
+//		//TODO rivedere il metodo
+//		TreeItem last = ramo.get(ramo.size());
+//		Element current = albero.getRootElement();
+//		
+//		if(last.getText().equals(current.getAttribute("nome"))){
+//			ramo.remove(last);
+//			while (ramo.size()>1) {
+//				last = ramo.get(ramo.size());
+//				current = current.getChild(last.getText());
+//			}
+//			last = ramo.get(ramo.size());
+//			current = current.getChild(last.getText());
+//			if (current.getName().equals("foglia")) {				
+//				current.setAttribute("check", "si");
+//			} else {
+//				
+//			}
+//			aggiornaXml();
+//			current = current.getChild(last.getText());
+//		} else {
+//			System.out.println("errore nella creazione dell'albero");
+//		}
+//	}
 	
 	private void aggiornaXml(){
 		FileOutputStream fileOutputStream = null;
