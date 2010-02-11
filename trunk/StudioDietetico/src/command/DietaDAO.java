@@ -576,6 +576,25 @@ for (int i = 0; i < ris.size(); i++) {
 		close();
 	}
 	
+	public void cancellaRicetta(Ricetta ricetta){
+		
+		begin();
+		
+		Criteria criteria = getSession().createCriteria(hibernate.Composizione.class);
+		criteria.add( Restrictions.eq("ricetta", ricetta));
+		List<Composizione> comp = (List<Composizione>)criteria.list();
+		commit();
+		for (Composizione composizione : comp) {
+			getSession().delete(composizione);
+		}
+		commit();
+		begin();
+		getSession().delete(ricetta);
+		commit();
+		
+		close();
+	}
+	
 	public void inserisciIngrediente(String nome){
 		
 		//close();
