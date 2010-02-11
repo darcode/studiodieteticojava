@@ -61,7 +61,7 @@ public class DynamicQueryView extends ViewPart{
         tree.setBounds(new Rectangle(0, 52, 469, 415));
         tree.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
         	public void mouseDoubleClick(org.eclipse.swt.events.MouseEvent e) {        		
-        		//check se ├и selezionato e se ├и foglia
+        		//check se ши selezionato e se ш foglia
         		TreeItem[] arr = tree.getSelection();        		
         		if (arr[0] != null) {
         			TreeItem item = arr[0];
