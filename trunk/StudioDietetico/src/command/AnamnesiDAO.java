@@ -17,6 +17,7 @@ import hibernate.Tipologiaintervento;
 public class AnamnesiDAO extends BaseDAO{
 	public AnamnesiDAO(){}
 	
+	//INTERVENTI
 	public void registraTipoIntervento(String nome, String descrizione, String localizzazione){
 		getSession();
 		begin();
@@ -29,7 +30,7 @@ public class AnamnesiDAO extends BaseDAO{
 		close();
 	}
 	
-	public ArrayList<Tipologiaintervento> getInterventi(){
+	public ArrayList<Tipologiaintervento> getListTipoInterventi(){
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Tipologiaintervento interv ORDER BY interv.nome");
@@ -57,7 +58,7 @@ public class AnamnesiDAO extends BaseDAO{
 		close();
 	}
 	
-	public ArrayList<Intervento> getInterventiPaz(){
+	public ArrayList<Intervento> getListInterventi(){
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Intervento interv");
@@ -66,7 +67,7 @@ public class AnamnesiDAO extends BaseDAO{
 		return interventiPaz;
 	}
 	
-	public static ArrayList<Object> getInterventiPazPerLista(Paziente paz) {
+	public static ArrayList<Object> getInterventiListByPaziente(Paziente paz) {
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Intervento i WHERE paziente="+paz.getIdPaziente()/*+" ORDER BY af.nome"*/);
@@ -75,7 +76,6 @@ public class AnamnesiDAO extends BaseDAO{
 		return interventi;
 	}
 	
-	//update studiodietetico.intervento set numero=5 where idPaziente=4 and idTipologiaIntervento=2;
 	public void aggiornaNumero(Paziente paziente, Tipologiaintervento tipointervento, Date data, int numeroInt) {
 		getSession();
 		begin();
@@ -85,21 +85,13 @@ public class AnamnesiDAO extends BaseDAO{
 		interv.setData(data);
 		interv.setNumero(numeroInt);
 		getSession().saveOrUpdate(interv);
-		/*InterventoId idInt = new InterventoId();
-		idInt.setIdPaziente(paziente.getIdPaziente());
-		idInt.setIdTipologiaIntervento(tipointervento.getIdTipologiaIntervento());
-		interv.setId(idInt);
-		interv.setPaziente(paziente);
-		interv.setTipologiaintervento(tipointervento);
-		interv.setData(data);
-		interv.setNumero(numeroInt);*/
-		//Query q = getSession().createQuery("UPDATE Intervento SET numero="+numeroInt+", data="+data+" WHERE idPaziente="+paziente.getIdPaziente()+" and idTipologiaIntervento="+tipointervento.getIdTipologiaIntervento());
-		//q.executeUpdate();
-		//getSession().update(interv);
 		commit();
 		close();
 	}
 	
+	
+	
+	//ALLERGIE
 	public void registraAllergie(String flagAll,String sostanza, String alimPrinc, 
 			String derivati, String grado, String effCollaterali, Paziente paziente){
 		getSession();
@@ -117,6 +109,18 @@ public class AnamnesiDAO extends BaseDAO{
 		close();
 	}
 	
+	public static ArrayList<Object> getAllergieListByPaziente(Paziente paz) {
+		getSession();
+		begin();
+		Query q = getSession().createQuery("FROM Intolleranzaallergia all WHERE paziente="+paz.getIdPaziente());
+		ArrayList<Object> sport = (ArrayList<Object>)q.list();
+		commit();
+		return sport;
+	}
+	
+	
+	
+	//ATTIVITA' FISICA
 	public void registraSport(String nome, String descrizione, String durata, int freqSett, Paziente paziente){
 		getSession();
 		begin();
@@ -131,7 +135,7 @@ public class AnamnesiDAO extends BaseDAO{
 		close();
 	}
 	
-	public static ArrayList<Object> getSportPazPerLista(Paziente paz) {
+	public static ArrayList<Object> getSportListByPaziente(Paziente paz) {
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Attivitafisica af WHERE paziente="+paz.getIdPaziente()/*+" ORDER BY af.nome"*/);
