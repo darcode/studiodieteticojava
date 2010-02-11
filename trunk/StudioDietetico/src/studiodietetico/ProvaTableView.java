@@ -36,7 +36,7 @@ public class ProvaTableView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		//Prende il paziente selezionato
 		pazienteSel = PazienteDAO.getPazienti().get(4);
-		interventiPazList = AnamnesiDAO.getInterventiPazPerLista(pazienteSel);
+		interventiPazList = AnamnesiDAO.getInterventiListByPaziente(pazienteSel);
 		
 		//Richiama il costruttore della classe Form
 		classVis = new ProvaTableForm(parent, SWT.BORDER, interventiPazList);
