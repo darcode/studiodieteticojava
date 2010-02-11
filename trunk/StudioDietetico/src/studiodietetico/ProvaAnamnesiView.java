@@ -27,15 +27,21 @@ import command.AnamnesiDAO;
 import command.PazienteDAO;
 
 public class ProvaAnamnesiView extends ViewPart {
-
+	//Generale
 	private Composite top = null;
 	private TabFolder tabFolder = null;
-	private Composite compositeInterventi = null;
 	private Label labelPaziente;
 	private Text textPaziente;
 	private Paziente pazSelHome;
+	//Interventi
+	private Composite compositeInterventi = null;
 	private ArrayList<Object> interventiPazList;
 	private ProvaTableForm classVis;
+	//Allergie
+	private Composite compositeAllergie = null;
+	private ArrayList<Object> allergiePazList;
+	
+	//Costruttore
 	public ProvaAnamnesiView() {
 		// TODO Auto-generated constructor stub
 	}
@@ -74,6 +80,8 @@ public class ProvaAnamnesiView extends ViewPart {
 		
 		createCompositeInterventi(tabFolder);
 		
+		createCompositeAllergie(tabFolder);
+		
 	}
 
 	/**
@@ -85,7 +93,7 @@ public class ProvaAnamnesiView extends ViewPart {
 		TabItem tabItemInterventi = new TabItem(tabFolder, SWT.NONE);
 		tabItemInterventi.setText("Interventi");
 		tabItemInterventi.setControl(compositeInterventi);
-		interventiPazList = AnamnesiDAO.getInterventiPazPerLista(pazSelHome);
+		interventiPazList = AnamnesiDAO.getInterventiListByPaziente(pazSelHome);
 				
 		//Richiama il costruttore della classe Form
 		classVis = new ProvaTableForm(compositeInterventi, SWT.BORDER, interventiPazList);
@@ -120,5 +128,14 @@ public class ProvaAnamnesiView extends ViewPart {
 		classVis.ordinamentoData(classVis.getTableVisualizzazione(), 3);
 	}
 	
+	
+	private void createCompositeAllergie(TabFolder tabFolder) {
+		compositeAllergie = new Composite(tabFolder, SWT.TRANSPARENT);
+		TabItem tabItemAllergie = new TabItem(tabFolder, SWT.NONE);
+		tabItemAllergie.setText("Allergie/Intolleranze");
+		tabItemAllergie.setControl(compositeAllergie);
+		allergiePazList = AnamnesiDAO.getAllergieListByPaziente(pazSelHome);
+		
+	}
 
 }
