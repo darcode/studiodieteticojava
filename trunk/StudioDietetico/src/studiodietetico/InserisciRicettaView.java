@@ -217,6 +217,35 @@ public class InserisciRicettaView extends ViewPart {
         			
         		}
         		modifica = false;
+        		
+        		textAddIngrediente.setEnabled(false);
+				textAddIngrediente.setEnabled(false);
+				textNome.setEnabled(false);
+				textProcedimento.setEnabled(false);
+				textQuant.setEnabled(false);
+				tableIngRic.setEnabled(false);
+				bAddIngrediente.setEnabled(false);
+				bConferma.setEnabled(false);
+				listIngredienti.setEnabled(false);
+				bAddIngRic.setEnabled(false);
+				bDelIngRic.setEnabled(false);
+				buttonCreaNuovaRic.setEnabled(false);
+				bAddAlimento.setEnabled(true);
+				tableAlimenti.setEnabled(true);
+				tableRicette.setEnabled(true);
+				buttonAnnulla.setEnabled(false);
+				buttonCreaNuovaRic.setEnabled(true);
+				
+				textNome.setText("");
+				tableIngRic.removeAll();
+				textProcedimento.setText("");
+				textQuant.setText("");
+				bConferma.setEnabled(false);
+				bAddAlimento.setEnabled(true);
+				
+					buttonModificaRic.setEnabled(false);
+					buttonCancRic.setEnabled(false);
+			
         	}
         });
         lQuant = new Label(top, SWT.NONE);
@@ -230,12 +259,19 @@ public class InserisciRicettaView extends ViewPart {
         tableAlimenti = new Table(top, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
         tableAlimenti.setHeaderVisible(true);
         tableAlimenti.setLinesVisible(true);
-        tableAlimenti.setBounds(new Rectangle(16, 30, 417, 132));
+        tableAlimenti.setBounds(new Rectangle(16, 30, 443, 132));
         tableAlimenti
         		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
         			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
         				int idAlimento = Integer.parseInt(tableAlimenti.getSelection()[0].getText(3));
         				aggiornaRicette(idAlimento);
+        				tableRicette.setEnabled(true);
+        				buttonCreaNuovaRic.setEnabled(true);
+        				if (tableRicette.getItems().length==0) {
+							buttonModificaRic.setEnabled(false);
+							buttonCancRic.setEnabled(false);
+						}
+        				
         			}
 
 				
@@ -250,7 +286,7 @@ public class InserisciRicettaView extends ViewPart {
         tableRicette = new Table(top,  SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
         tableRicette.setHeaderVisible(true);
         tableRicette.setLinesVisible(true);
-        tableRicette.setBounds(new Rectangle(441, 30, 292, 131));
+        tableRicette.setBounds(new Rectangle(457, 26, 269, 131));
         tableRicette
         		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
         			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -267,6 +303,9 @@ public class InserisciRicettaView extends ViewPart {
 								item.setText(1, ing[j].split("\t")[1]);
 							}
 						}
+        				buttonCreaNuovaRic.setEnabled(true);
+        				buttonModificaRic.setEnabled(true);
+        				buttonCancRic.setEnabled(true);
         			}
         		});
         buttonCreaNuovaRic = new Button(top, SWT.NONE);
@@ -282,6 +321,7 @@ public class InserisciRicettaView extends ViewPart {
         		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
         			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
         				modifica=true;
+        				textNome.setEnabled(true);
         				textAddIngrediente.setEnabled(true);
         				textAddIngrediente.setEnabled(true);
         				textProcedimento.setEnabled(true);
@@ -292,9 +332,13 @@ public class InserisciRicettaView extends ViewPart {
         				listIngredienti.setEnabled(true);
         				bAddIngRic.setEnabled(true);
         				bDelIngRic.setEnabled(true);
+        				buttonAnnulla.setEnabled(true);
         				tableAlimenti.setEnabled(false);
         				tableRicette.setEnabled(false);
-        				buttonAnnulla.setEnabled(false);
+        				buttonCancRic.setEnabled(false);
+        				buttonCreaNuovaRic.setEnabled(false);
+        				buttonModificaRic.setEnabled(false);
+        				bAddAlimento.setEnabled(false);
         			}
         		});
         buttonCancRic = new Button(top, SWT.NONE);
@@ -305,6 +349,7 @@ public class InserisciRicettaView extends ViewPart {
         			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
         				textAddIngrediente.setEnabled(false);
         				textAddIngrediente.setEnabled(false);
+        				textNome.setEnabled(false);
         				textProcedimento.setEnabled(false);
         				textQuant.setEnabled(false);
         				tableIngRic.setEnabled(false);
@@ -314,12 +359,22 @@ public class InserisciRicettaView extends ViewPart {
         				bAddIngRic.setEnabled(false);
         				bDelIngRic.setEnabled(false);
         				buttonCreaNuovaRic.setEnabled(false);
-        				bAddAlimento.setEnabled(false);
+        				bAddAlimento.setEnabled(true);
         				tableAlimenti.setEnabled(true);
         				tableRicette.setEnabled(true);
-        				buttonAnnulla.setEnabled(true);
+        				buttonAnnulla.setEnabled(false);
         				buttonCreaNuovaRic.setEnabled(true);
+        				
+        				textNome.setText("");
+        				tableIngRic.removeAll();
+        				textProcedimento.setText("");
+        				textQuant.setText("");
+        				bConferma.setEnabled(false);
         				bAddAlimento.setEnabled(true);
+        			
+						buttonModificaRic.setEnabled(false);
+						buttonCancRic.setEnabled(false);
+					
         			}
         		});
         buttonCreaNuovaRic
@@ -329,6 +384,7 @@ public class InserisciRicettaView extends ViewPart {
         				textAddIngrediente.setEnabled(true);
         				textProcedimento.setEnabled(true);
         				textQuant.setEnabled(true);
+        				textNome.setEnabled(true);
         				tableIngRic.setEnabled(true);
         				bAddIngrediente.setEnabled(true);
         				bConferma.setEnabled(true);
@@ -337,7 +393,11 @@ public class InserisciRicettaView extends ViewPart {
         				bDelIngRic.setEnabled(true);
         				tableAlimenti.setEnabled(false);
         				tableRicette.setEnabled(false);
-        				buttonAnnulla.setEnabled(false);
+        				buttonAnnulla.setEnabled(true);
+        				buttonCancRic.setEnabled(false);
+        				buttonCreaNuovaRic.setEnabled(false);
+        				buttonModificaRic.setEnabled(false);
+        				bAddAlimento.setEnabled(false);
         				}
         		});
         final TableColumn columnNomeRicetta = new TableColumn(tableRicette, SWT.NONE);
@@ -345,6 +405,8 @@ public class InserisciRicettaView extends ViewPart {
         final TableColumn columnIdRicetta = new TableColumn(tableRicette, SWT.NONE);
         columnIdRicetta.setResizable(false);
         columnIdRicetta.setWidth(0);
+       
+        
 		final TableColumn [] columns3 = tableRicette.getColumns ();
 		for (int i=0; i<columns3.length-1; i++) columns3[i].pack();
         
@@ -370,10 +432,10 @@ public class InserisciRicettaView extends ViewPart {
   
 		final TableColumn columnNome = new TableColumn(tableAlimenti, SWT.NONE);
 		columnNome.setText("Nome alimento");
-		columnNome.setWidth(300);
+		
 		final TableColumn columnTipologia = new TableColumn(tableAlimenti, SWT.NONE);
 		columnTipologia.setText("Tipologia");
-		columnTipologia.setWidth(200);
+		
 		final TableColumn columnCalorie = new TableColumn(tableAlimenti, SWT.NONE);
 		columnCalorie.setText("Calorie");
 		final TableColumn columnIdAlimento = new TableColumn(tableAlimenti, SWT.NONE);
@@ -381,9 +443,11 @@ public class InserisciRicettaView extends ViewPart {
 		columnIdAlimento.setWidth(0);
 		
 		
+		
+		
 		final TableColumn [] columns2 = tableAlimenti.getColumns ();
 		aggiornaAlimenti();
-		for (int i=2; i<columns2.length-1; i++) columns2[i].pack();
+		for (int i=0; i<columns2.length-1; i++) columns2[i].pack();
        
 		Listener sortListener = new Listener() {
 	        public void handleEvent(Event e) {
@@ -453,6 +517,7 @@ public class InserisciRicettaView extends ViewPart {
 		
         
         listIngredienti.setItems(dieta.getIngredienti());
+        textNome.setEnabled(false);
         textAddIngrediente.setEnabled(false);
 		textAddIngrediente.setEnabled(false);
 		textProcedimento.setEnabled(false);
@@ -464,6 +529,31 @@ public class InserisciRicettaView extends ViewPart {
 		bAddIngRic.setEnabled(false);
 		bDelIngRic.setEnabled(false);
 		buttonAnnulla.setEnabled(false);
+		tableRicette.setEnabled(false);
+		buttonCreaNuovaRic.setEnabled(false);
+		buttonModificaRic.setEnabled(false);
+		buttonCancRic.setEnabled(false);
+		buttonCancRic
+		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				shellMsg = new Shell();
+				messageBox = new MessageBox(shellMsg,
+						SWT.OK| SWT.CANCEL |
+						SWT.ICON_WARNING);
+				messageBox.setMessage("Sei sicuro di voler cancellare la ricetta selezionata?" );	
+				if (messageBox.open() == SWT.OK) {
+					dieta.cancellaRicetta(dieta.getRicetta(Integer.parseInt(tableRicette.getSelection()[0].getText(1))));
+					int idAlimento = Integer.parseInt(tableAlimenti.getSelection()[0].getText(3));
+    				aggiornaRicette(idAlimento);
+				}
+				buttonCancRic.setEnabled(false);
+				buttonModificaRic.setEnabled(false);
+				bAddAlimento.setEnabled(false);
+
+
+			}
+		});
+		
 	}
 	public static void aggiornaAlimenti() {
 		tableAlimenti.removeAll();
