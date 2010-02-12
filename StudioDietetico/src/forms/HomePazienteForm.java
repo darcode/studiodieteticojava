@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import service.Utils;
-import studiodietetico.AnamnesiView;
+import studiodietetico.AnamnesiShell;
 import studiodietetico.InserisciDietaView;
 import studiodietetico.PrenotaVisitaView;
 import studiodietetico.RegistraPazienteView;
@@ -124,7 +124,7 @@ public class HomePazienteForm extends ListComposite {
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(
 							org.eclipse.swt.events.SelectionEvent e) {
-						Utils.showView(AnamnesiView.VIEW_ID);
+						Utils.showView("StudioDietetico.ProvaAnamnesiView");
 					}
 				});
 
