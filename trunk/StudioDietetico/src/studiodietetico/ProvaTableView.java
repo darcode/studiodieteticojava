@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -37,7 +38,6 @@ public class ProvaTableView extends ViewPart {
 		//Prende il paziente selezionato
 		pazienteSel = PazienteDAO.getPazienti().get(4);
 		interventiPazList = AnamnesiDAO.getInterventiListByPaziente(pazienteSel);
-		
 		//Richiama il costruttore della classe Form
 		classVis = new ProvaTableForm(parent, SWT.BORDER, interventiPazList);
 		classVis.setLayout(new GridLayout(1, true));
