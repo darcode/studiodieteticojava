@@ -40,6 +40,17 @@ public class AnamnesiDAO extends BaseDAO{
 		return interventi;
 	}
 	
+	
+	public Tipologiaintervento getTipoInterventiById(String id){
+		getSession();
+		begin();
+		Query q = getSession().createQuery("FROM Tipologiaintervento interv WHERE idTipologiaIntervento="+id);
+		Tipologiaintervento intervento = (Tipologiaintervento)q.uniqueResult();
+		commit();
+		return intervento;
+	}
+	
+	
 	public void registraIntervento(Paziente paziente, Tipologiaintervento tipologiaintervento, Date data, int numeroInt){
 		getSession();
 		begin();
