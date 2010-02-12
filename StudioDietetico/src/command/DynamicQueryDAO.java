@@ -102,19 +102,19 @@ public class DynamicQueryDAO extends BaseDAO{
 				} else if (currField.getType().isPrimitive()) {
 					String prim = currField.getType().toString();
 					if (prim.equals("char")) {
-						Element figlio = new Element("foglia");
+						Element figlio = new Element(currField.getName());
 						figlio.setAttribute("path", currField.getType().getCanonicalName());
 						figlio.setAttribute("nome", currField.getName());
 						figlio.setAttribute("check", "no");
 						currElement.addContent(figlio);
 					} else if (prim.equals("int")) {
-						Element figlio = new Element("foglia");
+						Element figlio = new Element(currField.getName());
 						figlio.setAttribute("path", currField.getType().getCanonicalName());
 						figlio.setAttribute("nome", currField.getName());
 						figlio.setAttribute("check", "no");
 						currElement.addContent(figlio);
 					} else if (prim.equals("double")) {
-						Element figlio = new Element("foglia");
+						Element figlio = new Element(currField.getName());
 						figlio.setAttribute("path", currField.getType().getCanonicalName());	
 						figlio.setAttribute("nome", currField.getName());
 						figlio.setAttribute("check", "no");
@@ -123,7 +123,7 @@ public class DynamicQueryDAO extends BaseDAO{
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 					sottoRadice.setText(currField.getName());
 				} else if (currField.getType().equals(java.lang.Boolean.class)) {
-					Element figlio = new Element("foglia");
+					Element figlio = new Element(currField.getName());
 					figlio.setAttribute("path", currField.getType().getCanonicalName());
 					currElement.addContent(figlio);
 					figlio.setAttribute("nome", currField.getName());
@@ -131,7 +131,7 @@ public class DynamicQueryDAO extends BaseDAO{
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 					sottoRadice.setText(currField.getName());
 				} else if (currField.getType().equals(java.lang.Double.class)) {
-					Element figlio = new Element("foglia");
+					Element figlio = new Element(currField.getName());
 					figlio.setAttribute("path", currField.getType().getCanonicalName());
 					figlio.setAttribute("nome", currField.getName());
 					figlio.setAttribute("check", "no");
@@ -139,7 +139,7 @@ public class DynamicQueryDAO extends BaseDAO{
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 					sottoRadice.setText(currField.getName());
 				} else if (currField.getType().isInstance(new String())) {
-					Element figlio = new Element("foglia");
+					Element figlio = new Element(currField.getName());
 					figlio.setAttribute("path", currField.getType().getCanonicalName());
 					figlio.setAttribute("nome", currField.getName());
 					figlio.setAttribute("check", "no");
@@ -147,7 +147,7 @@ public class DynamicQueryDAO extends BaseDAO{
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 					sottoRadice.setText(currField.getName());
 				} else if (currField.getType().isInstance(new Date())) {
-					Element figlio = new Element("foglia");
+					Element figlio = new Element(currField.getName());
 					figlio.setAttribute("path", currField.getType().getCanonicalName());
 					figlio.setAttribute("nome", currField.getName());
 					figlio.setAttribute("check", "no");
@@ -155,7 +155,7 @@ public class DynamicQueryDAO extends BaseDAO{
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 					sottoRadice.setText(currField.getName());
 				} else if (currField.getType().equals(java.lang.Integer.class)) {
-					Element figlio = new Element("foglia");
+					Element figlio = new Element(currField.getName());
 					figlio.setAttribute("path",currField.getType().getCanonicalName());
 					figlio.setAttribute("nome", currField.getName());
 					figlio.setAttribute("check", "no");
@@ -169,7 +169,7 @@ public class DynamicQueryDAO extends BaseDAO{
 					String testo = service.Utils.upperCase(currField.getName());					
 					String currentPath = currField.getType().getCanonicalName();
 					if (!nodiVisitati.contains(currentPath)) {
-						Element figlio = new Element("ramo");
+						Element figlio = new Element(currField.getName());
 						figlio.setAttribute("path", currentPath);
 						figlio.setAttribute("nome", testo);
 						figlio.setAttribute("check", "no");
@@ -185,8 +185,8 @@ public class DynamicQueryDAO extends BaseDAO{
 					String testo = service.Utils.rimuoviS(currField.getName());
 					testo = service.Utils.upperCase(testo);
 					if (!nodiVisitati.contains("hibernate." + testo)) {
-						Element figlio = new Element("ramo");
-						figlio.setAttribute("path", currField.getDeclaringClass().getCanonicalName());
+						Element figlio = new Element(testo);
+						figlio.setAttribute("path", "hibernate." + testo /*currField.getDeclaringClass().getCanonicalName()*/);
 						figlio.setAttribute("nome", testo);
 						figlio.setAttribute("check", "no");
 						currElement.addContent(figlio);
@@ -202,6 +202,30 @@ public class DynamicQueryDAO extends BaseDAO{
 				fieldClasse.remove(currField);
 			}
 		}
+	}
+	
+	public String getPath(ArrayList<TreeItem> ramo){	
+		String path = "";
+		TreeItem last = ramo.get(ramo.size()-1);
+		Element current = albero.getRootElement();		
+		if(last.getText().equals(current.getAttribute("nome").getValue())){
+			current = current.getChild(last.getText());
+			ramo.remove(last);
+			while (ramo.size()>1) {
+				last = ramo.get(ramo.size()-1);
+				current = current.getChild(last.getText());
+				ramo.remove(last);
+			}
+			last = ramo.get(ramo.size()-1);
+			current = current.getChild(last.getText());
+			
+			path = current.getAttributeValue("path");
+			
+			aggiornaXml();
+		} else {
+			System.out.println("errore nella creazione dell'albero");
+		}	
+		return path;
 	}
 
 //	public void checkSelezionato(ArrayList<TreeItem> ramo, boolean b) {

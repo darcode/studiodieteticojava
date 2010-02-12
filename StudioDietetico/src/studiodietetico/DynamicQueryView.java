@@ -26,7 +26,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.graphics.Point;
 import org.jdom.Element;
-import org.eclipse.swt.layout.GridLayout;
 
 public class DynamicQueryView extends ViewPart{
 
@@ -39,9 +38,9 @@ public class DynamicQueryView extends ViewPart{
 	private Table table = null;
 	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="398,602"
 	private Button buttonOk = null;
-	private Label label = null;
+	private Label etichetta = null;
 	private Text text = null;
-	private Label label1 = null;
+	private Label nomeAttributo = null;
 	private Button buttonCancella = null;
 	DynamicQueryDAO dynDao;
 	private Shell sShell1 = null;  //  @jve:decl-index=0:visual-constraint="760,595"
@@ -66,7 +65,14 @@ public class DynamicQueryView extends ViewPart{
         		if (arr[0] != null) {
         			TreeItem item = arr[0];
         			if (!item.getText().substring(0, 1).equals(item.getText().substring(0, 1).toUpperCase())) {
-                		createSShell(item);
+        				//si becca l'albero a ritroso
+        				ArrayList<TreeItem> ramo = new ArrayList<TreeItem>();
+        				TreeItem currTreeItem = arr[0];
+        				while (currTreeItem!=null) {
+        					ramo.add(currTreeItem);
+        					currTreeItem = currTreeItem.getParentItem();
+						}       				
+                		createSShell(item, dynDao.getPath(ramo));
                 		sShell.open();
 					}
 				}
@@ -180,20 +186,18 @@ public class DynamicQueryView extends ViewPart{
 	 * This method initializes sShell	
 	 *
 	 */
-	private void createSShell(final TreeItem item) {
+	private void createSShell(final TreeItem item, String path) {
 		sShell = new Shell();
 		sShell.setSize(new Point(290, 167));
 		buttonOk = new Button(sShell, SWT.NONE);
 		buttonOk.setText("Ok");
 		buttonOk.setBounds(new Rectangle(139, 109, 106, 27));
-		label = new Label(sShell, SWT.NONE);
-		label.setBounds(new Rectangle(87, 9, 117, 34));
-		label.setText("Inserisci il valore");
-		text = new Text(sShell, SWT.BORDER);
-		text.setBounds(new Rectangle(152, 56, 113, 25));
-		label1 = new Label(sShell, SWT.NONE);
-		label1.setBounds(new Rectangle(17, 59, 121, 22));
-		label1.setText(item.getText());
+		etichetta = new Label(sShell, SWT.NONE);
+		etichetta.setBounds(new Rectangle(87, 9, 117, 34));
+		etichetta.setText("Inserisci il valore");
+		nomeAttributo = new Label(sShell, SWT.NONE);
+		nomeAttributo.setBounds(new Rectangle(17, 59, 121, 22));
+		nomeAttributo.setText(item.getText());
 		buttonCancella = new Button(sShell, SWT.NONE);
 		buttonCancella.setBounds(new Rectangle(43, 107, 90, 27));
 		buttonCancella.setText("Cancella");
@@ -209,6 +213,14 @@ public class DynamicQueryView extends ViewPart{
 				sShell.close();
 			}
 		});
+		
+		
+		//if a cascata
+		
+		text = new Text(sShell, SWT.BORDER);
+		text.setBounds(new Rectangle(152, 56, 113, 25));
+		
+		
 	}
 
 	/**
