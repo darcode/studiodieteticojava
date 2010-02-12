@@ -10,7 +10,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
@@ -32,7 +37,7 @@ public class ProvaAnamnesiView extends ViewPart {
 	private TabFolder tabFolder = null;
 	private Label labelPaziente;
 	private Text textPaziente;
-	private Paziente pazSelHome;
+	private static Paziente pazSelHome;
 	//Interventi
 	private Composite compositeInterventi = null;
 	private ArrayList<Object> interventiPazList;
@@ -40,6 +45,16 @@ public class ProvaAnamnesiView extends ViewPart {
 	//Allergie
 	private Composite compositeAllergie = null;
 	private ArrayList<Object> allergiePazList;
+	
+	private Shell sShellInserimentoTipoInterventi;
+	private Group groupInserimentoTipoInt;
+	private Label labelNomeTipoInt;
+	private Text textNomeTipoInt;
+	private Label labelDescrTipoInt;
+	private Text textAreaDescrTipoInt;
+	private Label labelLocalizzazione;
+	private Text textAreaLocalizzazione;
+	private Button buttonInsertTipoInt;
 	
 	//Costruttore
 	public ProvaAnamnesiView() {
@@ -56,6 +71,9 @@ public class ProvaAnamnesiView extends ViewPart {
 	public void setFocus() {
 		// TODO Auto-generated method stub
 
+	}
+	public static Paziente getPazienteSel() {
+		return pazSelHome;
 	}
 
 	/**
@@ -84,6 +102,7 @@ public class ProvaAnamnesiView extends ViewPart {
 		
 	}
 
+	//INTERVENTI
 	/**
 	 * This method initializes compositeInterventi	
 	 *
@@ -116,6 +135,11 @@ public class ProvaAnamnesiView extends ViewPart {
 			itemSel = classVis.getTableVisualizzazione().getItem(j);
 			itemSel.setText(classVis.getTableVisualizzazione().getColumnCount()-1, nome);
 		} 
+		
+		/*for (TableColumn column : classVis.getTableVisualizzazione().getColumns()) {
+			column.pack();
+		}*/
+		
 		colonna.pack();
 		colonna.setResizable(false);
 		
@@ -128,13 +152,68 @@ public class ProvaAnamnesiView extends ViewPart {
 		classVis.ordinamentoData(classVis.getTableVisualizzazione(), 3);
 	}
 	
+	/**
+	 * This method initializes sShellInserimentoInterventi	
+	 *
+	 */
+	private void createSShellInserimentoInterventi() {
+		sShellInserimentoTipoInterventi = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		//sShellInserimentoInterventi.setLayout(new GridLayout());
+		sShellInserimentoTipoInterventi.setText("Inserimento Nuova Tipologia Intervento");
+		sShellInserimentoTipoInterventi.setSize(new Point(796, 226));
+		createGroupInserimentoTipoIntervento();
+		//sShellInserimentoTipoInterventi.open();
+	}
 	
+	/**
+	 * Crea il gruppo degli oggetti per inserire nuovi interventi, prima di collegarli al paziente
+	 */
+	private void createGroupInserimentoTipoIntervento() {
+		groupInserimentoTipoInt = new Group(sShellInserimentoTipoInterventi, SWT.NONE);
+		//groupInserimentoInt.setLayout(new GridLayout());
+		groupInserimentoTipoInt.setText("Inserimento nuova tipologia interevento");
+		groupInserimentoTipoInt.setBounds(new Rectangle(5, 3, 772, 180));
+		
+		labelNomeTipoInt = new Label(groupInserimentoTipoInt, SWT.NONE);
+		labelNomeTipoInt.setBounds(new Rectangle(10, 23, 170, 20));
+		labelNomeTipoInt.setText("*Indicare il nome dell'intervento");
+		textNomeTipoInt = new Text(groupInserimentoTipoInt, SWT.NONE);
+		textNomeTipoInt.setBounds(new Rectangle(209, 23, 360, 18));
+		labelDescrTipoInt = new Label(groupInserimentoTipoInt, SWT.NONE);
+		labelDescrTipoInt.setBounds(new Rectangle(10, 50, 170, 20));
+		labelDescrTipoInt.setText("Inserire una breve descrizione");
+		textAreaDescrTipoInt = new Text(groupInserimentoTipoInt, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaDescrTipoInt.setBounds(new Rectangle(209, 50, 545, 40));
+		labelLocalizzazione = new Label(groupInserimentoTipoInt, SWT.NONE);
+		labelLocalizzazione.setBounds(new Rectangle(10, 100, 170, 20));
+		labelLocalizzazione.setText("*Zona interessata");
+		textAreaLocalizzazione = new Text(groupInserimentoTipoInt, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaLocalizzazione.setBounds(new Rectangle(209, 100, 544, 40));
+		buttonInsertTipoInt = new Button(groupInserimentoTipoInt, SWT.NONE);
+		buttonInsertTipoInt.setBounds(new Rectangle(10, 150, 748, 28));
+		buttonInsertTipoInt.setText("Aggiorna lista interventi");
+		buttonInsertTipoInt.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				AnamnesiDAO interv = new AnamnesiDAO();
+				interv.registraTipoIntervento(textNomeTipoInt.getText(), textAreaDescrTipoInt.getText(), textAreaLocalizzazione.getText());
+				textNomeTipoInt.setText("");
+				textAreaDescrTipoInt.setText("");
+				textAreaLocalizzazione.setText("");
+				//listInterventi.add(textNomeInt.getText()+"  "+textAreaDescrInt.getText()+"  "+textAreaLocalizzazione.getText());
+			}
+		});
+	}
+	
+	
+	
+	
+	//ALLERGIE
 	private void createCompositeAllergie(TabFolder tabFolder) {
 		compositeAllergie = new Composite(tabFolder, SWT.TRANSPARENT);
 		TabItem tabItemAllergie = new TabItem(tabFolder, SWT.NONE);
 		tabItemAllergie.setText("Allergie/Intolleranze");
 		tabItemAllergie.setControl(compositeAllergie);
-		allergiePazList = AnamnesiDAO.getAllergieListByPaziente(pazSelHome);
+		//allergiePazList = AnamnesiDAO.getAllergieListByPaziente(pazSelHome);
 		
 	}
 
