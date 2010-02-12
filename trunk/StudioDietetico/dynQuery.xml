@@ -1,198 +1,198 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<radice path="hibernate.Fattura" nome="Fattura" check="no">
-  <foglia path="double" nome="importo" check="no" />
-  <foglia path="java.lang.Double" nome="acconto" check="no" />
-  <foglia path="java.lang.Double" nome="importoSconto" check="no" />
-  <foglia path="java.lang.String" nome="note" check="no" />
-  <foglia path="java.lang.String" nome="descrizione" check="no" />
-  <foglia path="java.util.Date" nome="data" check="no" />
-  <ramo path="hibernate.Fattura" nome="Visita" check="no">
-    <ramo path="hibernate.Prenotazione" nome="Prenotazione" check="no">
-      <ramo path="hibernate.Tipologiavisita" nome="Tipologiavisita" check="no">
-        <foglia path="java.lang.String" nome="tipologia" check="no" />
-        <foglia path="double" nome="costoVisita" check="no" />
-      </ramo>
-      <ramo path="hibernate.Paziente" nome="Paziente" check="no">
-        <foglia path="java.lang.String" nome="codiceFiscale" check="no" />
-        <foglia path="java.lang.String" nome="cognome" check="no" />
-        <foglia path="java.lang.String" nome="nome" check="no" />
-        <foglia path="java.util.Date" nome="dataNascita" check="no" />
-        <foglia path="char" nome="sesso" check="no" />
-        <foglia path="java.lang.String" nome="indirizzo" check="no" />
-        <foglia path="java.lang.String" nome="citta" check="no" />
-        <foglia path="java.lang.String" nome="cap" check="no" />
-        <foglia path="java.lang.String" nome="provincia" check="no" />
-        <foglia path="java.lang.String" nome="professione" check="no" />
-        <foglia path="java.lang.String" nome="telefono1" check="no" />
-        <foglia path="java.lang.String" nome="telefono2" check="no" />
-        <foglia path="java.lang.String" nome="email" check="no" />
-        <foglia path="java.lang.String" nome="numTesseraSanitaria" check="no" />
-        <foglia path="java.lang.String" nome="note" check="no" />
-        <ramo path="hibernate.Paziente" nome="Attivitafisica" check="no">
-          <foglia path="java.lang.String" nome="nome" check="no" />
-          <foglia path="java.lang.String" nome="descrizione" check="no" />
-          <foglia path="java.lang.String" nome="durata" check="no" />
-          <foglia path="int" nome="frequenzaSettimanale" check="no" />
-        </ramo>
-        <ramo path="hibernate.Paziente" nome="Intervento" check="no">
-          <ramo path="hibernate.Tipologiaintervento" nome="Tipologiaintervento" check="no">
-            <foglia path="java.lang.String" nome="nome" check="no" />
-            <foglia path="java.lang.String" nome="descrizione" check="no" />
-            <foglia path="java.lang.String" nome="localizzazione" check="no" />
-          </ramo>
-          <foglia path="java.util.Date" nome="data" check="no" />
-          <foglia path="int" nome="numero" check="no" />
-        </ramo>
-        <ramo path="hibernate.Paziente" nome="Intolleranzaallergia" check="no">
-          <foglia path="java.lang.String" nome="flagIntAll" check="no" />
-          <foglia path="java.lang.String" nome="sostanza" check="no" />
-          <foglia path="java.lang.String" nome="alimentoPrincipale" check="no" />
-          <foglia path="java.lang.String" nome="derivati" check="no" />
-          <foglia path="java.lang.String" nome="grado" check="no" />
-          <foglia path="java.lang.String" nome="effettiCollaterali" check="no" />
-        </ramo>
-        <ramo path="hibernate.Paziente" nome="Prescrizione" check="no">
-          <ramo path="hibernate.Dieta" nome="Dieta" check="no">
-            <ramo path="hibernate.Specifichedieta" nome="Specifichedieta" check="no">
-              <foglia path="int" nome="kilocalorie" check="no" />
-              <foglia path="java.lang.String" nome="indicata" check="no" />
-              <foglia path="java.lang.String" nome="contenutoPresente" check="no" />
-              <foglia path="java.lang.String" nome="contenutoAssente" check="no" />
-            </ramo>
-            <foglia path="java.lang.String" nome="nome" check="no" />
-            <foglia path="int" nome="durataCiclo" check="no" />
-            <foglia path="java.lang.String" nome="note" check="no" />
-            <foglia path="java.lang.Boolean" nome="dietaStandard" check="no" />
-            <ramo path="hibernate.Dieta" nome="Personalizzazionegiornata" check="no">
-              <ramo path="hibernate.Schemadietetico" nome="Schemadietetico" check="no">
-                <foglia path="java.lang.String" nome="descrizione" check="no" />
-                <foglia path="java.lang.String" nome="note" check="no" />
-                <ramo path="hibernate.Schemadietetico" nome="Costituzione" check="no">
-                  <ramo path="hibernate.Pasto" nome="Pasto" check="no">
-                    <foglia path="java.lang.String" nome="nome" check="no" />
-                  </ramo>
-                  <ramo path="hibernate.Alimento" nome="Alimento" check="no">
-                    <foglia path="java.lang.String" nome="nome" check="no" />
-                    <foglia path="java.lang.String" nome="tipologia" check="no" />
-                    <foglia path="java.lang.Integer" nome="calorie" check="no" />
-                    <ramo path="hibernate.Alimento" nome="Ricetta" check="no">
-                      <foglia path="java.lang.String" nome="nome" check="no" />
-                      <foglia path="java.lang.String" nome="procedimento" check="no" />
-                      <ramo path="hibernate.Ricetta" nome="Composizione" check="no">
-                        <ramo path="hibernate.Ingrediente" nome="Ingrediente" check="no">
-                          <foglia path="java.lang.String" nome="nome" check="no" />
-                        </ramo>
-                        <foglia path="java.lang.String" nome="quantita" check="no" />
-                      </ramo>
-                    </ramo>
-                  </ramo>
-                  <foglia path="java.lang.String" nome="quantita" check="no" />
-                </ramo>
-              </ramo>
-            </ramo>
-          </ramo>
-          <foglia path="java.util.Date" nome="dataInizio" check="no" />
-          <foglia path="int" nome="numRipetizCiclo" check="no" />
-          <foglia path="java.lang.String" nome="note" check="no" />
-        </ramo>
-        <ramo path="hibernate.Paziente" nome="Farmacoassunto" check="no">
-          <foglia path="java.lang.String" nome="nome" check="no" />
-          <foglia path="java.lang.String" nome="descrizione" check="no" />
-          <foglia path="java.lang.String" nome="dose" check="no" />
-          <foglia path="java.lang.String" nome="frequenza" check="no" />
-          <foglia path="java.lang.String" nome="principiAttivi" check="no" />
-        </ramo>
-        <ramo path="hibernate.Paziente" nome="Malattia" check="no">
-          <ramo path="hibernate.Tipologiadietaspeciale" nome="Tipologiadietaspeciale" check="no">
-            <foglia path="java.lang.String" nome="nome" check="no" />
-            <foglia path="java.lang.String" nome="descrizione" check="no" />
-          </ramo>
-          <foglia path="java.lang.String" nome="patologia" check="no" />
-          <foglia path="java.lang.Boolean" nome="malattiaEreditaria" check="no" />
-        </ramo>
-        <ramo path="hibernate.Paziente" nome="Abitudinialimentari" check="no">
-          <foglia path="int" nome="numPastiGiorno" check="no" />
-          <foglia path="java.lang.String" nome="integratori" check="no" />
-          <foglia path="java.lang.String" nome="cibiNonGraditi" check="no" />
-          <foglia path="java.lang.String" nome="preferenzaSchemaDietetico" check="no" />
-          <foglia path="java.lang.String" nome="note" check="no" />
-          <ramo path="hibernate.Abitudinialimentari" nome="Modalitapastofuori" check="no">
-            <foglia path="java.lang.String" nome="luogo" check="no" />
-            <foglia path="java.lang.String" nome="specificaGiorno" check="no" />
-            <foglia path="java.lang.Integer" nome="frequenzaGiornaliera" check="no" />
-          </ramo>
-          <ramo path="hibernate.Abitudinialimentari" nome="Assunzionebevande" check="no">
-            <ramo path="hibernate.Tipologiabevanda" nome="Tipologiabevanda" check="no">
-              <foglia path="java.lang.String" nome="nome" check="no" />
-              <foglia path="java.lang.String" nome="descrizione" check="no" />
-            </ramo>
-            <foglia path="java.lang.String" nome="quantita" check="no" />
-          </ramo>
-        </ramo>
-        <ramo path="hibernate.Paziente" nome="Referto" check="no">
-          <ramo path="hibernate.Parametroesame" nome="Parametroesame" check="no">
-            <ramo path="hibernate.Esameclinico" nome="Esameclinico" check="no">
-              <foglia path="java.lang.String" nome="nome" check="no" />
-              <foglia path="java.lang.String" nome="descrizione" check="no" />
-            </ramo>
-            <foglia path="java.lang.String" nome="nome" check="no" />
-            <foglia path="java.lang.String" nome="descrizione" check="no" />
-            <foglia path="java.lang.String" nome="minUomo" check="no" />
-            <foglia path="java.lang.String" nome="maxUomo" check="no" />
-            <foglia path="java.lang.String" nome="minDonna" check="no" />
-            <foglia path="java.lang.String" nome="maxDonna" check="no" />
-            <foglia path="java.lang.String" nome="minBambino" check="no" />
-            <foglia path="java.lang.String" nome="maxBambino" check="no" />
-          </ramo>
-          <foglia path="java.lang.String" nome="osservazioni" check="no" />
-          <ramo path="hibernate.Referto" nome="Risultatoanalisi" check="no">
-            <foglia path="java.lang.String" nome="valore" check="no" />
-            <foglia path="java.util.Date" nome="data" check="no" />
-            <foglia path="java.lang.String" nome="note" check="no" />
-          </ramo>
-        </ramo>
-        <ramo path="hibernate.Paziente" nome="Misurazione" check="no">
-          <ramo path="hibernate.Parametroantropometrico" nome="Parametroantropometrico" check="no">
-            <foglia path="java.lang.String" nome="nome" check="no" />
-            <foglia path="java.lang.String" nome="descrizione" check="no" />
-          </ramo>
-          <foglia path="java.lang.String" nome="osservazioni" check="no" />
-          <ramo path="hibernate.Misurazione" nome="Rilevamento" check="no">
-            <foglia path="java.lang.String" nome="valore" check="no" />
-            <foglia path="java.util.Date" nome="data" check="no" />
-          </ramo>
-        </ramo>
-      </ramo>
-      <foglia path="java.util.Date" nome="dataOra" check="no" />
-      <foglia path="java.lang.String" nome="note" check="no" />
-    </ramo>
-    <ramo path="hibernate.Medico" nome="Medico" check="no">
-      <foglia path="java.lang.String" nome="codiceFiscale" check="no" />
-      <foglia path="java.lang.String" nome="cognome" check="no" />
-      <foglia path="java.lang.String" nome="nome" check="no" />
-      <foglia path="java.util.Date" nome="dataNascita" check="no" />
-      <foglia path="char" nome="sesso" check="no" />
-      <foglia path="java.lang.String" nome="indirizzo" check="no" />
-      <foglia path="java.lang.String" nome="citta" check="no" />
-      <foglia path="java.lang.String" nome="cap" check="no" />
-      <foglia path="java.lang.String" nome="provincia" check="no" />
-      <foglia path="java.lang.String" nome="specializzazione" check="no" />
-      <foglia path="java.lang.String" nome="telefono1" check="no" />
-      <foglia path="java.lang.String" nome="telefono2" check="no" />
-      <foglia path="java.lang.String" nome="email" check="no" />
-      <ramo path="hibernate.Medico" nome="Prestazione" check="no">
-        <ramo path="hibernate.Turno" nome="Turno" check="no">
-          <foglia path="java.util.Date" nome="oraInizio" check="no" />
-          <foglia path="java.util.Date" nome="oraFine" check="no" />
-          <foglia path="java.lang.String" nome="nome" check="no" />
-        </ramo>
-      </ramo>
-    </ramo>
-    <foglia path="java.util.Date" nome="dataOraInizio" check="no" />
-    <foglia path="java.util.Date" nome="dataOraFine" check="no" />
-    <foglia path="java.lang.String" nome="motivazioni" check="no" />
-    <foglia path="java.lang.String" nome="statoPagamento" check="no" />
-    <foglia path="java.lang.String" nome="note" check="no" />
-  </ramo>
+<radice path="hibernate.Alimento" nome="Alimento" check="no">
+  <nome path="java.lang.String" nome="nome" check="no" />
+  <tipologia path="java.lang.String" nome="tipologia" check="no" />
+  <calorie path="java.lang.Integer" nome="calorie" check="no" />
+  <Costituzione path="hibernate.Costituzione" nome="Costituzione" check="no">
+    <pasto path="hibernate.Pasto" nome="Pasto" check="no">
+      <nome path="java.lang.String" nome="nome" check="no" />
+    </pasto>
+    <schemadietetico path="hibernate.Schemadietetico" nome="Schemadietetico" check="no">
+      <descrizione path="java.lang.String" nome="descrizione" check="no" />
+      <note path="java.lang.String" nome="note" check="no" />
+      <Personalizzazionegiornata path="hibernate.Personalizzazionegiornata" nome="Personalizzazionegiornata" check="no">
+        <dieta path="hibernate.Dieta" nome="Dieta" check="no">
+          <specifichedieta path="hibernate.Specifichedieta" nome="Specifichedieta" check="no">
+            <kilocalorie path="int" nome="kilocalorie" check="no" />
+            <indicata path="java.lang.String" nome="indicata" check="no" />
+            <contenutoPresente path="java.lang.String" nome="contenutoPresente" check="no" />
+            <contenutoAssente path="java.lang.String" nome="contenutoAssente" check="no" />
+          </specifichedieta>
+          <nome path="java.lang.String" nome="nome" check="no" />
+          <durataCiclo path="int" nome="durataCiclo" check="no" />
+          <note path="java.lang.String" nome="note" check="no" />
+          <dietaStandard path="java.lang.Boolean" nome="dietaStandard" check="no" />
+          <Prescrizione path="hibernate.Prescrizione" nome="Prescrizione" check="no">
+            <paziente path="hibernate.Paziente" nome="Paziente" check="no">
+              <codiceFiscale path="java.lang.String" nome="codiceFiscale" check="no" />
+              <cognome path="java.lang.String" nome="cognome" check="no" />
+              <nome path="java.lang.String" nome="nome" check="no" />
+              <dataNascita path="java.util.Date" nome="dataNascita" check="no" />
+              <sesso path="char" nome="sesso" check="no" />
+              <indirizzo path="java.lang.String" nome="indirizzo" check="no" />
+              <citta path="java.lang.String" nome="citta" check="no" />
+              <cap path="java.lang.String" nome="cap" check="no" />
+              <provincia path="java.lang.String" nome="provincia" check="no" />
+              <professione path="java.lang.String" nome="professione" check="no" />
+              <telefono1 path="java.lang.String" nome="telefono1" check="no" />
+              <telefono2 path="java.lang.String" nome="telefono2" check="no" />
+              <email path="java.lang.String" nome="email" check="no" />
+              <numTesseraSanitaria path="java.lang.String" nome="numTesseraSanitaria" check="no" />
+              <note path="java.lang.String" nome="note" check="no" />
+              <Attivitafisica path="hibernate.Attivitafisica" nome="Attivitafisica" check="no">
+                <nome path="java.lang.String" nome="nome" check="no" />
+                <descrizione path="java.lang.String" nome="descrizione" check="no" />
+                <durata path="java.lang.String" nome="durata" check="no" />
+                <frequenzaSettimanale path="int" nome="frequenzaSettimanale" check="no" />
+              </Attivitafisica>
+              <Intervento path="hibernate.Intervento" nome="Intervento" check="no">
+                <tipologiaintervento path="hibernate.Tipologiaintervento" nome="Tipologiaintervento" check="no">
+                  <nome path="java.lang.String" nome="nome" check="no" />
+                  <descrizione path="java.lang.String" nome="descrizione" check="no" />
+                  <localizzazione path="java.lang.String" nome="localizzazione" check="no" />
+                </tipologiaintervento>
+                <data path="java.util.Date" nome="data" check="no" />
+                <numero path="int" nome="numero" check="no" />
+              </Intervento>
+              <Intolleranzaallergia path="hibernate.Intolleranzaallergia" nome="Intolleranzaallergia" check="no">
+                <flagIntAll path="java.lang.String" nome="flagIntAll" check="no" />
+                <sostanza path="java.lang.String" nome="sostanza" check="no" />
+                <alimentoPrincipale path="java.lang.String" nome="alimentoPrincipale" check="no" />
+                <derivati path="java.lang.String" nome="derivati" check="no" />
+                <grado path="java.lang.String" nome="grado" check="no" />
+                <effettiCollaterali path="java.lang.String" nome="effettiCollaterali" check="no" />
+              </Intolleranzaallergia>
+              <Farmacoassunto path="hibernate.Farmacoassunto" nome="Farmacoassunto" check="no">
+                <nome path="java.lang.String" nome="nome" check="no" />
+                <descrizione path="java.lang.String" nome="descrizione" check="no" />
+                <dose path="java.lang.String" nome="dose" check="no" />
+                <frequenza path="java.lang.String" nome="frequenza" check="no" />
+                <principiAttivi path="java.lang.String" nome="principiAttivi" check="no" />
+              </Farmacoassunto>
+              <Malattia path="hibernate.Malattia" nome="Malattia" check="no">
+                <tipologiadietaspeciale path="hibernate.Tipologiadietaspeciale" nome="Tipologiadietaspeciale" check="no">
+                  <nome path="java.lang.String" nome="nome" check="no" />
+                  <descrizione path="java.lang.String" nome="descrizione" check="no" />
+                </tipologiadietaspeciale>
+                <patologia path="java.lang.String" nome="patologia" check="no" />
+                <malattiaEreditaria path="java.lang.Boolean" nome="malattiaEreditaria" check="no" />
+              </Malattia>
+              <Prenotazione path="hibernate.Prenotazione" nome="Prenotazione" check="no">
+                <tipologiavisita path="hibernate.Tipologiavisita" nome="Tipologiavisita" check="no">
+                  <tipologia path="java.lang.String" nome="tipologia" check="no" />
+                  <costoVisita path="double" nome="costoVisita" check="no" />
+                </tipologiavisita>
+                <dataOra path="java.util.Date" nome="dataOra" check="no" />
+                <note path="java.lang.String" nome="note" check="no" />
+                <Visita path="hibernate.Visita" nome="Visita" check="no">
+                  <fattura path="hibernate.Fattura" nome="Fattura" check="no">
+                    <importo path="double" nome="importo" check="no" />
+                    <acconto path="java.lang.Double" nome="acconto" check="no" />
+                    <importoSconto path="java.lang.Double" nome="importoSconto" check="no" />
+                    <note path="java.lang.String" nome="note" check="no" />
+                    <descrizione path="java.lang.String" nome="descrizione" check="no" />
+                    <data path="java.util.Date" nome="data" check="no" />
+                  </fattura>
+                  <medico path="hibernate.Medico" nome="Medico" check="no">
+                    <codiceFiscale path="java.lang.String" nome="codiceFiscale" check="no" />
+                    <cognome path="java.lang.String" nome="cognome" check="no" />
+                    <nome path="java.lang.String" nome="nome" check="no" />
+                    <dataNascita path="java.util.Date" nome="dataNascita" check="no" />
+                    <sesso path="char" nome="sesso" check="no" />
+                    <indirizzo path="java.lang.String" nome="indirizzo" check="no" />
+                    <citta path="java.lang.String" nome="citta" check="no" />
+                    <cap path="java.lang.String" nome="cap" check="no" />
+                    <provincia path="java.lang.String" nome="provincia" check="no" />
+                    <specializzazione path="java.lang.String" nome="specializzazione" check="no" />
+                    <telefono1 path="java.lang.String" nome="telefono1" check="no" />
+                    <telefono2 path="java.lang.String" nome="telefono2" check="no" />
+                    <email path="java.lang.String" nome="email" check="no" />
+                    <Prestazione path="hibernate.Prestazione" nome="Prestazione" check="no">
+                      <turno path="hibernate.Turno" nome="Turno" check="no">
+                        <oraInizio path="java.util.Date" nome="oraInizio" check="no" />
+                        <oraFine path="java.util.Date" nome="oraFine" check="no" />
+                        <nome path="java.lang.String" nome="nome" check="no" />
+                      </turno>
+                    </Prestazione>
+                  </medico>
+                  <dataOraInizio path="java.util.Date" nome="dataOraInizio" check="no" />
+                  <dataOraFine path="java.util.Date" nome="dataOraFine" check="no" />
+                  <motivazioni path="java.lang.String" nome="motivazioni" check="no" />
+                  <statoPagamento path="java.lang.String" nome="statoPagamento" check="no" />
+                  <note path="java.lang.String" nome="note" check="no" />
+                </Visita>
+              </Prenotazione>
+              <Abitudinialimentari path="hibernate.Abitudinialimentari" nome="Abitudinialimentari" check="no">
+                <numPastiGiorno path="int" nome="numPastiGiorno" check="no" />
+                <integratori path="java.lang.String" nome="integratori" check="no" />
+                <cibiNonGraditi path="java.lang.String" nome="cibiNonGraditi" check="no" />
+                <preferenzaSchemaDietetico path="java.lang.String" nome="preferenzaSchemaDietetico" check="no" />
+                <note path="java.lang.String" nome="note" check="no" />
+                <Modalitapastofuori path="hibernate.Modalitapastofuori" nome="Modalitapastofuori" check="no">
+                  <luogo path="java.lang.String" nome="luogo" check="no" />
+                  <specificaGiorno path="java.lang.String" nome="specificaGiorno" check="no" />
+                  <frequenzaGiornaliera path="java.lang.Integer" nome="frequenzaGiornaliera" check="no" />
+                </Modalitapastofuori>
+                <Assunzionebevande path="hibernate.Assunzionebevande" nome="Assunzionebevande" check="no">
+                  <tipologiabevanda path="hibernate.Tipologiabevanda" nome="Tipologiabevanda" check="no">
+                    <nome path="java.lang.String" nome="nome" check="no" />
+                    <descrizione path="java.lang.String" nome="descrizione" check="no" />
+                  </tipologiabevanda>
+                  <quantita path="java.lang.String" nome="quantita" check="no" />
+                </Assunzionebevande>
+              </Abitudinialimentari>
+              <Referto path="hibernate.Referto" nome="Referto" check="no">
+                <parametroesame path="hibernate.Parametroesame" nome="Parametroesame" check="no">
+                  <esameclinico path="hibernate.Esameclinico" nome="Esameclinico" check="no">
+                    <nome path="java.lang.String" nome="nome" check="no" />
+                    <descrizione path="java.lang.String" nome="descrizione" check="no" />
+                  </esameclinico>
+                  <nome path="java.lang.String" nome="nome" check="no" />
+                  <descrizione path="java.lang.String" nome="descrizione" check="no" />
+                  <minUomo path="java.lang.String" nome="minUomo" check="no" />
+                  <maxUomo path="java.lang.String" nome="maxUomo" check="no" />
+                  <minDonna path="java.lang.String" nome="minDonna" check="no" />
+                  <maxDonna path="java.lang.String" nome="maxDonna" check="no" />
+                  <minBambino path="java.lang.String" nome="minBambino" check="no" />
+                  <maxBambino path="java.lang.String" nome="maxBambino" check="no" />
+                </parametroesame>
+                <osservazioni path="java.lang.String" nome="osservazioni" check="no" />
+                <Risultatoanalisi path="hibernate.Risultatoanalisi" nome="Risultatoanalisi" check="no">
+                  <valore path="java.lang.String" nome="valore" check="no" />
+                  <data path="java.util.Date" nome="data" check="no" />
+                  <note path="java.lang.String" nome="note" check="no" />
+                </Risultatoanalisi>
+              </Referto>
+              <Misurazione path="hibernate.Misurazione" nome="Misurazione" check="no">
+                <parametroantropometrico path="hibernate.Parametroantropometrico" nome="Parametroantropometrico" check="no">
+                  <nome path="java.lang.String" nome="nome" check="no" />
+                  <descrizione path="java.lang.String" nome="descrizione" check="no" />
+                </parametroantropometrico>
+                <osservazioni path="java.lang.String" nome="osservazioni" check="no" />
+                <Rilevamento path="hibernate.Rilevamento" nome="Rilevamento" check="no">
+                  <valore path="java.lang.String" nome="valore" check="no" />
+                  <data path="java.util.Date" nome="data" check="no" />
+                </Rilevamento>
+              </Misurazione>
+            </paziente>
+            <dataInizio path="java.util.Date" nome="dataInizio" check="no" />
+            <numRipetizCiclo path="int" nome="numRipetizCiclo" check="no" />
+            <note path="java.lang.String" nome="note" check="no" />
+          </Prescrizione>
+        </dieta>
+      </Personalizzazionegiornata>
+    </schemadietetico>
+    <quantita path="java.lang.String" nome="quantita" check="no" />
+  </Costituzione>
+  <Ricetta path="hibernate.Ricetta" nome="Ricetta" check="no">
+    <nome path="java.lang.String" nome="nome" check="no" />
+    <procedimento path="java.lang.String" nome="procedimento" check="no" />
+    <Composizione path="hibernate.Composizione" nome="Composizione" check="no">
+      <ingrediente path="hibernate.Ingrediente" nome="Ingrediente" check="no">
+        <nome path="java.lang.String" nome="nome" check="no" />
+      </ingrediente>
+      <quantita path="java.lang.String" nome="quantita" check="no" />
+    </Composizione>
+  </Ricetta>
 </radice>
 
