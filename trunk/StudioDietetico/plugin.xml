@@ -331,7 +331,7 @@
             restorable="true">
       </view>
       <view
-            class="studiodietetico.AnamnesiView"
+            class="studiodietetico.AnamnesiShell"
             id="StudioDietetico.anamnesi"
             name="Gestione Anamnesi"
             restorable="true">
