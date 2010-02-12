@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Text;
 import java.util.HashSet;
 import java.util.Set;
 import hibernate.Paziente;
-
+import studiodietetico.AnamnesiShell;
 
 public class ProvaTableForm extends ListComposite {
 
@@ -47,7 +47,7 @@ public class ProvaTableForm extends ListComposite {
 	private CCombo cComboColonne = null;
 	private Label labelRicerca;
 	private Text textRicerca = null;
-	private String idShellVisualizzaDettagli;  //  @jve:decl-index=0:
+	//private String idShellVisualizzaDettagli;  //  @jve:decl-index=0:
 	private String idShellInserimento;  //  @jve:decl-index=0:
 	private Shell sShellMessElimina;
 	
@@ -80,7 +80,7 @@ public class ProvaTableForm extends ListComposite {
 	 * 
 	 */
 	private void initialize(ArrayList<Object> listaElementi) {
-		/*GridData gdForm = new GridData(SWT.BORDER);
+		GridData gdForm = new GridData(SWT.BORDER);
 		gdForm.grabExcessHorizontalSpace = true;
 		gdForm.horizontalAlignment = SWT.FILL;
 		gdForm.verticalAlignment = SWT.FILL;
@@ -106,18 +106,18 @@ public class ProvaTableForm extends ListComposite {
 		gdTop.horizontalAlignment = SWT.FILL;
 		gdTop.verticalAlignment = SWT.FILL;
 		gdTop.grabExcessHorizontalSpace = true;
-		gdTop.grabExcessVerticalSpace = true;*/
+		gdTop.grabExcessVerticalSpace = true;
 		
-		this.setLayout(new GridLayout(4, true));
-		this.setBackground(common.Utils.getStandardWhiteColor());
+		//this.setLayout(new GridLayout(4, true));
+		//this.setBackground(common.Utils.getStandardWhiteColor());
 		
         top = new Composite(this, SWT.BORDER);
         top.setLayout(new GridLayout(4, true));
-        //top.setLayoutData(gdTop);
+        top.setLayoutData(gdTop);
         
         labelSelItem = new Label(top, SWT.NONE);
 		labelSelItem.setText("Selezionare un elemento e scegliere una opzione");
-		//labelSelItem.setLayoutData(gdFiller);
+		labelSelItem.setLayoutData(gdFiller);
 		
 		labelRicerca = new Label(top, SWT.NONE);
 		labelRicerca.setText("Ricerca");
@@ -126,7 +126,7 @@ public class ProvaTableForm extends ListComposite {
 		//cComboColonne.setLayoutData(gridDataRic);
 		
 		textRicerca = new Text(top, SWT.BORDER);
-		//textRicerca.setLayoutData(gdFiller);
+		textRicerca.setLayoutData(gdFiller);
 		
 		textRicerca.addModifyListener(new org.eclipse.swt.events.ModifyListener() {
 			public void modifyText(org.eclipse.swt.events.ModifyEvent e) {
@@ -151,7 +151,7 @@ public class ProvaTableForm extends ListComposite {
 					
 				}
 				//tableVisualizzazione.remove(0, (itemTab.size()-1));
-				System.out.println("modifyText()"); // TODO Auto-generated Event stub modifyText()
+				System.out.println("modifyText()");
 			}
 		});
 	
@@ -160,12 +160,15 @@ public class ProvaTableForm extends ListComposite {
 		tableVisualizzazione.setHeaderVisible(true);
 		tableVisualizzazione.setLinesVisible(true);
 		tableVisualizzazione.setLayout(new GridLayout(1, true));
-		//tableVisualizzazione.setLayoutData(gdTbl);
+		tableVisualizzazione.setLayoutData(gdTbl);
 		tableVisualizzazione.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
 					public void mouseDoubleClick(org.eclipse.swt.events.MouseEvent e) {
 						 if(tableVisualizzazione.getSelectionCount()>0)
 							rigaTableClick = tableVisualizzazione.getSelection()[0];
-						 Utils.showView(idShellVisualizzaDettagli);
+						 //Utils.showView(idShellVisualizzaDettagli);
+						 //sShellVisualizzaDettagli.open();
+						 AnamnesiShell aw = new AnamnesiShell();
+						 aw.createSShellDettagliInterventi(rigaTableClick);
 						 tableVisualizzazione.deselectAll();
 					}
 				});
@@ -202,13 +205,15 @@ public class ProvaTableForm extends ListComposite {
 			itemTab.add(tableVisualizzazione.getItems()[i]);
 		}
 		
-		for (TableColumn colonna : tableVisualizzazione.getColumns()) {
+		/*for (TableColumn colonna : tableVisualizzazione.getColumns()) {
+			//System.out.println(colonna.getText());
 			colonna.pack();
 			colonna.setResizable(false);
-		}
+		}*/
 		
 		//nasconde la prima colonna che contiene l'id
 		nascondiColonna(0);
+		
 }
 	
 	private void createMessConfermaCanc(int indiceItemSel) {
