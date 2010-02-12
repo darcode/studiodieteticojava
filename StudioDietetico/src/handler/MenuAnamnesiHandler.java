@@ -15,7 +15,8 @@ public class MenuAnamnesiHandler extends AbstractHandler implements IHandler {
 		try {
 			HandlerUtil.getActiveWorkbenchWindow(event)
 		.getActivePage()
-		.showView("StudioDietetico.anamnesi");
+		//.showView("StudioDietetico.anamnesi");
+		.showView("StudioDietetico.ProvaAnamnesiView");
 			} catch (PartInitException e) {
 				throw new ExecutionException("Error while opening view", e);
 			}
