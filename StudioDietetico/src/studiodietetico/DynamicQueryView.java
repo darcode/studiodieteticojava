@@ -164,9 +164,9 @@ public class DynamicQueryView extends ViewPart{
 						radice.setText(new String[] {nomeClasse});
 						nodiVisitati.clear();	
 						
-						Element radiceXml = new Element("radice");
+						Element radiceXml = new Element(nomeClasse);
 						radiceXml.setAttribute("path", pathClasse);
-						radiceXml.setAttribute("nome", nomeClasse);
+//						radiceXml.setAttribute("nome", nomeClasse);
 						radiceXml.setAttribute("check", "no");
 						
 						

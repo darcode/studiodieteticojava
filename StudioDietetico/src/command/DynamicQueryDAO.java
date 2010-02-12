@@ -169,7 +169,7 @@ public class DynamicQueryDAO extends BaseDAO{
 					String testo = service.Utils.upperCase(currField.getName());					
 					String currentPath = currField.getType().getCanonicalName();
 					if (!nodiVisitati.contains(currentPath)) {
-						Element figlio = new Element(currField.getName());
+						Element figlio = new Element(testo);
 						figlio.setAttribute("path", currentPath);
 						figlio.setAttribute("nome", testo);
 						figlio.setAttribute("check", "no");
@@ -207,21 +207,17 @@ public class DynamicQueryDAO extends BaseDAO{
 	public String getPath(ArrayList<TreeItem> ramo){	
 		String path = "";
 		TreeItem last = ramo.get(ramo.size()-1);
-		Element current = albero.getRootElement();		
-		if(last.getText().equals(current.getAttribute("nome").getValue())){
-			current = current.getChild(last.getText());
-			ramo.remove(last);
+		Element current = albero.getRootElement();
+		ramo.remove(last);
+		if(last.getText().equals(current.getName())){
 			while (ramo.size()>1) {
 				last = ramo.get(ramo.size()-1);
 				current = current.getChild(last.getText());
 				ramo.remove(last);
 			}
 			last = ramo.get(ramo.size()-1);
-			current = current.getChild(last.getText());
-			
+//			current = current.getChild(last.getText());			
 			path = current.getAttributeValue("path");
-			
-			aggiornaXml();
 		} else {
 			System.out.println("errore nella creazione dell'albero");
 		}	
