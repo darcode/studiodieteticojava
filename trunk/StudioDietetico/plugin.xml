@@ -198,7 +198,7 @@
             </command>
             <command
                   commandId="StudioDietetico.CommandRegistrazione"
-                  label="Registrazione"
+                  label="Gestione Utenti"
                   style="push">
             </command>
          </menu>
@@ -375,7 +375,7 @@
       <view
             class="security.RegistrazioneView"
             id="registrazioneViewID"
-            name="Registra Utente"
+            name="Gestione Utenti"
             restorable="true">
       </view>
       <view
