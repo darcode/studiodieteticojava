@@ -23,7 +23,7 @@ public class RuoloDAO extends BaseDAO{
 		return ruolo;
 	}
 	
-	public static Ruolo get(String descrRuolo) throws Exception {
+	public static Ruolo get(String descrRuolo) {
 		Ruolo ruolo = null;
 		try {
 			begin();
@@ -33,7 +33,6 @@ public class RuoloDAO extends BaseDAO{
 			commit();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw e;
 		}
 		return ruolo;
 	}
@@ -54,10 +53,22 @@ public class RuoloDAO extends BaseDAO{
 	public static boolean insRuolo(String descr, int[] idFunzioni) {
 		try {
 			begin();
-			System.out.println(idFunzioni);
 			Ruolo ruoloNew = new Ruolo(descr);
 			ruoloNew.setFunziones(FunzioneDAO.getFunzioniAsSet(idFunzioni));
 			getSession().save(ruoloNew);
+			commit();
+			getSession().flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	public static boolean updateRuolo(Ruolo ruolo, int[] idFunzioni) {
+		try {
+			begin();
+			ruolo.setFunziones(FunzioneDAO.getFunzioniAsSet(idFunzioni));
+			getSession().update(ruolo);
 			commit();
 			getSession().flush();
 		} catch (Exception e) {

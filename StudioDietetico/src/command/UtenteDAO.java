@@ -1,8 +1,10 @@
 package command;
 
+import hibernate.Funzione;
 import hibernate.Utente;
 
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -94,5 +96,32 @@ public class UtenteDAO extends BaseDAO {
 		utente = get(nome_utente);
 		getSession().delete(utente);
 
+	}
+	public static boolean hasRole(String nome_utente, String roleString) throws Exception{
+		begin();
+		Utente utente;
+		utente = get(nome_utente);
+		if(roleString.equals(utente.getRuolo().getDescrizione()))
+			return true;
+		else
+			return false;
+		
+	}
+	public static boolean canDo(String nome_utente, String function) throws Exception{
+		begin();
+		Utente utente;
+		utente = get(nome_utente);
+		if(utente!= null && utente.getRuolo()!= null && utente.getRuolo().getFunziones()!= null){
+			
+			Set functions  = utente.getRuolo().getFunziones();
+				for(Object item: functions){
+					if(function.equals(((Funzione)item).getDescrizione()))
+						return true;
+				}
+				return false;
+		}
+		else
+			return false;
+		
 	}
 }
