@@ -29,7 +29,7 @@ public class FunzioneDAO extends BaseDAO {
 			begin();
 			
 			for(int item:id){
-				Query q = getSession().createQuery("from Funzione where idFunzione = " + item+1);
+				Query q = getSession().createQuery("from Funzione where idFunzione = " + (item+1));
 				funzioni.add(q.uniqueResult());
 			}
 			commit();
