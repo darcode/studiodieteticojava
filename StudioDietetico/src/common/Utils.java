@@ -17,6 +17,8 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
@@ -225,4 +227,21 @@ public class Utils implements ICommonConstants {
 
 	}
 
+	public static void showMessageError(String message) {
+		Shell parent = new Shell();
+		parent.setSize(200, 50);
+		MessageBox msg = new MessageBox(parent);
+		msg.setMessage(message);
+		msg.setText("Errore applicativo");
+		msg.open();
+	}
+
+	public static void showMessageInfo(String message) {
+		Shell parent = new Shell();
+		parent.setSize(200, 50);
+		MessageBox msg = new MessageBox(parent);
+		msg.setMessage(message);
+		msg.setText("Info");
+		msg.open();
+	}
 }
