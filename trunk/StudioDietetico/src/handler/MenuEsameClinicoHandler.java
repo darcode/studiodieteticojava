@@ -1,25 +1,17 @@
 package handler;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.handlers.HandlerUtil;
 
-public class MenuEsameClinicoHandler extends AbstractHandler implements IHandler {
+public class MenuEsameClinicoHandler extends MenuStudioDieteticoHandler
+		implements IHandler {
+	private static final String VIEW = "StudioDietetico.EsameClinicoView";
+	private static final String MY_FUNCTION = "MenuEsameClinico";
 
-	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		
-		try {
-			HandlerUtil.getActiveWorkbenchWindow(event)
-		.getActivePage()
-		.showView("StudioDietetico.EsameClinicoView");
-			} catch (PartInitException e) {
-				throw new ExecutionException("Error while opening view", e);
-			}
-		return null;
+	String getMyFunction() {
+		return MY_FUNCTION;
 	}
 
+	String getMyView() {
+		return VIEW;
+	}
 }
