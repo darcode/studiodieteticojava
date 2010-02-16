@@ -1,27 +1,21 @@
 package handler;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.handlers.HandlerUtil;
 
 import common.ICommonConstants;
 
-public class MenuRegistrazioneHandler extends AbstractHandler implements IHandler {
+public class MenuRegistrazioneHandler extends MenuStudioDieteticoHandler
+		implements IHandler {
 
-	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		
-		try {
-			HandlerUtil.getActiveWorkbenchWindow(event)
-		.getActivePage()
-		.showView(ICommonConstants.registrazioneViewID);
-			} catch (PartInitException e) {
-				throw new ExecutionException("Error while opening view", e);
-			}
-		return null;
+	private static final String VIEW = ICommonConstants.registrazioneViewID;
+	private static final String MY_FUNCTION = "MenuRegistrazione";
+
+	String getMyFunction() {
+		return MY_FUNCTION;
+	}
+
+	String getMyView() {
+		return VIEW;
 	}
 
 }
