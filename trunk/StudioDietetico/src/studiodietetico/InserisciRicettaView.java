@@ -259,7 +259,7 @@ public class InserisciRicettaView extends ViewPart {
         tableAlimenti = new Table(top, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
         tableAlimenti.setHeaderVisible(true);
         tableAlimenti.setLinesVisible(true);
-        tableAlimenti.setBounds(new Rectangle(16, 30, 443, 132));
+        tableAlimenti.setBounds(new Rectangle(16, 30, 388, 132));
         tableAlimenti
         		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
         			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
