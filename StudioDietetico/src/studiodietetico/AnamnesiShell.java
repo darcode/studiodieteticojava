@@ -419,12 +419,12 @@ public class AnamnesiShell {
 						sShellDettagliInterventi.close();
 						
 						//Aggiornare la tabella degli interventi in ProvaAnamnesiView
-						AnamnesiTableView aw = new AnamnesiTableView();
-						//aw.aggiornaTable(rigaTableClick, data, num);
 						
+						AnamnesiTableView aw = new AnamnesiTableView();
+						aw.aggiungiColonnaIntervento();
 					}
 				});
-		
+	
 		buttonChiudi = new Button(sShellDettagliInterventi, SWT.NONE);
 		buttonChiudi.setBounds(new Rectangle(600, 350, 70, 25));
 		buttonChiudi.setText("Chiudi");
@@ -914,7 +914,7 @@ public class AnamnesiShell {
 	private void createMessConfermaCanc(int indiceItemSel) {
 		createSShellMessElimina();
 		MessageBox messageBox = new MessageBox(sShellMessElimina, SWT.OK | SWT.CANCEL| SWT.ICON_WARNING);
-		messageBox.setMessage("Sei sicuro di voler eliminare questo elemento?\nLa sua cancellazione comporta la rimozione di:"/*+messElementiCancellati*/);
+		messageBox.setMessage("Sei sicuro di voler eliminare questo elemento?");
 		messageBox.setText("Conferma cancellazione");
 		if (messageBox.open() == SWT.OK) {
 			AnamnesiDAO an = new AnamnesiDAO();
