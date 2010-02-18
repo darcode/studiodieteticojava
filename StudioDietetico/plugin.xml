@@ -379,9 +379,9 @@
             restorable="true">
       </view>
       <view
-            class="studiodietetico.ProvaAnamnesiView"
-            id="StudioDietetico.ProvaAnamnesiView"
-            name="ProvaAnamnesiView"
+            class="studiodietetico.AnamnesiTableView"
+            id="StudioDietetico.AnamnesiTableView"
+            name="Anamnesi"
             restorable="true">
       </view>
    </extension>
