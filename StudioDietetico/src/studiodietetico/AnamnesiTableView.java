@@ -48,15 +48,7 @@ public class AnamnesiTableView extends ViewPart {
 	private Composite compositeAllergie = null;
 	private ArrayList<Object> allergiePazList;
 	
-	private Shell sShellInserimentoTipoInterventi;
-	private Group groupInserimentoTipoInt;
-	private Label labelNomeTipoInt;
-	private Text textNomeTipoInt;
-	private Label labelDescrTipoInt;
-	private Text textAreaDescrTipoInt;
-	private Label labelLocalizzazione;
-	private Text textAreaLocalizzazione;
-	private Button buttonInsertTipoInt;
+
 	
 	//Costruttore
 	public AnamnesiTableView() {
@@ -170,4 +162,5 @@ public class AnamnesiTableView extends ViewPart {
 	}
 
 }
+
 
