@@ -147,6 +147,21 @@ public class AnamnesiTableView extends ViewPart {
 		colonna.setResizable(false);
 	}
 	
+	public void aggiungiColonnaIntervento() {
+		//Aggiunge la colonna che visualizza il nome dell'intervento
+		TableColumn colonna = new TableColumn(classVis.getTableVisualizzazione(), SWT.CENTER);
+		colonna.setText("Tipo Intervento");
+		String nome = "";
+		TableItem itemSel = null;
+		for (int j = 0; j < interventiPazList.size(); j++) {
+			nome = ((Intervento)interventiPazList.get(j)).getTipologiaintervento().getNome();
+			itemSel = classVis.getTableVisualizzazione().getItem(j);
+			itemSel.setText(classVis.getTableVisualizzazione().getColumnCount()-1, nome);
+		}
+		colonna.pack();
+		colonna.setResizable(false);
+	}
+	
 	public void aggiornaTable(ArrayList<Object> listaElementi) { //listaElemnti è interventiPazList
 		//Aggiorna la tabella quando è modificato qualche item
 		classVis.getTableVisualizzazione().removeAll(); //rimuove gli item
