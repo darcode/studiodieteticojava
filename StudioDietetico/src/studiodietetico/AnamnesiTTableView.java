@@ -2,7 +2,6 @@ package studiodietetico;
 
 import java.util.ArrayList;
 
-import forms.HomePazienteForm;
 import forms.TableUtil;
 import hibernate.Intervento;
 import hibernate.Paziente;
@@ -11,20 +10,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 
@@ -32,7 +23,7 @@ import service.Utils;
 
 import command.AnamnesiDAO;
 import command.PazienteDAO;
-import common.GenericBean;
+
 
 public class AnamnesiTTableView extends ViewPart {
 	//Generale
