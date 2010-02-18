@@ -145,24 +145,24 @@ public class RegistraVisitaView extends ViewPart {
         labelMotivazioni.setBounds(new Rectangle(10, 275, 129, 22));
         labelMotivazioni.setText("Motivazioni della visita:");
         textAreaMotivazioni = new Text(top, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-        textAreaMotivazioni.setBounds(new Rectangle(165, 274, 330, 55));
+        textAreaMotivazioni.setBounds(new Rectangle(157, 274, 344, 55));
         //textAreaMotivazioni.setTextLimit(300);
-        labelStatoPagamento = new Label(top, SWT.NONE);
+/*        labelStatoPagamento = new Label(top, SWT.NONE);
         labelStatoPagamento.setBounds(new Rectangle(10, 340, 108, 21));
-        labelStatoPagamento.setText("* Stato pagamento:");
+        labelStatoPagamento.setText("* Stato pagamento:");*/
         labelNote = new Label(top, SWT.NONE);
-        labelNote.setBounds(new Rectangle(12, 375, 41, 17));
+        labelNote.setBounds(new Rectangle(12, 341, 41, 17));
         labelNote.setText("Note:");
         textAreaNote = new Text(top, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-        textAreaNote.setBounds(new Rectangle(76, 374, 364, 83));
+        textAreaNote.setBounds(new Rectangle(60, 342, 398, 115));
         //textAreaNote.setTextLimit(300);
-        labelFattura = new Label(top, SWT.WRAP);
+/*        labelFattura = new Label(top, SWT.WRAP);
         labelFattura.setBounds(new Rectangle(12, 464, 191, 37));
-        labelFattura.setText("Si desidera creare una nuova fattura o associare una fattura esistente?");
-        listFatture = new List(top, SWT.V_SCROLL | SWT.H_SCROLL);
+        labelFattura.setText("Si desidera creare una nuova fattura o associare una fattura esistente?");*/
+/*        listFatture = new List(top, SWT.V_SCROLL | SWT.H_SCROLL);
         listFatture.setBounds(new Rectangle(15, 504, 501, 133));
-        listFatture.setEnabled(false);
-        buttonCreaNuovaFattura = new Button(top, SWT.MULTI);
+        listFatture.setEnabled(false);*/
+/*        buttonCreaNuovaFattura = new Button(top, SWT.MULTI);
         buttonCreaNuovaFattura.setBounds(new Rectangle(210, 467, 176, 25));
         buttonCreaNuovaFattura.setText("Crea e associa una nuova fattura");
         buttonCreaNuovaFattura
@@ -173,28 +173,28 @@ public class RegistraVisitaView extends ViewPart {
         				createSShellNuovaFattura();  				
         				System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
         			}
-        		});
+        		});*/
         buttonRegistraVisita = new Button(top, SWT.NONE);
-        buttonRegistraVisita.setBounds(new Rectangle(369, 640, 147, 25));
+        buttonRegistraVisita.setBounds(new Rectangle(354, 467, 147, 25));
         buttonRegistraVisita.setText("Registra visita");
         createGroupPrenotazione();
         createGroupDataVisita();
-        buttonAssociaFattura = new Button(top, SWT.NONE);
+/*        buttonAssociaFattura = new Button(top, SWT.NONE);
         buttonAssociaFattura.setBounds(new Rectangle(389, 467, 158, 25));
-        buttonAssociaFattura.setText("Associa una fattura esistente");
+        buttonAssociaFattura.setText("Associa una fattura esistente");*/
         labelFatturaAssociata = new Label(top, SWT.NONE);
-        labelFatturaAssociata.setBounds(new Rectangle(15, 644, 332, 18));
-        labelFatturaAssociata.setText("Fattura correttamente associata alla visita. Registrare la visita");
+        labelFatturaAssociata.setBounds(new Rectangle(11, 467, 332, 24));
+        labelFatturaAssociata.setText("Visita correttamente registrata");
         labelFatturaAssociata.setVisible(false);
-        createComboStatoPagamento();
-        buttonAssociaFattura
+        //createComboStatoPagamento();
+        /*buttonAssociaFattura
         		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
         			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
         				listFatture.setEnabled(true);
         				System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
         			}
         		});
-
+*/
         buttonRegistraVisita
         		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
         			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -213,18 +213,19 @@ public class RegistraVisitaView extends ViewPart {
         				Prenotazione prenotazione = VisitaDAO.getPrenotazioneByID(idPren);
         				Medico medico = medici.get(comboMedicoVisita.getSelectionIndex());
         				VisitaDAO visita = new VisitaDAO();
-        				if (fatturaSelezionata==null) {
+        				/*if (fatturaSelezionata==null) {
         					FatturaDAO f = new FatturaDAO();
         					Fattura fattura = f.getFatturaByID(idFatt);
         					visita.registraVisita(dataInizioVisita, dataFineVisita, textAreaMotivazioni.getText(), comboStatoPagamento.getText(), textAreaNote.getText(), fattura, medico, prenotazione);
 						} else {
 							visita.registraVisita(dataInizioVisita, dataFineVisita, textAreaMotivazioni.getText(), comboStatoPagamento.getText(), textAreaNote.getText(), fatturaSelezionata, medico, prenotazione);
-						}
-        				
+						}*/
+        				visita.registraVisita(dataInizioVisita, dataFineVisita, textAreaMotivazioni.getText(), textAreaNote.getText(), medico, prenotazione);
+        				labelFatturaAssociata.setVisible(true);
         				System.out.println("visita registrata"); // TODO Auto-generated Event stub widgetSelected()
         			}
         		});
-        fatt = FatturaDAO.getFatture();
+/*        fatt = FatturaDAO.getFatture();
 		ArrayList<String> f = new ArrayList<String>();
 		for (Fattura fattura : fatt) {
 			f.add("Data fattura: "+fattura.getData().getDate()+"/"+(fattura.getData().getMonth()+1)+"/"+(fattura.getData().getYear()+1900)+"  -- Descrizione: "+fattura.getDescrizione()+"  -- Note: "+fattura.getNote());
@@ -251,7 +252,7 @@ public class RegistraVisitaView extends ViewPart {
         		System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
         	}
         });
-        listViewer = new ListViewer(listFatture);
+        listViewer = new ListViewer(listFatture);*/
 	}
 
 	@Override
@@ -425,7 +426,7 @@ public class RegistraVisitaView extends ViewPart {
 	 * This method initializes sShellNuovaFattura	
 	 *
 	 */
-	private void createSShellNuovaFattura() {
+/*	private void createSShellNuovaFattura() {
 		sShellNuovaFattura = new Shell(Display.getCurrent(), SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
 		//sShellNuovaFattura.setLayout(new GridLayout());
 		sShellNuovaFattura.setSize(new Point(527, 366));
@@ -550,7 +551,7 @@ public class RegistraVisitaView extends ViewPart {
 				});
 		
 		sShellNuovaFattura.open();
-	}
+	}*/
 
 	/**
 	 * This method initializes groupPrenotazione	
@@ -641,12 +642,12 @@ public class RegistraVisitaView extends ViewPart {
 	 * This method initializes comboStatoPagamento	
 	 *
 	 */
-	private void createComboStatoPagamento() {
+/*	private void createComboStatoPagamento() {
 		comboStatoPagamento = new Combo(top, SWT.READ_ONLY);
 		comboStatoPagamento.setBounds(new Rectangle(135, 340, 223, 21));
 		comboStatoPagamento.setItems(new String [] {"completato","non completato"});
 		comboStatoPagamento.select(0);
-	}
+	}*/
 
 	/*
 	 * Temporary main generation 
@@ -669,4 +670,4 @@ public class RegistraVisitaView extends ViewPart {
 		display.dispose();*/
 	}
 
-}  //  @jve:decl-index=0:visual-constraint="10,10,611,668"
+}  //  @jve:decl-index=0:visual-constraint="10,10,623,579"
