@@ -6,6 +6,8 @@ import hibernate.Prenotazione;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
@@ -16,6 +18,7 @@ import command.DietaDAO;
 import common.Utils;
 
 public class DietaTableView extends ViewPart {
+	private Composite top = null;
 	private ProvaTableForm classVis;
 	private ArrayList<Object> diete;
 	
@@ -23,9 +26,12 @@ public class DietaTableView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		top = new Composite(parent, SWT.NONE);
 		diete = DietaDAO.getDieteObject();
 		//TODO aggiungere parametri
-		classVis = new ProvaTableForm(parent, SWT.BORDER, diete, "","","","DietaTableView");
+		classVis = new ProvaTableForm(top, SWT.BORDER, diete, "","","","DietaTableView");
+		classVis.setBounds(new Rectangle(6, 50, 800, 332));
+		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
 		

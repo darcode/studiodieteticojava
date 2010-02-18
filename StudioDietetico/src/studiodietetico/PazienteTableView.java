@@ -3,6 +3,8 @@ package studiodietetico;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
@@ -11,6 +13,7 @@ import command.PazienteDAO;
 import common.Utils;
 
 public class PazienteTableView extends ViewPart {
+	private Composite top = null;
 	private ProvaTableForm classVis;
 	private ArrayList<Object> pazienti;
 
@@ -18,9 +21,12 @@ public class PazienteTableView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		top = new Composite(parent, SWT.NONE);
 		pazienti = PazienteDAO.getPazientiObject();
 		//TODO aggiungere parametri
-		classVis = new ProvaTableForm(parent, SWT.BORDER, pazienti, "","","","PazienteTableView");
+		classVis = new ProvaTableForm(top, SWT.BORDER, pazienti, "","","","PazienteTableView");
+		classVis.setBounds(new Rectangle(6, 50, 800, 332));
+		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
 		
