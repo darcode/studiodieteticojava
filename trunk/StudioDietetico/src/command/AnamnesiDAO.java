@@ -1,17 +1,23 @@
 package command;
 
+import java.sql.BatchUpdateException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 
 import hibernate.Attivitafisica;
+import hibernate.Composizione;
 import hibernate.Intervento;
 import hibernate.InterventoId;
 import hibernate.Intolleranzaallergia;
 import hibernate.Paziente;
 import hibernate.Prenotazione;
+import hibernate.Ricetta;
 import hibernate.Tipologiaintervento;
 
 public class AnamnesiDAO extends BaseDAO{
@@ -27,15 +33,17 @@ public class AnamnesiDAO extends BaseDAO{
 		interv.setLocalizzazione(localizzazione);
 		getSession().saveOrUpdate(interv);
 		commit();
+		//interv.getIdTipologiaIntervento();
+		//System.out.println("IDTIPOINT: "+interv.getIdTipologiaIntervento());
 		close();
 	}
 	
-	public ArrayList<Tipologiaintervento> getListTipoInterventi(){
+	public ArrayList<Object> getListTipoInterventi(){
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Tipologiaintervento interv ORDER BY interv.nome");
 		
-		ArrayList<Tipologiaintervento> interventi = (ArrayList<Tipologiaintervento>)q.list();
+		ArrayList<Object> interventi = (ArrayList<Object>)q.list();
 		commit();
 		return interventi;
 	}
@@ -48,6 +56,35 @@ public class AnamnesiDAO extends BaseDAO{
 		Tipologiaintervento intervento = (Tipologiaintervento)q.uniqueResult();
 		commit();
 		return intervento;
+	}
+	
+	
+	public void modificaTipoIntervento(Tipologiaintervento tipointervento, String nome, String descrizione, String localizzazione) {
+		getSession();
+		begin();
+		Tipologiaintervento tipoInterv = new Tipologiaintervento();
+		Query q = getSession().createQuery("FROM Tipologiaintervento interv WHERE idTipologiaIntervento="+tipointervento.getIdTipologiaIntervento());
+		//commit();
+		//begin();
+		tipoInterv = (Tipologiaintervento) q.uniqueResult();
+		tipoInterv.setNome(nome);
+		tipoInterv.setDescrizione(descrizione);
+		tipoInterv.setLocalizzazione(localizzazione);
+		getSession().saveOrUpdate(tipoInterv);
+		commit();
+		close();
+	}
+	
+	public void cancellaTipoIntervento(Integer idtipoInt) {
+		begin();
+		Criteria criteria = getSession().createCriteria(hibernate.Tipologiaintervento.class);
+		criteria.add( Restrictions.eq("idTipologiaIntervento", idtipoInt));
+		List<Tipologiaintervento> interv = (List<Tipologiaintervento>)criteria.list();
+		commit();
+		begin();
+		getSession().delete(interv.get(0));
+		commit();
+		close();
 	}
 	
 	
@@ -87,11 +124,34 @@ public class AnamnesiDAO extends BaseDAO{
 		return interventi;
 	}
 	
-	public void aggiornaNumero(Paziente paziente, Tipologiaintervento tipointervento, Date data, int numeroInt) {
+	public ArrayList<Object> getInterventiListByIdTipoInt(int idTipoInt) {
+		getSession();
+		begin();
+		Query q = getSession().createQuery("FROM Intervento i WHERE tipologiaintervento="+idTipoInt);
+		ArrayList<Object> interventi = (ArrayList<Object>)q.list();
+		commit();
+		return interventi;
+	}
+	
+	
+	public Object getInterventiListByPazIdTipoInt(int idTipoInt, int idPaz) {
+		getSession();
+		begin();
+		Query q = getSession().createQuery("FROM Intervento i WHERE tipologiaintervento="+idTipoInt+" AND paziente="+idPaz);
+		//ArrayList<Object> interventi = (ArrayList<Object>)q.list();
+		Object interventi = q.uniqueResult();
+		commit();
+		return interventi;
+	}
+	
+	
+	public void modificaIntervento(Paziente paziente, Tipologiaintervento tipointervento, Date data, int numeroInt) {
 		getSession();
 		begin();
 		Intervento interv = new Intervento();
 		Query q = getSession().createQuery("FROM Intervento interv WHERE idPaziente="+paziente.getIdPaziente()+" and idTipologiaIntervento="+tipointervento.getIdTipologiaIntervento());
+		//commit();
+		//begin();
 		interv = (Intervento) q.uniqueResult();
 		interv.setData(data);
 		interv.setNumero(numeroInt);
