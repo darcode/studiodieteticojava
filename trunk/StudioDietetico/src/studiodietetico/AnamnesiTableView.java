@@ -3,6 +3,7 @@ package studiodietetico;
 import java.util.ArrayList;
 
 import forms.HomePazienteForm;
+import forms.TableUtil;
 import hibernate.Intervento;
 import hibernate.Paziente;
 
@@ -120,7 +121,7 @@ public class AnamnesiTableView extends ViewPart {
 		classVis.nascondiColonne(new int[]{0,1,2});
 		
 		//Aggiunge la colonna che visualizza il nome dell'intervento
-		aggiungiColonnaIntervento();
+		aggiungiColonnaIntervento(classVis, interventiPazList);
 		
 		//Aggiorna la combo con l'attributo aggiunto
 		classVis.aggiornaCombo();
@@ -131,7 +132,7 @@ public class AnamnesiTableView extends ViewPart {
 		classVis.ordinamentoData(classVis.getTableVisualizzazione(), 3);
 	}
 	
-	public void aggiungiColonnaIntervento() {
+	public void aggiungiColonnaIntervento(ProvaTableForm classVis, ArrayList<Object> interventiPazList) {
 		//Aggiunge la colonna che visualizza il nome dell'intervento
 		TableColumn colonna = new TableColumn(classVis.getTableVisualizzazione(), SWT.CENTER);
 		colonna.setText("Tipo Intervento");
@@ -146,6 +147,19 @@ public class AnamnesiTableView extends ViewPart {
 		colonna.setResizable(false);
 	}
 	
+	public void aggiornaTable(ArrayList<Object> listaElementi) { //listaElemnti è interventiPazList
+		//Aggiorna la tabella quando è modificato qualche item
+		classVis.getTableVisualizzazione().removeAll(); //rimuove gli item
+		//rimuove le colonne
+		int k = 0;
+		while (k<classVis.getTableVisualizzazione().getColumnCount()) {
+			classVis.getTableVisualizzazione().getColumn(k).dispose();
+		}
+		TableUtil.riempiTabellaEntita(classVis.getTableVisualizzazione(), interventiPazList);
+		//riempiTabellaEntita(classVis.getTableVisualizzazione(), interventiPazList);
+		
+		
+	}
 	
 	
 	
