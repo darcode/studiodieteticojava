@@ -172,7 +172,7 @@ public class ProvaTableForm extends ListComposite {
 				}
 				else if (classeChiamante.equalsIgnoreCase("AnamnesiTableView")) {
 					nascondiColonne(new int[]{0,1,2});
-					AnamnesiTableView.aggiungiColonnaIntervento(ProvaTableForm.this, listaElementiTable);
+					AnamnesiTTableView.aggiungiColonnaIntervento(ProvaTableForm.this, listaElementiTable);
 				}
 
 				
