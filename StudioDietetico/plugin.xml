@@ -379,7 +379,7 @@
             restorable="true">
       </view>
       <view
-            class="studiodietetico.AnamnesiTableView"
+            class="studiodietetico.AnamnesiTTableView"
             id="StudioDietetico.AnamnesiTableView"
             name="Anamnesi"
             restorable="true">
