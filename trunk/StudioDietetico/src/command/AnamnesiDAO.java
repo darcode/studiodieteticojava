@@ -106,11 +106,11 @@ public class AnamnesiDAO extends BaseDAO{
 		close();
 	}
 	
-	public ArrayList<Intervento> getListInterventi(){
+	public ArrayList<Object> getListInterventi(){
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Intervento interv");
-		ArrayList<Intervento> interventiPaz = (ArrayList<Intervento>)q.list();
+		ArrayList<Object> interventiPaz = (ArrayList<Object>)q.list();
 		commit();
 		return interventiPaz;
 	}
