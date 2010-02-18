@@ -170,6 +170,10 @@ public class ProvaTableForm extends ListComposite {
 					nascondiColonne(new int[] {0});
 					FattureTableView.modificaColonna(ProvaTableForm.this, listaElementiTable);
 				}
+				else if (classeChiamante.equalsIgnoreCase("AnamnesiTableView")) {
+					nascondiColonne(new int[]{0,1,2});
+					AnamnesiTableView.aggiungiColonnaIntervento(ProvaTableForm.this, listaElementiTable);
+				}
 
 				
 				//ricerca incrementale nella colonna selezionata
