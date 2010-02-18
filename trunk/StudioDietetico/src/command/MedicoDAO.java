@@ -211,5 +211,24 @@ public class MedicoDAO extends BaseDAO {
 		return 0;
 
 	}
+	
+	public static ArrayList<Object> getMediciObject() {
+		getSession();
+		begin();
+		Query q = getSession().createQuery("FROM Medico m ORDER BY m.cognome");
+		ArrayList<Object> medici = (ArrayList<Object>) q.list();
+		commit();
+		return medici;
+
+	}
+	
+	public static ArrayList<Object> getPrestazioniObject() {
+		getSession();
+		begin();
+		Query q = getSession().createQuery("FROM Prestazione p ORDER BY p.id.dataTurno");
+		ArrayList<Object> prestazioni = (ArrayList<Object>) q.list();
+		commit();
+		return prestazioni;
+	}
 
 }
