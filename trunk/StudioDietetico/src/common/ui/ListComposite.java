@@ -1,8 +1,10 @@
 package common.ui;
 
 import hibernate.Attivitafisica;
+import hibernate.Dieta;
 import hibernate.Intolleranzaallergia;
 import hibernate.Paziente;
+import hibernate.Specifichedieta;
 import hibernate.Tipologiaintervento;
 
 import java.util.ArrayList;
@@ -50,6 +52,12 @@ public class ListComposite extends Composite {
 					}
 					if  (valuesObj[i] instanceof Attivitafisica) {  
 						valuesObj[i] = ((Attivitafisica)valuesObj[i]).getIdAttivitaFisica();
+					}
+					if  (valuesObj[i] instanceof Dieta) {  
+						valuesObj[i] = ((Dieta)valuesObj[i]).getIdDieta();
+					}
+					if  (valuesObj[i] instanceof Specifichedieta) {  
+						valuesObj[i] = ((Specifichedieta)valuesObj[i]).getIdSpecificheDieta();
 					}
 					
 					i++;
