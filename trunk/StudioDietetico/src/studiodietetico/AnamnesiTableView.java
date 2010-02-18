@@ -110,16 +110,14 @@ public class AnamnesiTableView extends ViewPart {
 				
 		//Richiama il costruttore della classe Form per gli interventi
 		AnamnesiShell aw = new AnamnesiShell();
-		classVis = new ProvaTableForm(compositeInterventi, SWT.BORDER, interventiPazList,"createSShellDettagliInterventi", "createSShellInserimentoInterventi", aw);
+		classVis = new ProvaTableForm(compositeInterventi, SWT.BORDER, interventiPazList,"createSShellDettagliInterventi", "createSShellInserimentoInterventi", aw, "AnamnesiTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
 		
 		//Nasconde le colonne che visualizzano gli id
-		classVis.nascondiColonna(0);
-		classVis.nascondiColonna(1);
-		classVis.nascondiColonna(2);
+		classVis.nascondiColonne(new int[]{0,1,2});
 		
 		//Aggiunge la colonna che visualizza il nome dell'intervento
 		aggiungiColonnaIntervento();
