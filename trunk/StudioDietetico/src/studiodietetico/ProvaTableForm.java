@@ -139,40 +139,82 @@ public class ProvaTableForm extends ListComposite {
 						colonna.dispose();
 					}					
 				}*/
-				//TODO nasconde e aggiorna le colonne in base alla classe chiamante 
+				//TODO nasconde, aggiorna e ordina le colonne in base alla classe chiamante 
 				if (classeChiamante.equalsIgnoreCase("VisitaTableView")) {
 					nascondiColonne(new int[] {0,1,2,3,6,7,8});
 					VisitaTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+					ordinamentoData(tableVisualizzazione, 4);
+					ordinamentoData(tableVisualizzazione, 5);
+					ordinamentoStringhe(tableVisualizzazione, 9);
+					ordinamentoStringhe(tableVisualizzazione, 10);
+					ordinamentoStringhe(tableVisualizzazione, 11);
 				}
 				else if (classeChiamante.equalsIgnoreCase("PazienteTableView")) {
 					nascondiColonne(new int[] {0,1,8,9,10,11,12,13,14,15});
+					ordinamentoData(tableVisualizzazione, 4);
+					ordinamentoStringhe(tableVisualizzazione, 2);
+					ordinamentoStringhe(tableVisualizzazione, 3);
+					ordinamentoStringhe(tableVisualizzazione, 5);
+					ordinamentoStringhe(tableVisualizzazione, 6);
+					ordinamentoStringhe(tableVisualizzazione, 7);
 				}
 				else if (classeChiamante.equalsIgnoreCase("MedicoTableView")) {
 					nascondiColonne(new int[] {0,1,4,5,8,9,13});
+					ordinamentoStringhe(tableVisualizzazione, 2);
+					ordinamentoStringhe(tableVisualizzazione, 3);
+					ordinamentoStringhe(tableVisualizzazione, 6);
+					ordinamentoStringhe(tableVisualizzazione, 7);
+					ordinamentoStringhe(tableVisualizzazione, 10);
+					ordinamentoStringhe(tableVisualizzazione, 11);
+					ordinamentoStringhe(tableVisualizzazione, 12);
 				}
 				else if (classeChiamante.equalsIgnoreCase("PrenotazioneTableView")) {
 					nascondiColonne(new int[] {0,1,2,4});
 					PrenotazioneTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+					ordinamentoData(tableVisualizzazione, 3);
+					ordinamentoStringhe(tableVisualizzazione, 5);
+					ordinamentoStringhe(tableVisualizzazione, 6);
 				}
 				else if (classeChiamante.equalsIgnoreCase("DietaTableView")) {
 					nascondiColonne(new int[] {0,1,4,5});
 					DietaTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+					ordinamentoStringhe(tableVisualizzazione, 2);
+					ordinamentoInteri(tableVisualizzazione, 3);
+					ordinamentoInteri(tableVisualizzazione, 6);
+					ordinamentoStringhe(tableVisualizzazione, 7);
+					ordinamentoStringhe(tableVisualizzazione, 8);
+					ordinamentoStringhe(tableVisualizzazione, 9);
 				}
 				else if (classeChiamante.equalsIgnoreCase("PrescrizioneTableView")) {
 					nascondiColonne(new int[] {0,1,2,5});
 					PrescrizioneTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+					ordinamentoData(tableVisualizzazione, 3);
+					ordinamentoInteri(tableVisualizzazione, 4);
+					ordinamentoStringhe(tableVisualizzazione, 6);
+					ordinamentoStringhe(tableVisualizzazione, 7);
 				}
 				else if (classeChiamante.equalsIgnoreCase("TurniTableView")) {
 					nascondiColonne(new int[] {0,1,2});
 					TurniTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+					ordinamentoData(tableVisualizzazione, 3);
+					ordinamentoStringhe(tableVisualizzazione, 6);
 				}
 				else if (classeChiamante.equalsIgnoreCase("FattureTableView")) {
 					nascondiColonne(new int[] {0});
 					FattureTableView.modificaColonna(ProvaTableForm.this, listaElementiTable);
+					ordinamentoInteri(tableVisualizzazione, 1);
+					ordinamentoInteri(tableVisualizzazione, 2);
+					ordinamentoInteri(tableVisualizzazione, 3);
+					ordinamentoStringhe(tableVisualizzazione, 4);
+					ordinamentoStringhe(tableVisualizzazione, 5);
+					ordinamentoData(tableVisualizzazione, 6);
 				}
 				else if (classeChiamante.equalsIgnoreCase("AnamnesiTableView")) {
 					nascondiColonne(new int[]{0,1,2});
 					AnamnesiTTableView.aggiungiColonnaIntervento(ProvaTableForm.this, listaElementiTable);
+					ordinamentoInteri(tableVisualizzazione, 4);
+					ordinamentoStringhe(tableVisualizzazione, 5);
+					ordinamentoData(tableVisualizzazione, 3);
 				}
 
 				
