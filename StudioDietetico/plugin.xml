@@ -384,6 +384,60 @@
             name="Anamnesi"
             restorable="true">
       </view>
+      <view
+            class="studiodietetico.VisitaTableView"
+            id="StudioDietetico.VisitaTableView"
+            name="Visite"
+            restorable="true">
+      </view>
+      <view
+            class="studiodietetico.PazienteTableView"
+            id="StudioDietetico.PazienteTableView"
+            name="Pazienti"
+            restorable="true">
+      </view>
+      <view
+            class="studiodietetico.MedicoTableView"
+            id="StudioDietetico.MedicoTableView"
+            name="Medici"
+            restorable="true">
+      </view>
+      <view
+            class="studiodietetico.PrenotazioneTableView"
+            id="StudioDietetico.PrenotazioneTableView"
+            name="Prenotazioni"
+            restorable="true">
+      </view>
+      <view
+            class="studiodietetico.DietaTableView"
+            id="StudioDietetico.DietaTableView"
+            name="Diete"
+            restorable="true">
+      </view>
+      <view
+            class="studiodietetico.PrescrizioneTableView"
+            id="StudioDietetico.PrescrizioneTableView"
+            name="Prescrizioni"
+            restorable="true">
+      </view>
+      <view
+            class="studiodietetico.TurniTableView"
+            id="StudioDietetico.TurniTableView"
+            name="Turni"
+            restorable="true">
+      </view>
+      <view
+            class="studiodietetico.RegistraFatturaView"
+            id="StudioDietetico.RegistraFatturaView"
+            name="Registra Fattura"
+            restorable="true">
+      </view>
+      <view
+            class="studiodietetico.FattureTableView"
+            id="StudioDietetico.FattureTableView"
+            name="Fatture"
+            restorable="true">
+      </view>
    </extension>
    <extension
          id="product"
