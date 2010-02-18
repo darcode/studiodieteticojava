@@ -59,13 +59,17 @@ CREATE TABLE `alimento` (
   `Tipologia` varchar(45) default NULL,
   `Calorie` int(11) default NULL,
   PRIMARY KEY  (`idAlimento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `alimento`
 --
 
 /*!40000 ALTER TABLE `alimento` DISABLE KEYS */;
+INSERT INTO `alimento` (`idAlimento`,`Nome`,`Tipologia`,`Calorie`) VALUES 
+ (1,'lasagne','',0),
+ (2,'arance','',0),
+ (3,'carne','',0);
 /*!40000 ALTER TABLE `alimento` ENABLE KEYS */;
 
 
@@ -139,6 +143,12 @@ CREATE TABLE `composizione` (
 --
 
 /*!40000 ALTER TABLE `composizione` DISABLE KEYS */;
+INSERT INTO `composizione` (`idRicetta`,`idIngrediente`,`Quantita`) VALUES 
+ (6,1,'1'),
+ (6,9,'200gr'),
+ (6,10,'100gr'),
+ (7,9,'600gr'),
+ (7,10,'400gr');
 /*!40000 ALTER TABLE `composizione` ENABLE KEYS */;
 
 
@@ -207,13 +217,16 @@ CREATE TABLE `dieta` (
   PRIMARY KEY  (`idDieta`),
   KEY `FK_SpecificheDieta` (`FK_SpecificheDieta`),
   CONSTRAINT `FK_SpecificheDieta` FOREIGN KEY (`FK_SpecificheDieta`) REFERENCES `specifichedieta` (`idSpecificheDieta`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `dieta`
 --
 
 /*!40000 ALTER TABLE `dieta` DISABLE KEYS */;
+INSERT INTO `dieta` (`idDieta`,`Nome`,`DurataCiclo`,`Note`,`dietaStandard`,`FK_SpecificheDieta`) VALUES 
+ (1,'dieta1',7,'note',NULL,1),
+ (2,'dieta2',5,'note',0,2);
 /*!40000 ALTER TABLE `dieta` ENABLE KEYS */;
 
 
@@ -227,13 +240,15 @@ CREATE TABLE `esameclinico` (
   `Nome` varchar(45) NOT NULL,
   `Descrizione` varchar(45) default NULL,
   PRIMARY KEY  (`idEsameClinico`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `esameclinico`
 --
 
 /*!40000 ALTER TABLE `esameclinico` DISABLE KEYS */;
+INSERT INTO `esameclinico` (`idEsameClinico`,`Nome`,`Descrizione`) VALUES 
+ (1,'urine','');
 /*!40000 ALTER TABLE `esameclinico` ENABLE KEYS */;
 
 
@@ -277,7 +292,7 @@ CREATE TABLE `fattura` (
   `Descrizione` varchar(300) NOT NULL,
   `Data` datetime NOT NULL,
   PRIMARY KEY  (`idFattura`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `fattura`
@@ -298,7 +313,9 @@ INSERT INTO `fattura` (`idFattura`,`Importo`,`Acconto`,`ImportoSconto`,`Note`,`D
  (15,33,0,0,'19genn1','fatt','2010-01-19 11:28:24'),
  (16,100,40,15,'notefattura19 acconto aumentato, sconto maggiore','fattura19genn','2010-01-19 11:54:25'),
  (17,111,0,1,'ok19','19gennaio bis','2010-01-19 11:16:34'),
- (18,22,0,0,'note','fa','2010-01-19 11:46:29');
+ (18,22,0,0,'note','fa','2010-01-19 11:46:29'),
+ (19,12,0,0,'','fatturaprova	','2010-02-17 12:19:56'),
+ (20,133,0,0,'ffff','f','2010-02-17 12:25:07');
 /*!40000 ALTER TABLE `fattura` ENABLE KEYS */;
 
 
@@ -311,13 +328,32 @@ CREATE TABLE `funzione` (
   `idFunzione` int(10) unsigned NOT NULL auto_increment,
   `Descrizione` varchar(45) NOT NULL,
   PRIMARY KEY  (`idFunzione`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `funzione`
 --
 
 /*!40000 ALTER TABLE `funzione` DISABLE KEYS */;
+INSERT INTO `funzione` (`idFunzione`,`Descrizione`) VALUES 
+ (1,'Registra Utente'),
+ (2,'Statistiche'),
+ (3,'Prenota Visita'),
+ (4,'Registra Visita'),
+ (5,'Interrogazioni dinamiche'),
+ (6,'MenuStatisticheHandler'),
+ (7,'MenuAnamnesi'),
+ (8,'MenuDinamiche'),
+ (9,'MenuEsameClinico'),
+ (10,'MenuGrafici'),
+ (11,'MenuMedico'),
+ (12,'MenuParametroAntropometrico'),
+ (13,'MenuPaziente'),
+ (14,'MenuPrenotaVisita'),
+ (15,'MenuRegistraVisita'),
+ (16,'MenuRegistrazione'),
+ (17,'MenuRilevazioneParametroAntro'),
+ (18,'MenuRisultatoAnalisi');
 /*!40000 ALTER TABLE `funzione` ENABLE KEYS */;
 
 
@@ -364,6 +400,14 @@ CREATE TABLE `intervento` (
 --
 
 /*!40000 ALTER TABLE `intervento` DISABLE KEYS */;
+INSERT INTO `intervento` (`idPaziente`,`idTipologiaIntervento`,`Data`,`Numero`) VALUES 
+ (4,6,'1910-01-01',0),
+ (4,7,'1910-01-01',11),
+ (4,10,'1938-01-16',3),
+ (4,11,'1910-01-01',1),
+ (5,1,'1910-01-01',3),
+ (5,2,'1977-10-04',1),
+ (5,10,'1998-04-05',2);
 /*!40000 ALTER TABLE `intervento` ENABLE KEYS */;
 
 
@@ -384,13 +428,19 @@ CREATE TABLE `intolleranzaallergia` (
   PRIMARY KEY  (`idIntolleranzaAllergia`),
   KEY `FK1_Paziente` (`FK1_Paziente`),
   CONSTRAINT `FK1_Paziente` FOREIGN KEY (`FK1_Paziente`) REFERENCES `paziente` (`idPaziente`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `intolleranzaallergia`
 --
 
 /*!40000 ALTER TABLE `intolleranzaallergia` DISABLE KEYS */;
+INSERT INTO `intolleranzaallergia` (`idIntolleranzaAllergia`,`FlagIntAll`,`Sostanza`,`AlimentoPrincipale`,`Derivati`,`Grado`,`EffettiCollaterali`,`FK1_Paziente`) VALUES 
+ (1,'int','ò','k','k','i','k',4),
+ (2,'all','g','j','n\r\nn','4','h\r\nr\r\nt',4),
+ (3,'all','iii','ppp','iii','12','iiii',4),
+ (4,'all','','','','','',5),
+ (5,'int','','','','','',5);
 /*!40000 ALTER TABLE `intolleranzaallergia` ENABLE KEYS */;
 
 
@@ -549,6 +599,8 @@ CREATE TABLE `parametroesame` (
 --
 
 /*!40000 ALTER TABLE `parametroesame` DISABLE KEYS */;
+INSERT INTO `parametroesame` (`idParametroEsame`,`Nome`,`Descrizione`,`MinUomo`,`MaxUomo`,`MinDonna`,`MaxDonna`,`MinBambino`,`MaxBambino`,`FK_EsameClinico`) VALUES 
+ (0,'hc1','','10','100','5','80','9','30',1);
 /*!40000 ALTER TABLE `parametroesame` ENABLE KEYS */;
 
 
@@ -657,7 +709,7 @@ CREATE TABLE `prenotazione` (
   KEY `FK_TipologiaVisita1` USING BTREE (`idTipologiaVisita`),
   CONSTRAINT `FK8_Paziente` FOREIGN KEY (`idPaziente`) REFERENCES `paziente` (`idPaziente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_TipologiaVisita` FOREIGN KEY (`idTipologiaVIsita`) REFERENCES `tipologiavisita` (`idTipologiaVisita`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `prenotazione`
@@ -685,7 +737,8 @@ INSERT INTO `prenotazione` (`idPaziente`,`idTipologiaVisita`,`DataOra`,`Note`,`i
  (2,2,'2010-01-27 11:30:00','',18),
  (7,2,'2010-01-27 11:30:00','',19),
  (5,2,'2010-01-28 12:49:00','aa',20),
- (6,2,'2010-02-02 17:18:00','2febb',21);
+ (6,2,'2010-02-02 17:18:00','2febb',21),
+ (5,2,'2010-02-17 13:06:00','17febb',22);
 /*!40000 ALTER TABLE `prenotazione` ENABLE KEYS */;
 
 
@@ -706,13 +759,17 @@ CREATE TABLE `prescrizione` (
   KEY `FK_prescrizione_paziente` (`FK_Paziente`),
   CONSTRAINT `FK_prescrizione_dieta` FOREIGN KEY (`FK_Dieta`) REFERENCES `dieta` (`idDieta`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_prescrizione_paziente` FOREIGN KEY (`FK_Paziente`) REFERENCES `paziente` (`idPaziente`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `prescrizione`
 --
 
 /*!40000 ALTER TABLE `prescrizione` DISABLE KEYS */;
+INSERT INTO `prescrizione` (`idPrescrizione`,`dataInizio`,`NumRipetizCiclo`,`Note`,`FK_Paziente`,`FK_Dieta`) VALUES 
+ (1,'2009-02-01',4,'note',2,1),
+ (2,'2010-01-30',8,'note',3,2),
+ (3,'2010-04-05',3,'3 ripetizioni del ciclo',3,1);
 /*!40000 ALTER TABLE `prescrizione` ENABLE KEYS */;
 
 
@@ -800,13 +857,16 @@ CREATE TABLE `ricetta` (
   PRIMARY KEY  (`idRicetta`),
   KEY `FK2_Alimento` (`FK2_Alimento`),
   CONSTRAINT `FK2_Alimento` FOREIGN KEY (`FK2_Alimento`) REFERENCES `alimento` (`idAlimento`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ricetta`
 --
 
 /*!40000 ALTER TABLE `ricetta` DISABLE KEYS */;
+INSERT INTO `ricetta` (`idRicetta`,`Nome`,`Procedimento`,`FK2_Alimento`) VALUES 
+ (6,'Pasta fresca e fagioli','Bollire la pasta\r\nCuocere i fagioli\r\nMischiare tutto',1),
+ (7,'Pasta fresca e fagioli 4 persone','Bollire la pasta\r\nCuocere i fagioli\r\nMischiare tutto',1);
 /*!40000 ALTER TABLE `ricetta` ENABLE KEYS */;
 
 
@@ -868,13 +928,15 @@ CREATE TABLE `ruolo` (
   `idRuolo` int(10) unsigned NOT NULL auto_increment,
   `descrizione` varchar(45) NOT NULL,
   PRIMARY KEY  (`idRuolo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ruolo`
 --
 
 /*!40000 ALTER TABLE `ruolo` DISABLE KEYS */;
+INSERT INTO `ruolo` (`idRuolo`,`descrizione`) VALUES 
+ (1,'Amministratore');
 /*!40000 ALTER TABLE `ruolo` ENABLE KEYS */;
 
 
@@ -897,6 +959,25 @@ CREATE TABLE `ruolo_funzione` (
 --
 
 /*!40000 ALTER TABLE `ruolo_funzione` DISABLE KEYS */;
+INSERT INTO `ruolo_funzione` (`idRuolo`,`idFunzione`) VALUES 
+ (1,1),
+ (1,2),
+ (1,3),
+ (1,4),
+ (1,5),
+ (1,6),
+ (1,7),
+ (1,8),
+ (1,9),
+ (1,10),
+ (1,11),
+ (1,12),
+ (1,13),
+ (1,14),
+ (1,15),
+ (1,16),
+ (1,17),
+ (1,18);
 /*!40000 ALTER TABLE `ruolo_funzione` ENABLE KEYS */;
 
 
@@ -940,7 +1021,7 @@ CREATE TABLE `specifichedieta` (
   `ContenutoPresente` text,
   `ContenutoAssente` text,
   PRIMARY KEY  (`idSpecificheDieta`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `specifichedieta`
@@ -948,7 +1029,8 @@ CREATE TABLE `specifichedieta` (
 
 /*!40000 ALTER TABLE `specifichedieta` DISABLE KEYS */;
 INSERT INTO `specifichedieta` (`idSpecificheDieta`,`Kilocalorie`,`Indicata`,`ContenutoPresente`,`ContenutoAssente`) VALUES 
- (1,10,'llkok','dsfds','adszd<');
+ (1,10,'llkok','dsfds','adszd<'),
+ (2,20,'diabete','molto','poco');
 /*!40000 ALTER TABLE `specifichedieta` ENABLE KEYS */;
 
 
@@ -1003,13 +1085,26 @@ CREATE TABLE `tipologiaintervento` (
   `Descrizione` varchar(45) default NULL,
   `Localizzazione` varchar(45) NOT NULL,
   PRIMARY KEY  (`idTipologiaIntervento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tipologiaintervento`
 --
 
 /*!40000 ALTER TABLE `tipologiaintervento` DISABLE KEYS */;
+INSERT INTO `tipologiaintervento` (`idTipologiaIntervento`,`Nome`,`Descrizione`,`Localizzazione`) VALUES 
+ (1,'op1','jjjj		','fegato'),
+ (2,'op2','		','cuore'),
+ (3,'op3','		','polmoni'),
+ (4,'op4','hh		','ginocchio'),
+ (5,'op5','','femore'),
+ (6,'fs','fs','fs'),
+ (7,'h','','denti'),
+ (8,'ll','ll','ll'),
+ (9,'gg','jjhhjjh','jbjbjb'),
+ (10,'m1','fffff','mano'),
+ (11,'op7','cccc','dito'),
+ (12,'','','');
 /*!40000 ALTER TABLE `tipologiaintervento` ENABLE KEYS */;
 
 
@@ -1093,13 +1188,15 @@ CREATE TABLE `utente` (
   PRIMARY KEY  (`idUtente`),
   KEY `FK_utente_ruolo` (`idRuolo`),
   CONSTRAINT `FK_utente_ruolo` FOREIGN KEY (`idRuolo`) REFERENCES `ruolo` (`idRuolo`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `utente`
 --
 
 /*!40000 ALTER TABLE `utente` DISABLE KEYS */;
+INSERT INTO `utente` (`idUtente`,`nomeUtente`,`password`,`idRuolo`) VALUES 
+ (1,'Admin','admin',1);
 /*!40000 ALTER TABLE `utente` ENABLE KEYS */;
 
 
@@ -1125,7 +1222,7 @@ CREATE TABLE `visita` (
   CONSTRAINT `FK2_Medico` FOREIGN KEY (`FK2_Medico`) REFERENCES `medico` (`idMedico`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_Fattura` FOREIGN KEY (`FK_Fattura`) REFERENCES `fattura` (`idFattura`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_Prenotazione` FOREIGN KEY (`FK_Prenotazione`) REFERENCES `prenotazione` (`idPrenotazione`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `visita`
@@ -1146,7 +1243,10 @@ INSERT INTO `visita` (`idVisita`,`DataOraInizio`,`DataOraFine`,`Motivazioni`,`St
  (11,'2010-01-26 15:40:00','2010-01-26 17:48:00','sadsadassad','asadsadsadsd','adasaadwqdwqdqwq',9,1,17),
  (12,'2010-01-26 07:05:00','2010-01-26 08:00:00','mot	','sadas','dalle 7 alle 8',6,1,17),
  (13,'2010-01-26 14:03:00','2010-01-26 17:03:00','mah	','pagato','dasdasdas',13,1,17),
- (14,'2010-01-27 11:40:00','2010-01-27 12:31:00','controllo	','completato','',10,1,18);
+ (14,'2010-01-27 11:40:00','2010-01-27 12:31:00','controllo	','completato','',10,1,18),
+ (15,'2010-01-27 11:00:00','2010-01-27 12:30:00','controllo','ok','ok',NULL,1,18),
+ (16,'2010-02-17 13:09:00','2010-02-17 14:09:00','controllo paziente	',NULL,'tutto ok',NULL,4,22),
+ (17,'2010-02-17 16:26:00','2010-02-17 18:26:00','',NULL,'',NULL,5,22);
 /*!40000 ALTER TABLE `visita` ENABLE KEYS */;
 
 
