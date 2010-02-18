@@ -78,6 +78,9 @@ public class ProvaTableForm extends ListComposite {
 		GridData gdFiller = new GridData(SWT.FILL);
 		gdFiller.grabExcessHorizontalSpace = true;
 		gdFiller.horizontalAlignment = SWT.FILL;
+		gdFiller.grabExcessVerticalSpace = false;
+		gdFiller.heightHint = 25;
+		gdFiller.widthHint = -1;
 		gdFiller.horizontalSpan = 4;
 
 		GridData gdTbl = new GridData(SWT.FILL);
@@ -102,7 +105,7 @@ public class ProvaTableForm extends ListComposite {
 		labelSelItem.setLayoutData(gdFiller);
 		
 		labelRicerca = new Label(top, SWT.NONE);
-		labelRicerca.setText("Ricerca");
+		labelRicerca.setText("Ricerca sull'attributo:");
 		
 		cComboColonne = new CCombo(top, SWT.READ_ONLY);
 		cComboColonne
@@ -127,18 +130,8 @@ public class ProvaTableForm extends ListComposite {
 					tableVisualizzazione.getColumn(k).dispose();
 				}
 				
-				//stampa degli elementi
-			/*	for (int i = 0; i < listaElementiTable.size(); i++) {
-					System.out.println(listaElementiTable.get(i).toString());
-				}*/
 				riempiTabella(listaElementiTable);
-				/*for (int j = 0; j < tableVisualizzazione.getColumnCount(); j++) {
-					if (j>=numeroCol) {
-						TableColumn colonna = tableVisualizzazione.getColumn(j);
-						colonna.setWidth(0);
-						colonna.dispose();
-					}					
-				}*/
+
 				//TODO nasconde, aggiorna e ordina le colonne in base alla classe chiamante 
 				if (classeChiamante.equalsIgnoreCase("VisitaTableView")) {
 					nascondiColonne(new int[] {0,1,2,3,6,7,8});
@@ -216,7 +209,6 @@ public class ProvaTableForm extends ListComposite {
 					ordinamentoStringhe(tableVisualizzazione, 5);
 					ordinamentoData(tableVisualizzazione, 3);
 				}
-
 				
 				//ricerca incrementale nella colonna selezionata
 				int indiceColonnaSel = convertiComboToColonna(cComboColonne.getSelectionIndex());
@@ -229,29 +221,8 @@ public class ProvaTableForm extends ListComposite {
 					else {
 						i++;
 					}
-					
 				}
-/*				for (int i = 0; i < itemTab.length; i++) {
-					//TableItem itemSel = tableVisualizzazione.getItem(i);
-					//controllo sul testo nel campo di ricerca. verificare l'indice della combo
-					if (!(itemTab[i].getText((cComboColonne.getSelectionIndex()+3))).startsWith(textRicerca.getText())) {
-						tableVisualizzazione.remove(i);
-						
-						//TableItem newItem = new TableItem(tableVisualizzazione, SWT.NONE);
-						//tableVisualizzazione.remove(i);
-						
-						for (int j = 0; j < tableVisualizzazione.getColumnCount(); j++) {
-							newItem.setText(j, itemTab.get(i).getText(j));
-						}		
-					}
-					else {
-						//set a 0 l'altezza dell'item
-						
-					}
-					
-				}*/
-				
-				System.out.println("tabella modificata"); 
+				System.out.println("tabella modificata");
 			}
 		});
 	
@@ -602,3 +573,4 @@ public class ProvaTableForm extends ListComposite {
 		return tableVisualizzazione;
 	}
 }  //  @jve:decl-index=0:visual-constraint="10,10"
+
