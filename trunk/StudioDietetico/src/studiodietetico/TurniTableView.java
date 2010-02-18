@@ -7,6 +7,8 @@ import hibernate.PrestazioneId;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
@@ -17,6 +19,7 @@ import command.MedicoDAO;
 import common.Utils;
 
 public class TurniTableView extends ViewPart {
+	private Composite top = null;
 	private ProvaTableForm classVis;
 	private ArrayList<Object> prestazioni;
 
@@ -24,9 +27,12 @@ public class TurniTableView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		top = new Composite(parent, SWT.NONE);
 		prestazioni = MedicoDAO.getPrestazioniObject();
 		//TODO aggiungere parametri
-		classVis = new ProvaTableForm(parent, SWT.BORDER, prestazioni, "","","","TurniTableView");
+		classVis = new ProvaTableForm(top, SWT.BORDER, prestazioni, "","","","TurniTableView");
+		classVis.setBounds(new Rectangle(6, 50, 800, 332));
+		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
 
