@@ -84,6 +84,16 @@ public class PazienteDAO extends BaseDAO{
 				
 	} 
 	
+	public static ArrayList<Object> getPazientiObject() {
+		getSession();
+		begin();
+		Query q = getSession().createQuery("FROM Paziente p ORDER BY p.cognome");
+		ArrayList<Object> pazienti = (ArrayList<Object>)q.list();
+		commit();
+		return pazienti;
+
+	}
+	
 }
 
 

@@ -633,4 +633,22 @@ for (int i = 0; i < ris.size(); i++) {
 
 	}
 	
+	public static ArrayList<Object> getDieteObject(){
+		Criteria criteria = getSession().createCriteria(hibernate.Dieta.class);
+		begin();
+		ArrayList<Object> ris = (ArrayList<Object>)criteria.list();
+		commit();
+		//close();
+		return ris;
+	}
+	
+	public static ArrayList<Object> getPrescrizioniObject(){
+		Criteria criteria = getSession().createCriteria(hibernate.Prescrizione.class);
+		begin();
+		ArrayList<Object> ris = (ArrayList<Object>)criteria.list();
+		commit();
+		//close();
+		return ris;
+	}
+	
 }

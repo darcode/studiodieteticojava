@@ -83,17 +83,17 @@ public class VisitaDAO extends BaseDAO {
 	}
 
 	public void registraVisita(Date datainizio, Date datafine,
-			String motivazioni, String statoPagamento, String note,
-			Fattura fattura, Medico medico, Prenotazione prenotazione) {
+			String motivazioni, String note,
+			Medico medico, Prenotazione prenotazione) {
 		getSession();
 		begin();
 		Visita vis = new Visita();
 		vis.setDataOraInizio(datainizio);
 		vis.setDataOraFine(datafine);
 		vis.setMotivazioni(motivazioni);
-		vis.setStatoPagamento(statoPagamento);
+		//vis.setStatoPagamento(statoPagamento);
 		vis.setNote(note);
-		vis.setFattura(fattura);
+		//vis.setFattura(fattura);
 		vis.setMedico(medico);
 		vis.setPrenotazione(prenotazione);
 		getSession().saveOrUpdate(vis);
@@ -205,13 +205,23 @@ public class VisitaDAO extends BaseDAO {
 
 	}
 	
-	public static ArrayList<Visita> getVisite() {
+	public static ArrayList<Object> getVisite() {
 		begin();
 		Query q = getSession().createQuery(
 				"FROM Visita v ORDER BY v.dataOraInizio");
-		ArrayList<Visita> vis = (ArrayList<Visita>) q.list();
+		ArrayList<Object> vis = (ArrayList<Object>) q.list();
 		commit();
 		return vis;
+
+	}
+	
+	public static ArrayList<Object> getPrenotazioniObject() {
+		begin();
+		Query q = getSession().createQuery(
+				"FROM Prenotazione pr ORDER BY pr.paziente.cognome");
+		ArrayList<Object> pr = (ArrayList<Object>) q.list();
+		commit();
+		return pr;
 
 	}
 }
