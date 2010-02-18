@@ -1,6 +1,7 @@
 package studiodietetico;
 
 import forms.HomePazienteForm;
+import forms.TableUtil;
 import hibernate.Alimento;
 import hibernate.Attivitafisica;
 import hibernate.Intervento;
@@ -418,8 +419,7 @@ public class AnamnesiShell {
 						
 						sShellDettagliInterventi.close();
 						
-						//Aggiornare la tabella degli interventi in ProvaAnamnesiView
-						
+						//Aggiornare la tabella degli interventi in AnamnesiTableView
 						AnamnesiTableView aw = new AnamnesiTableView();
 						aw.aggiungiColonnaIntervento();
 					}
@@ -463,7 +463,8 @@ public class AnamnesiShell {
 					}
 				});
 		
-		riempiTabellaEntita(tableTipoInt, listTipoInt);
+		//riempiTabellaEntita(tableTipoInt, listTipoInt);
+		TableUtil.riempiTabellaEntita(tableTipoInt, listTipoInt);
 		
 		for (TableColumn colonna : tableTipoInt.getColumns()) {
 			colonna.pack();
@@ -629,7 +630,8 @@ public class AnamnesiShell {
 					tableTipoInt.getColumn(k).dispose();
 				}
 				ArrayList<Object> listaTipoInt = interv.getListTipoInterventi();
-				riempiTabellaEntita(tableTipoInt, listaTipoInt);
+				//riempiTabellaEntita(tableTipoInt, listaTipoInt);
+				TableUtil.riempiTabellaEntita(tableTipoInt, listaTipoInt);
 				tableTipoInt.getColumn(0).setWidth(0);
 				
 				calendarInserimento.setEnabled(true);
@@ -960,7 +962,7 @@ public class AnamnesiShell {
 		}
 	}
 	
-	private void riempiTabellaEntita(Table table, ArrayList<Object> lista) {
+	/*private void riempiTabellaEntita(Table table, ArrayList<Object> lista) {
 		if (!lista.isEmpty()) {
 			ArrayList<String> colonne = GenericBean.getFieldsNamesPerQuery(lista.get(0));
 			for (String item : colonne) {
@@ -1002,7 +1004,7 @@ public class AnamnesiShell {
 				tblItem.setText(values);
 			}
 		}
-	}
+	}*/
 
 	/**
 	 * This method initializes calendarInserimento	
