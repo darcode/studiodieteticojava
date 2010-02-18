@@ -132,7 +132,7 @@ public class AnamnesiTableView extends ViewPart {
 		classVis.ordinamentoData(classVis.getTableVisualizzazione(), 3);
 	}
 	
-	public void aggiungiColonnaIntervento(ProvaTableForm classVis, ArrayList<Object> interventiPazList) {
+	public static void aggiungiColonnaIntervento(ProvaTableForm classVis, ArrayList<Object> interventiPazList) {
 		//Aggiunge la colonna che visualizza il nome dell'intervento
 		TableColumn colonna = new TableColumn(classVis.getTableVisualizzazione(), SWT.CENTER);
 		colonna.setText("Tipo Intervento");
