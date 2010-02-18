@@ -409,7 +409,7 @@ public class AnamnesiShell {
 		buttonAppyModInterventi.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 						//Inserire la query di modifica
-						Paziente pazSel = AnamnesiTableView.getPazienteSel();
+						Paziente pazSel = AnamnesiTTableView.getPazienteSel();
 						String data = calendar.getYear()+"-"+(calendar.getMonth()+1)+"-"+calendar.getDay();
 						String formato = "yyyy-MM-dd";
 						Date dataInt = service.Utils.convertStringToDate(data, formato);
@@ -420,8 +420,10 @@ public class AnamnesiShell {
 						sShellDettagliInterventi.close();
 						
 						//Aggiornare la tabella degli interventi in AnamnesiTableView
-						AnamnesiTableView aw = new AnamnesiTableView();
-						aw.aggiungiColonnaIntervento();
+						AnamnesiTTableView aw = new AnamnesiTTableView();
+						/*ArrayList<Object> listaI = an.getListInterventi();
+						aw.aggiungiColonnaIntervento();*/
+						aw.aggiornaTable(/*listaI*/);
 					}
 				});
 	
@@ -550,7 +552,7 @@ public class AnamnesiShell {
 		buttonInserIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 						AnamnesiDAO an = new AnamnesiDAO();
-						Paziente pazSelHome = AnamnesiTableView.getPazienteSel();
+						Paziente pazSelHome = AnamnesiTTableView.getPazienteSel();
 						//Paziente pazSelHome = PazienteDAO.getPazienti().get(3);
 						String data = calendarInserimento.getYear()+"-"+(calendarInserimento.getMonth()+1)+"-"+calendarInserimento.getDay();
 						String formato = "yyyy-MM-dd";
