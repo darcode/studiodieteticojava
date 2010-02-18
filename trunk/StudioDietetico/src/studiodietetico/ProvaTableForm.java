@@ -45,23 +45,26 @@ public class ProvaTableForm extends ListComposite {
 	private String idShellInserimento;  //  @jve:decl-index=0:
 	private Shell sShellMessElimina;
 	private Object classeShell = null;
+	int numeroCol;
 	
 	
-	public ProvaTableForm(Composite parent, int style, ArrayList<Object> listaElementi, String methodCreateShellDettagli, String methodCreateShellIns, Object classShell) {
+	public ProvaTableForm(Composite parent, int style, ArrayList<Object> listaElementi, String methodCreateShellDettagli, String methodCreateShellIns, Object classShell, String classe) {
 		super(parent, style);
 		rigaTableClick = null;
 		idShellVisualizzaDettagli = methodCreateShellDettagli;
 		idShellInserimento = methodCreateShellIns;
 		classeShell = classShell;
 		
-		initialize(listaElementi);
+		initialize(listaElementi, classe);
 	}
 
 	/**
 	 * This method initializes this
 	 * 
 	 */
-	private void initialize(ArrayList<Object> listaElementi) {
+	private void initialize(ArrayList<Object> listaElementi, String classe) {
+		final String classeChiamante = classe;
+		final ArrayList<Object> listaElementiTable = listaElementi;
 		GridData gdForm = new GridData(SWT.BORDER);
 		gdForm.grabExcessHorizontalSpace = true;
 		gdForm.horizontalAlignment = SWT.FILL;
@@ -102,11 +105,110 @@ public class ProvaTableForm extends ListComposite {
 		labelRicerca.setText("Ricerca");
 		
 		cComboColonne = new CCombo(top, SWT.READ_ONLY);
+		cComboColonne
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						textRicerca.setEnabled(true);
+					}
+				});
 		
 		textRicerca = new Text(top, SWT.BORDER);
 		textRicerca.setLayoutData(gdFiller);
+		textRicerca.setEnabled(false);
 		
-		
+		textRicerca.addModifyListener(new org.eclipse.swt.events.ModifyListener() {
+			public void modifyText(org.eclipse.swt.events.ModifyEvent e) {
+				
+				tableVisualizzazione.removeAll(); //rimuove le righe
+				
+				//rimuove le colonne
+				int k = 0;
+				while (k<tableVisualizzazione.getColumnCount()) {
+					tableVisualizzazione.getColumn(k).dispose();
+				}
+				
+				//stampa degli elementi
+			/*	for (int i = 0; i < listaElementiTable.size(); i++) {
+					System.out.println(listaElementiTable.get(i).toString());
+				}*/
+				riempiTabella(listaElementiTable);
+				/*for (int j = 0; j < tableVisualizzazione.getColumnCount(); j++) {
+					if (j>=numeroCol) {
+						TableColumn colonna = tableVisualizzazione.getColumn(j);
+						colonna.setWidth(0);
+						colonna.dispose();
+					}					
+				}*/
+				//TODO nasconde e aggiorna le colonne in base alla classe chiamante 
+				if (classeChiamante.equalsIgnoreCase("VisitaTableView")) {
+					nascondiColonne(new int[] {0,1,2,3,6,7,8});
+					VisitaTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+				}
+				else if (classeChiamante.equalsIgnoreCase("PazienteTableView")) {
+					nascondiColonne(new int[] {0,1,8,9,10,11,12,13,14,15});
+				}
+				else if (classeChiamante.equalsIgnoreCase("MedicoTableView")) {
+					nascondiColonne(new int[] {0,1,4,5,8,9,13});
+				}
+				else if (classeChiamante.equalsIgnoreCase("PrenotazioneTableView")) {
+					nascondiColonne(new int[] {0,1,2,4});
+					PrenotazioneTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+				}
+				else if (classeChiamante.equalsIgnoreCase("DietaTableView")) {
+					nascondiColonne(new int[] {0,1,4,5});
+					DietaTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+				}
+				else if (classeChiamante.equalsIgnoreCase("PrescrizioneTableView")) {
+					nascondiColonne(new int[] {0,1,2,5});
+					PrescrizioneTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+				}
+				else if (classeChiamante.equalsIgnoreCase("TurniTableView")) {
+					nascondiColonne(new int[] {0,1,2});
+					TurniTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+				}
+				else if (classeChiamante.equalsIgnoreCase("FattureTableView")) {
+					nascondiColonne(new int[] {0});
+					FattureTableView.modificaColonna(ProvaTableForm.this, listaElementiTable);
+				}
+
+				
+				//ricerca incrementale nella colonna selezionata
+				int indiceColonnaSel = convertiComboToColonna(cComboColonne.getSelectionIndex());
+				int i = 0;
+				while (i<tableVisualizzazione.getItems().length) {
+					String item = tableVisualizzazione.getItem(i).getText(indiceColonnaSel).toLowerCase();
+					if (!(item.startsWith(textRicerca.getText().toLowerCase()))) {
+						tableVisualizzazione.remove(i);
+					}
+					else {
+						i++;
+					}
+					
+				}
+/*				for (int i = 0; i < itemTab.length; i++) {
+					//TableItem itemSel = tableVisualizzazione.getItem(i);
+					//controllo sul testo nel campo di ricerca. verificare l'indice della combo
+					if (!(itemTab[i].getText((cComboColonne.getSelectionIndex()+3))).startsWith(textRicerca.getText())) {
+						tableVisualizzazione.remove(i);
+						
+						//TableItem newItem = new TableItem(tableVisualizzazione, SWT.NONE);
+						//tableVisualizzazione.remove(i);
+						
+						for (int j = 0; j < tableVisualizzazione.getColumnCount(); j++) {
+							newItem.setText(j, itemTab.get(i).getText(j));
+						}		
+					}
+					else {
+						//set a 0 l'altezza dell'item
+						
+					}
+					
+				}*/
+				
+				System.out.println("tabella modificata"); 
+			}
+		});
+	
 		
 		tableVisualizzazione = new Table(top, SWT.FILL | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL);
 		tableVisualizzazione.setHeaderVisible(true);
@@ -163,8 +265,36 @@ public class ProvaTableForm extends ListComposite {
 			}
 		});
 		
-		riempiTabellaEntita(tableVisualizzazione, listaElementi);
+		riempiTabella(listaElementi);
+
+		numeroCol = tableVisualizzazione.getColumnCount();
+		System.out.println("numero di colonne iniziali: " + numeroCol);
 		
+}
+	
+	private int convertiComboToColonna (int indiceCombo){
+		ArrayList<Integer> colonneVisibili = new ArrayList<Integer>();
+		for (int i = 0; i<tableVisualizzazione.getColumnCount(); i++) {
+				if (tableVisualizzazione.getColumn(i).getWidth()!=0) {
+				colonneVisibili.add(i);
+			}
+		}
+		return colonneVisibili.get(indiceCombo);
+	} 
+
+	
+	private void riempiTabella(ArrayList<Object> listaElementi){
+		riempiTabellaEntita(tableVisualizzazione, listaElementi);
+		for (int i = 0; i < tableVisualizzazione.getColumnCount(); i++) {
+			if (tableVisualizzazione.getColumn(i).getText().toLowerCase().contains("dataora")) {
+				for (TableItem item : tableVisualizzazione.getItems()) {
+					String testoitem = item.getText(i);
+					int lunghezzaTestoItem = item.getText(i).length();
+					item.setText(i, testoitem.substring(0, lunghezzaTestoItem-5));
+				}
+			}
+		}
+
 		for (TableColumn colonna : tableVisualizzazione.getColumns()) {
 			colonna.pack();
 			colonna.setResizable(false);
@@ -203,8 +333,10 @@ public class ProvaTableForm extends ListComposite {
 	 * Nasconde la colonna con indice dato in input
 	 * @param indiceColonna
 	 */
-	public void nascondiColonna(int indiceColonna) {
-		tableVisualizzazione.getColumn(indiceColonna).setWidth(0);
+	public void nascondiColonne(int[]indiciColonne) {
+		for (int i = 0; i < indiciColonne.length; i++) {
+			tableVisualizzazione.getColumn(indiciColonne[i]).setWidth(0);
+		}
 	}
 	
 	/**
