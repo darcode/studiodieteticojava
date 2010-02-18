@@ -1,13 +1,17 @@
 package studiodietetico;
 
 import forms.HomePazienteForm;
+import hibernate.Alimento;
 import hibernate.Attivitafisica;
 import hibernate.Intervento;
+import hibernate.Intolleranzaallergia;
 import hibernate.Paziente;
+import hibernate.Ricetta;
 import hibernate.Tipologiaintervento;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.BatchUpdateException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -39,6 +43,8 @@ import org.eclipse.swt.widgets.Spinner;
 import command.AnamnesiDAO;
 import command.PazienteDAO;
 
+import common.GenericBean;
+
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.custom.CTabFolder;
@@ -49,14 +55,13 @@ import service.RegistraIntervento;
 import service.Utils;
 import studiodietetico.HomePazienteView;
 import org.eclipse.swt.widgets.Table;
-import common.ui.ListComposite;
+import org.hibernate.exception.ConstraintViolationException;
 
 public class AnamnesiShell {
-	
+
 	//GENERALE
 	private Label labelPaziente = null;  //  @jve:decl-index=0:visual-constraint="9,-39"
 	private Text textPaziente = null;  //  @jve:decl-index=0:visual-constraint="630,11"
-	private Paziente pazSelHome;
 	private CTabFolder cTabFolderAnamnesi = null;
 	
 	//INTERVENTI
@@ -76,24 +81,17 @@ public class AnamnesiShell {
 	private Button buttonAddIntSel = null;
 	private List listIntSel = null;
 	private Button buttonConfermaInt = null;
-	private Label labelNumInt = null;
-	private Spinner spinnerNumInt = null;
-	private Label labelData = null;
-	private Combo cComboGG = null;
-	private Combo cComboMese = null;
-	private Combo cComboAnno = null;
 	private Button buttonInsInt = null;
 	private Button buttonModificaInt = null;
 	private Button buttonEliminaInt = null;
-	private Shell sShellNumData = null;  //  @jve:decl-index=0:visual-constraint="304,231"
-	private Button buttonOKNumData = null;
 	private Set<String> setInt = new HashSet<String>();
 	private ArrayList<Tipologiaintervento> listInterventiDB;  //  @jve:decl-index=0:
-	private Tipologiaintervento interventoSelez;  
+	private Tipologiaintervento interventoSelez = null;  
 	private ArrayList<RegistraIntervento> listaInterventiRegistrati = new ArrayList<RegistraIntervento>();  //  @jve:decl-index=0:
 	private ArrayList<Intervento> listIntervPazDB;
-	private Shell sShellInserimentoInterventi = null;  //  @jve:decl-index=0:visual-constraint="-20,0"
+	private Shell sShellInserimentoInterventi = null;  //  @jve:decl-index=0:visual-constraint="-376,-86"
 	private Group groupInserimentoInt = null;
+	private boolean attivaModifica = false;
 	//ALLERGIE
 	private Group groupAllergie = null;
 	private Label labelIntAll = null;
@@ -123,24 +121,17 @@ public class AnamnesiShell {
 	private Button buttonAggiornaListaAttFis = null;
 	private Group groupInsAttFis = null;
 	private Button buttonInsNewAttFis = null;
-	private Label labelDurataAttFis = null;
-	private Text textDurataAttFis = null;
-	private Label labelFrequenzaAttFis = null;
-	private Spinner spinnerFrequenzaAttFis = null;
 	private Button buttonConfermaAttFis = null;
 	private Shell sShellInsAttFis = null; 
 	//private static ArrayList<Object> sport;
 	//private Table tableSportPerPaziente = null;
 	private Group groupVisualizzazioneSport = null;
-	private AnamnesiViewTableSport tableSport;
+	//private AnamnesiViewTableSport tableSport;
 	private ArrayList<String> listSport;
-	private Shell SShellDurFreq = null;
-	private Shell sShellProva = null;  //  @jve:decl-index=0:visual-constraint="-23,476"
-	private Button buttonOKFreqDur = null;
-	
+	private Shell sShellProva = null;  //  @jve:decl-index=0:visual-constraint="-364,1197"
 	//public static final String VIEW_ID = "StudioDietetico.anamnesi";
-	private Shell sShellMessElimina = null;  //  @jve:decl-index=0:visual-constraint="308,396"
-	private Shell sShellDettagliInterventi;  //  @jve:decl-index=0:visual-constraint="-11,1238"
+	private Shell sShellMessElimina = null;  //  @jve:decl-index=0:visual-constraint="-347,665"
+	private Shell sShellDettagliInterventi;  //  @jve:decl-index=0:visual-constraint="-373,748"
 	private Label labelNomeIntVis = null;
 	private Label labelDescrIntVis = null;
 	private Text textNomeIntVis = null;
@@ -149,14 +140,26 @@ public class AnamnesiShell {
 	private Text textAreaLocalizzazioneVis;
 	private Label labelDataIntVis;
 	private Label labelNumIntVis;
-	private Text textAreaDataIntVis;
+	//private Text textAreaDataIntVis;
 	//private Text textAreaNumIntVis;
 	private Button buttonModificaInterventi = null;
 	private Button buttonAppyModInterventi;
 	private Button buttonChiudi;
 	private Spinner spinnerNumVis = null;
 	private DateTime calendar;
-	
+	private Table tableTipoInt;
+	private Button buttonInsertTipoIntervento = null;
+	private Button buttonModificaTipoIntervento = null;
+	private Button buttonEliminaTipoIntervento = null;
+	private Label labelDataIntervento = null;
+	private DateTime calendarInserimento = null;
+	private Label labelNumInterventi = null;
+	private Spinner spinnerNumInterventi = null;
+	private Button buttonAnnullaNewInt;
+	private Button buttonInserIntervento = null;
+	private Label labelElencoTipoInt = null;
+	private Button buttonAnnullaIntervento = null;
+	private Text textDataIntVis;
 	
 	
 	public AnamnesiShell() {}
@@ -293,7 +296,7 @@ public class AnamnesiShell {
 	
 	
 	/**
-	 * Aggliorna l'oggetto list con gli interventi presenti nel db
+	 * Aggiorna l'oggetto list con gli interventi presenti nel db
 	 */
 	/*public void aggiornaListInterventi() {
 		listInterventiDB = new ArrayList<Tipologiaintervento>(); 
@@ -309,22 +312,17 @@ public class AnamnesiShell {
 		listInterventi.setItems(intArray);
 	}*/
 
-	public void createSShellDettagliInterventi(TableItem rigaTableClick) {
-		//String idTipoInt = rigaTableClick.getText(2);
-		//System.out.println("Id: "+idTipoInt);
-		//AnamnesiDAO an = new AnamnesiDAO();
-		//String descrizione = ((Intervento)interventiPazList.get(j)).getTipologiaintervento().getNome();
-		//String descrizione = ((Intervento)rigaTableClick).getTipologiaintervento().getDescrizione();
-		//Tipologiaintervento tipoInt = an.getTipoInterventiById(idTipoInt);
-		//System.out.println("RigaT:"+((Intervento)rigaTableClick.getText()).getTipologiaintervento().getDescrizione());
-		
+	public void createSShellDettagliInterventi(final TableItem rigaTableClick) {
+		String idTipoInt = rigaTableClick.getText(2);
+		AnamnesiDAO an = new AnamnesiDAO();
+		final Tipologiaintervento tipoInt = an.getTipoInterventiById(idTipoInt);
 		final String nome = rigaTableClick.getText(5);
-		final String descrizione = "";
-		final String localizzazione = "";
+		final String descrizione = tipoInt.getDescrizione();
+		final String localizzazione = tipoInt.getLocalizzazione();
 		String[] dataSplit = rigaTableClick.getText(3).split("-");
-		int gg = Integer.parseInt(dataSplit[0]),
+		int gg = Integer.parseInt(dataSplit[2]),
 			mm = Integer.parseInt(dataSplit[1]),
-			yy = Integer.parseInt(dataSplit[2]),
+			yy = Integer.parseInt(dataSplit[0]),
 			num = Integer.parseInt(rigaTableClick.getText(4));
 		
 		sShellDettagliInterventi = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
@@ -333,7 +331,7 @@ public class AnamnesiShell {
 		
 		labelNomeIntVis = new Label(sShellDettagliInterventi, SWT.NONE);
 		labelNomeIntVis.setBounds(new Rectangle(20, 20, 130, 20));
-		labelNomeIntVis.setText("Nome dell\'intervento");
+		labelNomeIntVis.setText("Nome dell'intervento");
 		textNomeIntVis = new Text(sShellDettagliInterventi, SWT.NONE);
 		textNomeIntVis.setBounds(new Rectangle(170, 20, 480, 20));
 		textNomeIntVis.setEnabled(false);
@@ -362,33 +360,39 @@ public class AnamnesiShell {
 		labelDataIntVis.setBounds(new Rectangle(20, 190, 130, 20));
 		labelDataIntVis.setText("Data ultimo intervento");
 		calendar = new DateTime (sShellDettagliInterventi, SWT.NONE | SWT.CALENDAR | SWT.BORDER);
-		calendar.setBounds(new Rectangle(170, 190, 165, 145));
-		calendar.setDay(gg);
-		calendar.setMonth(mm);
-		calendar.setYear(yy);
+		calendar.setBounds(new Rectangle(170, 190, 225, 145));
+		calendar.setVisible(false);
+		//calendar.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		//calendar.setDate(yy, mm, gg);
+		textDataIntVis = new Text(sShellDettagliInterventi, SWT.NONE);
+		textDataIntVis.setBounds(new Rectangle(170, 190, 225, 20));
+		textDataIntVis.setEnabled(false);
+		textDataIntVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textDataIntVis.setText(gg+"/"+mm+"/"+yy);
 		
 		labelNumIntVis = new Label(sShellDettagliInterventi, SWT.NONE);
-		labelNumIntVis.setBounds(new Rectangle(380, 190, 120, 20));
+		labelNumIntVis.setBounds(new Rectangle(430, 190, 120, 20));
 		labelNumIntVis.setText("Numero di interventi");
 		spinnerNumVis = new Spinner(sShellDettagliInterventi, SWT.READ_ONLY);
-		spinnerNumVis.setBounds(new Rectangle(510, 190, 45, 20));
+		spinnerNumVis.setBounds(new Rectangle(570, 190, 45, 20));
 		spinnerNumVis.setEnabled(false);
 		spinnerNumVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
-		spinnerNumVis.setTextLimit(num);
+		spinnerNumVis.setMinimum(num);
 		
 		buttonModificaInterventi = new Button(sShellDettagliInterventi, SWT.NONE);
 		buttonModificaInterventi.setBounds(new Rectangle(400, 350, 70, 25));
 		buttonModificaInterventi.setText("Modifica");
 		buttonModificaInterventi.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						textNomeIntVis.setEnabled(true);
+						/*textNomeIntVis.setEnabled(true);
 						textNomeIntVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
 						textAreaDescrIntVis.setEnabled(true);
 						textAreaDescrIntVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
 						textAreaLocalizzazioneVis.setEnabled(true);
-						textAreaLocalizzazioneVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
-						textAreaDataIntVis.setEnabled(true);
-						textAreaDataIntVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						textAreaLocalizzazioneVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));*/
+						textDataIntVis.setVisible(false);
+						calendar.setVisible(true);
+						//calendar.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
 						spinnerNumVis.setEnabled(true);
 						spinnerNumVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
 						
@@ -404,28 +408,20 @@ public class AnamnesiShell {
 		buttonAppyModInterventi.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 						//Inserire la query di modifica
-						Paziente pazSel = ProvaAnamnesiView.getPazienteSel();
+						Paziente pazSel = AnamnesiTableView.getPazienteSel();
 						String data = calendar.getYear()+"-"+(calendar.getMonth()+1)+"-"+calendar.getDay();
 						String formato = "yyyy-MM-dd";
 						Date dataInt = service.Utils.convertStringToDate(data, formato);
+						int num = spinnerNumVis.getSelection();
+						AnamnesiDAO an = new AnamnesiDAO();
+						an.modificaIntervento(pazSel, tipoInt, dataInt, num);
 						
-						if(nome.equals(textNomeIntVis.getText()) && 
-								descrizione.equals(textAreaDescrIntVis.getText()) && 
-								localizzazione.equals(textAreaLocalizzazioneVis.getText())) {
-							AnamnesiDAO an = new AnamnesiDAO();
-							//Inserire tipoInt
-							Tipologiaintervento tipoInt = new Tipologiaintervento();
-							an.aggiornaNumero(pazSel, tipoInt, dataInt, spinnerNumVis.getSelection());
-						} else {
-							AnamnesiDAO an = new AnamnesiDAO();
-							an.registraTipoIntervento(textNomeIntVis.getText(), textAreaDescrIntVis.getText(), textAreaLocalizzazioneVis.getText());
-							//inserire lo stesso tipoInt che ho appena aggiunto al db
-							Tipologiaintervento tipoInt = new Tipologiaintervento();
-							an.registraIntervento(pazSel, tipoInt, dataInt, spinnerNumVis.getSelection());
-						}
-												
 						sShellDettagliInterventi.close();
+						
 						//Aggiornare la tabella degli interventi in ProvaAnamnesiView
+						AnamnesiTableView aw = new AnamnesiTableView();
+						//aw.aggiornaTable(rigaTableClick, data, num);
+						
 					}
 				});
 		
@@ -437,15 +433,148 @@ public class AnamnesiShell {
 						sShellDettagliInterventi.close();
 					}
 				});
-		
+		sShellDettagliInterventi.open();
 	}
 	
 	public void createSShellInserimentoInterventi() {
 		sShellInserimentoInterventi = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
-		//sShellInserimentoInterventi.setLayout(new GridLayout());
 		sShellInserimentoInterventi.setText("Inserimento Nuovo Intervento");
-		sShellInserimentoInterventi.setSize(new Point(796, 226));
+		sShellInserimentoInterventi.setSize(new Point(725, 739));
+		
+		final AnamnesiDAO an = new AnamnesiDAO(); 
+		ArrayList<Object> listTipoInt = an.getListTipoInterventi();
+		
+		labelElencoTipoInt = new Label(sShellInserimentoInterventi, SWT.NONE);
+		labelElencoTipoInt.setBounds(new Rectangle(23, 207, 341, 17));
+		labelElencoTipoInt.setText("Selezionare la tipologia dell'intervento di interesse");
+		tableTipoInt = new Table(sShellInserimentoInterventi, SWT.FILL | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
+		tableTipoInt.setHeaderVisible(true);
+		tableTipoInt.setLinesVisible(true);
+		tableTipoInt.setBounds(new Rectangle(22, 226, 483, 203));
+		tableTipoInt.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						buttonEliminaTipoIntervento.setEnabled(true);
+						buttonModificaTipoIntervento.setEnabled(true);
+						interventoSelez = an.getTipoInterventiById(tableTipoInt.getSelection()[0].getText(0));
+						
+						textAreaDescrInt.setText(interventoSelez.getDescrizione());
+						textNomeInt.setText(interventoSelez.getNome());
+						textAreaLocalizzazione.setText(interventoSelez.getLocalizzazione());
+					}
+				});
+		
+		riempiTabellaEntita(tableTipoInt, listTipoInt);
+		
+		for (TableColumn colonna : tableTipoInt.getColumns()) {
+			colonna.pack();
+			colonna.setResizable(false);
+		}
+		//nasconde la colonna id
+		tableTipoInt.getColumn(0).setWidth(0);
+		//ordinamento
+		ProvaTableForm.ordinamentoStringhe(tableTipoInt, 1);
+		ProvaTableForm.ordinamentoStringhe(tableTipoInt, 2);
+		ProvaTableForm.ordinamentoStringhe(tableTipoInt, 3);
+		
 		createGroupInserimentoInt();
+		
+		buttonInsertTipoIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
+		buttonInsertTipoIntervento.setBounds(new Rectangle(22, 435, 90, 25));
+		buttonInsertTipoIntervento.setText("Inserisci Nuovo");
+		buttonInsertTipoIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						groupInserimentoInt.setEnabled(true);
+						
+						calendarInserimento.setEnabled(false);
+						spinnerNumInterventi.setEnabled(false);
+						tableTipoInt.setEnabled(false);
+						buttonInsertTipoIntervento.setEnabled(false);
+						buttonModificaTipoIntervento.setEnabled(false);
+						buttonEliminaTipoIntervento.setEnabled(false);
+						buttonInserIntervento.setEnabled(false);
+						buttonAnnullaIntervento.setEnabled(false);
+					}
+				});
+		
+		buttonModificaTipoIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
+		buttonModificaTipoIntervento.setBounds(new Rectangle(119, 435, 60, 25));
+		buttonModificaTipoIntervento.setText("Modifica");
+		buttonModificaTipoIntervento.setEnabled(false);
+		buttonModificaTipoIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						if(tableTipoInt.getSelectionCount()>0) {
+							attivaModifica = true;
+							groupInserimentoInt.setEnabled(true);
+						
+							calendarInserimento.setEnabled(false);
+							spinnerNumInterventi.setEnabled(false);
+							tableTipoInt.setEnabled(false);
+							buttonInsertTipoIntervento.setEnabled(false);
+							buttonModificaTipoIntervento.setEnabled(false);
+							buttonEliminaTipoIntervento.setEnabled(false);
+							buttonInserIntervento.setEnabled(false);
+							buttonAnnullaIntervento.setEnabled(false);
+						} else {
+							createMessNotSelElem();
+						}
+					}
+				});
+		
+		buttonEliminaTipoIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
+		buttonEliminaTipoIntervento.setBounds(new Rectangle(184, 435, 60, 25));
+		buttonEliminaTipoIntervento.setText("Elimina");
+		buttonEliminaTipoIntervento.setEnabled(false);
+		buttonEliminaTipoIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						if(tableTipoInt.getSelectionCount()>0)
+							createMessConfermaCanc(tableTipoInt.getSelectionIndex());
+						else
+							createMessNotSelElem();
+					}
+				});
+		
+		labelDataIntervento = new Label(sShellInserimentoInterventi, SWT.NONE);
+		labelDataIntervento.setBounds(new Rectangle(25, 34, 130, 20));
+		labelDataIntervento.setText("Data ultimo intervento");
+		createCalendarInserimento();
+		labelNumInterventi = new Label(sShellInserimentoInterventi, SWT.NONE);
+		labelNumInterventi.setBounds(new Rectangle(437, 37, 115, 20));
+		labelNumInterventi.setText("Numero di interventi");
+		spinnerNumInterventi = new Spinner(sShellInserimentoInterventi, SWT.NONE);
+		spinnerNumInterventi.setBounds(new Rectangle(563, 37, 68, 20));
+		spinnerNumInterventi.setMinimum(1);
+		buttonInserIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
+		buttonInserIntervento.setBounds(new Rectangle(520, 466, 89, 28));
+		buttonInserIntervento.setText("Inserisci");
+		buttonInserIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						AnamnesiDAO an = new AnamnesiDAO();
+						Paziente pazSelHome = AnamnesiTableView.getPazienteSel();
+						//Paziente pazSelHome = PazienteDAO.getPazienti().get(3);
+						String data = calendarInserimento.getYear()+"-"+(calendarInserimento.getMonth()+1)+"-"+calendarInserimento.getDay();
+						String formato = "yyyy-MM-dd";
+						Date dataI = service.Utils.convertStringToDate(data, formato);
+						
+						if(interventoSelez == null) {
+							createMessNotSelElem();
+						} else {
+							if(an.getInterventiListByPazIdTipoInt(interventoSelez.getIdTipologiaIntervento(), pazSelHome.getIdPaziente())==null)
+								an.registraIntervento(pazSelHome, interventoSelez, dataI, spinnerNumInterventi.getSelection());	
+							else
+								createMessElemPresente();
+						}
+					}
+				});
+		
+		buttonAnnullaIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
+		buttonAnnullaIntervento.setBounds(new Rectangle(617, 468, 84, 26));
+		buttonAnnullaIntervento.setText("Annulla");
+		buttonAnnullaIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						sShellInserimentoInterventi.close();
+					}
+				});
+		
 		sShellInserimentoInterventi.open();
 	}
 	
@@ -454,111 +583,95 @@ public class AnamnesiShell {
 	 */
 	private void createGroupInserimentoInt() {
 		groupInserimentoInt = new Group(sShellInserimentoInterventi, SWT.NONE);
-		//groupInserimentoInt.setLayout(new GridLayout());
 		groupInserimentoInt.setText("Inserimento nuovo intervento");
-		groupInserimentoInt.setBounds(new Rectangle(5, 3, 772, 180));
+		groupInserimentoInt.setBounds(new Rectangle(18, 514, 689, 180));
+		groupInserimentoInt.setEnabled(false);
 		
 		labelNomeInt = new Label(groupInserimentoInt, SWT.NONE);
 		labelNomeInt.setBounds(new Rectangle(10, 23, 170, 20));
-		labelNomeInt.setText("*Indicare il nome dell'intervento");
+		labelNomeInt.setText("* Nome dell'intervento");
 		textNomeInt = new Text(groupInserimentoInt, SWT.NONE);
-		textNomeInt.setBounds(new Rectangle(209, 23, 360, 18));
+		textNomeInt.setBounds(new Rectangle(209, 23, 450, 20));
+		
 		labelDescrInt = new Label(groupInserimentoInt, SWT.NONE);
 		labelDescrInt.setBounds(new Rectangle(10, 50, 170, 20));
-		labelDescrInt.setText("Inserire una breve descrizione");
+		labelDescrInt.setText("Descrizione");
 		textAreaDescrInt = new Text(groupInserimentoInt, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textAreaDescrInt.setBounds(new Rectangle(209, 50, 545, 40));
+		textAreaDescrInt.setBounds(new Rectangle(209, 50, 470, 40));
+		
 		labelLocalizzazione = new Label(groupInserimentoInt, SWT.NONE);
 		labelLocalizzazione.setBounds(new Rectangle(10, 100, 170, 20));
-		labelLocalizzazione.setText("*Zona interessata");
+		labelLocalizzazione.setText("* Zona interessata");
 		textAreaLocalizzazione = new Text(groupInserimentoInt, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textAreaLocalizzazione.setBounds(new Rectangle(209, 100, 544, 40));
+		textAreaLocalizzazione.setBounds(new Rectangle(209, 100, 470, 40));
+		
 		buttonInsertNewInt = new Button(groupInserimentoInt, SWT.NONE);
-		buttonInsertNewInt.setBounds(new Rectangle(10, 150, 748, 28));
-		buttonInsertNewInt.setText("Aggiorna lista interventi");
+		buttonInsertNewInt.setBounds(new Rectangle(505, 150, 74, 28));
+		buttonInsertNewInt.setText("Conferma");
 		buttonInsertNewInt.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				AnamnesiDAO interv = new AnamnesiDAO();
-				interv.registraTipoIntervento(textNomeInt.getText(), textAreaDescrInt.getText(), textAreaLocalizzazione.getText());
+				if (attivaModifica) { //fa la modifica
+					interv.modificaTipoIntervento(interventoSelez, textNomeInt.getText(), textAreaDescrInt.getText(), textAreaLocalizzazione.getText());
+				} else { //fa l'inserimento
+					interv.registraTipoIntervento(textNomeInt.getText(), textAreaDescrInt.getText(), textAreaLocalizzazione.getText());
+				}
+				
 				textNomeInt.setText("");
 				textAreaDescrInt.setText("");
 				textAreaLocalizzazione.setText("");
-				//aggiornaListInterventi();
-				//listInterventi.add(textNomeInt.getText()+"  "+textAreaDescrInt.getText()+"  "+textAreaLocalizzazione.getText());
+				groupInserimentoInt.setEnabled(false);
+				
+				//aggiornare la tabella
+				tableTipoInt.removeAll();
+				int k = 0;
+				while (k<tableTipoInt.getColumnCount()) {
+					tableTipoInt.getColumn(k).dispose();
+				}
+				ArrayList<Object> listaTipoInt = interv.getListTipoInterventi();
+				riempiTabellaEntita(tableTipoInt, listaTipoInt);
+				tableTipoInt.getColumn(0).setWidth(0);
+				
+				calendarInserimento.setEnabled(true);
+				spinnerNumInterventi.setEnabled(true);
+				tableTipoInt.setEnabled(true);
+				tableTipoInt.deselectAll();
+				buttonInsertTipoIntervento.setEnabled(true);
+				//buttonModificaTipoIntervento.setEnabled(true);
+				//buttonEliminaTipoIntervento.setEnabled(true);
+				buttonInserIntervento.setEnabled(true);
+				buttonAnnullaIntervento.setEnabled(true);
+				attivaModifica = false;
 			}
 		});
+		
+		buttonAnnullaNewInt = new Button(groupInserimentoInt, SWT.NONE);
+		buttonAnnullaNewInt.setBounds(new Rectangle(585, 150, 74, 28));
+		buttonAnnullaNewInt.setText("Annulla");
+		buttonAnnullaNewInt.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						textNomeInt.setText("");
+						textAreaDescrInt.setText("");
+						textAreaLocalizzazione.setText("");
+						attivaModifica = false;
+						
+						groupInserimentoInt.setEnabled(false);
+						calendarInserimento.setEnabled(true);
+						spinnerNumInterventi.setEnabled(true);
+						tableTipoInt.setEnabled(true);
+						tableTipoInt.deselectAll();
+						buttonInsertTipoIntervento.setEnabled(true);
+						//buttonModificaTipoIntervento.setEnabled(true);
+						//buttonEliminaTipoIntervento.setEnabled(true);
+						buttonInserIntervento.setEnabled(true);
+						buttonAnnullaIntervento.setEnabled(true);
+					}
+				});
+	
 	}
 	
-	/**
-	 * Permette di inserire il numero e la data degli interventi
-	 */
-	private void createSShellNumData(final Paziente paziente, final Tipologiaintervento tipoIntervento) {
-		sShellNumData = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
-		sShellNumData.setLayout(null);
-		sShellNumData.setText("Informazioni intervento");
-		sShellNumData.setSize(new Point(614, 150));
-		//numero
-		labelNumInt = new Label(sShellNumData, SWT.NONE);
-		labelNumInt.setBounds(new Rectangle(20, 10, 380, 19));
-		labelNumInt.setText("* Inserire il numero di volte in cui si è sottoposto allo stesso intervento");
-		spinnerNumInt = new Spinner(sShellNumData, SWT.READ_ONLY);
-		spinnerNumInt.setBounds(new Rectangle(430, 10, 50, 19));
-		spinnerNumInt.setMinimum(1);
-		//data
-		labelData = new Label(sShellNumData, SWT.NONE);
-		labelData.setBounds(new Rectangle(20, 40, 150, 21));
-		labelData.setText("Data dell'ultimo intervento");
-		// crea combo giorno
-		cComboGG = new Combo(sShellNumData, SWT.READ_ONLY);
-		cComboGG.setBounds(new Rectangle(190, 40, 48, 23));
-		cComboGG.setItems(new String [] {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"});
-		cComboGG.setText(cComboGG.getItem(0));
-		//crea combo mese
-		cComboMese = new Combo(sShellNumData, SWT.READ_ONLY);
-		cComboMese.setBounds(new Rectangle(250, 40, 48, 25));
-		cComboMese.setItems(new String [] {"1","2","3","4","5","6","7","8","9","10","11","12"});
-		cComboMese.setText(cComboMese.getItem(0));
-		// crea combo anno
-		cComboAnno = new Combo(sShellNumData, SWT.READ_ONLY);
-		cComboAnno.setBounds(new Rectangle(310, 40, 83, 23));
-		Date now = new Date();
-		for (int i = 1910; i < (now.getYear()+1901); i++) {
-			cComboAnno.add(""+i);
-		}
-		cComboAnno.setText(cComboAnno.getItem(0));
-		buttonOKNumData = new Button(sShellNumData, SWT.NONE);
-		buttonOKNumData.setBounds(new Rectangle(410, 76, 94, 28));
-		buttonOKNumData.setText("Conferma");
-		buttonOKNumData.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				int numInt = 0;
-				Date dataInt;
-				RegistraIntervento intReg = new RegistraIntervento();
-				//numero
-				numInt = spinnerNumInt.getSelection();
-				//data
-				String dateString = cComboAnno.getText()+"-"+cComboMese.getText()+"-"+cComboGG.getText();
-				String formato = "yyyy-MM-dd";
-				dataInt = Utils.convertStringToDate(dateString, formato);
-			
-				intReg.setPaziente(paziente);
-				intReg.setTipoIntervento(tipoIntervento);
-				intReg.setDataIntervento(dataInt);
-				intReg.setNumInterventi(numInt);
-				listaInterventiRegistrati.add(intReg);
-				
-				//Visualizzazione degli interventi selezionati
-				for (String iSel : listInterventi.getSelection()) {
-					if(setInt.add(iSel))
-						listIntSel.add(iSel + "    Num: "+numInt+"    Data: "+cComboGG.getText()+"/"+cComboMese.getText()+"/"+cComboAnno.getText());
-				}
-				listInterventi.deselectAll();
-				buttonConfermaInt.setEnabled(true);
-				sShellNumData.close();
-			}
-		});
-		sShellNumData.open();
-	}
+	
+	
 	
 	
 	//-----------------------------------------ALLERGIE/INTOLLERANZE-------------------------------------------------------------
@@ -681,7 +794,7 @@ public class AnamnesiShell {
 							textAreaAttFisSel.add(sportSel);
 						}
 						textAreaAttFis.deselectAll();
-						createSShellDurFreq();
+						
 					}
 				});
 		textAreaAttFisSel = new List(groupAttFisica, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
@@ -780,9 +893,9 @@ public class AnamnesiShell {
 		groupVisualizzazioneSport.setBounds(new Rectangle(15, 324, 770, 226));
 		
 		
-		tableSport = new AnamnesiViewTableSport(groupVisualizzazioneSport, SWT.BORDER, pazSelHome);
-		tableSport.setLayout(new GridLayout(1, true));
-		tableSport.setBackground(Utils.getStandardWhiteColor());
+		//tableSport = new AnamnesiViewTableSport(groupVisualizzazioneSport, SWT.BORDER, pazSelHome);
+		//tableSport.setLayout(new GridLayout(1, true));
+		//tableSport.setBackground(Utils.getStandardWhiteColor());
 		
 		/*form = new HomePazienteForm(parent, SWT.BORDER);
 		form.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -790,100 +903,115 @@ public class AnamnesiShell {
 		form.setBackground(Utils.getStandardWhiteColor());*/
 	}	
 	
-	/**
-	 * Permette di inserire la durata e la frequenza settimanale degli sport
-	 */
-	private void createSShellDurFreq() {
-		SShellDurFreq = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
-		SShellDurFreq.setLayout(null);
-		SShellDurFreq.setText("Informazioni sport");
-		SShellDurFreq.setSize(new Point(614, 150));
-		//durata
-		labelDurataAttFis = new Label(SShellDurFreq, SWT.NONE);
-		labelDurataAttFis.setBounds(new Rectangle(10, 9, 100, 20));
-		labelDurataAttFis.setText("Inserire la durata");
-		textDurataAttFis = new Text(SShellDurFreq, SWT.BORDER);
-		textDurataAttFis.setBounds(new Rectangle(120, 9, 324, 20));
-		//frequenza
-		labelFrequenzaAttFis = new Label(SShellDurFreq, SWT.NONE);
-		labelFrequenzaAttFis.setBounds(new Rectangle(10, 50, 200, 20));
-		labelFrequenzaAttFis.setText("* Selezionare la frequenza settimanale ");
-		spinnerFrequenzaAttFis = new Spinner(SShellDurFreq, SWT.READ_ONLY);
-		spinnerFrequenzaAttFis.setBounds(new Rectangle(230, 50, 60, 20));
-		spinnerFrequenzaAttFis.setMinimum(1);
-		
-		buttonOKFreqDur = new Button(SShellDurFreq, SWT.NONE);
-		buttonOKFreqDur.setBounds(new Rectangle(400, 76, 94, 28));
-		buttonOKFreqDur.setText("Conferma");
-		/*labelProvaAttFis = new Label(SShellDurFreq, SWT.NONE);
-		labelProvaAttFis.setBounds(new Rectangle(7, 9, 211, 19));
-		labelProvaAttFis.setText("Label");*/
-		buttonOKFreqDur.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				int freq = 0;
-				//Date dataInt;
-				//RegistraIntervento intReg = new RegistraIntervento();
-				
-				//frequenza
-				freq = spinnerFrequenzaAttFis.getSelection();
-				//durata
-				String durata = textDurataAttFis.getText();
-				textAreaAttFisSel.add(textAreaAttFis.getSelection()+"   Freq: "+freq+"   Durata: "+durata);
-				SShellDurFreq.close();
-				
-				/*intReg.setPaziente(paziente);
-				//intReg.setTipoIntervento(tipoIntervento);
-				//intReg.setDataIntervento(dataInt);
-				//intReg.setNumInterventi(numInt);
-				//listaInterventiRegistrati.add(intReg);
-				
-				//Visualizzazione degli interventi selezionati
-				for (String iSel : listInterventi.getSelection()) {
-					if(setInt.add(iSel))
-						listIntSel.add(iSel + "    Num: "+numInt+"    Data: "+cComboGG.getText()+"/"+cComboMese.getText()+"/"+cComboAnno.getText());
-				}
-				listInterventi.deselectAll();
-				buttonConfermaInt.setEnabled(true);
-				sShellNumData.close();*/
-			}
-		});
-		SShellDurFreq.open();
-	}
-
-	/**
-	 * This method initializes sShellMessElimina	
-	 *
-	 */
+	
+	
 	private void createSShellMessElimina() {
-		sShellMessElimina = new Shell();
+		sShellMessElimina = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
 		sShellMessElimina.setLayout(new GridLayout());
-		sShellMessElimina.setText("Conferma eliminazione");
 		sShellMessElimina.setSize(new Point(377, 72));
 	}
-
-}
-
-class AnamnesiViewTableSport extends ListComposite {
-
-	public AnamnesiViewTableSport(Composite parent, int style, Paziente pazSelHome) {
-		super(parent, style);
-		//initialize(parent, pazSelHome);
+	
+	private void createMessConfermaCanc(int indiceItemSel) {
+		createSShellMessElimina();
+		MessageBox messageBox = new MessageBox(sShellMessElimina, SWT.OK | SWT.CANCEL| SWT.ICON_WARNING);
+		messageBox.setMessage("Sei sicuro di voler eliminare questo elemento?\nLa sua cancellazione comporta la rimozione di:"/*+messElementiCancellati*/);
+		messageBox.setText("Conferma cancellazione");
+		if (messageBox.open() == SWT.OK) {
+			AnamnesiDAO an = new AnamnesiDAO();
+			int idCanc = Integer.parseInt(tableTipoInt.getItem(indiceItemSel).getText());
+			if(an.getInterventiListByIdTipoInt(idCanc).isEmpty()) {
+				an.cancellaTipoIntervento(idCanc);
+				tableTipoInt.remove(indiceItemSel);
+			} else {
+				sShellMessElimina.close();
+				createMessElemCascade();
+			}
+		}
 	}
 	
-	private Table tableSportPerPaziente = null;
-	private static ArrayList<Object> sport;
+	private void createMessNotSelElem() {
+		createSShellMessElimina();
+		MessageBox messageBox = new MessageBox(sShellMessElimina, SWT.OK | SWT.ICON_ERROR);
+		messageBox.setMessage("Selezionare un elemento!");
+		messageBox.setText("Errore: elemento non selezionato");
+		if (messageBox.open() == SWT.OK) {
+			sShellMessElimina.close();
+		}
+	}
 	
-	public void initialize(Composite comp, Paziente pazSelHome) {
-		tableSportPerPaziente = new Table(comp, SWT.FILL | SWT.BORDER
-				| SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
-		tableSportPerPaziente.setHeaderVisible(true);
-		tableSportPerPaziente.setLinesVisible(true);
-		//tableSportPerPaziente.setBounds(new Rectangle(36, 596, 628, 226));
-		tableSportPerPaziente.setLayout(new GridLayout(1, true));
-		sport = AnamnesiDAO.getSportListByPaziente(pazSelHome);
-		System.out.println("N sport: "+sport.size());
-		riempiTabellaEntita(tableSportPerPaziente, sport);
-		System.out.println("N colonne: "+tableSportPerPaziente.getColumnCount());
-		tableSportPerPaziente.getColumn(0).setWidth(0);
+	
+	public void createMessElemCascade() {
+		createSShellMessElimina();
+		MessageBox messageBox = new MessageBox(sShellMessElimina, SWT.OK | SWT.ICON_INFORMATION);
+		messageBox.setMessage("Non è possibile cancellare questo elemento: è collegato ad altri!");
+		messageBox.setText("Elemento referenziato");
+		if (messageBox.open() == SWT.OK) {
+			sShellMessElimina.close();
+		}
+	}
+	
+	public void createMessElemPresente() {
+		createSShellMessElimina();
+		MessageBox messageBox = new MessageBox(sShellMessElimina, SWT.OK | SWT.ICON_INFORMATION);
+		messageBox.setMessage("Non è possibile inserire questo elemento: associazione già presente!");
+		messageBox.setText("Associazione presente");
+		if (messageBox.open() == SWT.OK) {
+			sShellMessElimina.close();
+		}
+	}
+	
+	private void riempiTabellaEntita(Table table, ArrayList<Object> lista) {
+		if (!lista.isEmpty()) {
+			ArrayList<String> colonne = GenericBean.getFieldsNamesPerQuery(lista.get(0));
+			for (String item : colonne) {
+				TableColumn colonna = new TableColumn(table, SWT.CENTER);
+				colonna.setWidth(item.length() * 15);
+				colonna.setText(item);
+			}
+			table.setHeaderVisible(true);
+			for (Object item : lista) {
+				TableItem tblItem = new TableItem(table, SWT.NONE);
+				Object[] valuesObj = new Object[GenericBean.getFieldsNumber(item)];
+				String[] values = new String[GenericBean.getFieldsNumber(item)];
+				int i = 0;
+				
+				for (String colonna : colonne) {
+					valuesObj[i] = GenericBean.getProperty(colonna, item);
+					//if a cascata per sostituire l'id hibernate con l'id numerico 
+					if ( valuesObj[i] instanceof Paziente) { 
+						valuesObj[i] = ((Paziente)valuesObj[i]).getIdPaziente();
+					} 
+					if  (valuesObj[i] instanceof Tipologiaintervento) {  
+						valuesObj[i] = ((Tipologiaintervento)valuesObj[i]).getIdTipologiaIntervento();
+					} 
+					if  (valuesObj[i] instanceof Intolleranzaallergia) {  
+						valuesObj[i] = ((Intolleranzaallergia)valuesObj[i]).getIdIntolleranzaAllergia();
+					}
+					if  (valuesObj[i] instanceof Attivitafisica) {  
+						valuesObj[i] = ((Attivitafisica)valuesObj[i]).getIdAttivitaFisica();
+					}
+					
+					i++;
+				}
+				
+				for (int j = 0; j < valuesObj.length; j++) {
+					if (valuesObj[j]!=null)
+						values[j]=valuesObj[j].toString();
+				}
+				
+				tblItem.setText(values);
+			}
+		}
+	}
+
+	/**
+	 * This method initializes calendarInserimento	
+	 *
+	 */
+	private void createCalendarInserimento() {
+		calendarInserimento = new DateTime(sShellInserimentoInterventi, SWT.NONE
+				| SWT.CALENDAR | SWT.BORDER);
+		calendarInserimento.setBackground(new Color(Display.getCurrent(),245,245,245));
+		calendarInserimento.setBounds(new Rectangle(163, 34, 227, 141));
 	}
 }
