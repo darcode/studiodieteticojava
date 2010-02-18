@@ -6,6 +6,8 @@ import hibernate.Visita;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
@@ -16,6 +18,7 @@ import command.VisitaDAO;
 import common.Utils;
 
 public class PrenotazioneTableView extends ViewPart {
+	private Composite top = null;
 	private ProvaTableForm classVis;
 	private ArrayList<Object> prenotazioni;
 	
@@ -23,10 +26,13 @@ public class PrenotazioneTableView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+	top = new Composite(parent, SWT.NONE);
 	prenotazioni = VisitaDAO.getPrenotazioniObject();
 	
 	//TODO aggiungere parametri
-	classVis = new ProvaTableForm(parent, SWT.BORDER, prenotazioni, "","","","PrenotazioneTableView");
+	classVis = new ProvaTableForm(top, SWT.BORDER, prenotazioni, "","","","PrenotazioneTableView");
+	classVis.setBounds(new Rectangle(6, 50, 800, 332));
+	classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	classVis.setLayout(new GridLayout(1, true));
 	classVis.setBackground(Utils.getStandardWhiteColor());
 	
