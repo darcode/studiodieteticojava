@@ -1,5 +1,7 @@
 package studiodietetico;
 
+import java.awt.Frame;
+
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.widgets.Display;
@@ -15,16 +17,34 @@ public class Application implements IApplication {
 	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
 	 */
 	public Object start(IApplicationContext context) {
-		Display display = PlatformUI.createDisplay();
-		try {
-			int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
-			if (returnCode == PlatformUI.RETURN_RESTART) {
-				return IApplication.EXIT_RESTART;
+		
+		//Login maschera = new Login();
+		//LoginMaschera maschera = new LoginMaschera();
+		LoginDialog maschera = new LoginDialog(new Frame());
+		maschera.setLocation(400, 400);
+		maschera.setVisible(true);
+		
+		//maschera.setAlwaysOnTop(true);
+		//maschera.setLocationByPlatform(true);
+		//maschera.show();
+		//maschera.
+		if(maschera.risultato == 1) {
+			maschera.dispose();
+			Display display = PlatformUI.createDisplay();
+			try {
+				int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
+				if (returnCode == PlatformUI.RETURN_RESTART) {
+					return IApplication.EXIT_RESTART;
+				}
+				return IApplication.EXIT_OK;
+			} finally {
+				display.dispose();
 			}
-			return IApplication.EXIT_OK;
-		} finally {
-			display.dispose();
 		}
+		else{
+			return IApplication.EXIT_RESTART;
+		}
+		
 	}
 
 	/* (non-Javadoc)
