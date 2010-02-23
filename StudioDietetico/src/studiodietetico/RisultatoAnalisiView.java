@@ -5,6 +5,7 @@ package studiodietetico;
 import hibernate.Esameclinico;
 import hibernate.Parametroesame;
 import hibernate.Paziente;
+import hibernate.Prenotazione;
 import hibernate.Referto;
 import hibernate.Risultatoanalisi;
 
@@ -20,6 +21,7 @@ import command.PazienteDAO;
 import command.RefertoDAO;
 import command.RilevamentoDAO;
 import command.RisultatoAnalisiDAO;
+import command.VisitaDAO;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -27,9 +29,16 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.TableItem;
@@ -38,6 +47,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.widgets.Combo;
+
+import service.Utils;
 
 
 public class RisultatoAnalisiView extends ViewPart {
@@ -52,16 +63,20 @@ public class RisultatoAnalisiView extends ViewPart {
 	private ArrayList<Paziente> paz;  //  @jve:decl-index=0:
 	private ListViewer listViewer = null;
 	ParametroAntropometricoDAO par = new ParametroAntropometricoDAO();  //  @jve:decl-index=0:
-    
+	private Button buttonSelezionaData = null;
+	private Date dn = null;
 	private Combo cmbParametro = null;
 	private Label lblParametro = null;
 	private Text txtValore = null;
 	private Label lblValore = null;
 	private Label lblOsservazione = null;
 	private Text txtOsservazione = null;
+	private Text textAreaPrenotazioniOdierne = null;
+	private Label lblData = null;
 	private Button btnAggiungi = null;
 	private List listEsameClinico = null;
 	private Label lblParametro1 = null;
+	private Shell ShellCalendario = null;
 	private PazienteDAO pz = new PazienteDAO();
 	private EsameClinicoDAO es = new EsameClinicoDAO();
 	private ParametroClinicoDAO parclinico= new ParametroClinicoDAO();  //  @jve:decl-index=0:
@@ -82,7 +97,7 @@ public class RisultatoAnalisiView extends ViewPart {
 		tableParametroClinico = new Table(top, SWT.NONE);
 		tableParametroClinico.setHeaderVisible(true);
 		tableParametroClinico.setLinesVisible(true);
-		tableParametroClinico.setBounds(new Rectangle(14, 288, 421, 111));
+		tableParametroClinico.setBounds(new Rectangle(14, 303, 421, 111));
 		TableColumn tableColumn = new TableColumn(tableParametroClinico, SWT.NONE);
 		tableColumn.setWidth(0);
 		tableColumn.setText("IdParametro");
@@ -97,24 +112,38 @@ public class RisultatoAnalisiView extends ViewPart {
 		tableColumn12.setText("Osservazione");
 		tableViewer = new TableViewer(tableParametroClinico);
 		btnRegistra = new Button(top, SWT.NONE);
-		btnRegistra.setBounds(new Rectangle(319, 405, 117, 23));
+		btnRegistra.setBounds(new Rectangle(319, 419, 117, 23));
 		btnRegistra.setText("Registra Rilevazioni");
+		buttonSelezionaData = new Button(top, SWT.NONE);
+        buttonSelezionaData.setBounds(new Rectangle(13, 210, 189, 27));
+        buttonSelezionaData.setText("Seleziona la data dell'esame");
+        buttonSelezionaData
+        		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+        			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+        				createShellCalendario();
+        				ShellCalendario.open();
+        				System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
+        			}
+        		});
+        lblData = new Label(top, SWT.NONE);
+		lblData.setBounds(new Rectangle(216, 219, 172, 17));
+		lblData.setText("");
 		createCmbParametro();
 		lblParametro = new Label(top, SWT.NONE);
-		lblParametro.setBounds(new Rectangle(14, 230, 61, 13));
+		lblParametro.setBounds(new Rectangle(14, 256, 61, 13));
 		lblParametro.setText("Parametro");
 		txtValore = new Text(top, SWT.BORDER);
-		txtValore.setBounds(new Rectangle(140, 249, 76, 19));
+		txtValore.setBounds(new Rectangle(140, 275, 76, 19));
 		lblValore = new Label(top, SWT.NONE);
-		lblValore.setBounds(new Rectangle(140, 231, 43, 13));
+		lblValore.setBounds(new Rectangle(140, 257, 43, 13));
 		lblValore.setText("Valore");
 		lblOsservazione = new Label(top, SWT.NONE);
-		lblOsservazione.setBounds(new Rectangle(232, 231, 66, 13));
+		lblOsservazione.setBounds(new Rectangle(232, 257, 66, 13));
 		lblOsservazione.setText("Osservazioni");
 		txtOsservazione = new Text(top, SWT.BORDER);
-		txtOsservazione.setBounds(new Rectangle(232, 250, 155, 19));
+		txtOsservazione.setBounds(new Rectangle(232, 276, 155, 19));
 		btnAggiungi = new Button(top, SWT.NONE);
-		btnAggiungi.setBounds(new Rectangle(404, 248, 30, 23));
+		btnAggiungi.setBounds(new Rectangle(404, 274, 30, 23));
 		btnAggiungi.setText("+");
 		listEsameClinico = new List(top, SWT.NONE);
 		listEsameClinico.setBounds(new Rectangle(120, 119, 166, 76));
@@ -149,7 +178,7 @@ public class RisultatoAnalisiView extends ViewPart {
 					Risultatoanalisi r = new Risultatoanalisi();
 					Referto re = new Referto();
 					re = ref.registraReferto(parametro, pazientemem, item.getText(3));
-					Date data = new Date();
+					Date data = dn;
 
 					ris.registraRisultatoAnalisi(data, re, item.getText(2), item.getText(3));
 					//p.registraMisurazione(parametro, paziente, setril, item.getText(3));
@@ -242,7 +271,61 @@ public class RisultatoAnalisiView extends ViewPart {
 	 */
 	private void createCmbParametro() {
 		cmbParametro = new Combo(top, SWT.NONE);
-		cmbParametro.setBounds(new Rectangle(15, 249, 103, 21));
+		cmbParametro.setBounds(new Rectangle(15, 275, 103, 21));
+	}
+	private Date createShellCalendario() {
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gridData.heightHint = 32;
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		ShellCalendario = new Shell(Display.getCurrent(), SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		ShellCalendario.setText("Seleziona data e ora");
+		ShellCalendario.setLayout(new GridLayout());
+		ShellCalendario.setSize(new Point(270, 300));
+		final DateTime calendar = new DateTime (ShellCalendario, SWT.CALENDAR | SWT.BORDER);
+		//final DateTime date = new DateTime (ShellCalendario, SWT.DATE | SWT.SHORT);
+		calendar.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				//ArrayList<Prenotazione> prenotGiorno = VisitaDAO.getPrenotazioniGiorno(calendar.getYear (), (calendar.getMonth () + 1), calendar.getDay ());
+				//textAreaPrenotazioniOdierne.setText("N. di prenotazioni per il "+calendar.getDay ()+"/"+(calendar.getMonth () + 1)+"/"+calendar.getYear ()+" = "+ prenotGiorno.size()+"\n");
+				//for (Prenotazione prenotazione : prenotGiorno) {
+				//	textAreaPrenotazioniOdierne.append("ore: "+prenotazione.getDataOra().getHours()+":"+ (prenotazione.getDataOra().getMinutes() < 10 ? "0" : "") + prenotazione.getDataOra().getMinutes()+"  -paziente: "+prenotazione.getPaziente().getCognome()+" "+prenotazione.getPaziente().getNome()+"\n");
+				//}
+				textAreaPrenotazioniOdierne.setTopIndex(0);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		//final DateTime time = new DateTime (ShellCalendario, SWT.TIME | SWT.SHORT);
+		textAreaPrenotazioniOdierne = new Text(ShellCalendario, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
+		textAreaPrenotazioniOdierne.setEditable(false);
+		textAreaPrenotazioniOdierne.setLayoutData(gridData);
+		//new Label (ShellCalendario, SWT.NONE);
+		//new Label (ShellCalendario, SWT.NONE);
+		Button ok = new Button (ShellCalendario, SWT.PUSH);
+		ok.setText ("OK");
+		ok.setLayoutData(new GridData (SWT.FILL, SWT.CENTER, false, false));
+		ok.addSelectionListener (new SelectionAdapter () {
+			public void widgetSelected (SelectionEvent e) {
+				//System.out.println ("Calendar date selected (MM/DD/YYYY) = " + (calendar.getMonth () + 1) + "/" + calendar.getDay () + "/" + calendar.getYear ());
+				//System.out.println ("Date selected (MM/YYYY) = " + (date.getMonth () + 1) + "/" + date.getYear ());
+				//System.out.println ("Time selected (HH:MM) = " + time.getHours () + ":" + (time.getMinutes () < 10 ? "0" : "") + time.getMinutes ());
+				//String dateString = calendar.getYear ()+"-"+(calendar.getMonth () + 1)+"-"+calendar.getDay ()+" "+time.getHours () +":"+(time.getMinutes () < 10 ? "0" : "") + time.getMinutes ()+":00";
+				String dateString = calendar.getYear ()+"-"+(calendar.getMonth () + 1)+"-"+calendar.getDay ()+" 00:00:00";
+				String formato = "yyyy-MM-dd HH:mm:ss";
+				dn = Utils.convertStringToDate(dateString, formato);
+				lblData.setText(dn.toString());
+				ShellCalendario.close ();
+			}
+		});
+
+		//ShellCalendario.open();
+		
+		return dn ;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="12,3,535,462"

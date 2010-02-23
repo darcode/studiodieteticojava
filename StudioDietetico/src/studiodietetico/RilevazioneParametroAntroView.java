@@ -5,6 +5,7 @@ package studiodietetico;
 import hibernate.Misurazione;
 import hibernate.Parametroantropometrico;
 import hibernate.Paziente;
+import hibernate.Prenotazione;
 import hibernate.Rilevamento;
 
 import javax.swing.JComponent;
@@ -16,14 +17,23 @@ import command.MisurazioneDAO;
 import command.ParametroAntropometricoDAO;
 import command.PazienteDAO;
 import command.RilevamentoDAO;
+import command.VisitaDAO;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.TableItem;
@@ -33,6 +43,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.widgets.Combo;
 
+import service.Utils;
+
 public class RilevazioneParametroAntroView extends ViewPart {
 
 	public static final String ID = "studiodietetico.RilevazioneParametroAntroView"; // TODO Needs to be whatever is mentioned in plugin.xml
@@ -41,19 +53,23 @@ public class RilevazioneParametroAntroView extends ViewPart {
 	private Label labelPazVis = null;
 	private Table tableParametroAntropometrico = null;
 	private Button btnRegistra = null;
+	private Button buttonSelezionaData = null;
 	public TableViewer tableViewer = null;
 	private JComponent[] components;
 	private ArrayList<Paziente> paz;  //  @jve:decl-index=0:
 	private ListViewer listViewer = null;
 	ParametroAntropometricoDAO par = new ParametroAntropometricoDAO();  //  @jve:decl-index=0:
-    
+	private Shell ShellCalendario = null;
 	private Combo cmbParametro = null;
 	private Label lblParametro = null;
+	private Date dn = null;
 	private Text txtValore = null;
+	private Text textAreaPrenotazioniOdierne = null;
 	private Label lblValore = null;
 	private Label lblOsservazione = null;
 	private Text txtOsservazione = null;
 	private Button btnAggiungi = null;
+	private Label lblData = null;
 	@Override
 	public void createPartControl(Composite parent) {
 		// TODO Auto-generated method stub
@@ -87,25 +103,39 @@ public class RilevazioneParametroAntroView extends ViewPart {
 		btnRegistra.setBounds(new Rectangle(319, 300, 117, 23));
 		btnRegistra.setText("Registra Rilevazioni");
 		createCmbParametro();
+		buttonSelezionaData = new Button(top, SWT.NONE);
+        buttonSelezionaData.setBounds(new Rectangle(13, 102, 189, 27));
+        buttonSelezionaData.setText("Seleziona la data della rilevazione");
+        buttonSelezionaData
+        		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+        			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+        				createShellCalendario();
+        				ShellCalendario.open();
+        				System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
+        			}
+        		});
 		lblParametro = new Label(top, SWT.NONE);
-		lblParametro.setBounds(new Rectangle(14, 125, 61, 13));
+		lblParametro.setBounds(new Rectangle(14, 138, 61, 13));
 		lblParametro.setText("Parametro");
 		txtValore = new Text(top, SWT.BORDER);
-		txtValore.setBounds(new Rectangle(140, 144, 76, 19));
+		txtValore.setBounds(new Rectangle(140, 157, 76, 19));
 		txtValore.setEnabled(false);
 		lblValore = new Label(top, SWT.NONE);
-		lblValore.setBounds(new Rectangle(140, 126, 43, 13));
+		lblValore.setBounds(new Rectangle(140, 139, 43, 13));
 		lblValore.setText("Valore");
 		lblOsservazione = new Label(top, SWT.NONE);
-		lblOsservazione.setBounds(new Rectangle(232, 126, 66, 13));
+		lblOsservazione.setBounds(new Rectangle(232, 139, 66, 13));
 		lblOsservazione.setText("Osservazioni");
 		txtOsservazione = new Text(top, SWT.BORDER);
-		txtOsservazione.setBounds(new Rectangle(232, 145, 155, 19));
+		txtOsservazione.setBounds(new Rectangle(232, 158, 155, 19));
 		txtOsservazione.setEnabled(false);
 		btnAggiungi = new Button(top, SWT.NONE);
-		btnAggiungi.setBounds(new Rectangle(404, 143, 30, 23));
+		btnAggiungi.setBounds(new Rectangle(404, 156, 30, 23));
 		btnAggiungi.setText("+");
 		btnAggiungi.setEnabled(false);
+		lblData = new Label(top, SWT.NONE);
+		lblData.setBounds(new Rectangle(215, 107, 172, 17));
+		lblData.setText("");
 		btnAggiungi.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				Parametroantropometrico parametro = par.getParametro(cmbParametro.getText());	
@@ -127,7 +157,7 @@ public class RilevazioneParametroAntroView extends ViewPart {
 					Rilevamento r = new Rilevamento();
 					Misurazione misurazione = new Misurazione();
 					misurazione = p.registraMisurazione(parametro, paziente, item.getText(3));
-					Date data = new Date();
+					Date data = dn;
 
 					ril.registraRilevamento(data, misurazione, item.getText(2));
 					//p.registraMisurazione(parametro, paziente, setril, item.getText(3));
@@ -140,6 +170,7 @@ public class RilevazioneParametroAntroView extends ViewPart {
 				txtOsservazione.setEnabled(true);
 				btnAggiungi.setEnabled(true);
 				btnRegistra.setEnabled(true);
+				lblData.setText("");
 			}
 		});
 		paz = PazienteDAO.getPazienti();
@@ -171,6 +202,61 @@ public class RilevazioneParametroAntroView extends ViewPart {
 		cmbParametro.select(0);
 	}
 	
+	private Date createShellCalendario() {
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gridData.heightHint = 32;
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		ShellCalendario = new Shell(Display.getCurrent(), SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		ShellCalendario.setText("Seleziona data e ora");
+		ShellCalendario.setLayout(new GridLayout());
+		ShellCalendario.setSize(new Point(270, 300));
+		final DateTime calendar = new DateTime (ShellCalendario, SWT.CALENDAR | SWT.BORDER);
+		//final DateTime date = new DateTime (ShellCalendario, SWT.DATE | SWT.SHORT);
+		calendar.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				ArrayList<Prenotazione> prenotGiorno = VisitaDAO.getPrenotazioniGiorno(calendar.getYear (), (calendar.getMonth () + 1), calendar.getDay ());
+				textAreaPrenotazioniOdierne.setText("N. di prenotazioni per il "+calendar.getDay ()+"/"+(calendar.getMonth () + 1)+"/"+calendar.getYear ()+" = "+ prenotGiorno.size()+"\n");
+				for (Prenotazione prenotazione : prenotGiorno) {
+					textAreaPrenotazioniOdierne.append("ore: "+prenotazione.getDataOra().getHours()+":"+ (prenotazione.getDataOra().getMinutes() < 10 ? "0" : "") + prenotazione.getDataOra().getMinutes()+"  -paziente: "+prenotazione.getPaziente().getCognome()+" "+prenotazione.getPaziente().getNome()+"\n");
+				}
+				textAreaPrenotazioniOdierne.setTopIndex(0);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		//final DateTime time = new DateTime (ShellCalendario, SWT.TIME | SWT.SHORT);
+		textAreaPrenotazioniOdierne = new Text(ShellCalendario, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
+		textAreaPrenotazioniOdierne.setEditable(false);
+		textAreaPrenotazioniOdierne.setLayoutData(gridData);
+		//new Label (ShellCalendario, SWT.NONE);
+		//new Label (ShellCalendario, SWT.NONE);
+		Button ok = new Button (ShellCalendario, SWT.PUSH);
+		ok.setText ("OK");
+		ok.setLayoutData(new GridData (SWT.FILL, SWT.CENTER, false, false));
+		ok.addSelectionListener (new SelectionAdapter () {
+			public void widgetSelected (SelectionEvent e) {
+				//System.out.println ("Calendar date selected (MM/DD/YYYY) = " + (calendar.getMonth () + 1) + "/" + calendar.getDay () + "/" + calendar.getYear ());
+				//System.out.println ("Date selected (MM/YYYY) = " + (date.getMonth () + 1) + "/" + date.getYear ());
+				//System.out.println ("Time selected (HH:MM) = " + time.getHours () + ":" + (time.getMinutes () < 10 ? "0" : "") + time.getMinutes ());
+				//String dateString = calendar.getYear ()+"-"+(calendar.getMonth () + 1)+"-"+calendar.getDay ()+" "+time.getHours () +":"+(time.getMinutes () < 10 ? "0" : "") + time.getMinutes ()+":00";
+				String dateString = calendar.getYear ()+"-"+(calendar.getMonth () + 1)+"-"+calendar.getDay ()+" 00:00:00";
+				String formato = "yyyy-MM-dd HH:mm:ss";
+				dn = Utils.convertStringToDate(dateString, formato);
+				lblData.setText(dn.toString());
+				ShellCalendario.close ();
+			}
+		});
+
+		//ShellCalendario.open();
+		
+		return dn ;
+	}
+	
 	@Override
 	public void setFocus() {
 		// TODO Auto-generated method stub
@@ -183,7 +269,7 @@ public class RilevazioneParametroAntroView extends ViewPart {
 	 */
 	private void createCmbParametro() {
 		cmbParametro = new Combo(top, SWT.NONE);
-		cmbParametro.setBounds(new Rectangle(15, 144, 103, 21));
+		cmbParametro.setBounds(new Rectangle(15, 157, 103, 21));
 		cmbParametro.setEnabled(false);
 	}
 
