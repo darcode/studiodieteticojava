@@ -224,4 +224,13 @@ public class VisitaDAO extends BaseDAO {
 		return pr;
 
 	}
+	
+	public static Visita getVisitaByID(int id) {
+		begin();
+		Query q = getSession().createQuery(
+				"FROM Visita v WHERE v.idVisita=" + id);
+		Visita visita = new Visita();
+		visita = (Visita) q.uniqueResult();
+		return visita;
+	}
 }
