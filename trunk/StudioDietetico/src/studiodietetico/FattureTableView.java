@@ -17,6 +17,7 @@ public class FattureTableView extends ViewPart {
 	private Composite top = null;
 	private ProvaTableForm classVis;
 	private ArrayList<Object> fatture;
+	public static final String VIEW_ID = "StudioDietetico.FattureTableView";
 	
 	
 	public FattureTableView() {}
