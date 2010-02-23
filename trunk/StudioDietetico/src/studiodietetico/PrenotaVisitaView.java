@@ -18,7 +18,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.jface.viewers.ListViewer;
 
-import command.MedicoDAO;
 import command.PazienteDAO;
 import command.VisitaDAO;
 
