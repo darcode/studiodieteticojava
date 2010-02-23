@@ -280,7 +280,6 @@ public class VisitaTableView extends ViewPart {
 							double importoAcconto = Double.parseDouble(textImportoAcconto.getText());
 							fattura.aggiornaFattura(fatturaSelezionata,textDescrizioneFattura.getText(), importoFattura, importoAcconto, 0, textAreaNoteFattura.getText());
 						}
-						// TODO associare la fattura alla visita
 						TableItem itemSel = classVis.getTableVisualizzazione().getItem(classVis.getTableVisualizzazione().getSelectionIndex());
 						int idVisitaSel = Integer.parseInt(itemSel.getText(0));
 						visitaSel = VisitaDAO.getVisitaByID(idVisitaSel);
