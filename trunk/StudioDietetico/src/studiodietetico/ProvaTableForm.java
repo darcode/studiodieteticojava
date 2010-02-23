@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Text;
 
 public class ProvaTableForm extends ListComposite {
 
-	private Composite top;
+	public Composite top;
 	private Label labelSelItem;
 	private Table tableVisualizzazione = null;
 	private Button buttonInsert;
