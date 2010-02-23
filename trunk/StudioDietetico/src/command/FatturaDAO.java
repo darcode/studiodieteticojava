@@ -44,7 +44,7 @@ public class FatturaDAO extends BaseDAO {
 
 	}
 
-	public Fattura getFatturaByID(int id) {
+	public static Fattura getFatturaByID(int id) {
 		begin();
 		Query q = getSession().createQuery(
 				"FROM Fattura f WHERE f.idFattura=" + id);
