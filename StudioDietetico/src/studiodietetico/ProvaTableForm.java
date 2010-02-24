@@ -132,7 +132,7 @@ public class ProvaTableForm extends ListComposite {
 				
 				riempiTabella(listaElementiTable);
 
-				//TODO nasconde, aggiorna e ordina le colonne in base alla classe chiamante 
+				//nasconde, aggiorna e ordina le colonne in base alla classe chiamante 
 				if (classeChiamante.equalsIgnoreCase("VisitaTableView")) {
 					nascondiColonne(new int[] {0,1,2,3,6,7,8});
 					VisitaTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
@@ -202,13 +202,30 @@ public class ProvaTableForm extends ListComposite {
 					ordinamentoStringhe(tableVisualizzazione, 5);
 					ordinamentoData(tableVisualizzazione, 6);
 				}
-				else if (classeChiamante.equalsIgnoreCase("AnamnesiTableView")) {
+				else if (classeChiamante.equalsIgnoreCase("InterventiTableView")) {
 					nascondiColonne(new int[]{0,1,2});
 					AnamnesiTTableView.aggiungiColonnaIntervento(ProvaTableForm.this, listaElementiTable);
 					ordinamentoInteri(tableVisualizzazione, 4);
 					ordinamentoStringhe(tableVisualizzazione, 5);
 					ordinamentoData(tableVisualizzazione, 3);
 				}
+				else if (classeChiamante.equalsIgnoreCase("AllergieTableView")) {
+					nascondiColonne(new int[]{0,1,5,7});
+					ordinamentoStringhe(tableVisualizzazione, 2);
+					ordinamentoStringhe(tableVisualizzazione, 3);
+					ordinamentoStringhe(tableVisualizzazione, 4);
+					ordinamentoStringhe(tableVisualizzazione, 6);
+				}
+				else if (classeChiamante.equalsIgnoreCase("SportTableView")) {
+					nascondiColonne(new int[]{0,5});
+					ordinamentoStringhe(tableVisualizzazione, 1);
+					ordinamentoStringhe(tableVisualizzazione, 2);
+					ordinamentoStringhe(tableVisualizzazione, 3);
+					ordinamentoInteri(tableVisualizzazione, 4);
+				}
+				
+				
+				
 				
 				//ricerca incrementale nella colonna selezionata
 				int indiceColonnaSel = convertiComboToColonna(cComboColonne.getSelectionIndex());
@@ -285,7 +302,7 @@ public class ProvaTableForm extends ListComposite {
 		riempiTabella(listaElementi);
 
 		numeroCol = tableVisualizzazione.getColumnCount();
-		System.out.println("numero di colonne iniziali: " + numeroCol);
+		//System.out.println("numero di colonne iniziali: " + numeroCol);
 		
 }
 	
@@ -298,7 +315,6 @@ public class ProvaTableForm extends ListComposite {
 		}
 		return colonneVisibili.get(indiceCombo);
 	} 
-
 	
 	private void riempiTabella(ArrayList<Object> listaElementi){
 		riempiTabellaEntita(tableVisualizzazione, listaElementi);
@@ -317,7 +333,7 @@ public class ProvaTableForm extends ListComposite {
 			colonna.setResizable(false);
 		}
 		
-}
+	}
 	
 	private void createMessConfermaCanc(int indiceItemSel) {
 		createSShellMessElimina();
