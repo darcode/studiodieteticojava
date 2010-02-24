@@ -31,6 +31,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import service.GiornoDieta;
@@ -467,6 +469,25 @@ public class DietaDAO extends BaseDAO{
 		close();
 
 		return ris.get(0);
+	}
+	
+	
+	public List<Alimento> getAlimentiList() {
+		Criteria criteria = getSession().createCriteria(hibernate.Alimento.class);
+		//criteria.add( Restrictions.eq("idAlimento", aliId));
+		ProjectionList proList = Projections.projectionList();
+	      proList.add(Projections.property("nome"));
+	      proList.add(Projections.property("tipologia"));
+	      proList.add(Projections.property("calorie"));
+	      criteria.setProjection(proList);
+		begin();
+		List<Alimento> ris = (List<Alimento>)criteria.list();
+		//System.out.println(ris.size());
+
+		commit();
+		close();
+
+		return ris;
 	}
 
 	public Ricetta[] getRicette(Alimento ali) {
