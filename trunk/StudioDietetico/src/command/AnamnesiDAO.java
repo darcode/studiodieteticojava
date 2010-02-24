@@ -1,6 +1,5 @@
 package command;
 
-import java.sql.BatchUpdateException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,22 +7,18 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.exception.ConstraintViolationException;
 
 import hibernate.Attivitafisica;
-import hibernate.Composizione;
 import hibernate.Intervento;
 import hibernate.InterventoId;
 import hibernate.Intolleranzaallergia;
 import hibernate.Paziente;
-import hibernate.Prenotazione;
-import hibernate.Ricetta;
 import hibernate.Tipologiaintervento;
 
 public class AnamnesiDAO extends BaseDAO{
 	public AnamnesiDAO(){}
 	
-	//INTERVENTI
+	//TIPOLOGIA INTERVENTO
 	public void registraTipoIntervento(String nome, String descrizione, String localizzazione){
 		getSession();
 		begin();
@@ -48,7 +43,6 @@ public class AnamnesiDAO extends BaseDAO{
 		return interventi;
 	}
 	
-	
 	public Tipologiaintervento getTipoInterventiById(String id){
 		getSession();
 		begin();
@@ -58,14 +52,11 @@ public class AnamnesiDAO extends BaseDAO{
 		return intervento;
 	}
 	
-	
 	public void modificaTipoIntervento(Tipologiaintervento tipointervento, String nome, String descrizione, String localizzazione) {
 		getSession();
 		begin();
 		Tipologiaintervento tipoInterv = new Tipologiaintervento();
 		Query q = getSession().createQuery("FROM Tipologiaintervento interv WHERE idTipologiaIntervento="+tipointervento.getIdTipologiaIntervento());
-		//commit();
-		//begin();
 		tipoInterv = (Tipologiaintervento) q.uniqueResult();
 		tipoInterv.setNome(nome);
 		tipoInterv.setDescrizione(descrizione);
@@ -88,6 +79,7 @@ public class AnamnesiDAO extends BaseDAO{
 	}
 	
 	
+	//INTERVENTO
 	public void registraIntervento(Paziente paziente, Tipologiaintervento tipologiaintervento, Date data, int numeroInt){
 		getSession();
 		begin();
@@ -133,7 +125,6 @@ public class AnamnesiDAO extends BaseDAO{
 		return interventi;
 	}
 	
-	
 	public Object getInterventiListByPazIdTipoInt(int idTipoInt, int idPaz) {
 		getSession();
 		begin();
@@ -144,14 +135,11 @@ public class AnamnesiDAO extends BaseDAO{
 		return interventi;
 	}
 	
-	
 	public void modificaIntervento(Paziente paziente, Tipologiaintervento tipointervento, Date data, int numeroInt) {
 		getSession();
 		begin();
 		Intervento interv = new Intervento();
 		Query q = getSession().createQuery("FROM Intervento interv WHERE idPaziente="+paziente.getIdPaziente()+" and idTipologiaIntervento="+tipointervento.getIdTipologiaIntervento());
-		//commit();
-		//begin();
 		interv = (Intervento) q.uniqueResult();
 		interv.setData(data);
 		interv.setNumero(numeroInt);
@@ -159,7 +147,6 @@ public class AnamnesiDAO extends BaseDAO{
 		commit();
 		close();
 	}
-	
 	
 	
 	//ALLERGIE
@@ -183,13 +170,39 @@ public class AnamnesiDAO extends BaseDAO{
 	public static ArrayList<Object> getAllergieListByPaziente(Paziente paz) {
 		getSession();
 		begin();
-		Query q = getSession().createQuery("FROM Intolleranzaallergia all WHERE paziente="+paz.getIdPaziente());
+		Query q = getSession().createQuery("FROM Intolleranzaallergia WHERE paziente="+paz.getIdPaziente());
 		ArrayList<Object> sport = (ArrayList<Object>)q.list();
 		commit();
 		return sport;
 	}
 	
+	public static Intolleranzaallergia getAllergiaById(String id){
+		getSession();
+		begin();
+		Query q = getSession().createQuery("FROM Intolleranzaallergia WHERE idIntolleranzaAllergia="+id);
+		Intolleranzaallergia allergia = (Intolleranzaallergia)q.uniqueResult();
+		commit();
+		return allergia;
+	}
 	
+	public void modificaAllergie(/*Paziente paziente, */Intolleranzaallergia allergia, String flagAll,
+			String sostanza, String alimPrinc, String derivati, String grado, String effCollaterali) {
+		getSession();
+		begin();
+		Intolleranzaallergia allerg = new Intolleranzaallergia();
+		Query q = getSession().createQuery("FROM Intolleranzaallergia aller WHERE idIntolleranzaAllergia="+allergia.getIdIntolleranzaAllergia());
+		allerg = (Intolleranzaallergia) q.uniqueResult();
+		allerg.setFlagIntAll(flagAll);
+		allerg.setSostanza(sostanza);
+		allerg.setAlimentoPrincipale(alimPrinc);
+		allerg.setDerivati(derivati);
+		allerg.setGrado(grado);
+		allerg.setEffettiCollaterali(effCollaterali);
+		//allerg.setPaziente(paziente);
+		getSession().saveOrUpdate(allerg);
+		commit();
+		close();
+	}
 	
 	//ATTIVITA' FISICA
 	public void registraSport(String nome, String descrizione, String durata, int freqSett, Paziente paziente){
