@@ -83,6 +83,7 @@ public class AnamnesiShell {
 	
 	
 	//ALLERGIE
+	private Shell sShellDettagliAllergie = null;
 	private Group groupAllergie = null;
 	private Label labelIntAll = null;
 	private Button radioButtonInt = null;
@@ -120,8 +121,24 @@ public class AnamnesiShell {
 	
 	//MESSAGE BOX
 	private Shell sShellMessElimina = null;  //  @jve:decl-index=0:visual-constraint="-347,665"
+	private Label labelSostanzaAllVis;
+	private Text textSostanzaAllVis;
+	private Label labelFlagAllVis;
 	private static TableItem itemInserimento = null;
 	private static TableItem itemModifica = null;
+	private Button radioButtonIntolleranza = null;
+	private Button radioButtonAllergia = null;
+	private Label labelAlimentoVis;
+	private Text textAlimentoVis;
+	private Label labelDerivatiVis;
+	private Text textDerivatiVis;
+	private Label labelGradoVis;
+	private Text textGradoVis;
+	private Label labelEffettiCollVis;
+	private Text textEffettiCollVis;
+	private Button buttonModificaAllergie;
+	private Button buttonAppyModAllergie;
+	private Button buttonChiudiAll;
 	
 	
 	public AnamnesiShell() {}
@@ -223,7 +240,7 @@ public class AnamnesiShell {
 						
 						sShellDettagliInterventi.close();
 						
-						//Aggiornare la tabella degli interventi in AnamnesiTableView
+						//TODO Aggiornare la tabella degli interventi in AnamnesiTableView
 					}
 				});
 	
@@ -489,10 +506,146 @@ public class AnamnesiShell {
 	
 	
 	//-----------------------------------------ALLERGIE/INTOLLERANZE---------------------------------------------------
-	/**
-	 * Crea il gruppo degli oggetti per inserire allergie/intolleranze collegate al paziente
-	 */
-	private void createGroupAll(Composite comp) {
+	public void createSShellDettagliAllergie(final TableItem rigaTableClick) {
+		String idAllInt = rigaTableClick.getText(0);
+		AnamnesiDAO an = new AnamnesiDAO();
+		final Intolleranzaallergia intAll = an.getAllergiaById(idAllInt);
+		
+		final String flag = rigaTableClick.getText(2);
+		final String sostanza = rigaTableClick.getText(3);
+		final String alimento = rigaTableClick.getText(4);
+		final String derivati = rigaTableClick.getText(5);
+		final String grado = rigaTableClick.getText(6);
+		final String effettiCollaterali = rigaTableClick.getText(7);
+		
+		sShellDettagliAllergie = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		sShellDettagliAllergie.setText("Dettagli Intolleranza/Allergia Selezionata");
+		sShellDettagliAllergie.setSize(new Point(712, 434));
+		
+		labelFlagAllVis = new Label(sShellDettagliAllergie, SWT.NONE);
+		labelFlagAllVis.setBounds(new Rectangle(20, 20, 130, 20));
+		labelFlagAllVis.setText("Intolleranza / Allergia");
+		radioButtonIntolleranza = new Button(sShellDettagliAllergie, SWT.RADIO);
+		radioButtonIntolleranza.setBounds(new Rectangle(170, 20, 100, 20));
+		radioButtonIntolleranza.setText("Intolleranza");
+		radioButtonIntolleranza.setEnabled(false);
+		radioButtonAllergia = new Button(sShellDettagliAllergie, SWT.RADIO);
+		radioButtonAllergia.setBounds(new Rectangle(280, 20, 100, 20));
+		radioButtonAllergia.setText("Allergia");
+		radioButtonAllergia.setEnabled(false);
+		if (flag.equals("int")) {
+			radioButtonIntolleranza.setSelection(true);
+			radioButtonAllergia.setSelection(false);
+		} else if (flag.equals("all")) {
+			radioButtonAllergia.setSelection(true);
+			radioButtonIntolleranza.setSelection(false);
+		}
+
+		labelSostanzaAllVis = new Label(sShellDettagliAllergie, SWT.NONE);
+		labelSostanzaAllVis.setBounds(new Rectangle(20, 60, 130, 20));
+		labelSostanzaAllVis.setText("Sostanza");
+		textSostanzaAllVis = new Text(sShellDettagliAllergie, SWT.NONE);
+		textSostanzaAllVis.setBounds(new Rectangle(170, 60, 500, 20));
+		textSostanzaAllVis.setEnabled(false);
+		textSostanzaAllVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textSostanzaAllVis.setText(sostanza);
+		
+		labelAlimentoVis = new Label(sShellDettagliAllergie, SWT.NONE);
+		labelAlimentoVis.setBounds(new Rectangle(20, 100, 130, 20));
+		labelAlimentoVis.setText("Alimento principale");
+		textAlimentoVis = new Text(sShellDettagliAllergie, SWT.NONE);
+		textAlimentoVis.setBounds(new Rectangle(170, 100, 500, 20));
+		textAlimentoVis.setEnabled(false);
+		textAlimentoVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textAlimentoVis.setText(alimento);
+		
+		labelDerivatiVis = new Label(sShellDettagliAllergie, SWT.NONE);
+		labelDerivatiVis.setBounds(new Rectangle(20, 140, 130, 20));
+		labelDerivatiVis.setText("Derivati");
+		textDerivatiVis = new Text(sShellDettagliAllergie, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textDerivatiVis.setBounds(new Rectangle(170, 140, 500, 60));
+		textDerivatiVis.setEnabled(false);
+		textDerivatiVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textDerivatiVis.setText(derivati);
+		
+		labelGradoVis = new Label(sShellDettagliAllergie, SWT.NONE);
+		labelGradoVis.setBounds(new Rectangle(20, 220, 130, 20));
+		labelGradoVis.setText("Grado");
+		textGradoVis = new Text(sShellDettagliAllergie, SWT.NONE);
+		textGradoVis.setBounds(new Rectangle(170, 220, 500, 20));
+		textGradoVis.setEnabled(false);
+		textGradoVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textGradoVis.setText(grado);
+		
+		labelEffettiCollVis = new Label(sShellDettagliAllergie, SWT.NONE);
+		labelEffettiCollVis.setBounds(new Rectangle(20, 260, 130, 20));
+		labelEffettiCollVis.setText("Effetti Collaterali");
+		textEffettiCollVis = new Text(sShellDettagliAllergie, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textEffettiCollVis.setBounds(new Rectangle(170, 260, 500, 60));
+		textEffettiCollVis.setEnabled(false);
+		textEffettiCollVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textEffettiCollVis.setText(effettiCollaterali);
+		
+		
+		buttonModificaAllergie = new Button(sShellDettagliAllergie, SWT.NONE);
+		buttonModificaAllergie.setBounds(new Rectangle(400, 350, 70, 25));
+		buttonModificaAllergie.setText("Modifica");
+		buttonModificaAllergie.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						radioButtonIntolleranza.setEnabled(true);
+						radioButtonAllergia.setEnabled(true);
+						textSostanzaAllVis.setEnabled(true);
+						textSostanzaAllVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						textAlimentoVis.setEnabled(true);
+						textAlimentoVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						textDerivatiVis.setEnabled(true);
+						textDerivatiVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						textGradoVis.setEnabled(true);
+						textGradoVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						textEffettiCollVis.setEnabled(true);
+						textEffettiCollVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						
+						buttonAppyModAllergie.setEnabled(true);
+						buttonModificaAllergie.setEnabled(false);
+					}
+				});
+		
+		buttonAppyModAllergie = new Button(sShellDettagliAllergie, SWT.NONE);
+		buttonAppyModAllergie.setBounds(new Rectangle(480, 350, 110, 25));
+		buttonAppyModAllergie.setText("Applica Modifiche");
+		buttonAppyModAllergie.setEnabled(false);
+		buttonAppyModAllergie.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						Paziente pazSel = AnamnesiTTableView.getPazienteSel();
+						String flagAI = "";
+						if(radioButtonAllergia.getSelection())
+							flagAI = "all";
+						else 
+							flagAI = "int";
+						AnamnesiDAO an = new AnamnesiDAO();
+						an.modificaAllergie(intAll, flagAI, textSostanzaAllVis.getText(), textAlimentoVis.getText(), textDerivatiVis.getText(), textGradoVis.getText(), textEffettiCollVis.getText());
+						
+						sShellDettagliAllergie.close();
+						
+						//TODO Aggiornare la tabella delle allergie in AnamnesiTableView
+					}
+				});
+	
+		buttonChiudiAll = new Button(sShellDettagliAllergie, SWT.NONE);
+		buttonChiudiAll.setBounds(new Rectangle(600, 350, 70, 25));
+		buttonChiudiAll.setText("Chiudi");
+		buttonChiudiAll.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						sShellDettagliAllergie.close();
+					}
+				});
+		sShellDettagliAllergie.open();
+		
+	}
+	
+	
+	
+	/*private void createGroupAll(Composite comp) {
 		groupAllergie = new Group(comp, SWT.NONE);
 		groupAllergie.setText("Inserimento eventuali intolleranze o allergie");
 		groupAllergie.setBounds(new Rectangle(20, 63, 1000, 400));
@@ -557,7 +710,7 @@ public class AnamnesiShell {
 				an.registraAllergie(flag, textSost.getText(), textAlPrinc.getText(), textAreaDerivati.getText(), textGrado.getText(), textAreaEffColl.getText(), nomePaziente);
 		}
 	});
-	}
+	}*/
 
 	
 	
