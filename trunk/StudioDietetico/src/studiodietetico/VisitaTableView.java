@@ -27,6 +27,7 @@ import command.VisitaDAO;
 import common.Utils;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.widgets.Combo;
 
 public class VisitaTableView extends ViewPart {
 	private Composite top = null;
@@ -66,6 +67,9 @@ public class VisitaTableView extends ViewPart {
 	private Composite compositeShell = null;
 	private Fattura fatturaSelezionata = null;
 	private Visita visitaSel = null;
+	private Label labelSelezAttributo = null;
+	private Combo comboAttributi = null;
+	private Text textRicerca = null;
 	
 	public VisitaTableView() {}
 
@@ -383,7 +387,40 @@ public class VisitaTableView extends ViewPart {
 		tableConti = new Table(compositeShell, SWT.FILL | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL);
 		tableConti.setHeaderVisible(true);
 		tableConti.setLinesVisible(true);
-		tableConti.setSize(new Point(589, 328));
+		tableConti.setLocation(new Point(0, 39));
+		tableConti.setSize(new Point(589, 289));
+		labelSelezAttributo = new Label(compositeShell, SWT.NONE);
+		labelSelezAttributo.setBounds(new Rectangle(2, 6, 123, 22));
+		labelSelezAttributo.setText("Ricerca sull'attributo: ");
+		createComboAttributi();
+		textRicerca = new Text(compositeShell, SWT.BORDER);
+		textRicerca.setBounds(new Rectangle(283, 6, 196, 24));
+		textRicerca.setEditable(false);
+		textRicerca.addModifyListener(new org.eclipse.swt.events.ModifyListener() {
+			public void modifyText(org.eclipse.swt.events.ModifyEvent e) {
+				tableConti.removeAll(); //rimuove le righe
+				//rimuove le colonne
+				int k = 0;
+				while (k<tableConti.getColumnCount()) {
+					tableConti.getColumn(k).dispose();
+				}
+				//rigenera la tabella
+				generaTabella();
+				//ricerca incrementale nella colonna selezionata
+				int indiceColonnaSel = comboAttributi.getSelectionIndex()+1;
+				int i = 0;
+				while (i<tableConti.getItems().length) {
+					String item = tableConti.getItem(i).getText(indiceColonnaSel).toLowerCase();
+					if (!(item.startsWith(textRicerca.getText().toLowerCase()))) {
+						tableConti.remove(i);
+					}
+					else {
+						i++;
+					}
+				}
+			}
+		});
+		
 		tableConti.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				createSShellNuovaFattura();
@@ -407,6 +444,44 @@ public class VisitaTableView extends ViewPart {
         		buttonAggiornaFattura.setVisible(true);
 			}
 		});
+		generaTabella();
+		/*TableColumn colonnaId = new TableColumn(tableConti, SWT.CENTER);	
+		colonnaId.setText("id");
+		colonnaId.setWidth(0);
+		colonnaId.setResizable(false);
+		TableColumn colonnaData = new TableColumn(tableConti, SWT.CENTER);	
+		colonnaData.setText("Data ultima modifica");
+		TableColumn colonnaDescrizione = new TableColumn(tableConti, SWT.CENTER);	
+		colonnaDescrizione.setText("Descrizione");
+		TableColumn colonnaNote = new TableColumn(tableConti, SWT.CENTER);	
+		colonnaNote.setText("Note");
+		for (int i = 0; i < fatture.size(); i++) {
+			TableItem item = new TableItem(tableConti, SWT.NONE);
+			item.setText(0, ""+fatture.get(i).getIdFattura());
+			item.setText(1, ""+fatture.get(i).getData());
+			item.setText(2, fatture.get(i).getDescrizione());
+			item.setText(3, fatture.get(i).getNote());
+		}
+		//elimina i secondi e i millisecondi dagli items
+		for (TableItem item : tableConti.getItems()) {
+			int i = 1;
+			String testoitem = item.getText(i);
+			int lunghezzaTestoItem = item.getText(i).length();
+			item.setText(i, testoitem.substring(0, lunghezzaTestoItem-5));
+		}
+		for (int i = 1; i < tableConti.getColumnCount(); i++) {
+			tableConti.getColumn(i).pack();
+			tableConti.getColumn(i).setResizable(false);
+		}
+		
+		classVis.ordinamentoData(tableConti, 1);
+		classVis.ordinamentoStringhe(tableConti, 2);
+		classVis.ordinamentoStringhe(tableConti, 3);
+		*/
+		sShellFatture.open();
+	}
+
+	private void generaTabella() {
 		TableColumn colonnaId = new TableColumn(tableConti, SWT.CENTER);	
 		colonnaId.setText("id");
 		colonnaId.setWidth(0);
@@ -440,7 +515,21 @@ public class VisitaTableView extends ViewPart {
 		classVis.ordinamentoStringhe(tableConti, 2);
 		classVis.ordinamentoStringhe(tableConti, 3);
 		
-		sShellFatture.open();
+	}
+
+	private void createComboAttributi() {
+		comboAttributi = new Combo(compositeShell, SWT.READ_ONLY);
+		comboAttributi.setBounds(new Rectangle(131, 6, 136, 22));
+		comboAttributi.setItems(new String[] {"Data","Descrizione","Note"});
+		comboAttributi
+				.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						textRicerca.setEditable(true);
+					}
+					public void widgetDefaultSelected(
+							org.eclipse.swt.events.SelectionEvent e) {
+					}
+				});
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10,310,351"
