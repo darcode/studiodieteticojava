@@ -29,8 +29,8 @@ public class TableUtil {
 				TableItem tblItem = new TableItem(table, SWT.NONE);
 				Object[] valuesObj = new Object[GenericBean.getFieldsNumber(item)];
 				String[] values = new String[GenericBean.getFieldsNumber(item)];
-				int i = 0;
 				
+				int i = 0;
 				for (String colonna : colonne) {
 					valuesObj[i] = GenericBean.getProperty(colonna, item);
 					//if a cascata per sostituire l'id hibernate con l'id numerico 
