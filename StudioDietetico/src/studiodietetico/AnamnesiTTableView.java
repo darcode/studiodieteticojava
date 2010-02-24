@@ -39,7 +39,9 @@ public class AnamnesiTTableView extends ViewPart {
 	//Allergie
 	private Composite compositeAllergie = null;
 	private ArrayList<Object> allergiePazList;
-	
+	//Attivit‡Fisica
+	private Composite compositeAttivitaFisica = null;
+	private ArrayList<Object> sportPazList;
 
 	
 	//Costruttore
@@ -86,6 +88,8 @@ public class AnamnesiTTableView extends ViewPart {
 		
 		createCompositeAllergie(tabFolder);
 		
+		createCompositeAttivitaFisica(tabFolder);
+		
 	}
 
 	//INTERVENTI
@@ -102,7 +106,7 @@ public class AnamnesiTTableView extends ViewPart {
 				
 		//Richiama il costruttore della classe Form per gli interventi
 		AnamnesiShell aw = new AnamnesiShell();
-		classVis = new ProvaTableForm(compositeInterventi, SWT.BORDER, interventiPazList,"createSShellDettagliInterventi", "createSShellInserimentoInterventi", aw, "AnamnesiTableView");
+		classVis = new ProvaTableForm(compositeInterventi, SWT.BORDER, interventiPazList,"createSShellDettagliInterventi", "createSShellInserimentoInterventi", aw, "InterventiTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -113,21 +117,6 @@ public class AnamnesiTTableView extends ViewPart {
 		
 		//Aggiunge la colonna che visualizza il nome dell'intervento
 		aggiungiColonnaIntervento(/*classVis, interventiPazList*/);
-		
-		//Aggiunge la colonna che visualizza il nome dell'intervento
-		TableColumn colonna = new TableColumn(classVis.getTableVisualizzazione(), SWT.CENTER);
-		colonna.setText("Tipo Intervento");
-		String nome = "";
-		TableItem itemSel = null;
-		for (int j = 0; j < interventiPazList.size(); j++) {
-			nome = ((Intervento)interventiPazList.get(j)).getTipologiaintervento().getNome();
-			itemSel = classVis.getTableVisualizzazione().getItem(j);
-			itemSel.setText(classVis.getTableVisualizzazione().getColumnCount()-1, nome);
-		}
-		colonna.pack();
-		colonna.setResizable(false);
-		
-		
 		
 		//Aggiorna la combo con l'attributo aggiunto
 		classVis.aggiornaCombo();
@@ -168,29 +157,6 @@ public class AnamnesiTTableView extends ViewPart {
 		colonna.setResizable(false);
 	}
 	
-	public void aggiornaTable() { //listaElementi Ë interventiPazList
-		AnamnesiDAO an = new AnamnesiDAO();
-		ArrayList<Object> listaElementi = an.getListInterventi();
-		//Aggiorna la tabella quando Ë modificato qualche item
-		classVis.getTableVisualizzazione().removeAll(); //rimuove gli item
-		//rimuove le colonne
-		int k = 0;
-		while (k<classVis.getTableVisualizzazione().getColumnCount()) {
-			classVis.getTableVisualizzazione().getColumn(k).dispose();
-		}
-		TableUtil.riempiTabellaEntita(classVis.getTableVisualizzazione(), listaElementi);
-		//riempiTabellaEntita(classVis.getTableVisualizzazione(), interventiPazList);
-		for (TableColumn colonna : classVis.getTableVisualizzazione().getColumns()) {
-			colonna.pack();
-			colonna.setResizable(false);
-		}
-		
-		for (int i = 0; i < 3; i++) {
-			classVis.getTableVisualizzazione().getColumn(i).setWidth(0);
-		}
-	}
-	
-	
 	
 	//ALLERGIE
 	private void createCompositeAllergie(TabFolder tabFolder) {
@@ -198,9 +164,92 @@ public class AnamnesiTTableView extends ViewPart {
 		TabItem tabItemAllergie = new TabItem(tabFolder, SWT.NONE);
 		tabItemAllergie.setText("Allergie/Intolleranze");
 		tabItemAllergie.setControl(compositeAllergie);
-		//allergiePazList = AnamnesiDAO.getAllergieListByPaziente(pazSelHome);
+		allergiePazList = AnamnesiDAO.getAllergieListByPaziente(pazSelHome);
+		
+		//Richiama il costruttore della classe Form per le allergie
+		AnamnesiShell aw = new AnamnesiShell();
+		classVis = new ProvaTableForm(compositeAllergie, SWT.BORDER, allergiePazList,"createSShellDettagliAllergie", "createSShellInserimentoAllergie", aw, "AllergieTableView");
+		classVis.setBounds(new Rectangle(6, 50, 800, 332));
+		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		classVis.setLayout(new GridLayout(1, true));
+		classVis.setBackground(Utils.getStandardWhiteColor());
+		
+		//Nasconde le colonne che visualizzano gli id
+		classVis.nascondiColonne(new int[]{0,1,5,7});
+		
+		//Aggiorna la combo con l'attributo aggiunto
+		classVis.aggiornaCombo();
+		
+		//Applica l'ordinamento alle colonne visualizzate
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 2);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 3);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 4);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 6);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	//ATTIVITA' FISICA
+	private void createCompositeAttivitaFisica(TabFolder tabFolder) {
+		compositeAttivitaFisica = new Composite(tabFolder, SWT.TRANSPARENT);
+		TabItem tabItemAttivitaFisica = new TabItem(tabFolder, SWT.NONE);
+		tabItemAttivitaFisica.setText("Attivit‡ Fisica");
+		tabItemAttivitaFisica.setControl(compositeAttivitaFisica);
+		sportPazList = AnamnesiDAO.getSportListByPaziente(pazSelHome);
+		
+		//Richiama il costruttore della classe Form per gli sport
+		AnamnesiShell aw = new AnamnesiShell();
+		classVis = new ProvaTableForm(compositeAttivitaFisica, SWT.BORDER, sportPazList,"createSShellDettagliSport", "createSShellInserimentoSport", aw, "SportTableView");
+		classVis.setBounds(new Rectangle(6, 50, 800, 332));
+		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		classVis.setLayout(new GridLayout(1, true));
+		classVis.setBackground(Utils.getStandardWhiteColor());
+		
+		//Nasconde le colonne che visualizzano gli id
+		//classVis.nascondiColonne(new int[]{0,5});
+		
+		//Aggiorna la combo con l'attributo aggiunto
+		classVis.aggiornaCombo();
+		
+		//Applica l'ordinamento alle colonne visualizzate
+		/*classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 1);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 2);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 3);
+		classVis.ordinamentoInteri(classVis.getTableVisualizzazione(), 4);*/
 		
 	}
+	
+	
+	
+	
+	
+	
+	/*public void aggiornaTable() { //listaElementi Ë interventiPazList
+	AnamnesiDAO an = new AnamnesiDAO();
+	ArrayList<Object> listaElementi = an.getListInterventi();
+	//Aggiorna la tabella quando Ë modificato qualche item
+	classVis.getTableVisualizzazione().removeAll(); //rimuove gli item
+	//rimuove le colonne
+	int k = 0;
+	while (k<classVis.getTableVisualizzazione().getColumnCount()) {
+		classVis.getTableVisualizzazione().getColumn(k).dispose();
+	}
+	TableUtil.riempiTabellaEntita(classVis.getTableVisualizzazione(), listaElementi);
+	
+	for (TableColumn colonna : classVis.getTableVisualizzazione().getColumns()) {
+		colonna.pack();
+		colonna.setResizable(false);
+	}
+	
+	for (int i = 0; i < 3; i++) {
+		classVis.getTableVisualizzazione().getColumn(i).setWidth(0);
+	}
+}*/
 
 }
 
