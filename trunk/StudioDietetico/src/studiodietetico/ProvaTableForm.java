@@ -222,7 +222,7 @@ public class ProvaTableForm extends ListComposite {
 						i++;
 					}
 				}
-				System.out.println("tabella modificata");
+				//System.out.println("tabella modificata");
 			}
 		});
 	
