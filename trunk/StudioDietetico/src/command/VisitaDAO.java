@@ -233,4 +233,24 @@ public class VisitaDAO extends BaseDAO {
 		visita = (Visita) q.uniqueResult();
 		return visita;
 	}
+	
+	public static void registraTipologiaVisita(String tipologia, double costo) {
+		getSession();
+		begin();
+		Tipologiavisita tv = new Tipologiavisita();
+		tv.setTipologia(tipologia);
+		tv.setCostoVisita(costo);
+		getSession().saveOrUpdate(tv);
+		commit();
+		close();
+	}
+	
+	public static Tipologiavisita getTipVisitaByID(int id) {
+		begin();
+		Query q = getSession().createQuery(
+				"FROM Tipologiavisita tv WHERE tv.idTipologiaVisita=" + id);
+		Tipologiavisita tv = new Tipologiavisita();
+		tv = (Tipologiavisita) q.uniqueResult();
+		return tv;
+	}
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import org.hibernate.Query;
 
 import hibernate.Paziente;
+import hibernate.Visita;
 
 public class PazienteDAO extends BaseDAO{
 	public PazienteDAO(){}
@@ -92,6 +93,15 @@ public class PazienteDAO extends BaseDAO{
 		commit();
 		return pazienti;
 
+	}
+	
+	public static Paziente getPazienteByID(int id) {
+		begin();
+		Query q = getSession().createQuery(
+				"FROM Paziente p WHERE p.idPaziente=" + id);
+		Paziente paziente = new Paziente();
+		paziente = (Paziente) q.uniqueResult();
+		return paziente;
 	}
 	
 }
