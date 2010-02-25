@@ -65,14 +65,13 @@ public class TurniMediciView extends ViewPart {
 	private Button buttonConfermaAggiungiTurno = null;
 	private Group groupGestisciTurnoMedico = null;
 	private Button buttonConfermaRimuoviTurno = null;
+	
 	public TurniMediciView() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
         top = new Composite(parent, SWT.NONE);
-		// TODO Auto-generated method stub
         
         final DateTime timeInizioTurno = new DateTime(top, SWT.TIME | SWT.SHORT);
         final DateTime timeFineTurno = new DateTime(top, SWT.TIME | SWT.SHORT);
@@ -110,8 +109,6 @@ public class TurniMediciView extends ViewPart {
         				comboTurni.setVisible(false);
         				buttonConfermaAggiungiTurno.setVisible(false);
         				groupGestisciTurnoMedico.setVisible(true);
-        				       				
-        				System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
         			}
         		});
         labelOrganizzazioneTurni = new Label(top, SWT.NONE);
@@ -130,7 +127,6 @@ public class TurniMediciView extends ViewPart {
         				timeInizioTurno.setVisible(true);
         				timeFineTurno.setVisible(true);
         				buttonAggiungiOk.setVisible(true);
-        				System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
         			}
         		});
         labelNomeTurno = new Label(top, SWT.NONE);
@@ -198,7 +194,7 @@ public class TurniMediciView extends ViewPart {
         				//comboTurni.setVisible(false);
         				buttonConfermaRimuoviTurno.setVisible(false);
         				groupGestisciTurnoMedico.setVisible(false);
-        				System.out.println("Turno del medico rimosso"); // TODO Auto-generated Event stub widgetSelected()
+        				System.out.println("Turno del medico rimosso"); 
         			}
         		});
         buttonConfermaAggiungiTurno
@@ -221,7 +217,7 @@ public class TurniMediciView extends ViewPart {
         				comboTurni.setVisible(false);
         				buttonConfermaAggiungiTurno.setVisible(false);
         				groupGestisciTurnoMedico.setVisible(false);
-        				System.out.println("Turno del medico registrato"); // TODO Auto-generated Event stub widgetSelected()
+        				System.out.println("Turno del medico registrato"); 
         			}
         		});
         createGroupGestisciTurnoMedico();
@@ -255,7 +251,7 @@ public class TurniMediciView extends ViewPart {
         				item.setText(2, oraFineStringRidotta);
         				textNomeTurno.setText("");
         				
-        				System.out.println("turno inserito"); // TODO Auto-generated Event stub widgetSelected()
+        				System.out.println("turno inserito"); 
         			}
         		});
         timeFineTurno.setBounds(434, 425, 70, 20);
@@ -271,7 +267,6 @@ public class TurniMediciView extends ViewPart {
         				buttonConfermaAggiungiTurno.setVisible(true);
         				buttonConfermaRimuoviTurno.setVisible(false);
         				groupGestisciTurnoMedico.setVisible(true);
-        				System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
         			}
         		});
         tableViewer = new TableViewer(tableTurni);
@@ -281,8 +276,7 @@ public class TurniMediciView extends ViewPart {
     	tableTurni.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
     		public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
     			buttonAggiungiTurnoMedico.setEnabled(true);
-    			buttonRimuoviTurnoMedico.setEnabled(true);
-    			System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
+    			buttonRimuoviTurnoMedico.setEnabled(true); 
     		}
     	});
     	String[] giorniMese = {"Medici \\ Giorni", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"};
@@ -340,8 +334,6 @@ public class TurniMediciView extends ViewPart {
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -369,14 +361,17 @@ public class TurniMediciView extends ViewPart {
 				int mese = (comboMesi.getSelectionIndex())+1;
 				if (mese==4 |  mese==6 | mese==9 | mese==11 ) {
 					tableTurni.getColumn(31).setText("");
+					spinnerGiornoMese.setMaximum(30);
 				} else if (mese==2) {
 					tableTurni.getColumn(31).setText("");
 					tableTurni.getColumn(30).setText("");
 					tableTurni.getColumn(29).setText("");
+					spinnerGiornoMese.setMaximum(28);
 				} else {
 					tableTurni.getColumn(31).setText("31");
 					tableTurni.getColumn(30).setText("30");
 					tableTurni.getColumn(29).setText("29");
+					spinnerGiornoMese.setMaximum(31);
 				}
 				turniMediciMensili = MedicoDAO.getTurniMediciByMese(mese);
 				/*per ogni giorno del mese 
@@ -401,7 +396,7 @@ public class TurniMediciView extends ViewPart {
 					}
 				}
 				System.out.println("numero di turni per questo mese: "+turniMediciMensili.size());
-				System.out.println("mese selezionato: "+mese); // TODO Auto-generated Event stub widgetSelected()
+				System.out.println("mese selezionato: "+mese); 
 			}
 			public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
 			}
