@@ -445,39 +445,7 @@ public class VisitaTableView extends ViewPart {
 			}
 		});
 		generaTabella();
-		/*TableColumn colonnaId = new TableColumn(tableConti, SWT.CENTER);	
-		colonnaId.setText("id");
-		colonnaId.setWidth(0);
-		colonnaId.setResizable(false);
-		TableColumn colonnaData = new TableColumn(tableConti, SWT.CENTER);	
-		colonnaData.setText("Data ultima modifica");
-		TableColumn colonnaDescrizione = new TableColumn(tableConti, SWT.CENTER);	
-		colonnaDescrizione.setText("Descrizione");
-		TableColumn colonnaNote = new TableColumn(tableConti, SWT.CENTER);	
-		colonnaNote.setText("Note");
-		for (int i = 0; i < fatture.size(); i++) {
-			TableItem item = new TableItem(tableConti, SWT.NONE);
-			item.setText(0, ""+fatture.get(i).getIdFattura());
-			item.setText(1, ""+fatture.get(i).getData());
-			item.setText(2, fatture.get(i).getDescrizione());
-			item.setText(3, fatture.get(i).getNote());
-		}
-		//elimina i secondi e i millisecondi dagli items
-		for (TableItem item : tableConti.getItems()) {
-			int i = 1;
-			String testoitem = item.getText(i);
-			int lunghezzaTestoItem = item.getText(i).length();
-			item.setText(i, testoitem.substring(0, lunghezzaTestoItem-5));
-		}
-		for (int i = 1; i < tableConti.getColumnCount(); i++) {
-			tableConti.getColumn(i).pack();
-			tableConti.getColumn(i).setResizable(false);
-		}
 		
-		classVis.ordinamentoData(tableConti, 1);
-		classVis.ordinamentoStringhe(tableConti, 2);
-		classVis.ordinamentoStringhe(tableConti, 3);
-		*/
 		sShellFatture.open();
 	}
 
