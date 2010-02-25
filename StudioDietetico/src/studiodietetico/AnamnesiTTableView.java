@@ -35,7 +35,7 @@ public class AnamnesiTTableView extends ViewPart {
 	//Interventi
 	private Composite compositeInterventi = null;
 	private ArrayList<Object> interventiPazList;
-	private ProvaTableForm classVis;
+	private TableForm classVis;
 	//Allergie
 	private Composite compositeAllergie = null;
 	private ArrayList<Object> allergiePazList;
@@ -106,7 +106,7 @@ public class AnamnesiTTableView extends ViewPart {
 				
 		//Richiama il costruttore della classe Form per gli interventi
 		AnamnesiShell aw = new AnamnesiShell();
-		classVis = new ProvaTableForm(compositeInterventi, SWT.BORDER, interventiPazList,"createSShellDettagliInterventi", "createSShellInserimentoInterventi", aw, "InterventiTableView");
+		classVis = new TableForm(compositeInterventi, SWT.BORDER, interventiPazList,"createSShellDettagliInterventi", "createSShellInserimentoInterventi", aw, "InterventiTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -127,7 +127,7 @@ public class AnamnesiTTableView extends ViewPart {
 		classVis.ordinamentoData(classVis.getTableVisualizzazione(), 3);
 	}
 	
-	public static void aggiungiColonnaIntervento(ProvaTableForm classVis, ArrayList<Object> interventiPazList) {
+	public static void aggiungiColonnaIntervento(TableForm classVis, ArrayList<Object> interventiPazList) {
 		//Aggiunge la colonna che visualizza il nome dell'intervento
 		TableColumn colonna = new TableColumn(classVis.getTableVisualizzazione(), SWT.CENTER);
 		colonna.setText("Tipo Intervento");
@@ -168,7 +168,7 @@ public class AnamnesiTTableView extends ViewPart {
 		
 		//Richiama il costruttore della classe Form per le allergie
 		AnamnesiShell aw = new AnamnesiShell();
-		classVis = new ProvaTableForm(compositeAllergie, SWT.BORDER, allergiePazList,"createSShellDettagliAllergie", "createSShellInserimentoAllergie", aw, "AllergieTableView");
+		classVis = new TableForm(compositeAllergie, SWT.BORDER, allergiePazList,"createSShellDettagliAllergie", "createSShellInserimentoAllergie", aw, "AllergieTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -204,7 +204,7 @@ public class AnamnesiTTableView extends ViewPart {
 		
 		//Richiama il costruttore della classe Form per gli sport
 		AnamnesiShell aw = new AnamnesiShell();
-		classVis = new ProvaTableForm(compositeAttivitaFisica, SWT.BORDER, sportPazList,"createSShellDettagliSport", "createSShellInserimentoSport", aw, "SportTableView");
+		classVis = new TableForm(compositeAttivitaFisica, SWT.BORDER, sportPazList,"createSShellDettagliSport", "createSShellInserimentoSport", aw, "SportTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));

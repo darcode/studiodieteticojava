@@ -19,7 +19,7 @@ import common.Utils;
 
 public class DietaTableView extends ViewPart {
 	private Composite top = null;
-	private ProvaTableForm classVis;
+	private TableForm classVis;
 	private ArrayList<Object> diete;
 	
 	public DietaTableView() {}
@@ -29,7 +29,7 @@ public class DietaTableView extends ViewPart {
 		top = new Composite(parent, SWT.NONE);
 		diete = DietaDAO.getDieteObject();
 		//TODO aggiungere parametri
-		classVis = new ProvaTableForm(top, SWT.BORDER, diete, "","","","DietaTableView");
+		classVis = new TableForm(top, SWT.BORDER, diete, "","","","DietaTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -49,7 +49,7 @@ public class DietaTableView extends ViewPart {
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 9);
 	}
 
-	public static void aggiungiColonne(ProvaTableForm classVis, ArrayList<Object> diete) {
+	public static void aggiungiColonne(TableForm classVis, ArrayList<Object> diete) {
 		TableColumn colonna = new TableColumn(classVis.getTableVisualizzazione(), SWT.CENTER);
 		colonna.setText("Kcal");
 		String nome = "";

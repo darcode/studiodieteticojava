@@ -20,7 +20,7 @@ import common.Utils;
 
 public class TurniTableView extends ViewPart {
 	private Composite top = null;
-	private ProvaTableForm classVis;
+	private TableForm classVis;
 	private ArrayList<Object> prestazioni;
 
 	public TurniTableView() {}
@@ -30,7 +30,7 @@ public class TurniTableView extends ViewPart {
 		top = new Composite(parent, SWT.NONE);
 		prestazioni = MedicoDAO.getPrestazioniObject();
 		//TODO aggiungere parametri
-		classVis = new ProvaTableForm(top, SWT.BORDER, prestazioni, "","","","TurniTableView");
+		classVis = new TableForm(top, SWT.BORDER, prestazioni, "","","","TurniTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -47,7 +47,7 @@ public class TurniTableView extends ViewPart {
 
 	}
 
-	public static void aggiungiColonne(ProvaTableForm classVis, ArrayList<Object> prestazioni) {
+	public static void aggiungiColonne(TableForm classVis, ArrayList<Object> prestazioni) {
 		TableColumn colonna = new TableColumn(classVis.getTableVisualizzazione(), SWT.CENTER);
 		colonna.setText("Data turno");
 		String nome = "";

@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Combo;
 
 public class VisitaTableView extends ViewPart {
 	private Composite top = null;
-	private ProvaTableForm classVis;
+	private TableForm classVis;
 	private ArrayList<Object> visite;  //  @jve:decl-index=0:
 	private Shell sShellNuovaFattura = null;  //  @jve:decl-index=0:visual-constraint="10,425"
 	private Group groupPrenotazione = null;
@@ -78,7 +78,7 @@ public class VisitaTableView extends ViewPart {
 		top = new Composite(parent, SWT.NONE);
 		visite = VisitaDAO.getVisite();
 		//TODO aggiungere parametri
-		classVis = new ProvaTableForm(top, SWT.BORDER, visite, "","","","VisitaTableView");
+		classVis = new TableForm(top, SWT.BORDER, visite, "","","","VisitaTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -124,7 +124,7 @@ public class VisitaTableView extends ViewPart {
 
 	}
 	
-	public static void aggiungiColonne(ProvaTableForm classVis, ArrayList<Object> visite) {
+	public static void aggiungiColonne(TableForm classVis, ArrayList<Object> visite) {
 		TableColumn colonna = new TableColumn(classVis.getTableVisualizzazione(), SWT.CENTER);
 		colonna.setText("Medico");
 		String nome = "";
