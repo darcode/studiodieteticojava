@@ -30,7 +30,7 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Text;
 
 
-public class ProvaTableForm extends ListComposite {
+public class TableForm extends ListComposite {
 
 	public Composite top;
 	private Label labelSelItem;
@@ -48,7 +48,7 @@ public class ProvaTableForm extends ListComposite {
 	int numeroCol;
 	
 	
-	public ProvaTableForm(Composite parent, int style, ArrayList<Object> listaElementi, String methodCreateShellDettagli, String methodCreateShellIns, Object classShell, String classe) {
+	public TableForm(Composite parent, int style, ArrayList<Object> listaElementi, String methodCreateShellDettagli, String methodCreateShellIns, Object classShell, String classe) {
 		super(parent, style);
 		rigaTableClick = null;
 		idShellVisualizzaDettagli = methodCreateShellDettagli;
@@ -135,7 +135,7 @@ public class ProvaTableForm extends ListComposite {
 				//nasconde, aggiorna e ordina le colonne in base alla classe chiamante 
 				if (classeChiamante.equalsIgnoreCase("VisitaTableView")) {
 					nascondiColonne(new int[] {0,1,2,3,6,7,8});
-					VisitaTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+					VisitaTableView.aggiungiColonne(TableForm.this, listaElementiTable);
 					ordinamentoData(tableVisualizzazione, 4);
 					ordinamentoData(tableVisualizzazione, 5);
 					ordinamentoStringhe(tableVisualizzazione, 9);
@@ -163,14 +163,14 @@ public class ProvaTableForm extends ListComposite {
 				}
 				else if (classeChiamante.equalsIgnoreCase("PrenotazioneTableView")) {
 					nascondiColonne(new int[] {0,1,2,4});
-					PrenotazioneTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+					PrenotazioneTableView.aggiungiColonne(TableForm.this, listaElementiTable);
 					ordinamentoData(tableVisualizzazione, 3);
 					ordinamentoStringhe(tableVisualizzazione, 5);
 					ordinamentoStringhe(tableVisualizzazione, 6);
 				}
 				else if (classeChiamante.equalsIgnoreCase("DietaTableView")) {
 					nascondiColonne(new int[] {0,1,4,5});
-					DietaTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+					DietaTableView.aggiungiColonne(TableForm.this, listaElementiTable);
 					ordinamentoStringhe(tableVisualizzazione, 2);
 					ordinamentoInteri(tableVisualizzazione, 3);
 					ordinamentoInteri(tableVisualizzazione, 6);
@@ -180,7 +180,7 @@ public class ProvaTableForm extends ListComposite {
 				}
 				else if (classeChiamante.equalsIgnoreCase("PrescrizioneTableView")) {
 					nascondiColonne(new int[] {0,1,2,5});
-					PrescrizioneTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+					PrescrizioneTableView.aggiungiColonne(TableForm.this, listaElementiTable);
 					ordinamentoData(tableVisualizzazione, 3);
 					ordinamentoInteri(tableVisualizzazione, 4);
 					ordinamentoStringhe(tableVisualizzazione, 6);
@@ -188,13 +188,13 @@ public class ProvaTableForm extends ListComposite {
 				}
 				else if (classeChiamante.equalsIgnoreCase("TurniTableView")) {
 					nascondiColonne(new int[] {0,1,2});
-					TurniTableView.aggiungiColonne(ProvaTableForm.this, listaElementiTable);
+					TurniTableView.aggiungiColonne(TableForm.this, listaElementiTable);
 					ordinamentoData(tableVisualizzazione, 3);
 					ordinamentoStringhe(tableVisualizzazione, 6);
 				}
 				else if (classeChiamante.equalsIgnoreCase("FattureTableView")) {
 					nascondiColonne(new int[] {0});
-					FattureTableView.modificaColonna(ProvaTableForm.this, listaElementiTable);
+					FattureTableView.modificaColonna(TableForm.this, listaElementiTable);
 					ordinamentoInteri(tableVisualizzazione, 1);
 					ordinamentoInteri(tableVisualizzazione, 2);
 					ordinamentoInteri(tableVisualizzazione, 3);
@@ -204,7 +204,7 @@ public class ProvaTableForm extends ListComposite {
 				}
 				else if (classeChiamante.equalsIgnoreCase("InterventiTableView")) {
 					nascondiColonne(new int[]{0,1,2});
-					AnamnesiTTableView.aggiungiColonnaIntervento(ProvaTableForm.this, listaElementiTable);
+					AnamnesiTTableView.aggiungiColonnaIntervento(TableForm.this, listaElementiTable);
 					ordinamentoInteri(tableVisualizzazione, 4);
 					ordinamentoStringhe(tableVisualizzazione, 5);
 					ordinamentoData(tableVisualizzazione, 3);

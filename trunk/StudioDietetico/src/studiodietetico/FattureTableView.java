@@ -15,7 +15,7 @@ import common.Utils;
 
 public class FattureTableView extends ViewPart {
 	private Composite top = null;
-	private ProvaTableForm classVis;
+	private TableForm classVis;
 	private ArrayList<Object> fatture;
 	public static final String VIEW_ID = "StudioDietetico.FattureTableView";
 	
@@ -27,7 +27,7 @@ public class FattureTableView extends ViewPart {
 		top = new Composite(parent, SWT.NONE);
 		fatture = FatturaDAO.getFattureObject();
 		//TODO aggiungere parametri
-		classVis = new ProvaTableForm(top, SWT.BORDER, fatture, "","","","FattureTableView");
+		classVis = new TableForm(top, SWT.BORDER, fatture, "","","","FattureTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -47,7 +47,7 @@ public class FattureTableView extends ViewPart {
 		classVis.ordinamentoData(classVis.getTableVisualizzazione(), 6);
 	}
 
-	public static void modificaColonna(ProvaTableForm classVis, ArrayList<Object> prenotazioni) {
+	public static void modificaColonna(TableForm classVis, ArrayList<Object> prenotazioni) {
 		for (int i = 1; i < 4; i++) {
 			for (TableItem item : classVis.getTableVisualizzazione().getItems()) {
 				String testoitem = item.getText(i);

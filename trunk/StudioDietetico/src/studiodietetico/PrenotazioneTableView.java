@@ -19,7 +19,7 @@ import common.Utils;
 
 public class PrenotazioneTableView extends ViewPart {
 	private Composite top = null;
-	private ProvaTableForm classVis;
+	private TableForm classVis;
 	private ArrayList<Object> prenotazioni;
 	
 	public PrenotazioneTableView() {}
@@ -30,7 +30,7 @@ public class PrenotazioneTableView extends ViewPart {
 	prenotazioni = VisitaDAO.getPrenotazioniObject();
 	
 	//TODO aggiungere parametri
-	classVis = new ProvaTableForm(top, SWT.BORDER, prenotazioni, "","","","PrenotazioneTableView");
+	classVis = new TableForm(top, SWT.BORDER, prenotazioni, "","","","PrenotazioneTableView");
 	classVis.setBounds(new Rectangle(6, 50, 800, 332));
 	classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	classVis.setLayout(new GridLayout(1, true));
@@ -47,7 +47,7 @@ public class PrenotazioneTableView extends ViewPart {
 	classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 6);
 	}
 
-	public static void aggiungiColonne(ProvaTableForm classVis, ArrayList<Object> prenotazioni) {
+	public static void aggiungiColonne(TableForm classVis, ArrayList<Object> prenotazioni) {
 		TableColumn colonna = new TableColumn(classVis.getTableVisualizzazione(), SWT.CENTER);
 		colonna.setText("Paziente");
 		String nome = "";

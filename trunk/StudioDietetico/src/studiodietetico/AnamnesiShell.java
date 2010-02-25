@@ -294,9 +294,9 @@ public class AnamnesiShell {
 			colonna.setResizable(false);
 		}
 		tableTipoInt.getColumn(0).setWidth(0);
-		ProvaTableForm.ordinamentoStringhe(tableTipoInt, 1);
-		ProvaTableForm.ordinamentoStringhe(tableTipoInt, 2);
-		ProvaTableForm.ordinamentoStringhe(tableTipoInt, 3);
+		TableForm.ordinamentoStringhe(tableTipoInt, 1);
+		TableForm.ordinamentoStringhe(tableTipoInt, 2);
+		TableForm.ordinamentoStringhe(tableTipoInt, 3);
 		
 		createGroupInserimentoInt();
 		
@@ -464,9 +464,9 @@ public class AnamnesiShell {
 					colonna.setResizable(false);
 				}
 				tableTipoInt.getColumn(0).setWidth(0);
-				ProvaTableForm.ordinamentoStringhe(tableTipoInt, 1);
-				ProvaTableForm.ordinamentoStringhe(tableTipoInt, 2);
-				ProvaTableForm.ordinamentoStringhe(tableTipoInt, 3);
+				TableForm.ordinamentoStringhe(tableTipoInt, 1);
+				TableForm.ordinamentoStringhe(tableTipoInt, 2);
+				TableForm.ordinamentoStringhe(tableTipoInt, 3);
 		
 				calendarInserimento.setEnabled(true);
 				spinnerNumInterventi.setEnabled(true);

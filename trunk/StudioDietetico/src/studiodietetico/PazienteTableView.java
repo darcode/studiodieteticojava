@@ -14,7 +14,7 @@ import common.Utils;
 
 public class PazienteTableView extends ViewPart {
 	private Composite top = null;
-	private ProvaTableForm classVis;
+	private TableForm classVis;
 	private ArrayList<Object> pazienti;
 
 	public PazienteTableView() {}
@@ -24,7 +24,7 @@ public class PazienteTableView extends ViewPart {
 		top = new Composite(parent, SWT.NONE);
 		pazienti = PazienteDAO.getPazientiObject();
 		//TODO aggiungere parametri
-		classVis = new ProvaTableForm(top, SWT.BORDER, pazienti, "","","","PazienteTableView");
+		classVis = new TableForm(top, SWT.BORDER, pazienti, "","","","PazienteTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
