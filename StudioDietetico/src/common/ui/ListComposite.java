@@ -50,29 +50,56 @@ public class ListComposite extends Composite {
 		ArrayList<String> colonne = new ArrayList<String>();
 
 		if (lista.isEmpty()) {
-			//TODO per le altre classi come nella ricerca in ProvaTableForm
-			
-			
+			//TODO generare le colonne in base alla classe chiamante 			
 			if (classeChiamante.equalsIgnoreCase("VisitaTableView")) {
-				/*colonne.add("IdIntervento");
-				colonne.add("IdPaziente");
-				colonne.add("IdTipologiaIntervento");
-				colonne.add("Data");
-				colonne.add("Numero");*/
+				colonne.add("dataOraInizio");
+				colonne.add("dataOraFine");
+				colonne.add("Medico");
+				colonne.add("Paziente");
+				colonne.add("Fatturata");
 			} else if (classeChiamante.equalsIgnoreCase("PazienteTableView")) {
-							
+				colonne.add("cognome");
+				colonne.add("nome");
+				colonne.add("dataNascita");
+				colonne.add("sesso");
+				colonne.add("indirizzo");
+				colonne.add("citta");
 			} else if (classeChiamante.equalsIgnoreCase("MedicoTableView")) {
-							
+				colonne.add("cognome");
+				colonne.add("nome");
+				colonne.add("indirizzo");
+				colonne.add("citta");
+				colonne.add("specializzazione");
+				colonne.add("telefono1");
+				colonne.add("telefono2");
 			} else if (classeChiamante.equalsIgnoreCase("PrenotazioneTableView")) {
-							
+				colonne.add("dataOra");
+				colonne.add("Paziente");
+				colonne.add("Tipologia visita");			
 			} else if (classeChiamante.equalsIgnoreCase("DietaTableView")) {
-							
+				colonne.add("nome");
+				colonne.add("durataCiclo");
+				colonne.add("Kcal");
+				colonne.add("Indicata");
+				colonne.add("Contenuto presente");
+				colonne.add("Contenuto assente");			
 			} else if (classeChiamante.equalsIgnoreCase("PrescrizioneTableView")) {
-							
+				colonne.add("dataInizio");
+				colonne.add("numRipetizCiclo");
+				colonne.add("Paziente");
+				colonne.add("Dieta");			
 			} else if (classeChiamante.equalsIgnoreCase("TurniTableView")) {
-							
+				colonne.add("Data turno");
+				colonne.add("Ora inizio turno");
+				colonne.add("Ora fine turno");
+				colonne.add("Medico");			
 			} else if (classeChiamante.equalsIgnoreCase("FattureTableView")) {
-							
+				colonne.add("importo");
+				colonne.add("acconto");
+				colonne.add("importoSconto");
+				colonne.add("note");
+				colonne.add("descrizione");
+				colonne.add("data");			
 			} else if (classeChiamante.equalsIgnoreCase("InterventiTableView")) {
 				colonne.add("IdIntervento");
 				colonne.add("IdPaziente");
