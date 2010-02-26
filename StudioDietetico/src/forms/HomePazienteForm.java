@@ -141,7 +141,7 @@ public class HomePazienteForm extends ListComposite {
 		 */
 
 		paz = PazienteDAO.getPazientiPerLista();
-		riempiTabellaEntita(listElencoPazienti, paz);
+		riempiTabellaEntita(listElencoPazienti, paz,"");
 		listElencoPazienti.getColumn(0).setWidth(0);
 		// ArrayList<String> p = new ArrayList<String>();
 		// for (Object paziente : paz) {
