@@ -189,11 +189,6 @@ public class AnamnesiTTableView extends ViewPart {
 	
 	
 	
-	
-	
-	
-	
-	
 	//ATTIVITA' FISICA
 	private void createCompositeAttivitaFisica(TabFolder tabFolder) {
 		compositeAttivitaFisica = new Composite(tabFolder, SWT.TRANSPARENT);
@@ -211,16 +206,16 @@ public class AnamnesiTTableView extends ViewPart {
 		classVis.setBackground(Utils.getStandardWhiteColor());
 		
 		//Nasconde le colonne che visualizzano gli id
-		//classVis.nascondiColonne(new int[]{0,5});
+		classVis.nascondiColonne(new int[]{0,1});
 		
 		//Aggiorna la combo con l'attributo aggiunto
 		classVis.aggiornaCombo();
 		
 		//Applica l'ordinamento alle colonne visualizzate
-		/*classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 1);
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 2);
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 3);
-		classVis.ordinamentoInteri(classVis.getTableVisualizzazione(), 4);*/
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 4);
+		classVis.ordinamentoInteri(classVis.getTableVisualizzazione(), 5);
 		
 	}
 	
