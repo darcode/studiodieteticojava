@@ -230,7 +230,7 @@ public class RegistrazioneForm extends ListComposite {
 		tblFunzioni.setHeaderVisible(true);
 		tblFunzioni.setToolTipText("Funzioni - selezione multipla");
 		tblFunzioni.setLinesVisible(true);
-		riempiTabellaEntita(tblFunzioni, FunzioneDAO.getAllFunzioni());
+		riempiTabellaEntita(tblFunzioni, FunzioneDAO.getAllFunzioni(),"");
 		tblFunzioni.getColumn(0).setWidth(0);
 		tblFunzioni.setFont(font);
 		tblFunzioni.setLayoutData(gdTables);
@@ -291,7 +291,7 @@ public class RegistrazioneForm extends ListComposite {
 		tblFunzioniUp.setToolTipText("Funzioni - selezione multipla");
 		tblFunzioniUp.setLinesVisible(true);
 		tblFunzioniUp.setLayoutData(gdTables);
-		riempiTabellaEntita(tblFunzioniUp, FunzioneDAO.getAllFunzioni());
+		riempiTabellaEntita(tblFunzioniUp, FunzioneDAO.getAllFunzioni(),"");
 		tblFunzioniUp.getColumn(0).setWidth(0);
 		tblFunzioniUp.setFont(font);
 		Button modifica = new Button(cmpModificaRoulo, SWT.NONE);
