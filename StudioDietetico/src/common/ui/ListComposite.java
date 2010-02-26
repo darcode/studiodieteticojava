@@ -53,14 +53,33 @@ public class ListComposite extends Composite {
 			//TODO per le altre classi come nella ricerca in ProvaTableForm
 			
 			
-			if (classeChiamante.equalsIgnoreCase("InterventiTableView")) {
+			if (classeChiamante.equalsIgnoreCase("VisitaTableView")) {
+				/*colonne.add("IdIntervento");
+				colonne.add("IdPaziente");
+				colonne.add("IdTipologiaIntervento");
+				colonne.add("Data");
+				colonne.add("Numero");*/
+			} else if (classeChiamante.equalsIgnoreCase("PazienteTableView")) {
+							
+			} else if (classeChiamante.equalsIgnoreCase("MedicoTableView")) {
+							
+			} else if (classeChiamante.equalsIgnoreCase("PrenotazioneTableView")) {
+							
+			} else if (classeChiamante.equalsIgnoreCase("DietaTableView")) {
+							
+			} else if (classeChiamante.equalsIgnoreCase("PrescrizioneTableView")) {
+							
+			} else if (classeChiamante.equalsIgnoreCase("TurniTableView")) {
+							
+			} else if (classeChiamante.equalsIgnoreCase("FattureTableView")) {
+							
+			} else if (classeChiamante.equalsIgnoreCase("InterventiTableView")) {
 				colonne.add("IdIntervento");
 				colonne.add("IdPaziente");
 				colonne.add("IdTipologiaIntervento");
 				colonne.add("Data");
 				colonne.add("Numero");
-			}
-			else if (classeChiamante.equalsIgnoreCase("AllergieTableView")) {
+			} else if (classeChiamante.equalsIgnoreCase("AllergieTableView")) {
 				colonne.add("idIntolleranzaAllergia");
 				colonne.add("IdPaziente");
 				colonne.add("flagIntAll");
@@ -69,8 +88,7 @@ public class ListComposite extends Composite {
 				colonne.add("derivati");
 				colonne.add("grado");
 				colonne.add("effettiCollaterali");
-			}
-			else if (classeChiamante.equalsIgnoreCase("SportTableView")) {
+			} else if (classeChiamante.equalsIgnoreCase("SportTableView")) {
 				colonne.add("idAttivitaFisica");
 				colonne.add("idPaziente");
 				colonne.add("nome");
