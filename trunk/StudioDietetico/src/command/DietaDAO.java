@@ -474,7 +474,7 @@ public class DietaDAO extends BaseDAO{
 	
 	public List<Alimento> getAlimentiList() {
 		Criteria criteria = getSession().createCriteria(hibernate.Alimento.class);
-		//criteria.add( Restrictions.eq("idAlimento", aliId));
+		
 		ProjectionList proList = Projections.projectionList();
 	      proList.add(Projections.property("nome"));
 	      proList.add(Projections.property("tipologia"));
