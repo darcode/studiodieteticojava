@@ -414,24 +414,24 @@ public class AnamnesiShell {
 	
 	private void createGroupInserimentoInt() {
 		groupInserimentoInt = new Group(sShellInserimentoInterventi, SWT.NONE);
-		groupInserimentoInt.setText("Inserimento nuovo intervento");
+		groupInserimentoInt.setText("Inserimento nuova tipologia di intervento");
 		groupInserimentoInt.setBounds(new Rectangle(18, 514, 689, 180));
 		groupInserimentoInt.setEnabled(false);
 		
 		labelNomeInt = new Label(groupInserimentoInt, SWT.NONE);
-		labelNomeInt.setBounds(new Rectangle(10, 23, 170, 20));
-		labelNomeInt.setText("* Nome dell'intervento");
+		labelNomeInt.setBounds(new Rectangle(10, 23, 190, 20));
+		labelNomeInt.setText("* Nome della tipologia di intervento");
 		textNomeInt = new Text(groupInserimentoInt, SWT.NONE);
 		textNomeInt.setBounds(new Rectangle(209, 23, 450, 20));
 		
 		labelDescrInt = new Label(groupInserimentoInt, SWT.NONE);
-		labelDescrInt.setBounds(new Rectangle(10, 50, 170, 20));
+		labelDescrInt.setBounds(new Rectangle(10, 50, 190, 20));
 		labelDescrInt.setText("Descrizione");
 		textAreaDescrInt = new Text(groupInserimentoInt, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		textAreaDescrInt.setBounds(new Rectangle(209, 50, 470, 40));
 		
 		labelLocalizzazione = new Label(groupInserimentoInt, SWT.NONE);
-		labelLocalizzazione.setBounds(new Rectangle(10, 100, 170, 20));
+		labelLocalizzazione.setBounds(new Rectangle(10, 100, 190, 20));
 		labelLocalizzazione.setText("* Zona interessata");
 		textAreaLocalizzazione = new Text(groupInserimentoInt, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		textAreaLocalizzazione.setBounds(new Rectangle(209, 100, 470, 40));
