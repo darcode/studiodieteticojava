@@ -41,6 +41,9 @@ import org.eclipse.swt.widgets.Table;
 
 public class AnamnesiShell {
 
+	//MESSAGE BOX
+	private Shell sShellMessElimina = null;  //  @jve:decl-index=0:visual-constraint="-347,665"
+	
 	//INTERVENTI	
 	private Label labelNomeInt = null;
 	private Text textNomeInt = null;
@@ -84,48 +87,9 @@ public class AnamnesiShell {
 	
 	//ALLERGIE
 	private Shell sShellDettagliAllergie = null;
-	private Group groupAllergie = null;
-	private Label labelIntAll = null;
-	private Button radioButtonInt = null;
-	private Button radioButtonAll = null;
-	private Label labelSostanza = null;
-	private Text textSost = null;
-	private Label labelAlPrinc = null;
-	private Text textAlPrinc = null;
-	private Label labelDerivati = null;
-	private Text textAreaDerivati = null;
-	private Label labelGrado = null;
-	private Label labelEffColl = null;
-	private Text textAreaEffColl = null;
-	private Button buttonConfermaAll = null;
-	private Text textGrado = null;
-	
-	//ATTIVITA' FISICA
-	private Group groupAttFisica = null;
-	private Label labelAttFisSel = null;
-	private List textAreaAttFis = null;
-	private Button buttonVaiAttFis = null;
-	private List textAreaAttFisSel = null;
-	private Label labelNomeAttFis = null;
-	private Text textNomeAttFis = null;
-	private Label labelDescAttFis = null;
-	private Text textAreaDescAttFis = null;
-	private Button buttonAggiornaListaAttFis = null;
-	private Group groupInsAttFis = null;
-	private Button buttonInsNewAttFis = null;
-	private Button buttonConfermaAttFis = null;
-	private Shell sShellInsAttFis = null; 
-	private Group groupVisualizzazioneSport = null;
-	private Shell sShellProva = null;  //  @jve:decl-index=0:visual-constraint="-364,1197"
-	//public static final String VIEW_ID = "StudioDietetico.anamnesi";
-	
-	//MESSAGE BOX
-	private Shell sShellMessElimina = null;  //  @jve:decl-index=0:visual-constraint="-347,665"
 	private Label labelSostanzaAllVis;
 	private Text textSostanzaAllVis;
 	private Label labelFlagAllVis;
-	private static TableItem itemInserimento = null;
-	private static TableItem itemModifica = null;
 	private Button radioButtonIntolleranza = null;
 	private Button radioButtonAllergia = null;
 	private Label labelAlimentoVis;
@@ -138,7 +102,50 @@ public class AnamnesiShell {
 	private Text textEffettiCollVis;
 	private Button buttonModificaAllergie;
 	private Button buttonAppyModAllergie;
-	private Button buttonChiudiAll;
+	private Button buttonChiudiAll;  //  @jve:decl-index=0:visual-constraint="521,2597"
+	private Shell sShellInserimentoAllergie;
+	private Label labelFlagAllIns;
+	private Button radioButtonIntolleranzaIns;
+	private Button radioButtonAllergiaIns;
+	private Label labelSostanzaAllIns;
+	private Text textSostanzaAllIns;
+	private Label labelAlimentoIns;
+	private Text textAlimentoIns;
+	private Label labelDerivatiIns;
+	private Text textDerivatiIns;
+	private Label labelGradoIns;
+	private Text textGradoIns;
+	private Label labelEffettiCollIns;
+	private Text textEffettiCollIns;
+	private Button buttonInserisciAllergie;
+	private Button buttonChiudiAllIns;
+	
+	
+	
+	//ATTIVITA' FISICA
+	private Label labelNomeAttFis = null;
+	private Text textNomeAttFis = null;
+	private Label labelDescAttFis = null;
+	private Text textAreaDescAttFis = null;
+	private Shell sShellInserimentoSport = null;  //  @jve:decl-index=0:visual-constraint="-364,2080"
+	private Label labelDurataAttFis;
+	private Text textDurataAttFis;
+	private Label labelFreqSettAttFis;
+	private Button buttonChiudiSport;
+	private Button buttonInserisciSport;
+	private Spinner spinnerNumAttFis;
+	private Shell sShellDettagliSport;
+	private Label labelNomeAttFisVis;
+	private Text textNomeAttFisVis;
+	private Label labelDescAttFisVis;
+	private Text textAreaDescAttFisVis;
+	private Label labelDurataAttFisVis;
+	private Text textDurataAttFisVis;
+	private Label labelFreqSettAttFisVis;
+	private Spinner spinnerNumAttFisVis;
+	private Button buttonChiudiSportVis;
+	private Button buttonModificaSportVis;
+	private Button buttonAppyModSportVis;
 	
 	
 	public AnamnesiShell() {}
@@ -274,7 +281,7 @@ public class AnamnesiShell {
 		tableTipoInt = new Table(sShellInserimentoInterventi, SWT.FILL | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
 		tableTipoInt.setHeaderVisible(true);
 		tableTipoInt.setLinesVisible(true);
-		tableTipoInt.setBounds(new Rectangle(22, 226, 483, 203));
+		tableTipoInt.setBounds(new Rectangle(22, 226, 639, 203));
 		tableTipoInt.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 						buttonEliminaTipoIntervento.setEnabled(true);
@@ -388,7 +395,7 @@ public class AnamnesiShell {
 							else
 								createMessElemPresente();
 						}
-						//Aggiornare la table di AnamnesiTableView con il nuovo intervento
+						//TODO Aggiornare la table di AnamnesiTableView con il nuovo intervento
 						
 					}
 				});
@@ -616,7 +623,6 @@ public class AnamnesiShell {
 		buttonAppyModAllergie.setEnabled(false);
 		buttonAppyModAllergie.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						Paziente pazSel = AnamnesiTTableView.getPazienteSel();
 						String flagAI = "";
 						if(radioButtonAllergia.getSelection())
 							flagAI = "all";
@@ -631,10 +637,10 @@ public class AnamnesiShell {
 					}
 				});
 	
-		buttonChiudiAll = new Button(sShellDettagliAllergie, SWT.NONE);
-		buttonChiudiAll.setBounds(new Rectangle(600, 350, 70, 25));
-		buttonChiudiAll.setText("Chiudi");
-		buttonChiudiAll.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		buttonChiudiAllIns = new Button(sShellDettagliAllergie, SWT.NONE);
+		buttonChiudiAllIns.setBounds(new Rectangle(600, 350, 70, 25));
+		buttonChiudiAllIns.setText("Chiudi");
+		buttonChiudiAllIns.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 						sShellDettagliAllergie.close();
 					}
@@ -643,231 +649,241 @@ public class AnamnesiShell {
 		
 	}
 	
+	public void createSShellInserimentoAllergie() {
+		sShellInserimentoAllergie = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		sShellInserimentoAllergie.setText("Inserimento Intolleranza/Allergia");
+		sShellInserimentoAllergie.setSize(new Point(712, 434));
+		
+		labelFlagAllIns = new Label(sShellInserimentoAllergie, SWT.NONE);
+		labelFlagAllIns.setBounds(new Rectangle(20, 20, 130, 20));
+		labelFlagAllIns.setText("* Intolleranza / Allergia");
+		radioButtonIntolleranzaIns = new Button(sShellInserimentoAllergie, SWT.RADIO);
+		radioButtonIntolleranzaIns.setBounds(new Rectangle(170, 20, 100, 20));
+		radioButtonIntolleranzaIns.setText("Intolleranza");
+		radioButtonAllergiaIns = new Button(sShellInserimentoAllergie, SWT.RADIO);
+		radioButtonAllergiaIns.setBounds(new Rectangle(280, 20, 100, 20));
+		radioButtonAllergiaIns.setText("Allergia");
+		
+		labelSostanzaAllIns = new Label(sShellInserimentoAllergie, SWT.NONE);
+		labelSostanzaAllIns.setBounds(new Rectangle(20, 60, 130, 20));
+		labelSostanzaAllIns.setText("* Sostanza");
+		textSostanzaAllIns = new Text(sShellInserimentoAllergie, SWT.NONE);
+		textSostanzaAllIns.setBounds(new Rectangle(170, 60, 500, 20));
+		
+		labelAlimentoIns = new Label(sShellInserimentoAllergie, SWT.NONE);
+		labelAlimentoIns.setBounds(new Rectangle(20, 100, 130, 20));
+		labelAlimentoIns.setText("* Alimento principale");
+		textAlimentoIns = new Text(sShellInserimentoAllergie, SWT.NONE);
+		textAlimentoIns.setBounds(new Rectangle(170, 100, 500, 20));
+		
+		labelDerivatiIns = new Label(sShellInserimentoAllergie, SWT.NONE);
+		labelDerivatiIns.setBounds(new Rectangle(20, 140, 130, 20));
+		labelDerivatiIns.setText("Derivati");
+		textDerivatiIns = new Text(sShellInserimentoAllergie, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textDerivatiIns.setBounds(new Rectangle(170, 140, 500, 60));
+		
+		labelGradoIns = new Label(sShellInserimentoAllergie, SWT.NONE);
+		labelGradoIns.setBounds(new Rectangle(20, 220, 130, 20));
+		labelGradoIns.setText("Grado");
+		textGradoIns = new Text(sShellInserimentoAllergie, SWT.NONE);
+		textGradoIns.setBounds(new Rectangle(170, 220, 500, 20));
+		
+		labelEffettiCollIns = new Label(sShellInserimentoAllergie, SWT.NONE);
+		labelEffettiCollIns.setBounds(new Rectangle(20, 260, 130, 20));
+		labelEffettiCollIns.setText("Effetti Collaterali");
+		textEffettiCollIns = new Text(sShellInserimentoAllergie, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textEffettiCollIns.setBounds(new Rectangle(170, 260, 500, 60));
+		
+		buttonInserisciAllergie = new Button(sShellInserimentoAllergie, SWT.NONE);
+		buttonInserisciAllergie.setBounds(new Rectangle(520, 350, 70, 25));
+		buttonInserisciAllergie.setText("Inserisci");
+		buttonInserisciAllergie.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						Paziente pazSel = AnamnesiTTableView.getPazienteSel();
+						String flag = "";
+						if (radioButtonIntolleranzaIns.getSelection())
+							flag = "int";
+						else
+							flag = "all";
+						AnamnesiDAO an = new AnamnesiDAO();
+						an.registraAllergie(flag, textSostanzaAllIns.getText(), textAlimentoIns.getText(), 
+								textDerivatiIns.getText(), textGradoIns.getText(), textEffettiCollIns.getText(), pazSel);
+						
+						//TODO Aggiornare la table di AnamnesiTableView con il nuovo intervento
+						
+						
+						sShellInserimentoAllergie.close();
+						
+					}
+				});
+		
+		buttonChiudiAll = new Button(sShellInserimentoAllergie, SWT.NONE);
+		buttonChiudiAll.setBounds(new Rectangle(600, 350, 70, 25));
+		buttonChiudiAll.setText("Chiudi");
+		buttonChiudiAll.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						sShellInserimentoAllergie.close();
+					}
+				});
+		sShellInserimentoAllergie.open();
+		
+	}
 	
-	
-	/*private void createGroupAll(Composite comp) {
-		groupAllergie = new Group(comp, SWT.NONE);
-		groupAllergie.setText("Inserimento eventuali intolleranze o allergie");
-		groupAllergie.setBounds(new Rectangle(20, 63, 1000, 400));
-		labelIntAll = new Label(groupAllergie, SWT.NONE);
-		labelIntAll.setText("Indicare se si tratta di intolleranza o allergia");
-		labelIntAll.setBounds(new Rectangle(20, 40, 250, 20));
-		radioButtonInt = new Button(groupAllergie, SWT.RADIO);
-		radioButtonInt.setBounds(new Rectangle(280, 40, 85, 20));
-		radioButtonInt.setText("Intolleranza");
-		radioButtonAll = new Button(groupAllergie, SWT.RADIO);
-		radioButtonAll.setBounds(new Rectangle(390, 40, 71, 20));
-		radioButtonAll.setText("Allergia");
-		
-		labelGrado = new Label(groupAllergie, SWT.NONE);
-		labelGrado.setBounds(new Rectangle(20, 80, 210, 20));
-		labelGrado.setText("Indicare il grado di intolleranza/allergia");
-		textGrado = new Text(groupAllergie, SWT.BORDER);
-		textGrado.setBounds(new Rectangle(250, 80, 300, 20));
-		
-		labelSostanza = new Label(groupAllergie, SWT.NONE);
-		labelSostanza.setBounds(new Rectangle(20, 110, 61, 20));
-		labelSostanza.setText("*Sostanza");
-		textSost = new Text(groupAllergie, SWT.BORDER);
-		textSost.setBounds(new Rectangle(80, 110, 400, 40));
-		
-		labelAlPrinc = new Label(groupAllergie, SWT.NONE);
-		labelAlPrinc.setBounds(new Rectangle(20, 160, 120, 20));
-		labelAlPrinc.setText("*Alimento principale");
-		textAlPrinc = new Text(groupAllergie, SWT.BORDER);
-		textAlPrinc.setBounds(new Rectangle(140, 160, 400, 40));
-		
-		labelDerivati = new Label(groupAllergie, SWT.NONE);
-		labelDerivati.setBounds(new Rectangle(20, 210, 50, 20));
-		labelDerivati.setText("Derivati");
-		textAreaDerivati = new Text(groupAllergie, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL );
-		textAreaDerivati.setBounds(new Rectangle(80, 210, 400, 60));
-		
-		labelEffColl = new Label(groupAllergie, SWT.NONE);
-		labelEffColl.setBounds(new Rectangle(20, 290, 120, 20));
-		labelEffColl.setText("Effetti collaterali");
-		textAreaEffColl = new Text(groupAllergie, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textAreaEffColl.setBounds(new Rectangle(150, 290, 400, 60));
-		
-		buttonConfermaAll = new Button(groupAllergie, SWT.NONE);
-		buttonConfermaAll.setBounds(new Rectangle(600, 370, 80, 25));
-		buttonConfermaAll.setText("Conferma");
-		
-		buttonConfermaAll.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				AnamnesiDAO an = new AnamnesiDAO();
-				String flag = "";
-				if (radioButtonInt.getSelection())
-					flag = "int";
-				else flag = "all";
-				Paziente nomePaziente = new Paziente();
-				
-				//Sostituire con il paziente selezionato in HomePazienteView(togliere i commenti)
-				nomePaziente = PazienteDAO.getPazienti().get(3);
-				
-				//HomePazienteView homeP = new HomePazienteView();
-				//an.registraAllergie(flag, textSost.getText(), textAlPrinc.getText(), textAreaDerivati.getText(), textGrado.getText(), textAreaEffColl.getText(), homeP.getPazienteSelezionato());
-				an.registraAllergie(flag, textSost.getText(), textAlPrinc.getText(), textAreaDerivati.getText(), textGrado.getText(), textAreaEffColl.getText(), nomePaziente);
-		}
-	});
-	}*/
-
 	
 	
 //-----------------------------------------ATTIVITA' FISICA-------------------------------------------------------------	
-	/**
-	 * sShellProva da inserire nel tab	
-	 *
-	 */
-	private void createSShellProva() {
-		sShellProva = new Shell();
-		//sShellProva.setLayout(new GridLayout());
-		sShellProva.setText("Shell prova");
-		createGroupAttFisica();
-		createGroupVisualizzazioneSport();
-		sShellProva.setSize(new Point(810, 592));
-
+	public void createSShellInserimentoSport() {
+		sShellInserimentoSport = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		sShellInserimentoSport.setText("Inserimento Nuovo Sport");
+		sShellInserimentoSport.setSize(new Point(727, 313));
 		
-	}
-
-	/**
-	 * Crea tutto il contenuto del tab in groupAttFisica
-	 */
-	private void createGroupAttFisica() {
-		groupAttFisica = new Group(sShellProva, SWT.NONE);
-		//groupAttFisica.setLayout(new GridLayout());
-		groupAttFisica.setText("Attività Fisica");
-		groupAttFisica.setBounds(new Rectangle(14, 2, 772, 309));
-		labelAttFisSel = new Label(groupAttFisica, SWT.NONE);
-		labelAttFisSel.setBounds(new Rectangle(15, 31, 200, 27));
-		labelAttFisSel.setText("Selezionare lo sport seguito");
-		textAreaAttFis = new List(groupAttFisica, SWT.WRAP | SWT.V_SCROLL);
-		textAreaAttFis.setBounds(new Rectangle(15, 60, 330, 115));
-		textAreaAttFis
-		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				buttonVaiAttFis.setEnabled(true);
-			}
-		});
-		buttonVaiAttFis = new Button(groupAttFisica, SWT.NONE);
-		buttonVaiAttFis.setBounds(new Rectangle(350, 90, 70, 30));
-		buttonVaiAttFis.setEnabled(false);
-		buttonVaiAttFis.setText(">>");
-		buttonVaiAttFis
-				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						for (String sportSel : textAreaAttFis.getSelection()) {
-							textAreaAttFisSel.add(sportSel);
-						}
-						textAreaAttFis.deselectAll();
-						
-					}
-				});
-		textAreaAttFisSel = new List(groupAttFisica, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textAreaAttFisSel.setBounds(new Rectangle(430, 60, 330, 115));
-		textAreaAttFisSel
-				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
-					}
-				});
-		
-				
-		buttonInsNewAttFis = new Button(groupAttFisica, SWT.NONE);
-		buttonInsNewAttFis.setBounds(new Rectangle(15, 179, 98, 21));
-		buttonInsNewAttFis.setText("Inserisci nuovo");
-		buttonInsNewAttFis
-				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						createSShellInsAttFis();
-					}
-				});
-		
-		buttonConfermaAttFis = new Button(groupAttFisica, SWT.NONE);
-		buttonConfermaAttFis.setBounds(new Rectangle(636, 266, 94, 31));
-		buttonConfermaAttFis.setText("Conferma");
-		buttonConfermaAttFis
-				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						
-						
-					}
-				});
-		
-		
-		//aggiorna la lista con gli sport presenti nel db
-		AnamnesiDAO am = new AnamnesiDAO();
-		ArrayList<Attivitafisica> elencoSport = new ArrayList<Attivitafisica>();
-		ArrayList<String> listAF = new ArrayList<String>();
-		elencoSport = am.getSport();
-		
-		for (Attivitafisica sport : elencoSport) {
-			listAF.add(sport.getNome()+"    "+sport.getDescrizione());
-		}
-		String[] listAFString = (String[]) listAF.toArray((new String[0]));
-		textAreaAttFis.setItems(listAFString);
-	}
-
-	/**
-	 * Crea il contenuto per l'inserimento di un nuovo sport in groupInsAttFis	
-	 *
-	 */
-	private void createGroupInsAttFis() {
-		groupInsAttFis = new Group(sShellInsAttFis, SWT.NONE);
-		groupInsAttFis.setBounds(new Rectangle(4, 8, 774, 167));
-		groupInsAttFis.setText("Inserimento nuovo sport");
-		labelNomeAttFis = new Label(groupInsAttFis, SWT.NONE);
-		labelNomeAttFis.setBounds(new Rectangle(10, 30, 45, 25));
+		labelNomeAttFis = new Label(sShellInserimentoSport, SWT.NONE);
+		labelNomeAttFis.setBounds(new Rectangle(20, 20, 130, 20));
 		labelNomeAttFis.setText("* Nome");
-		textNomeAttFis = new Text(groupInsAttFis, SWT.BORDER);
-		textNomeAttFis.setBounds(new Rectangle(10, 60, 220, 25));
-		labelDescAttFis = new Label(groupInsAttFis, SWT.NONE);
-		labelDescAttFis.setBounds(new Rectangle(255, 30, 81, 24));
+		textNomeAttFis = new Text(sShellInserimentoSport, SWT.BORDER);
+		textNomeAttFis.setBounds(new Rectangle(170, 20, 500, 20));
+		
+		labelDescAttFis = new Label(sShellInserimentoSport, SWT.NONE);
+		labelDescAttFis.setBounds(new Rectangle(20, 60, 130, 20));
 		labelDescAttFis.setText("Descrizione");
-		textAreaDescAttFis = new Text(groupInsAttFis, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textAreaDescAttFis.setBounds(new Rectangle(256, 60, 483, 60));
-		buttonAggiornaListaAttFis = new Button(groupInsAttFis, SWT.NONE);
-		buttonAggiornaListaAttFis.setBounds(new Rectangle(4, 135, 764, 27));
-		buttonAggiornaListaAttFis.setText("Aggiorna elenco attività fisiche");
-		buttonAggiornaListaAttFis.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				textAreaAttFis.add(textNomeAttFis.getText()+"    "+textAreaDescAttFis.getText());
-				sShellInsAttFis.close();
-			}
-		});
+		textAreaDescAttFis = new Text(sShellInserimentoSport, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaDescAttFis.setBounds(new Rectangle(170, 60, 500, 60));
+		
+		labelDurataAttFis = new Label(sShellInserimentoSport, SWT.NONE);
+		labelDurataAttFis.setBounds(new Rectangle(20, 140, 130, 20));
+		labelDurataAttFis.setText("Durata");
+		textDurataAttFis = new Text(sShellInserimentoSport, SWT.BORDER);
+		textDurataAttFis.setBounds(new Rectangle(170, 140, 500, 20));
+		
+		labelFreqSettAttFis = new Label(sShellInserimentoSport, SWT.NONE);
+		labelFreqSettAttFis.setBounds(new Rectangle(20, 180, 130, 20));
+		labelFreqSettAttFis.setText("* Frequenza Settimanale");
+		spinnerNumAttFis = new Spinner(sShellInserimentoSport, SWT.NONE);
+		spinnerNumAttFis.setBounds(new Rectangle(170, 180, 68, 20));
+		spinnerNumAttFis.setMinimum(1);
+		
+		buttonInserisciSport = new Button(sShellInserimentoSport, SWT.NONE);
+		buttonInserisciSport.setBounds(new Rectangle(520, 230, 70, 25));
+		buttonInserisciSport.setText("Inserisci");
+		buttonInserisciSport.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						Paziente pazSel = AnamnesiTTableView.getPazienteSel();
+						AnamnesiDAO an = new AnamnesiDAO();
+						an.registraSport(textNomeAttFis.getText(), textAreaDescAttFis.getText(), textDurataAttFis.getText(), spinnerNumAttFis.getSelection(), pazSel);
+						
+						//TODO Aggiornare la table di AnamnesiTableView con il nuovo sport
+						
+						sShellInserimentoSport.close();
+					}
+				});
+		
+		buttonChiudiSport = new Button(sShellInserimentoSport, SWT.NONE);
+		buttonChiudiSport.setBounds(new Rectangle(600, 230, 70, 25));
+		buttonChiudiSport.setText("Chiudi");
+		buttonChiudiSport.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						sShellInserimentoSport.close();
+					}
+				});
+		
+		sShellInserimentoSport.open();		
 	}
-
-	/**
-	 * Crea sShellInsAttFis per l'inserimento di un nuovo sport
-	 */
-	private void createSShellInsAttFis() {
-		sShellInsAttFis = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
-		//sShellInsAttFis.setLayout(new GridLayout());
-		sShellInsAttFis.setText("Inserimento Nuovo Sport");
-		sShellInsAttFis.setSize(new Point(800, 215));
-		createGroupInsAttFis();
-		sShellInsAttFis.open();
+	
+	public void createSShellDettagliSport(final TableItem rigaTableClick) {
+		String idSport = rigaTableClick.getText(0);
+		AnamnesiDAO an = new AnamnesiDAO();
+		final Attivitafisica sport = an.getSportById(idSport);
+		
+		final String nome = rigaTableClick.getText(2);
+		final String descrizione = rigaTableClick.getText(3);
+		final String durata = rigaTableClick.getText(4);
+		final int freqSett = Integer.parseInt(rigaTableClick.getText(5));
+		
+		sShellDettagliSport = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		sShellDettagliSport.setText("Dettagli Sport Selezionato");
+		sShellDettagliSport.setSize(new Point(727, 313));
+		
+		labelNomeAttFisVis = new Label(sShellDettagliSport, SWT.NONE);
+		labelNomeAttFisVis.setBounds(new Rectangle(20, 20, 130, 20));
+		labelNomeAttFisVis.setText("* Nome");
+		textNomeAttFisVis = new Text(sShellDettagliSport, SWT.BORDER);
+		textNomeAttFisVis.setBounds(new Rectangle(170, 20, 500, 20));
+		textNomeAttFisVis.setEnabled(false);
+		textNomeAttFisVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textNomeAttFisVis.setText(nome);
+		
+		labelDescAttFisVis = new Label(sShellDettagliSport, SWT.NONE);
+		labelDescAttFisVis.setBounds(new Rectangle(20, 60, 130, 20));
+		labelDescAttFisVis.setText("Descrizione");
+		textAreaDescAttFisVis = new Text(sShellDettagliSport, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaDescAttFisVis.setBounds(new Rectangle(170, 60, 500, 60));
+		textAreaDescAttFisVis.setEnabled(false);
+		textAreaDescAttFisVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textAreaDescAttFisVis.setText(descrizione);
+		
+		labelDurataAttFisVis = new Label(sShellDettagliSport, SWT.NONE);
+		labelDurataAttFisVis.setBounds(new Rectangle(20, 140, 130, 20));
+		labelDurataAttFisVis.setText("Durata");
+		textDurataAttFisVis = new Text(sShellDettagliSport, SWT.BORDER);
+		textDurataAttFisVis.setBounds(new Rectangle(170, 140, 500, 20));
+		textDurataAttFisVis.setEnabled(false);
+		textDurataAttFisVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textDurataAttFisVis.setText(durata);
+		
+		labelFreqSettAttFisVis = new Label(sShellDettagliSport, SWT.NONE);
+		labelFreqSettAttFisVis.setBounds(new Rectangle(20, 180, 130, 20));
+		labelFreqSettAttFisVis.setText("* Frequenza Settimanale");
+		spinnerNumAttFisVis = new Spinner(sShellDettagliSport, SWT.NONE);
+		spinnerNumAttFisVis.setBounds(new Rectangle(170, 180, 68, 20));
+		spinnerNumAttFisVis.setEnabled(false);
+		spinnerNumAttFisVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		spinnerNumAttFisVis.setSelection(freqSett);
+		
+		buttonModificaSportVis = new Button(sShellDettagliSport, SWT.NONE);
+		buttonModificaSportVis.setBounds(new Rectangle(400, 230, 70, 25));
+		buttonModificaSportVis.setText("Modifica");
+		buttonModificaSportVis.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						textNomeAttFisVis.setEnabled(true);
+						textNomeAttFisVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						textAreaDescAttFisVis.setEnabled(true);
+						textAreaDescAttFisVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						textDurataAttFisVis.setEnabled(true);
+						textDurataAttFisVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						spinnerNumAttFisVis.setEnabled(true);
+						spinnerNumAttFisVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						
+						buttonAppyModSportVis.setEnabled(true);
+						buttonModificaSportVis.setEnabled(false);
+					}
+				});
+		
+		buttonAppyModSportVis = new Button(sShellDettagliSport, SWT.NONE);
+		buttonAppyModSportVis.setBounds(new Rectangle(480, 230, 110, 25));
+		buttonAppyModSportVis.setText("Applica Modifiche");
+		buttonAppyModSportVis.setEnabled(false);
+		buttonAppyModSportVis.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						AnamnesiDAO an = new AnamnesiDAO();
+						an.modificaSport(sport, textNomeAttFisVis.getText(), textAreaDescAttFisVis.getText(), textDurataAttFisVis.getText(), spinnerNumAttFisVis.getSelection());
+						
+						sShellDettagliSport.close();
+						
+						//TODO Aggiornare la tabella delle allergie in AnamnesiTableView
+					}
+				});		
+		
+		buttonChiudiSportVis = new Button(sShellDettagliSport, SWT.NONE);
+		buttonChiudiSportVis.setBounds(new Rectangle(600, 230, 70, 25));
+		buttonChiudiSportVis.setText("Chiudi");
+		buttonChiudiSportVis.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						sShellDettagliSport.close();
+					}
+				});
+		
+		sShellDettagliSport.open();
 	}
-
-	/**
-	 * This method initializes groupVisualizzazioneSport	
-	 */
-	private void createGroupVisualizzazioneSport() {
-		groupVisualizzazioneSport = new Group(sShellProva, SWT.NONE);
-		//groupVisualizzazioneSport.setLayout(new GridLayout());
-		groupVisualizzazioneSport.setText("Attività fisica del paziente");
-		groupVisualizzazioneSport.setBounds(new Rectangle(15, 324, 770, 226));
-		
-		
-		//tableSport = new AnamnesiViewTableSport(groupVisualizzazioneSport, SWT.BORDER, pazSelHome);
-		//tableSport.setLayout(new GridLayout(1, true));
-		//tableSport.setBackground(Utils.getStandardWhiteColor());
-		
-		/*form = new HomePazienteForm(parent, SWT.BORDER);
-		form.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		form.setLayout(new GridLayout(1, true));
-		form.setBackground(Utils.getStandardWhiteColor());*/
-	}	
 	
 	
 	//MESSAGE BOX
@@ -905,7 +921,7 @@ public class AnamnesiShell {
 		}
 	}
 	
-	public void createMessElemCascade() {
+	private void createMessElemCascade() {
 		createSShellMessElimina();
 		MessageBox messageBox = new MessageBox(sShellMessElimina, SWT.OK | SWT.ICON_INFORMATION);
 		messageBox.setMessage("Non è possibile cancellare questo elemento: è collegato ad altri!");
@@ -915,7 +931,7 @@ public class AnamnesiShell {
 		}
 	}
 	
-	public void createMessElemPresente() {
+	private void createMessElemPresente() {
 		createSShellMessElimina();
 		MessageBox messageBox = new MessageBox(sShellMessElimina, SWT.OK | SWT.ICON_INFORMATION);
 		messageBox.setMessage("Non è possibile inserire questo elemento: associazione già presente!");
@@ -960,12 +976,12 @@ public class AnamnesiShell {
 		}
 	}
 
-	public static TableItem getItemInserimento() {
+	/*public static TableItem getItemInserimento() {
 		return itemInserimento;
 	}
 
 	public static TableItem getItemModifica() {
 		return itemModifica;
-	}
+	}*/
 
 }
