@@ -46,21 +46,61 @@ public class ListComposite extends Composite {
 		super(parent, style);
 	}
 
-	protected void riempiTabellaEntita(Table table, ArrayList<Object> lista) {
-		if (!lista.isEmpty()) {
-			ArrayList<String> colonne = GenericBean.getFieldsNamesPerQuery(lista.get(0));
+	protected void riempiTabellaEntita(Table table, ArrayList<Object> lista, String classeChiamante) {
+		ArrayList<String> colonne = new ArrayList<String>();
+
+		if (lista.isEmpty()) {
+			//TODO per le altre classi come nella ricerca in ProvaTableForm
+			
+			
+			if (classeChiamante.equalsIgnoreCase("InterventiTableView")) {
+				colonne.add("IdIntervento");
+				colonne.add("IdPaziente");
+				colonne.add("IdTipologiaIntervento");
+				colonne.add("Data");
+				colonne.add("Numero");
+			}
+			else if (classeChiamante.equalsIgnoreCase("AllergieTableView")) {
+				colonne.add("idIntolleranzaAllergia");
+				colonne.add("IdPaziente");
+				colonne.add("flagIntAll");
+				colonne.add("sostanza");
+				colonne.add("alimentoPrincipale");
+				colonne.add("derivati");
+				colonne.add("grado");
+				colonne.add("effettiCollaterali");
+			}
+			else if (classeChiamante.equalsIgnoreCase("SportTableView")) {
+				colonne.add("idAttivitaFisica");
+				colonne.add("idPaziente");
+				colonne.add("nome");
+				colonne.add("descrizione");
+				colonne.add("durata");
+				colonne.add("frequenzaSettimanale");
+			}
+				
+			for (String item : colonne) {
+				TableColumn colonna = new TableColumn(table, SWT.CENTER);
+				colonna.setWidth(item.length() * 15);
+				colonna.setText(item);
+			}
+			table.setHeaderVisible(true);
+
+		} else {	
+			colonne = GenericBean.getFieldsNamesPerQuery(lista.get(0));
 			for (String item : colonne) {
 				TableColumn colonna = new TableColumn(table, SWT.CENTER);
 				//colonna.setWidth(item.length() * 15);
 				colonna.setText(item);
 			}
+
 			table.setHeaderVisible(true);
 			for (Object item : lista) {
 				TableItem tblItem = new TableItem(table, SWT.NONE);
 				Object[] valuesObj = new Object[GenericBean.getFieldsNumber(item)];
 				String[] values = new String[GenericBean.getFieldsNumber(item)];
 				int i = 0;
-				
+
 				for (String colonna : colonne) {
 					valuesObj[i] = GenericBean.getProperty(colonna, item);
 					//if a cascata per sostituire l'id hibernate con l'id numerico 
@@ -151,15 +191,15 @@ public class ListComposite extends Composite {
 					else if  (valuesObj[i] instanceof Visita) {  
 						valuesObj[i] = ((Visita)valuesObj[i]).getIdVisita();
 					}
-					
+
 					i++;
 				}
-				
+
 				for (int j = 0; j < valuesObj.length; j++) {
 					if (valuesObj[j]!=null)
 						values[j]=valuesObj[j].toString();
 				}
-				
+
 				tblItem.setText(values);
 			}
 		}
