@@ -185,7 +185,7 @@ public class AnamnesiDAO extends BaseDAO{
 		return allergia;
 	}
 	
-	public void modificaAllergie(/*Paziente paziente, */Intolleranzaallergia allergia, String flagAll,
+	public void modificaAllergie(Intolleranzaallergia allergia, String flagAll,
 			String sostanza, String alimPrinc, String derivati, String grado, String effCollaterali) {
 		getSession();
 		begin();
@@ -228,7 +228,33 @@ public class AnamnesiDAO extends BaseDAO{
 		return sport;
 	}
 	
-	public ArrayList<Attivitafisica> getSport(){
+	public static Attivitafisica getSportById(String id){
+		getSession();
+		begin();
+		Query q = getSession().createQuery("FROM Attivitafisica WHERE idAttivitaFisica="+id);
+		Attivitafisica sport = (Attivitafisica)q.uniqueResult();
+		commit();
+		return sport;
+	}
+
+	public void modificaSport(Attivitafisica sport, String nome, String descrizione, 
+			String durata, int frequenzaSett) {
+		getSession();
+		begin();
+		Attivitafisica sportMod = new Attivitafisica();
+		Query q = getSession().createQuery("FROM Attivitafisica WHERE idAttivitaFisica="+sport.getIdAttivitaFisica());
+		sportMod = (Attivitafisica) q.uniqueResult();
+		sportMod.setNome(nome);
+		sportMod.setDescrizione(descrizione);
+		sportMod.setDurata(durata);
+		sportMod.setFrequenzaSettimanale(frequenzaSett);
+		
+		getSession().saveOrUpdate(sportMod);
+		commit();
+		close();
+	}
+	
+	/*public ArrayList<Attivitafisica> getSport(){
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Attivitafisica att ORDER BY att.nome");
@@ -236,6 +262,6 @@ public class AnamnesiDAO extends BaseDAO{
 		ArrayList<Attivitafisica> sport = (ArrayList<Attivitafisica>)q.list();
 		commit();
 		return sport;
-	}
+	}*/
 	
 }
