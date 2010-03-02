@@ -89,5 +89,7 @@
 	<classpathentry kind="lib" path="lib/xercesImpl-2.7.0.jar"/>
 	<classpathentry kind="lib" path="lib/xml-apis-ext.jar"/>
 	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
+	<classpathentry kind="lib" path="lib/DynamicJasper-3.0.14-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/DynamicJasper-3.0.14.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
