@@ -4,15 +4,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.swt.widgets.TableItem;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 
 import hibernate.Attivitafisica;
+import hibernate.Composizione;
+import hibernate.Farmacoassunto;
 import hibernate.Intervento;
 import hibernate.InterventoId;
 import hibernate.Intolleranzaallergia;
+import hibernate.Malattia;
 import hibernate.Paziente;
+import hibernate.Ricetta;
 import hibernate.Tipologiaintervento;
 
 public class AnamnesiDAO extends BaseDAO{
@@ -77,8 +82,7 @@ public class AnamnesiDAO extends BaseDAO{
 		commit();
 		close();
 	}
-	
-	
+		
 	//INTERVENTO
 	public void registraIntervento(Paziente paziente, Tipologiaintervento tipologiaintervento, Date data, int numeroInt){
 		getSession();
@@ -107,7 +111,7 @@ public class AnamnesiDAO extends BaseDAO{
 		return interventiPaz;
 	}
 	
-	public static ArrayList<Object> getInterventiListByPaziente(Paziente paz) {
+	public ArrayList<Object> getInterventiListByPaziente(Paziente paz) {
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Intervento i WHERE paziente="+paz.getIdPaziente()/*+" ORDER BY af.nome"*/);
@@ -148,6 +152,17 @@ public class AnamnesiDAO extends BaseDAO{
 		close();
 	}
 	
+	public void cancellaInterventi(TableItem rigaTable) {
+		begin();
+		Intervento interv = new Intervento();
+		Query q = getSession().createQuery("FROM Intervento WHERE idTipologiaIntervento="+rigaTable.getText(2).toString()+" AND idPaziente="+rigaTable.getText(1).toString());
+		interv = (Intervento) q.uniqueResult();
+		commit();
+		begin();
+		getSession().delete(interv);
+		commit();
+		close();
+	}
 	
 	//ALLERGIE
 	public void registraAllergie(String flagAll,String sostanza, String alimPrinc, 
@@ -167,7 +182,7 @@ public class AnamnesiDAO extends BaseDAO{
 		close();
 	}
 	
-	public static ArrayList<Object> getAllergieListByPaziente(Paziente paz) {
+	public ArrayList<Object> getAllergieListByPaziente(Paziente paz) {
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Intolleranzaallergia WHERE paziente="+paz.getIdPaziente());
@@ -176,7 +191,7 @@ public class AnamnesiDAO extends BaseDAO{
 		return sport;
 	}
 	
-	public static Intolleranzaallergia getAllergiaById(String id){
+	public Intolleranzaallergia getAllergiaById(String id){
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Intolleranzaallergia WHERE idIntolleranzaAllergia="+id);
@@ -204,6 +219,19 @@ public class AnamnesiDAO extends BaseDAO{
 		close();
 	}
 	
+	public void cancellaAllergie(TableItem rigaTable) {
+		begin();
+		Intolleranzaallergia allergia = new Intolleranzaallergia();
+		System.out.println("IdAll: "+rigaTable.getText(0));
+		Query q = getSession().createQuery("FROM Intolleranzaallergia WHERE idIntolleranzaAllergia="+rigaTable.getText(0).toString());
+		allergia = (Intolleranzaallergia) q.uniqueResult();
+		commit();
+		begin();
+		getSession().delete(allergia);
+		commit();
+		close();
+	}
+	
 	//ATTIVITA' FISICA
 	public void registraSport(String nome, String descrizione, String durata, int freqSett, Paziente paziente){
 		getSession();
@@ -219,7 +247,7 @@ public class AnamnesiDAO extends BaseDAO{
 		close();
 	}
 	
-	public static ArrayList<Object> getSportListByPaziente(Paziente paz) {
+	public ArrayList<Object> getSportListByPaziente(Paziente paz) {
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Attivitafisica af WHERE paziente="+paz.getIdPaziente()/*+" ORDER BY af.nome"*/);
@@ -228,7 +256,7 @@ public class AnamnesiDAO extends BaseDAO{
 		return sport;
 	}
 	
-	public static Attivitafisica getSportById(String id){
+	public Attivitafisica getSportById(String id){
 		getSession();
 		begin();
 		Query q = getSession().createQuery("FROM Attivitafisica WHERE idAttivitaFisica="+id);
@@ -254,14 +282,112 @@ public class AnamnesiDAO extends BaseDAO{
 		close();
 	}
 	
-	/*public ArrayList<Attivitafisica> getSport(){
+	public void cancellaSport(TableItem rigaTable) {
+		begin();
+		Attivitafisica sport = new Attivitafisica();
+		System.out.println("IdSport: "+rigaTable.getText(0));
+		Query q = getSession().createQuery("FROM Attivitafisica WHERE idAttivitaFisica="+rigaTable.getText(0).toString());
+		sport = (Attivitafisica) q.uniqueResult();
+		commit();
+		begin();
+		getSession().delete(sport);
+		commit();
+		close();
+	}
+	
+	//FARMACI  
+	public void registraFarmaco(String nome, String descrizione, String dose, String frequenza, String pricipiAttivi, Paziente paziente){
 		getSession();
 		begin();
-		Query q = getSession().createQuery("FROM Attivitafisica att ORDER BY att.nome");
-		
-		ArrayList<Attivitafisica> sport = (ArrayList<Attivitafisica>)q.list();
+		Farmacoassunto fa = new Farmacoassunto();
+		fa.setNome(nome);
+		fa.setDescrizione(descrizione);
+		fa.setDose(dose);
+		fa.setFrequenza(frequenza);
+		fa.setPrincipiAttivi(pricipiAttivi);
+		fa.setPaziente(paziente);
+		getSession().saveOrUpdate(fa);
 		commit();
-		return sport;
-	}*/
+		close();
+	}
+	
+	public ArrayList<Object> getFarmaciListByPaziente(Paziente paz) {
+		getSession();
+		begin();
+		Query q = getSession().createQuery("FROM Farmacoassunto WHERE paziente="+paz.getIdPaziente());
+		ArrayList<Object> farmaci = (ArrayList<Object>)q.list();
+		commit();
+		return farmaci;
+	}
+	
+	public Farmacoassunto getFarmacoById(String id){
+		getSession();
+		begin();
+		Query q = getSession().createQuery("FROM Farmacoassunto WHERE idFarmacoAssunto="+id);
+		Farmacoassunto farmaco = (Farmacoassunto)q.uniqueResult();
+		commit();
+		return farmaco;
+	}
+
+	public void modificaFarmaco(Farmacoassunto farmaco, String nome, String descrizione, 
+			String dose, String frequenza, String pricipiAttivi) {
+		getSession();
+		begin();
+		Farmacoassunto farmacoMod = new Farmacoassunto();
+		Query q = getSession().createQuery("FROM Farmacoassunto WHERE idFarmacoAssunto="+farmaco.getIdFarmacoAssunto());
+		farmacoMod = (Farmacoassunto) q.uniqueResult();
+		farmacoMod.setNome(nome);
+		farmacoMod.setDescrizione(descrizione);
+		farmacoMod.setDose(dose);
+		farmacoMod.setFrequenza(frequenza);
+		farmacoMod.setPrincipiAttivi(pricipiAttivi);
+		
+		getSession().saveOrUpdate(farmacoMod);
+		commit();
+		close();
+	}
+
+	public void cancellaFarmaci(TableItem rigaTable) {
+		begin();
+		Farmacoassunto farmaco = new Farmacoassunto();
+		System.out.println("IdFarmaco: "+rigaTable.getText(0));
+		Query q = getSession().createQuery("FROM Farmacoassunto WHERE idFarmacoAssunto="+rigaTable.getText(0).toString());
+		farmaco = (Farmacoassunto) q.uniqueResult();
+		commit();
+		begin();
+		getSession().delete(farmaco);
+		commit();
+		close();
+	}
+	
+	//MALATTIE
+	
+	public ArrayList<Object> getMalattieListByPaziente(Paziente paz) {
+		getSession();
+		begin();
+		//Query q = getSession().createQuery("FROM Malattia WHERE paziente="+paz.getIdPaziente());
+		Query q = getSession().createQuery("FROM Malattia");
+		ArrayList<Object> malattie = (ArrayList<Object>)q.list();
+		ArrayList<Object> malattiePaz = new ArrayList<Object>();
+		for (Object malattia : malattie) {
+			for (Object pazPerMalattia : ((Malattia)malattia).getPazientes()) {
+				if (pazPerMalattia.equals(paz)) {
+					malattiePaz.add(malattia);
+				}
+			}
+		}
+		commit();
+		return malattiePaz;
+	}
+	
+	public ArrayList<Object> getListMalattie(){
+		getSession();
+		begin();
+		Query q = getSession().createQuery("FROM Malattia"/* mal ORDER BY interv.nome"*/);
+		ArrayList<Object> malattie = (ArrayList<Object>)q.list();
+		commit();
+		return malattie;
+	}
+	
 	
 }
