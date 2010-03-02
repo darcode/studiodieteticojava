@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 
 import hibernate.Fattura;
-import hibernate.Prenotazione;
 import hibernate.Visita;
 
 public class FatturaDAO extends BaseDAO {
@@ -118,6 +119,18 @@ public class FatturaDAO extends BaseDAO {
 		begin();
 		vis.setFattura(fat);
 		getSession().update(vis);
+		commit();
+		close();
+	}
+	
+	public static void cancellaFatture(int idFatt) {
+		begin();
+		Criteria criteria = getSession().createCriteria(hibernate.Fattura.class);
+		criteria.add( Restrictions.eq("idFattura", idFatt));
+		List<Fattura> fatture = (List<Fattura>)criteria.list();
+		commit();
+		begin();
+		getSession().delete(fatture.get(0));
 		commit();
 		close();
 	}
