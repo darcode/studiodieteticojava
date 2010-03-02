@@ -1,6 +1,5 @@
 package command;
 
-import hibernate.Fattura;
 import hibernate.Medico;
 import hibernate.Paziente;
 import hibernate.Prenotazione;
@@ -11,8 +10,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 public class VisitaDAO extends BaseDAO {
 	public VisitaDAO() {
@@ -252,5 +253,38 @@ public class VisitaDAO extends BaseDAO {
 		Tipologiavisita tv = new Tipologiavisita();
 		tv = (Tipologiavisita) q.uniqueResult();
 		return tv;
+	}
+	
+	public static void cancellaVisita(int idVis) {
+		begin();
+		Criteria criteria = getSession().createCriteria(hibernate.Visita.class);
+		criteria.add( Restrictions.eq("idVisita", idVis));
+		List<Visita> visit = (List<Visita>)criteria.list();
+		commit();
+		begin();
+		getSession().delete(visit.get(0));
+		commit();
+		close();
+	}
+	
+	public static void cancellaPrenotazione(int idPrenot) {
+		begin();
+		Criteria criteria = getSession().createCriteria(hibernate.Prenotazione.class);
+		criteria.add( Restrictions.eq("idPrenotazione", idPrenot));
+		List<Prenotazione> prenot = (List<Prenotazione>)criteria.list();
+		commit();
+		begin();
+		getSession().delete(prenot.get(0));
+		commit();
+		close();
+	}
+	
+	public static void setPagamentoVisita(Visita vis) {
+		getSession();
+		begin();
+		vis.setStatoPagamento("completato");
+		getSession().saveOrUpdate(vis);
+		commit();
+		close();
 	}
 }
