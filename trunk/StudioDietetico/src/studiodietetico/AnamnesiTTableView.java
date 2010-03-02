@@ -28,7 +28,7 @@ import command.PazienteDAO;
 public class AnamnesiTTableView extends ViewPart {
 	//Generale
 	private Composite top = null;
-	private TabFolder tabFolder = null;
+	private static TabFolder tabFolder = null;
 	private Label labelPaziente;
 	private Text textPaziente;
 	private static Paziente pazSelHome;
@@ -42,7 +42,12 @@ public class AnamnesiTTableView extends ViewPart {
 	//Attivit‡Fisica
 	private Composite compositeAttivitaFisica = null;
 	private ArrayList<Object> sportPazList;
-
+	//Farmaci
+	private Composite compositeFarmaci = null;
+	private ArrayList<Object> farmaciPazList;
+	//Malattie
+	private Composite compositeMalattie;
+	private ArrayList<Object> malattiePazList;
 	
 	//Costruttore
 	public AnamnesiTTableView() {
@@ -90,23 +95,28 @@ public class AnamnesiTTableView extends ViewPart {
 		
 		createCompositeAttivitaFisica(tabFolder);
 		
+		createCompositeFarmaci(tabFolder);
+		
+		createCompositeMalattie(tabFolder);
+		
+	}
+	public static void selectTab(int indexTab) {
+		tabFolder.setSelection(indexTab);
 	}
 
+	
 	//INTERVENTI
-	/**
-	 * This method initializes compositeInterventi	
-	 *
-	 */
 	public void createCompositeInterventi(TabFolder tabFolder) {
 		compositeInterventi = new Composite(tabFolder, SWT.TRANSPARENT);
 		TabItem tabItemInterventi = new TabItem(tabFolder, SWT.NONE);
 		tabItemInterventi.setText("Interventi");
 		tabItemInterventi.setControl(compositeInterventi);
-		interventiPazList = AnamnesiDAO.getInterventiListByPaziente(pazSelHome);
+		AnamnesiDAO ad = new AnamnesiDAO();
+		interventiPazList = ad.getInterventiListByPaziente(pazSelHome);
 				
 		//Richiama il costruttore della classe Form per gli interventi
 		AnamnesiShell aw = new AnamnesiShell();
-		classVis = new TableForm(compositeInterventi, SWT.BORDER, interventiPazList,"createSShellDettagliInterventi", "createSShellInserimentoInterventi", aw, "InterventiTableView");
+		classVis = new TableForm(compositeInterventi, SWT.BORDER, interventiPazList,"createSShellDettagliInterventi", "createSShellInserimentoInterventi", aw, ad, "InterventiTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -156,19 +166,19 @@ public class AnamnesiTTableView extends ViewPart {
 		colonna.pack();
 		colonna.setResizable(false);
 	}
-	
-	
+		
 	//ALLERGIE
 	private void createCompositeAllergie(TabFolder tabFolder) {
 		compositeAllergie = new Composite(tabFolder, SWT.TRANSPARENT);
 		TabItem tabItemAllergie = new TabItem(tabFolder, SWT.NONE);
 		tabItemAllergie.setText("Allergie/Intolleranze");
 		tabItemAllergie.setControl(compositeAllergie);
-		allergiePazList = AnamnesiDAO.getAllergieListByPaziente(pazSelHome);
+		AnamnesiDAO ad = new AnamnesiDAO();
+		allergiePazList = ad.getAllergieListByPaziente(pazSelHome);
 		
 		//Richiama il costruttore della classe Form per le allergie
 		AnamnesiShell aw = new AnamnesiShell();
-		classVis = new TableForm(compositeAllergie, SWT.BORDER, allergiePazList,"createSShellDettagliAllergie", "createSShellInserimentoAllergie", aw, "AllergieTableView");
+		classVis = new TableForm(compositeAllergie, SWT.BORDER, allergiePazList,"createSShellDettagliAllergie", "createSShellInserimentoAllergie", aw, ad, "AllergieTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -187,19 +197,18 @@ public class AnamnesiTTableView extends ViewPart {
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 6);
 	}
 	
-	
-	
 	//ATTIVITA' FISICA
 	private void createCompositeAttivitaFisica(TabFolder tabFolder) {
 		compositeAttivitaFisica = new Composite(tabFolder, SWT.TRANSPARENT);
 		TabItem tabItemAttivitaFisica = new TabItem(tabFolder, SWT.NONE);
 		tabItemAttivitaFisica.setText("Attivit‡ Fisica");
 		tabItemAttivitaFisica.setControl(compositeAttivitaFisica);
-		sportPazList = AnamnesiDAO.getSportListByPaziente(pazSelHome);
+		AnamnesiDAO ad = new AnamnesiDAO();
+		sportPazList = ad.getSportListByPaziente(pazSelHome);
 		
 		//Richiama il costruttore della classe Form per gli sport
 		AnamnesiShell aw = new AnamnesiShell();
-		classVis = new TableForm(compositeAttivitaFisica, SWT.BORDER, sportPazList,"createSShellDettagliSport", "createSShellInserimentoSport", aw, "SportTableView");
+		classVis = new TableForm(compositeAttivitaFisica, SWT.BORDER, sportPazList,"createSShellDettagliSport", "createSShellInserimentoSport", aw, ad, "SportTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -219,33 +228,67 @@ public class AnamnesiTTableView extends ViewPart {
 		
 	}
 	
-	
-	
-	
-	
-	
-	/*public void aggiornaTable() { //listaElementi Ë interventiPazList
-	AnamnesiDAO an = new AnamnesiDAO();
-	ArrayList<Object> listaElementi = an.getListInterventi();
-	//Aggiorna la tabella quando Ë modificato qualche item
-	classVis.getTableVisualizzazione().removeAll(); //rimuove gli item
-	//rimuove le colonne
-	int k = 0;
-	while (k<classVis.getTableVisualizzazione().getColumnCount()) {
-		classVis.getTableVisualizzazione().getColumn(k).dispose();
+	//FARMACI
+	private void createCompositeFarmaci(TabFolder tabFolder) {
+		compositeFarmaci = new Composite(tabFolder, SWT.TRANSPARENT);
+		TabItem tabItemFarmaci = new TabItem(tabFolder, SWT.NONE);
+		tabItemFarmaci.setText("Farmaci");
+		tabItemFarmaci.setControl(compositeFarmaci);
+		AnamnesiDAO ad = new AnamnesiDAO();
+		farmaciPazList = ad.getFarmaciListByPaziente(pazSelHome);
+		
+		//Richiama il costruttore della classe Form per gli sport
+		AnamnesiShell aw = new AnamnesiShell();
+		classVis = new TableForm(compositeFarmaci, SWT.BORDER, farmaciPazList,"createSShellDettagliFarmaco", "createSShellInserimentoFarmaco", aw, ad, "FarmaciTableView");
+		classVis.setBounds(new Rectangle(6, 50, 800, 332));
+		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		classVis.setLayout(new GridLayout(1, true));
+		classVis.setBackground(Utils.getStandardWhiteColor());
+		
+		//Nasconde le colonne che visualizzano gli id
+		classVis.nascondiColonne(new int[]{0,1,3,6});
+		
+		//Aggiorna la combo con l'attributo aggiunto
+		classVis.aggiornaCombo();
+		
+		//Applica l'ordinamento alle colonne visualizzate
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 2);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 4);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 5);
+		
 	}
-	TableUtil.riempiTabellaEntita(classVis.getTableVisualizzazione(), listaElementi);
 	
-	for (TableColumn colonna : classVis.getTableVisualizzazione().getColumns()) {
-		colonna.pack();
-		colonna.setResizable(false);
+	
+	//MALATTIE
+	private void createCompositeMalattie(TabFolder tabFolder) {
+		compositeMalattie = new Composite(tabFolder, SWT.TRANSPARENT);
+		TabItem tabItemMalattie = new TabItem(tabFolder, SWT.NONE);
+		tabItemMalattie.setText("Malattie");
+		tabItemMalattie.setControl(compositeMalattie);
+		AnamnesiDAO ad = new AnamnesiDAO();
+		malattiePazList = ad.getMalattieListByPaziente(pazSelHome);
+		
+		//Richiama il costruttore della classe Form per gli sport
+		AnamnesiShell aw = new AnamnesiShell();
+		classVis = new TableForm(compositeMalattie, SWT.BORDER, malattiePazList,"createSShellDettagliMalattia", "createSShellInserimentoMalattia", aw, ad, "MalattieTableView");
+		classVis.setBounds(new Rectangle(6, 50, 800, 332));
+		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		classVis.setLayout(new GridLayout(1, true));
+		classVis.setBackground(Utils.getStandardWhiteColor());
+		
+		//Nasconde le colonne che visualizzano gli id
+		//classVis.nascondiColonne(new int[]{0,1,3,6});
+		
+		//Aggiorna la combo con l'attributo aggiunto
+		classVis.aggiornaCombo();
+		
+		//Applica l'ordinamento alle colonne visualizzate
+		/*classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 2);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 4);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 5);*/
+		
 	}
 	
-	for (int i = 0; i < 3; i++) {
-		classVis.getTableVisualizzazione().getColumn(i).setWidth(0);
-	}
-}*/
-
 }
 
 
