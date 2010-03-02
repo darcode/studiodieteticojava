@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.commands.Command;
+import org.eclipse.swt.widgets.TableItem;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Criterion;
@@ -672,10 +673,11 @@ for (int i = 0; i < ris.size(); i++) {
 		return ris;
 	}
 	
-	public static void cancellaDieta(int idDieta) {
+	public static void cancellaDieta(TableItem rigaTable) {
 		begin();
 		Criteria criteria = getSession().createCriteria(hibernate.Dieta.class);
-		criteria.add( Restrictions.eq("idDieta", idDieta));
+		int id = Integer.parseInt(rigaTable.getText(0));
+		criteria.add( Restrictions.eq("idDieta", id));
 		List<Dieta> diete = (List<Dieta>)criteria.list();
 		commit();
 		begin();
@@ -684,10 +686,11 @@ for (int i = 0; i < ris.size(); i++) {
 		close();
 	}
 	
-	public static void cancellaPrescrizione(int idPrescr) {
+	public static void cancellaPrescrizione(TableItem rigaTable) {
 		begin();
 		Criteria criteria = getSession().createCriteria(hibernate.Prescrizione.class);
-		criteria.add( Restrictions.eq("idPrescrizione", idPrescr));
+		int id = Integer.parseInt(rigaTable.getText(0));
+		criteria.add( Restrictions.eq("idPrescrizione", id));
 		List<Prescrizione> pres = (List<Prescrizione>)criteria.list();
 		commit();
 		begin();

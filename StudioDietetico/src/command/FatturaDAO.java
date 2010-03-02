@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.swt.widgets.TableItem;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
@@ -123,10 +124,11 @@ public class FatturaDAO extends BaseDAO {
 		close();
 	}
 	
-	public static void cancellaFatture(int idFatt) {
+	public static void cancellaFatture(TableItem rigaTable) {
 		begin();
 		Criteria criteria = getSession().createCriteria(hibernate.Fattura.class);
-		criteria.add( Restrictions.eq("idFattura", idFatt));
+		int id = Integer.parseInt(rigaTable.getText(0));
+		criteria.add( Restrictions.eq("idFattura", id));
 		List<Fattura> fatture = (List<Fattura>)criteria.list();
 		commit();
 		begin();

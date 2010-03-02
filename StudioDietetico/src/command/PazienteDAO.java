@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.swt.widgets.TableItem;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
@@ -105,10 +106,11 @@ public class PazienteDAO extends BaseDAO{
 		return paziente;
 	}
 	
-	public static void cancellaPaziente(int idPaz) {
+	public static void cancellaPaziente(TableItem rigaTable) {
 		begin();
 		Criteria criteria = getSession().createCriteria(hibernate.Paziente.class);
-		criteria.add( Restrictions.eq("idPaziente", idPaz));
+		int id = Integer.parseInt(rigaTable.getText(0));
+		criteria.add( Restrictions.eq("idPaziente", id));
 		List<Paziente> paz = (List<Paziente>)criteria.list();
 		commit();
 		begin();

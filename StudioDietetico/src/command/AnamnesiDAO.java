@@ -223,7 +223,7 @@ public class AnamnesiDAO extends BaseDAO{
 		begin();
 		Intolleranzaallergia allergia = new Intolleranzaallergia();
 		System.out.println("IdAll: "+rigaTable.getText(0));
-		Query q = getSession().createQuery("FROM Intolleranzaallergia WHERE idIntolleranzaAllergia="+rigaTable.getText(0).toString());
+		Query q = getSession().createQuery("FROM Intolleranzaallergia WHERE idIntolleranzaAllergia="+rigaTable.getText(0));
 		allergia = (Intolleranzaallergia) q.uniqueResult();
 		commit();
 		begin();
@@ -286,7 +286,7 @@ public class AnamnesiDAO extends BaseDAO{
 		begin();
 		Attivitafisica sport = new Attivitafisica();
 		System.out.println("IdSport: "+rigaTable.getText(0));
-		Query q = getSession().createQuery("FROM Attivitafisica WHERE idAttivitaFisica="+rigaTable.getText(0).toString());
+		Query q = getSession().createQuery("FROM Attivitafisica WHERE idAttivitaFisica="+rigaTable.getText(0));
 		sport = (Attivitafisica) q.uniqueResult();
 		commit();
 		begin();
@@ -351,7 +351,7 @@ public class AnamnesiDAO extends BaseDAO{
 		begin();
 		Farmacoassunto farmaco = new Farmacoassunto();
 		System.out.println("IdFarmaco: "+rigaTable.getText(0));
-		Query q = getSession().createQuery("FROM Farmacoassunto WHERE idFarmacoAssunto="+rigaTable.getText(0).toString());
+		Query q = getSession().createQuery("FROM Farmacoassunto WHERE idFarmacoAssunto="+rigaTable.getText(0));
 		farmaco = (Farmacoassunto) q.uniqueResult();
 		commit();
 		begin();
