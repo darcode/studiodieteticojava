@@ -245,6 +245,7 @@ public class VisitaTableView extends ViewPart {
 						TableItem itemSel = classVis.getTableVisualizzazione().getItem(classVis.getTableVisualizzazione().getSelectionIndex());
 						int idVisitaSel = Integer.parseInt(itemSel.getText(0));
 						visitaSel = VisitaDAO.getVisitaByID(idVisitaSel);
+						VisitaDAO.setPagamentoVisita(visitaSel);
 						Fattura fatturaCreata = FatturaDAO.getFatturaByID(idFatt);
 						FatturaDAO.associaFattura(fatturaCreata, visitaSel);
 						itemSel.setText(11, "si"); 
@@ -287,6 +288,7 @@ public class VisitaTableView extends ViewPart {
 						TableItem itemSel = classVis.getTableVisualizzazione().getItem(classVis.getTableVisualizzazione().getSelectionIndex());
 						int idVisitaSel = Integer.parseInt(itemSel.getText(0));
 						visitaSel = VisitaDAO.getVisitaByID(idVisitaSel);
+						VisitaDAO.setPagamentoVisita(visitaSel);
 						FatturaDAO.associaFattura(fatturaSelezionata, visitaSel);
 						itemSel.setText(11, "si"); 
 						System.out.println("visita "+visitaSel.getIdVisita()+" fattura "+fatturaSelezionata.getIdFattura());
