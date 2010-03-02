@@ -672,4 +672,28 @@ for (int i = 0; i < ris.size(); i++) {
 		return ris;
 	}
 	
+	public static void cancellaDieta(int idDieta) {
+		begin();
+		Criteria criteria = getSession().createCriteria(hibernate.Dieta.class);
+		criteria.add( Restrictions.eq("idDieta", idDieta));
+		List<Dieta> diete = (List<Dieta>)criteria.list();
+		commit();
+		begin();
+		getSession().delete(diete.get(0));
+		commit();
+		close();
+	}
+	
+	public static void cancellaPrescrizione(int idPrescr) {
+		begin();
+		Criteria criteria = getSession().createCriteria(hibernate.Prescrizione.class);
+		criteria.add( Restrictions.eq("idPrescrizione", idPrescr));
+		List<Prescrizione> pres = (List<Prescrizione>)criteria.list();
+		commit();
+		begin();
+		getSession().delete(pres.get(0));
+		commit();
+		close();
+	}
+	
 }
