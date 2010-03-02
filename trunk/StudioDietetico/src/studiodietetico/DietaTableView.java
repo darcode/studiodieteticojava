@@ -28,8 +28,9 @@ public class DietaTableView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		top = new Composite(parent, SWT.NONE);
 		diete = DietaDAO.getDieteObject();
+		DietaDAO dd = new DietaDAO();
 		//TODO aggiungere parametri
-		classVis = new TableForm(top, SWT.BORDER, diete, "","","", "DietaDAO", "DietaTableView");
+		classVis = new TableForm(top, SWT.BORDER, diete, "","","", dd, "DietaTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));

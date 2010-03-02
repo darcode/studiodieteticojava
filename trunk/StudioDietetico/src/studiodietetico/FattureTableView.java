@@ -26,8 +26,9 @@ public class FattureTableView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		top = new Composite(parent, SWT.NONE);
 		fatture = FatturaDAO.getFattureObject();
+		FatturaDAO fd = new FatturaDAO();
 		//TODO aggiungere parametri
-		classVis = new TableForm(top, SWT.BORDER, fatture, "","","", "FatturaDAO", "FattureTableView");
+		classVis = new TableForm(top, SWT.BORDER, fatture, "","","", fd, "FattureTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
