@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 
 import hibernate.Paziente;
-import hibernate.Visita;
 
 public class PazienteDAO extends BaseDAO{
 	public PazienteDAO(){}
@@ -102,6 +103,18 @@ public class PazienteDAO extends BaseDAO{
 		Paziente paziente = new Paziente();
 		paziente = (Paziente) q.uniqueResult();
 		return paziente;
+	}
+	
+	public static void cancellaPaziente(int idPaz) {
+		begin();
+		Criteria criteria = getSession().createCriteria(hibernate.Paziente.class);
+		criteria.add( Restrictions.eq("idPaziente", idPaz));
+		List<Paziente> paz = (List<Paziente>)criteria.list();
+		commit();
+		begin();
+		getSession().delete(paz.get(0));
+		commit();
+		close();
 	}
 	
 }
