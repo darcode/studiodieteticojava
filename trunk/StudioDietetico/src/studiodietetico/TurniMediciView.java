@@ -82,7 +82,7 @@ public class TurniMediciView extends ViewPart {
         tableTurni = new Table(top, SWT.MULTI | SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.SELECTED | SWT.Selection | SWT.VIRTUAL | SWT.FULL_SELECTION);
         tableTurni.setHeaderVisible(true);
         tableTurni.setLinesVisible(true);
-        tableTurni.setBounds(new Rectangle(10, 65, 500, 183));
+        tableTurni.setBounds(new Rectangle(10, 65, 555, 183));
         tableTurni.setEnabled(false);
         labelSelezionaMedico = new Label(top, SWT.NONE);
         labelSelezionaMedico.setBounds(new Rectangle(10, 37, 507, 22));
