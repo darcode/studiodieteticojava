@@ -155,7 +155,7 @@ public class AnamnesiDAO extends BaseDAO{
 	public void cancellaInterventi(TableItem rigaTable) {
 		begin();
 		Intervento interv = new Intervento();
-		Query q = getSession().createQuery("FROM Intervento WHERE idTipologiaIntervento="+rigaTable.getText(2).toString()+" AND idPaziente="+rigaTable.getText(1).toString());
+		Query q = getSession().createQuery("FROM Intervento WHERE idTipologiaIntervento="+rigaTable.getText(2)+" AND idPaziente="+rigaTable.getText(1));
 		interv = (Intervento) q.uniqueResult();
 		commit();
 		begin();
