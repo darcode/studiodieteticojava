@@ -257,10 +257,11 @@ public class VisitaDAO extends BaseDAO {
 		return tv;
 	}
 	
-	public static void cancellaVisita(int idVis) {
+	public static void cancellaVisita(TableItem rigaTable) {
 		begin();
 		Criteria criteria = getSession().createCriteria(hibernate.Visita.class);
-		criteria.add( Restrictions.eq("idVisita", idVis));
+		int id = Integer.parseInt(rigaTable.getText(0));
+		criteria.add( Restrictions.eq("idVisita", id));
 		List<Visita> visit = (List<Visita>)criteria.list();
 		commit();
 		begin();
@@ -272,13 +273,13 @@ public class VisitaDAO extends BaseDAO {
 	
 	public void cancellaPrenotazione(TableItem rigaTable) {
 		begin();
-		Prenotazione prenot = new Prenotazione();
-		System.out.println("IdPrenotazione: "+rigaTable.getText(0));
-		Query q = getSession().createQuery("FROM Prenotazione WHERE idPrenotazione="+rigaTable.getText(0));
-		prenot = (Prenotazione) q.uniqueResult();
+		Criteria criteria = getSession().createCriteria(hibernate.Prenotazione.class);
+		int id = Integer.parseInt(rigaTable.getText(0));
+		criteria.add( Restrictions.eq("idPrenotazione", id));
+		List<Prenotazione> prenot = (List<Prenotazione>)criteria.list();
 		commit();
 		begin();
-		getSession().delete(prenot);
+		getSession().delete(prenot.get(0));
 		commit();
 		close();
 	}
