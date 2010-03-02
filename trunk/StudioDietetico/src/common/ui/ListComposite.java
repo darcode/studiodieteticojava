@@ -122,7 +122,23 @@ public class ListComposite extends Composite {
 				colonne.add("descrizione");
 				colonne.add("durata");
 				colonne.add("frequenzaSettimanale");
+			} else if (classeChiamante.equalsIgnoreCase("FarmaciTableView")) {
+				colonne.add("idFarmacoAssunto");
+				colonne.add("idPaziente");
+				colonne.add("nome");
+				colonne.add("descrizione");
+				colonne.add("dose");
+				colonne.add("frequenza");
+				colonne.add("principiAttivi");
+			} else if (classeChiamante.equalsIgnoreCase("MalattieTableView")) {
+				colonne.add("idMalattia");
+				colonne.add("idTipologiaDietaSpeciale");
+				colonne.add("patologia");
+				colonne.add("malattiaEreditaria");
+				colonne.add("idPaziente");
 			}
+			
+			
 				
 			for (String item : colonne) {
 				TableColumn colonna = new TableColumn(table, SWT.CENTER);
