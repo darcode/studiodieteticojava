@@ -29,7 +29,7 @@ public class PrescrizioneTableView extends ViewPart {
 		top = new Composite(parent, SWT.NONE);
 		prescrizioni = DietaDAO.getPrescrizioniObject();
 		//TODO aggiungere parametri
-		classVis = new TableForm(top, SWT.BORDER, prescrizioni, "","","","PrescrizioneTableView");
+		classVis = new TableForm(top, SWT.BORDER, prescrizioni, "","","", "DietaDAO","PrescrizioneTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));

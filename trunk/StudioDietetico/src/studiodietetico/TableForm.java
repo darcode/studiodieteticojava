@@ -1,6 +1,9 @@
 package studiodietetico;
 
+import hibernate.Intervento;
+
 import java.lang.reflect.Method;
+import java.lang.Integer;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +23,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
+import common.GenericBean;
 import common.ui.ListComposite;
 
 import org.eclipse.swt.graphics.Point;
@@ -45,16 +49,34 @@ public class TableForm extends ListComposite {
 	private String idShellInserimento;  //  @jve:decl-index=0:
 	private Shell sShellMessElimina;
 	private Object classeShell = null;
+	private Object classeDAO = null;
 	int numeroCol;
 	private String classeChiamante = "";  //  @jve:decl-index=0:
 	
-	public TableForm(Composite parent, int style, ArrayList<Object> listaElementi, String methodCreateShellDettagli, String methodCreateShellIns, Object classShell, String classe) {
+	/**
+	 * Costuttore della classe: crea una table con ricerca dell'item con scelta dell'attributo e ordinamento delle colonne. Permette di 
+	 * effettuare l'inserimento e la cancellazione degli item con i pulsanti, e la visualizzazione dei dettagli con eventuale modifica
+	 * attraverso il doppio click sull'item.
+	 * @param parent
+	 * @param style
+	 * @param listaElementi lista degli item da caricare nella table
+	 * @param methodCreateShellDettagli nome del metodo che crea la shell che si apre per i dettagli dell'item 
+	 * @param methodCreateShellIns nome del metodo che crea la shell che si apre per l'insermento di un nuovo item
+	 * @param classShell nome della classe che contiene le shell per inserimento e visualizzazione
+	 * @param classDAO nome della classe DAO che contiene i metodi per l'accesso al db
+	 * @param classe nome della classe View che richiama questa classe
+	 * @see ATTENZIONE: il nome del metodo per la cancellazione di un item contenuto nella classe DAO, deve essere della forma 
+	 * 		"cancella+classe View chiamante senza TableView finale. Ad esempio: 
+	 * 		classe chiamante: InterventiView --> metodo cancellazione: cancellaInterventi(TableItem item)
+	 */
+	public TableForm(Composite parent, int style, ArrayList<Object> listaElementi, String methodCreateShellDettagli, 
+			String methodCreateShellIns, Object classShell, Object classDAO, String classe) {
 		super(parent, style);
 		rigaTableClick = null;
 		idShellVisualizzaDettagli = methodCreateShellDettagli;
 		idShellInserimento = methodCreateShellIns;
 		classeShell = classShell;
-		
+		classeDAO = classDAO;
 		initialize(listaElementi, classe);
 	}
 
@@ -223,7 +245,12 @@ public class TableForm extends ListComposite {
 					ordinamentoStringhe(tableVisualizzazione, 4);
 					ordinamentoInteri(tableVisualizzazione, 5);
 				}
-				
+				else if (classeChiamante.equalsIgnoreCase("FarmaciTableView")) {
+					/*TODO nascondiColonne(new int[]{0,1});
+					ordinamentoStringhe(tableVisualizzazione, 2);
+					ordinamentoStringhe(tableVisualizzazione, 3);
+					ordinamentoStringhe(tableVisualizzazione, 4);*/
+				}
 				
 				
 				
@@ -271,7 +298,6 @@ public class TableForm extends ListComposite {
 		buttonInsert.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				Method metodo = null;
-				System.out.println("ClasseShell: "+classeShell);
 				if(classeShell!=null) {
 					try {
 						metodo = classeShell.getClass().getMethod(idShellInserimento, null);
@@ -290,7 +316,6 @@ public class TableForm extends ListComposite {
 				if(tableVisualizzazione.getSelectionCount()>0) {
 					int indiceItemSel = tableVisualizzazione.getSelectionIndex();
 					//MessageBox con conferma cancellazione
-					//elimina solo dalla tabella
 					createMessConfermaCanc(indiceItemSel);
 				} else {
 					//MessageBox con richiesta dell'elemento da cancellare
@@ -336,11 +361,32 @@ public class TableForm extends ListComposite {
 	}
 	
 	private void createMessConfermaCanc(int indiceItemSel) {
+		String classeCanc = "";
 		createSShellMessElimina();
 		MessageBox messageBox = new MessageBox(sShellMessElimina, SWT.OK | SWT.CANCEL| SWT.ICON_WARNING);
 		messageBox.setMessage("Sei sicuro di voler eliminare questo elemento?");
 		messageBox.setText("Conferma cancellazione");
 		if (messageBox.open() == SWT.OK) {
+			if (classeChiamante.endsWith("TableView")) {
+				classeCanc = classeChiamante.split("TableView")[0];
+			}
+			
+			rigaTableClick = tableVisualizzazione.getSelection()[0];
+			//Integer idClass = Integer.parseInt(rigaTableClick.getText(0).toString());
+			//System.out.println(rigaTableClick);
+			Class[] param = new Class[]{rigaTableClick.getClass()} ;
+			Method metodo = null;
+			if(classeDAO!=null) {
+				try {
+					//System.out.println("ClasseDAO: "+classeDAO.getClass().getMethod("cancella"+classeCanc, null));
+					metodo = classeDAO.getClass().getMethod("cancella"+classeCanc, param);
+					System.out.println("Metodo:"+metodo);
+					metodo.invoke(classeDAO, rigaTableClick);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+			
 			tableVisualizzazione.remove(indiceItemSel);
 			sShellMessElimina.close();
 		}

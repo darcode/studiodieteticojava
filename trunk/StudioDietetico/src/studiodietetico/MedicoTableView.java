@@ -26,7 +26,7 @@ public class MedicoTableView extends ViewPart {
 		top = new Composite(parent, SWT.NONE);
 		medici = MedicoDAO.getMediciObject();
 		//TODO aggiungere parametri
-		classVis = new TableForm(top, SWT.BORDER, medici, "","","","MedicoTableView");
+		classVis = new TableForm(top, SWT.BORDER, medici, "","","", "MedicoDAO", "MedicoTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
