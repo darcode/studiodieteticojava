@@ -78,7 +78,7 @@ public class VisitaTableView extends ViewPart {
 		top = new Composite(parent, SWT.NONE);
 		visite = VisitaDAO.getVisite();
 		//TODO aggiungere parametri
-		classVis = new TableForm(top, SWT.BORDER, visite, "","","","VisitaTableView");
+		classVis = new TableForm(top, SWT.BORDER, visite, "","","", "VisitaDAO", "VisitaTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));

@@ -30,7 +30,7 @@ public class PrenotazioneTableView extends ViewPart {
 	prenotazioni = VisitaDAO.getPrenotazioniObject();
 	
 	//TODO aggiungere parametri
-	classVis = new TableForm(top, SWT.BORDER, prenotazioni, "","","","PrenotazioneTableView");
+	classVis = new TableForm(top, SWT.BORDER, prenotazioni, "","","","VisitaDAO","PrenotazioneTableView");
 	classVis.setBounds(new Rectangle(6, 50, 800, 332));
 	classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	classVis.setLayout(new GridLayout(1, true));
