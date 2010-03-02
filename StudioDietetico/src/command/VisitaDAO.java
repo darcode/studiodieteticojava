@@ -1,5 +1,6 @@
 package command;
 
+import hibernate.Farmacoassunto;
 import hibernate.Medico;
 import hibernate.Paziente;
 import hibernate.Prenotazione;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.swt.widgets.TableItem;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -267,14 +269,16 @@ public class VisitaDAO extends BaseDAO {
 		close();
 	}
 	
-	public static void cancellaPrenotazione(int idPrenot) {
+	
+	public void cancellaPrenotazione(TableItem rigaTable) {
 		begin();
-		Criteria criteria = getSession().createCriteria(hibernate.Prenotazione.class);
-		criteria.add( Restrictions.eq("idPrenotazione", idPrenot));
-		List<Prenotazione> prenot = (List<Prenotazione>)criteria.list();
+		Prenotazione prenot = new Prenotazione();
+		System.out.println("IdPrenotazione: "+rigaTable.getText(0));
+		Query q = getSession().createQuery("FROM Prenotazione WHERE idPrenotazione="+rigaTable.getText(0));
+		prenot = (Prenotazione) q.uniqueResult();
 		commit();
 		begin();
-		getSession().delete(prenot.get(0));
+		getSession().delete(prenot);
 		commit();
 		close();
 	}
