@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.swt.widgets.DateTime;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 
 import service.Utils;
 
@@ -231,4 +233,27 @@ public class MedicoDAO extends BaseDAO {
 		return prestazioni;
 	}
 
+	public static void cancellaMedico(int idMed) {
+		begin();
+		Criteria criteria = getSession().createCriteria(hibernate.Medico.class);
+		criteria.add( Restrictions.eq("idMedico", idMed));
+		List<Medico> med = (List<Medico>)criteria.list();
+		commit();
+		begin();
+		getSession().delete(med.get(0));
+		commit();
+		close();
+	}
+	
+	public static void cancellaTurni(int idTur) {
+		begin();
+		Criteria criteria = getSession().createCriteria(hibernate.Turno.class);
+		criteria.add( Restrictions.eq("idTurno", idTur));
+		List<Turno> turni = (List<Turno>)criteria.list();
+		commit();
+		begin();
+		getSession().delete(turni.get(0));
+		commit();
+		close();
+	}
 }
