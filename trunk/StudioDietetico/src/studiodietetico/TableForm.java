@@ -1,7 +1,5 @@
 package studiodietetico;
 
-import hibernate.Intervento;
-
 import java.lang.reflect.Method;
 import java.lang.Integer;
 import java.text.Collator;
@@ -23,7 +21,6 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
-import common.GenericBean;
 import common.ui.ListComposite;
 
 import org.eclipse.swt.graphics.Point;
