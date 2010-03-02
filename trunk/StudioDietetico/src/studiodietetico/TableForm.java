@@ -154,7 +154,7 @@ public class TableForm extends ListComposite {
 				
 				riempiTabella(listaElementiTable, classeChiamante);
 
-				//nasconde, aggiorna e ordina le colonne in base alla classe chiamante 
+				//TODO nasconde, aggiorna e ordina le colonne in base alla classe chiamante 
 				if (classeChiamante.equalsIgnoreCase("VisitaTableView")) {
 					nascondiColonne(new int[] {0,1,2,3,6,7,8});
 					VisitaTableView.aggiungiColonne(TableForm.this, listaElementiTable);
@@ -372,13 +372,10 @@ public class TableForm extends ListComposite {
 			}
 			
 			rigaTableClick = tableVisualizzazione.getSelection()[0];
-			//Integer idClass = Integer.parseInt(rigaTableClick.getText(0).toString());
-			//System.out.println(rigaTableClick);
 			Class[] param = new Class[]{rigaTableClick.getClass()} ;
 			Method metodo = null;
 			if(classeDAO!=null) {
 				try {
-					//System.out.println("ClasseDAO: "+classeDAO.getClass().getMethod("cancella"+classeCanc, null));
 					metodo = classeDAO.getClass().getMethod("cancella"+classeCanc, param);
 					System.out.println("Metodo:"+metodo);
 					metodo.invoke(classeDAO, rigaTableClick);
