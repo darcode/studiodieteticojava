@@ -1,6 +1,7 @@
 package studiodietetico;
 
 import hibernate.Attivitafisica;
+import hibernate.Farmacoassunto;
 import hibernate.Intervento;
 import hibernate.Intolleranzaallergia;
 import hibernate.Paziente;
@@ -33,16 +34,17 @@ import command.AnamnesiDAO;
 import command.PazienteDAO;
 
 import common.GenericBean;
+import common.Utils;
 
 import org.eclipse.swt.layout.GridLayout;
 
-import service.RegistraIntervento;
+//import service.RegistraIntervento;
 import org.eclipse.swt.widgets.Table;
 
 public class AnamnesiShell {
 
 	//MESSAGE BOX
-	private Shell sShellMessElimina = null;  //  @jve:decl-index=0:visual-constraint="-347,665"
+	private Shell sShellMessElimina = null;  
 	
 	//INTERVENTI	
 	private Label labelNomeInt = null;
@@ -53,10 +55,10 @@ public class AnamnesiShell {
 	private Text textAreaLocalizzazione = null;
 	private Button buttonInsertNewInt = null;
 	private Tipologiaintervento interventoSelez = null;  
-	private Shell sShellInserimentoInterventi = null;  //  @jve:decl-index=0:visual-constraint="-376,-86"
+	private Shell sShellInserimentoInterventi = null;  
 	private Group groupInserimentoInt = null;
 	private boolean attivaModifica = false;
-	private Shell sShellDettagliInterventi;  //  @jve:decl-index=0:visual-constraint="-373,748"
+	private Shell sShellDettagliInterventi;  
 	private Label labelNomeIntVis = null;
 	private Label labelDescrIntVis = null;
 	private Text textNomeIntVis = null;
@@ -84,7 +86,6 @@ public class AnamnesiShell {
 	private Button buttonAnnullaIntervento = null;
 	private Text textDataIntVis;
 	
-	
 	//ALLERGIE
 	private Shell sShellDettagliAllergie = null;
 	private Label labelSostanzaAllVis;
@@ -102,7 +103,7 @@ public class AnamnesiShell {
 	private Text textEffettiCollVis;
 	private Button buttonModificaAllergie;
 	private Button buttonAppyModAllergie;
-	private Button buttonChiudiAll;  //  @jve:decl-index=0:visual-constraint="521,2597"
+	private Button buttonChiudiAll;  
 	private Shell sShellInserimentoAllergie;
 	private Label labelFlagAllIns;
 	private Button radioButtonIntolleranzaIns;
@@ -119,15 +120,13 @@ public class AnamnesiShell {
 	private Text textEffettiCollIns;
 	private Button buttonInserisciAllergie;
 	private Button buttonChiudiAllIns;
-	
-	
-	
+		
 	//ATTIVITA' FISICA
 	private Label labelNomeAttFis = null;
 	private Text textNomeAttFis = null;
 	private Label labelDescAttFis = null;
 	private Text textAreaDescAttFis = null;
-	private Shell sShellInserimentoSport = null;  //  @jve:decl-index=0:visual-constraint="-364,2080"
+	private Shell sShellInserimentoSport = null;  
 	private Label labelDurataAttFis;
 	private Text textDurataAttFis;
 	private Label labelFreqSettAttFis;
@@ -146,11 +145,45 @@ public class AnamnesiShell {
 	private Button buttonChiudiSportVis;
 	private Button buttonModificaSportVis;
 	private Button buttonAppyModSportVis;
+
+	//FARMACO ASSUNTO
+	private Shell sShellInserimentoFarmaco;  
+	private Label labelNomeFarmaco;
+	private Text textNomeFarmaco;
+	private Label labelDescFarmaco;
+	private Text textAreaDescFarmaco;
+	private Label labelDoseFarmaco;  
+	private Text textDoseFarmaco;
+	private Label labelFrequenzaFarmaco;
+	private Text textFrequenzaFarmaco;
+	private Label labelPrincipiFarmaco;
+	private Text textPrincipiFarmaco;
+	private Button buttonInserisciFarmaco;
+	private Button buttonChiudiFarmaco;
+	private Shell sShellDettagliFarmaco;
+	private Label labelNomeFarmacoVis;
+	private Text textNomeFarmacoVis;
+	private Label labelDescFarmacoVis;
+	private Text textAreaDescFarmacoVis;
+	private Label labelDoseFarmacoVis;
+	private Text textDoseFarmacoVis;
+	private Label labelFrequenzaFarmacoVis;
+	private Text textFrequenzaFarmacoVis;
+	private Label labelPrincipiFarmacoVis;
+	private Text textPrincipiFarmacoVis;
+	private Button buttonModificaFarmacoVis;
+	private Button buttonAppyModFarmacoVis;
+	private Button buttonChiudiFarmacoVis;
+	
+	//MALATTIA
+	private Shell sShellInserimentoMalattie;
+	
+	
 	
 	
 	public AnamnesiShell() {}
 
-	//-----------------------------------------INTERVENTI-------------------------------------------------------------
+//-----------------------------------------INTERVENTI-------------------------------------------------------------
 	public void createSShellDettagliInterventi(final TableItem rigaTableClick) {
 		String idTipoInt = rigaTableClick.getText(2);
 		AnamnesiDAO an = new AnamnesiDAO();
@@ -247,7 +280,10 @@ public class AnamnesiShell {
 						
 						sShellDettagliInterventi.close();
 						
-						//TODO Aggiornare la tabella degli interventi in AnamnesiTableView
+						//Aggiornare la tabella degli interventi in AnamnesiTableView
+						Utils.getActiveView().dispose();
+						Utils.showView("StudioDietetico.AnamnesiTableView");
+						AnamnesiTTableView.selectTab(0);
 					}
 				});
 	
@@ -263,8 +299,8 @@ public class AnamnesiShell {
 	}
 	
 	public void createSShellInserimentoInterventi() {
-		sShellInserimentoInterventi = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
-		sShellInserimentoInterventi.setText("Inserimento Nuovo Intervento");
+		sShellInserimentoInterventi = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM | SWT.MODELESS | SWT.PRIMARY_MODAL | SWT.SYSTEM_MODAL);
+		sShellInserimentoInterventi.setText("Inserimento Nuovo Intervento Effettuato");
 		sShellInserimentoInterventi.setSize(new Point(725, 739));
 		
 		final AnamnesiDAO an = new AnamnesiDAO(); 
@@ -390,13 +426,18 @@ public class AnamnesiShell {
 						if(interventoSelez == null) {
 							createMessNotSelElem();
 						} else {
-							if(an.getInterventiListByPazIdTipoInt(interventoSelez.getIdTipologiaIntervento(), pazSelHome.getIdPaziente())==null)
+							if(an.getInterventiListByPazIdTipoInt(interventoSelez.getIdTipologiaIntervento(), pazSelHome.getIdPaziente())==null) {
 								an.registraIntervento(pazSelHome, interventoSelez, dataI, spinnerNumInterventi.getSelection());	
-							else
+								sShellInserimentoInterventi.close();
+							} else
 								createMessElemPresente();
 						}
-						//TODO Aggiornare la table di AnamnesiTableView con il nuovo intervento
 						
+						
+						//Aggiorna la tabella in AnamnesiTableView
+						Utils.getActiveView().dispose();
+						Utils.showView("StudioDietetico.AnamnesiTableView");
+						AnamnesiTTableView.selectTab(0);
 					}
 				});
 		
@@ -633,7 +674,10 @@ public class AnamnesiShell {
 						
 						sShellDettagliAllergie.close();
 						
-						//TODO Aggiornare la tabella delle allergie in AnamnesiTableView
+						//Aggiornare la tabella delle allergie in AnamnesiTableView
+						Utils.getActiveView().dispose();
+						Utils.showView("StudioDietetico.AnamnesiTableView");
+						AnamnesiTTableView.selectTab(1);
 					}
 				});
 	
@@ -651,7 +695,7 @@ public class AnamnesiShell {
 	
 	public void createSShellInserimentoAllergie() {
 		sShellInserimentoAllergie = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
-		sShellInserimentoAllergie.setText("Inserimento Intolleranza/Allergia");
+		sShellInserimentoAllergie.setText("Inserimento Intolleranza/Allergia Rilevata");
 		sShellInserimentoAllergie.setSize(new Point(712, 434));
 		
 		labelFlagAllIns = new Label(sShellInserimentoAllergie, SWT.NONE);
@@ -709,11 +753,12 @@ public class AnamnesiShell {
 						an.registraAllergie(flag, textSostanzaAllIns.getText(), textAlimentoIns.getText(), 
 								textDerivatiIns.getText(), textGradoIns.getText(), textEffettiCollIns.getText(), pazSel);
 						
-						//TODO Aggiornare la table di AnamnesiTableView con il nuovo intervento
-						
-						
 						sShellInserimentoAllergie.close();
 						
+						//Aggiornare la table di AnamnesiTableView con il nuovo intervento
+						Utils.getActiveView().dispose();
+						Utils.showView("StudioDietetico.AnamnesiTableView");	
+						AnamnesiTTableView.selectTab(1);
 					}
 				});
 		
@@ -734,7 +779,7 @@ public class AnamnesiShell {
 //-----------------------------------------ATTIVITA' FISICA-------------------------------------------------------------	
 	public void createSShellInserimentoSport() {
 		sShellInserimentoSport = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
-		sShellInserimentoSport.setText("Inserimento Nuovo Sport");
+		sShellInserimentoSport.setText("Inserimento Nuovo Sport Praticato");
 		sShellInserimentoSport.setSize(new Point(727, 313));
 		
 		labelNomeAttFis = new Label(sShellInserimentoSport, SWT.NONE);
@@ -771,9 +816,12 @@ public class AnamnesiShell {
 						AnamnesiDAO an = new AnamnesiDAO();
 						an.registraSport(textNomeAttFis.getText(), textAreaDescAttFis.getText(), textDurataAttFis.getText(), spinnerNumAttFis.getSelection(), pazSel);
 						
-						//TODO Aggiornare la table di AnamnesiTableView con il nuovo sport
-						
 						sShellInserimentoSport.close();
+						
+						//Aggiornare la table di AnamnesiTableView con il nuovo sport
+						Utils.getActiveView().dispose();
+						Utils.showView("StudioDietetico.AnamnesiTableView");
+						AnamnesiTTableView.selectTab(2);
 					}
 				});
 		
@@ -869,7 +917,10 @@ public class AnamnesiShell {
 						
 						sShellDettagliSport.close();
 						
-						//TODO Aggiornare la tabella delle allergie in AnamnesiTableView
+						//Aggiornare la tabella delle allergie in AnamnesiTableView
+						Utils.getActiveView().dispose();
+						Utils.showView("StudioDietetico.AnamnesiTableView");
+						AnamnesiTTableView.selectTab(2);
 					}
 				});		
 		
@@ -885,6 +936,462 @@ public class AnamnesiShell {
 		sShellDettagliSport.open();
 	}
 	
+	
+	
+//-----------------------------------------FARMACO ASSUNTO-------------------------------------------------------------	
+	public void createSShellInserimentoFarmaco() {
+		sShellInserimentoFarmaco = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		sShellInserimentoFarmaco.setText("Inserimento Nuovo Farmaco Assunto");
+		sShellInserimentoFarmaco.setSize(new Point(727, 392));
+		
+		labelNomeFarmaco = new Label(sShellInserimentoFarmaco, SWT.NONE);
+		labelNomeFarmaco.setBounds(new Rectangle(20, 20, 130, 20));
+		labelNomeFarmaco.setText("* Nome");
+		textNomeFarmaco = new Text(sShellInserimentoFarmaco, SWT.BORDER);
+		textNomeFarmaco.setBounds(new Rectangle(170, 20, 500, 20));
+		
+		labelDescFarmaco = new Label(sShellInserimentoFarmaco, SWT.NONE);
+		labelDescFarmaco.setBounds(new Rectangle(20, 60, 130, 20));
+		labelDescFarmaco.setText("Descrizione");
+		textAreaDescFarmaco = new Text(sShellInserimentoFarmaco, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaDescFarmaco.setBounds(new Rectangle(170, 60, 500, 60));
+		
+		labelDoseFarmaco = new Label(sShellInserimentoFarmaco, SWT.NONE);
+		labelDoseFarmaco.setBounds(new Rectangle(20, 140, 130, 20));
+		labelDoseFarmaco.setText("* Dose");
+		textDoseFarmaco = new Text(sShellInserimentoFarmaco, SWT.BORDER);
+		textDoseFarmaco.setBounds(new Rectangle(170, 140, 500, 20));
+		
+		labelFrequenzaFarmaco = new Label(sShellInserimentoFarmaco, SWT.NONE);
+		labelFrequenzaFarmaco.setBounds(new Rectangle(20, 180, 130, 20));
+		labelFrequenzaFarmaco.setText("* Frequenza");
+		textFrequenzaFarmaco = new Text(sShellInserimentoFarmaco, SWT.BORDER);
+		textFrequenzaFarmaco.setBounds(new Rectangle(170, 180, 500, 20));
+		
+		labelPrincipiFarmaco = new Label(sShellInserimentoFarmaco, SWT.NONE);
+		labelPrincipiFarmaco.setBounds(new Rectangle(20, 220, 130, 20));
+		labelPrincipiFarmaco.setText("Principi Attivi");
+		textPrincipiFarmaco = new Text(sShellInserimentoFarmaco, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textPrincipiFarmaco.setBounds(new Rectangle(170, 220, 500, 60));
+		
+		buttonInserisciFarmaco = new Button(sShellInserimentoFarmaco, SWT.NONE);
+		buttonInserisciFarmaco.setBounds(new Rectangle(520, 300, 70, 25));
+		buttonInserisciFarmaco.setText("Inserisci");
+		buttonInserisciFarmaco.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						Paziente pazSel = AnamnesiTTableView.getPazienteSel();
+						AnamnesiDAO an = new AnamnesiDAO();
+						an.registraFarmaco(textNomeFarmaco.getText(), textAreaDescFarmaco.getText(), textDoseFarmaco.getText(), textFrequenzaFarmaco.getText(), textPrincipiFarmaco.getText(), pazSel);
+						
+						sShellInserimentoFarmaco.close();
+						
+						//Aggiornare la table di AnamnesiTableView con il nuovo farmaco
+						Utils.getActiveView().dispose();
+						Utils.showView("StudioDietetico.AnamnesiTableView");
+						AnamnesiTTableView.selectTab(3);
+					}
+				});
+		
+		buttonChiudiFarmaco = new Button(sShellInserimentoFarmaco, SWT.NONE);
+		buttonChiudiFarmaco.setBounds(new Rectangle(600, 300, 70, 25));
+		buttonChiudiFarmaco.setText("Chiudi");
+		buttonChiudiFarmaco.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						sShellInserimentoFarmaco.close();
+					}
+				});
+		
+		sShellInserimentoFarmaco.open();		
+	}
+
+	public void createSShellDettagliFarmaco(final TableItem rigaTableClick) {
+		String idFarmaco = rigaTableClick.getText(0);
+		AnamnesiDAO an = new AnamnesiDAO();
+		final Farmacoassunto farmaco = an.getFarmacoById(idFarmaco);
+		
+		final String nome = rigaTableClick.getText(2);
+		final String descrizione = rigaTableClick.getText(3);
+		final String dose = rigaTableClick.getText(4);
+		final String frequenza = rigaTableClick.getText(5);
+		final String principi = rigaTableClick.getText(6);
+		
+		sShellDettagliFarmaco = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		sShellDettagliFarmaco.setText("Dettagli Sport Selezionato");
+		sShellDettagliFarmaco.setSize(new Point(727, 392));
+		
+		labelNomeFarmacoVis = new Label(sShellDettagliFarmaco, SWT.NONE);
+		labelNomeFarmacoVis.setBounds(new Rectangle(20, 20, 130, 20));
+		labelNomeFarmacoVis.setText("* Nome");
+		textNomeFarmacoVis = new Text(sShellDettagliFarmaco, SWT.BORDER);
+		textNomeFarmacoVis.setBounds(new Rectangle(170, 20, 500, 20));
+		textNomeFarmacoVis.setEnabled(false);
+		textNomeFarmacoVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textNomeFarmacoVis.setText(nome);
+		
+		labelDescFarmacoVis = new Label(sShellDettagliFarmaco, SWT.NONE);
+		labelDescFarmacoVis.setBounds(new Rectangle(20, 60, 130, 20));
+		labelDescFarmacoVis.setText("Descrizione");
+		textAreaDescFarmacoVis = new Text(sShellDettagliFarmaco, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaDescFarmacoVis.setBounds(new Rectangle(170, 60, 500, 60));
+		textAreaDescFarmacoVis.setEnabled(false);
+		textAreaDescFarmacoVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textAreaDescFarmacoVis.setText(descrizione);
+		
+		labelDoseFarmacoVis = new Label(sShellDettagliFarmaco, SWT.NONE);
+		labelDoseFarmacoVis.setBounds(new Rectangle(20, 140, 130, 20));
+		labelDoseFarmacoVis.setText("* Dose");
+		textDoseFarmacoVis = new Text(sShellDettagliFarmaco, SWT.BORDER);
+		textDoseFarmacoVis.setBounds(new Rectangle(170, 140, 500, 20));
+		textDoseFarmacoVis.setEnabled(false);
+		textDoseFarmacoVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textDoseFarmacoVis.setText(dose);
+		
+		labelFrequenzaFarmacoVis = new Label(sShellDettagliFarmaco, SWT.NONE);
+		labelFrequenzaFarmacoVis.setBounds(new Rectangle(20, 180, 130, 20));
+		labelFrequenzaFarmacoVis.setText("* Frequenza");
+		textFrequenzaFarmacoVis = new Text(sShellDettagliFarmaco, SWT.BORDER);
+		textFrequenzaFarmacoVis.setBounds(new Rectangle(170, 180, 500, 20));
+		textFrequenzaFarmacoVis.setEnabled(false);
+		textFrequenzaFarmacoVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textFrequenzaFarmacoVis.setText(frequenza);
+		
+		labelPrincipiFarmacoVis = new Label(sShellDettagliFarmaco, SWT.NONE);
+		labelPrincipiFarmacoVis.setBounds(new Rectangle(20, 220, 130, 20));
+		labelPrincipiFarmacoVis.setText("Principi Attivi");
+		textPrincipiFarmacoVis = new Text(sShellDettagliFarmaco, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textPrincipiFarmacoVis.setBounds(new Rectangle(170, 220, 500, 60));
+		textPrincipiFarmacoVis.setEnabled(false);
+		textPrincipiFarmacoVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textPrincipiFarmacoVis.setText(principi);
+		
+		buttonModificaFarmacoVis = new Button(sShellDettagliFarmaco, SWT.NONE);
+		buttonModificaFarmacoVis.setBounds(new Rectangle(400, 300, 70, 25));
+		buttonModificaFarmacoVis.setText("Modifica");
+		buttonModificaFarmacoVis.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						textNomeFarmacoVis.setEnabled(true);
+						textNomeFarmacoVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						textAreaDescFarmacoVis.setEnabled(true);
+						textAreaDescFarmacoVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						textDoseFarmacoVis.setEnabled(true);
+						textDoseFarmacoVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						textFrequenzaFarmacoVis.setEnabled(true);
+						textFrequenzaFarmacoVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						textPrincipiFarmacoVis.setEnabled(true);
+						textPrincipiFarmacoVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+
+						buttonAppyModFarmacoVis.setEnabled(true);
+						buttonModificaFarmacoVis.setEnabled(false);
+					}
+				});
+		
+		buttonAppyModFarmacoVis = new Button(sShellDettagliFarmaco, SWT.NONE);
+		buttonAppyModFarmacoVis.setBounds(new Rectangle(480, 300, 110, 25));
+		buttonAppyModFarmacoVis.setText("Applica Modifiche");
+		buttonAppyModFarmacoVis.setEnabled(false);
+		buttonAppyModFarmacoVis.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						AnamnesiDAO an = new AnamnesiDAO();
+						an.modificaFarmaco(farmaco, textNomeFarmacoVis.getText(), textAreaDescFarmacoVis.getText(), textDoseFarmacoVis.getText(), textFrequenzaFarmacoVis.getText(), textPrincipiFarmacoVis.getText());
+						
+						sShellDettagliFarmaco.close();
+						
+						//Aggiornare la tabella delle allergie in AnamnesiTableView
+						Utils.getActiveView().dispose();
+						Utils.showView("StudioDietetico.AnamnesiTableView");
+						AnamnesiTTableView.selectTab(3);
+					}
+				});		
+		
+		buttonChiudiFarmacoVis = new Button(sShellDettagliFarmaco, SWT.NONE);
+		buttonChiudiFarmacoVis.setBounds(new Rectangle(600, 300, 70, 25));
+		buttonChiudiFarmacoVis.setText("Chiudi");
+		buttonChiudiFarmacoVis.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						sShellDettagliFarmaco.close();
+					}
+				});
+		
+		sShellDettagliFarmaco.open();
+	}
+	
+	
+	//--------------------------------------MALATTIE-------------------------------------------------------------
+	/*public void createSShellInserimentoMalattie() {
+		sShellInserimentoMalattie = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		sShellInserimentoMalattie.setText("Inserimento Nuova Malattia Diagnosticata");
+		sShellInserimentoMalattie.setSize(new Point(725, 739));
+		
+		final AnamnesiDAO an = new AnamnesiDAO(); 
+		ArrayList<Object> listMalattie = an.getListMalattie();
+		
+		for (int i = 0; i < listTipoInt.size(); i++) {
+			System.out.println("ListaTipoInt("+i+"): "+listTipoInt.get(i));
+		}
+				
+		labelElencoTipoInt = new Label(sShellInserimentoInterventi, SWT.NONE);
+		labelElencoTipoInt.setBounds(new Rectangle(23, 207, 341, 17));
+		labelElencoTipoInt.setText("Selezionare la tipologia dell'intervento di interesse");
+		
+		tableTipoInt = new Table(sShellInserimentoInterventi, SWT.FILL | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
+		tableTipoInt.setHeaderVisible(true);
+		tableTipoInt.setLinesVisible(true);
+		tableTipoInt.setBounds(new Rectangle(22, 226, 639, 203));
+		tableTipoInt.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						buttonEliminaTipoIntervento.setEnabled(true);
+						buttonModificaTipoIntervento.setEnabled(true);
+						interventoSelez = an.getTipoInterventiById(tableTipoInt.getSelection()[0].getText(0));
+						
+						textAreaDescrInt.setText(interventoSelez.getDescrizione());
+						textNomeInt.setText(interventoSelez.getNome());
+						textAreaLocalizzazione.setText(interventoSelez.getLocalizzazione());
+					}
+				});
+		
+		//Adatta la tabella, nasconde la prima colonna e applica l'ordinamento alle colonne
+		riempiTabellaTipoIntervento(tableTipoInt, listTipoInt);
+		for (TableColumn colonna : tableTipoInt.getColumns()) {
+			colonna.pack();
+			colonna.setResizable(false);
+		}
+		tableTipoInt.getColumn(0).setWidth(0);
+		TableForm.ordinamentoStringhe(tableTipoInt, 1);
+		TableForm.ordinamentoStringhe(tableTipoInt, 2);
+		TableForm.ordinamentoStringhe(tableTipoInt, 3);
+		
+		createGroupInserimentoInt();
+		
+		buttonInsertTipoIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
+		buttonInsertTipoIntervento.setBounds(new Rectangle(22, 435, 90, 25));
+		buttonInsertTipoIntervento.setText("Inserisci Nuovo");
+		buttonInsertTipoIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						groupInserimentoInt.setEnabled(true);
+						
+						calendarInserimento.setEnabled(false);
+						spinnerNumInterventi.setEnabled(false);
+						tableTipoInt.setEnabled(false);
+						buttonInsertTipoIntervento.setEnabled(false);
+						buttonModificaTipoIntervento.setEnabled(false);
+						buttonEliminaTipoIntervento.setEnabled(false);
+						buttonInserIntervento.setEnabled(false);
+						buttonAnnullaIntervento.setEnabled(false);
+					}
+				});
+		
+		buttonModificaTipoIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
+		buttonModificaTipoIntervento.setBounds(new Rectangle(119, 435, 60, 25));
+		buttonModificaTipoIntervento.setText("Modifica");
+		buttonModificaTipoIntervento.setEnabled(false);
+		buttonModificaTipoIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						if(tableTipoInt.getSelectionCount()>0) {
+							attivaModifica = true;
+							groupInserimentoInt.setEnabled(true);
+						
+							calendarInserimento.setEnabled(false);
+							spinnerNumInterventi.setEnabled(false);
+							tableTipoInt.setEnabled(false);
+							buttonInsertTipoIntervento.setEnabled(false);
+							buttonModificaTipoIntervento.setEnabled(false);
+							buttonEliminaTipoIntervento.setEnabled(false);
+							buttonInserIntervento.setEnabled(false);
+							buttonAnnullaIntervento.setEnabled(false);
+						} else {
+							createMessNotSelElem();
+						}
+					}
+				});
+		
+		buttonEliminaTipoIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
+		buttonEliminaTipoIntervento.setBounds(new Rectangle(184, 435, 60, 25));
+		buttonEliminaTipoIntervento.setText("Elimina");
+		buttonEliminaTipoIntervento.setEnabled(false);
+		buttonEliminaTipoIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						if(tableTipoInt.getSelectionCount()>0)
+							createMessConfermaCanc(tableTipoInt.getSelectionIndex());
+						else
+							createMessNotSelElem();
+					}
+				});
+		
+		labelDataIntervento = new Label(sShellInserimentoInterventi, SWT.NONE);
+		labelDataIntervento.setBounds(new Rectangle(25, 34, 130, 20));
+		labelDataIntervento.setText("Data ultimo intervento");
+		calendarInserimento = new DateTime(sShellInserimentoInterventi, SWT.NONE | SWT.CALENDAR | SWT.BORDER);
+		calendarInserimento.setBackground(new Color(Display.getCurrent(),245,245,245));
+		calendarInserimento.setBounds(new Rectangle(163, 34, 227, 141));
+		
+		labelNumInterventi = new Label(sShellInserimentoInterventi, SWT.NONE);
+		labelNumInterventi.setBounds(new Rectangle(437, 37, 115, 20));
+		labelNumInterventi.setText("Numero di interventi");
+		spinnerNumInterventi = new Spinner(sShellInserimentoInterventi, SWT.NONE);
+		spinnerNumInterventi.setBounds(new Rectangle(563, 37, 68, 20));
+		spinnerNumInterventi.setMinimum(1);
+		buttonInserIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
+		buttonInserIntervento.setBounds(new Rectangle(520, 466, 89, 28));
+		buttonInserIntervento.setText("Inserisci");
+		buttonInserIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						AnamnesiDAO an = new AnamnesiDAO();
+						Paziente pazSelHome = AnamnesiTTableView.getPazienteSel();
+						//Paziente pazSelHome = PazienteDAO.getPazienti().get(3);
+						String data = calendarInserimento.getYear()+"-"+(calendarInserimento.getMonth()+1)+"-"+calendarInserimento.getDay();
+						String formato = "yyyy-MM-dd";
+						Date dataI = service.Utils.convertStringToDate(data, formato);
+						
+						if(interventoSelez == null) {
+							createMessNotSelElem();
+						} else {
+							if(an.getInterventiListByPazIdTipoInt(interventoSelez.getIdTipologiaIntervento(), pazSelHome.getIdPaziente())==null) {
+								an.registraIntervento(pazSelHome, interventoSelez, dataI, spinnerNumInterventi.getSelection());	
+								sShellInserimentoInterventi.close();
+							} else
+								createMessElemPresente();
+						}
+						
+						
+						//Aggiorna la tabella in AnamnesiTableView
+						Utils.getActiveView().dispose();
+						Utils.showView("StudioDietetico.AnamnesiTableView");
+						AnamnesiTTableView.selectTab(0);
+					}
+				});
+		
+		buttonAnnullaIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
+		buttonAnnullaIntervento.setBounds(new Rectangle(617, 468, 84, 26));
+		buttonAnnullaIntervento.setText("Annulla");
+		buttonAnnullaIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						sShellInserimentoInterventi.close();
+					}
+				});
+		
+		sShellInserimentoInterventi.open();
+	}*/
+	
+	
+	
+	
+	
+	/*public void createSShellDettagliInterventi(final TableItem rigaTableClick) {
+		String idTipoInt = rigaTableClick.getText(2);
+		AnamnesiDAO an = new AnamnesiDAO();
+		final Tipologiaintervento tipoInt = an.getTipoInterventiById(idTipoInt);
+		final String nome = rigaTableClick.getText(5);
+		final String descrizione = tipoInt.getDescrizione();
+		final String localizzazione = tipoInt.getLocalizzazione();
+		String[] dataSplit = rigaTableClick.getText(3).split("-");
+		int gg = Integer.parseInt(dataSplit[2]),
+			mm = Integer.parseInt(dataSplit[1]),
+			yy = Integer.parseInt(dataSplit[0]),
+			num = Integer.parseInt(rigaTableClick.getText(4));
+		
+		sShellDettagliInterventi = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		sShellDettagliInterventi.setText("Dettagli Intervento Selezionato");
+		sShellDettagliInterventi.setSize(new Point(712, 434));
+		
+		labelNomeIntVis = new Label(sShellDettagliInterventi, SWT.NONE);
+		labelNomeIntVis.setBounds(new Rectangle(20, 20, 130, 20));
+		labelNomeIntVis.setText("Nome dell'intervento");
+		textNomeIntVis = new Text(sShellDettagliInterventi, SWT.NONE);
+		textNomeIntVis.setBounds(new Rectangle(170, 20, 480, 20));
+		textNomeIntVis.setEnabled(false);
+		textNomeIntVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textNomeIntVis.setText(nome);
+		
+		labelDescrIntVis = new Label(sShellDettagliInterventi, SWT.NONE);
+		labelDescrIntVis.setBounds(new Rectangle(20, 60, 130, 20));
+		labelDescrIntVis.setText("Descrizione");
+		textAreaDescrIntVis = new Text(sShellDettagliInterventi, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaDescrIntVis.setBounds(new Rectangle(170, 60, 500, 45));
+		textAreaDescrIntVis.setEnabled(false);
+		textAreaDescrIntVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textAreaDescrIntVis.setText(descrizione);
+		
+		labelLocalizzazioneVis = new Label(sShellDettagliInterventi, SWT.NONE);
+		labelLocalizzazioneVis.setBounds(new Rectangle(20, 125, 130, 20));
+		labelLocalizzazioneVis.setText("Zona interessata");
+		textAreaLocalizzazioneVis = new Text(sShellDettagliInterventi, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaLocalizzazioneVis.setBounds(new Rectangle(170, 125, 500, 45));
+		textAreaLocalizzazioneVis.setEnabled(false);
+		textAreaLocalizzazioneVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textAreaLocalizzazioneVis.setText(localizzazione);
+		
+		labelDataIntVis = new Label(sShellDettagliInterventi, SWT.NONE);
+		labelDataIntVis.setBounds(new Rectangle(20, 190, 130, 20));
+		labelDataIntVis.setText("Data ultimo intervento");
+		calendar = new DateTime (sShellDettagliInterventi, SWT.NONE | SWT.CALENDAR | SWT.BORDER);
+		calendar.setBounds(new Rectangle(170, 190, 225, 145));
+		calendar.setVisible(false);
+		textDataIntVis = new Text(sShellDettagliInterventi, SWT.NONE);
+		textDataIntVis.setBounds(new Rectangle(170, 190, 225, 20));
+		textDataIntVis.setEnabled(false);
+		textDataIntVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textDataIntVis.setText(gg+"/"+mm+"/"+yy);
+		
+		labelNumIntVis = new Label(sShellDettagliInterventi, SWT.NONE);
+		labelNumIntVis.setBounds(new Rectangle(430, 190, 120, 20));
+		labelNumIntVis.setText("Numero di interventi");
+		spinnerNumVis = new Spinner(sShellDettagliInterventi, SWT.READ_ONLY);
+		spinnerNumVis.setBounds(new Rectangle(570, 190, 45, 20));
+		spinnerNumVis.setEnabled(false);
+		spinnerNumVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		spinnerNumVis.setMinimum(num);
+		
+		buttonModificaInterventi = new Button(sShellDettagliInterventi, SWT.NONE);
+		buttonModificaInterventi.setBounds(new Rectangle(400, 350, 70, 25));
+		buttonModificaInterventi.setText("Modifica");
+		buttonModificaInterventi.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						textDataIntVis.setVisible(false);
+						calendar.setVisible(true);
+						spinnerNumVis.setEnabled(true);
+						spinnerNumVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						
+						buttonAppyModInterventi.setEnabled(true);
+						buttonModificaInterventi.setEnabled(false);
+					}
+				});
+		
+		buttonAppyModInterventi = new Button(sShellDettagliInterventi, SWT.NONE);
+		buttonAppyModInterventi.setBounds(new Rectangle(480, 350, 110, 25));
+		buttonAppyModInterventi.setText("Applica Modifiche");
+		buttonAppyModInterventi.setEnabled(false);
+		buttonAppyModInterventi.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						Paziente pazSel = AnamnesiTTableView.getPazienteSel();
+						String data = calendar.getYear()+"-"+(calendar.getMonth()+1)+"-"+calendar.getDay();
+						String formato = "yyyy-MM-dd";
+						Date dataInt = service.Utils.convertStringToDate(data, formato);
+						int num = spinnerNumVis.getSelection();
+						AnamnesiDAO an = new AnamnesiDAO();
+						an.modificaIntervento(pazSel, tipoInt, dataInt, num);
+						
+						sShellDettagliInterventi.close();
+						
+						//Aggiornare la tabella degli interventi in AnamnesiTableView
+						Utils.getActiveView().dispose();
+						Utils.showView("StudioDietetico.AnamnesiTableView");
+						AnamnesiTTableView.selectTab(0);
+					}
+				});
+	
+		buttonChiudi = new Button(sShellDettagliInterventi, SWT.NONE);
+		buttonChiudi.setBounds(new Rectangle(600, 350, 70, 25));
+		buttonChiudi.setText("Chiudi");
+		buttonChiudi.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						sShellDettagliInterventi.close();
+					}
+				});
+		sShellDettagliInterventi.open();
+	}*/
+	
+	
+	//MESSAGE BOX
 	
 	//MESSAGE BOX
 	private void createSShellMessElimina() {
@@ -975,13 +1482,5 @@ public class AnamnesiShell {
 			}
 		}
 	}
-
-	/*public static TableItem getItemInserimento() {
-		return itemInserimento;
-	}
-
-	public static TableItem getItemModifica() {
-		return itemModifica;
-	}*/
 
 }
