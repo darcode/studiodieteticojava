@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.TableItem;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
@@ -233,10 +234,11 @@ public class MedicoDAO extends BaseDAO {
 		return prestazioni;
 	}
 
-	public static void cancellaMedico(int idMed) {
+	public static void cancellaMedico(TableItem rigaTable) {
 		begin();
 		Criteria criteria = getSession().createCriteria(hibernate.Medico.class);
-		criteria.add( Restrictions.eq("idMedico", idMed));
+		int id = Integer.parseInt(rigaTable.getText(0));
+		criteria.add( Restrictions.eq("idMedico", id));
 		List<Medico> med = (List<Medico>)criteria.list();
 		commit();
 		begin();
@@ -245,10 +247,11 @@ public class MedicoDAO extends BaseDAO {
 		close();
 	}
 	
-	public static void cancellaTurni(int idTur) {
+	public static void cancellaTurni(TableItem rigaTable) {
 		begin();
 		Criteria criteria = getSession().createCriteria(hibernate.Turno.class);
-		criteria.add( Restrictions.eq("idTurno", idTur));
+		int id = Integer.parseInt(rigaTable.getText(0));
+		criteria.add( Restrictions.eq("idTurno", id));
 		List<Turno> turni = (List<Turno>)criteria.list();
 		commit();
 		begin();
