@@ -131,6 +131,7 @@ public class TableForm extends ListComposite {
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 						textRicerca.setEnabled(true);
+						textRicerca.setText("");
 					}
 				});
 		
@@ -338,7 +339,7 @@ public class TableForm extends ListComposite {
 		return colonneVisibili.get(indiceCombo);
 	} 
 	
-	private void riempiTabella(ArrayList<Object> listaElementi, String classeChiamante){
+	public void riempiTabella(ArrayList<Object> listaElementi, String classeChiamante){
 		riempiTabellaEntita(tableVisualizzazione, listaElementi, classeChiamante);
 		for (int i = 0; i < tableVisualizzazione.getColumnCount(); i++) {
 			if (tableVisualizzazione.getColumn(i).getText().toLowerCase().contains("dataora")) {
