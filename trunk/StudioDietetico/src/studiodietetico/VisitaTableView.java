@@ -1,9 +1,12 @@
 package studiodietetico;
 
 import hibernate.Fattura;
+import hibernate.Medico;
+import hibernate.Prenotazione;
 import hibernate.Visita;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -12,6 +15,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -23,11 +27,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 
 import command.FatturaDAO;
+import command.MedicoDAO;
 import command.VisitaDAO;
-import common.Utils;
+
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Combo;
+
+import service.Utils;
 
 public class VisitaTableView extends ViewPart {
 	private Composite top = null;
@@ -35,8 +41,6 @@ public class VisitaTableView extends ViewPart {
 	private ArrayList<Object> visite;  //  @jve:decl-index=0:
 	private Shell sShellNuovaFattura = null;  //  @jve:decl-index=0:visual-constraint="10,425"
 	private Group groupPrenotazione = null;
-	private Label labelNumFattura = null;
-	private Text textNumeroFattura = null;
 	private Label labelImportoFatt = null;
 	private Text textImportoFatt = null;
 	private Label labelImportoPagato = null;
@@ -70,6 +74,47 @@ public class VisitaTableView extends ViewPart {
 	private Label labelSelezAttributo = null;
 	private Combo comboAttributi = null;
 	private Text textRicerca = null;
+	private Shell sShellRegistraVisita = null;  //  @jve:decl-index=0:visual-constraint="18,1187"
+	
+	private Label labelSelezPrenotaz = null;
+	private Combo comboPrenotazOdierne = null;
+	private Text textAreaInfoPrenotazione = null;
+	private Label labelInfoPrenotazione = null;
+	private Label labelSelezMedico = null;
+	private Combo comboMedicoVisita = null;
+	private Combo comboGiornoVisita = null;
+	private Label labelOraInizioVisita = null;
+	private Label labelOraFineVisita = null;
+	private Label labelMotivazioni = null;
+	private Text textAreaMotivazioni = null;
+	private Label labelNote = null;
+	private Text textAreaNote = null;
+	private Button buttonRegistraVisita = null;
+	private ArrayList<Medico> medici;  //  @jve:decl-index=0:
+	private ArrayList<Prenotazione> prenotazioni;  //  @jve:decl-index=0:
+	private Group groupDataVisita = null;
+	private Label labelFatturaAssociata = null;
+	final ArrayList<Prenotazione> prenotazioniOdierne = new ArrayList<Prenotazione>();  //  @jve:decl-index=0:
+	private Shell sShellDettagliVisita = null;  //  @jve:decl-index=0:visual-constraint="20,1725"
+	private Label labelPazienteVis = null;
+	private Text textPazienteVis = null;
+	private Label labelTipologVis = null;
+	private Text textTipologiaVis = null;
+	private Label labelCostoVisita = null;
+	private Text textCostoVisita = null;
+	private Label labelMedicoVis = null;
+	private Text textMedicoVis = null;
+	private Label labelDataOraInizioVis = null;
+	private Text textDataOraInizioVis = null;
+	private Label labelDataOraFineVis = null;
+	private Text textDataOraFineVis = null;
+	private Label labelStatoPagamento = null;
+	private Text textStatoPagamento = null;
+	private Label labelMotivazioniVis = null;
+	private Text textAreaMotivazioniVis = null;
+	private Label labelNoteVis = null;
+	private Text textAreaNoteVis = null;
+	private Button buttonOk = null;
 	
 	public VisitaTableView() {}
 
@@ -78,8 +123,7 @@ public class VisitaTableView extends ViewPart {
 		top = new Composite(parent, SWT.NONE);
 		visite = VisitaDAO.getVisite();
 		VisitaDAO vd = new VisitaDAO();
-		//TODO aggiungere parametri
-		classVis = new TableForm(top, SWT.BORDER, visite, "","","", vd, "VisitaTableView");
+		classVis = new TableForm(top, SWT.BORDER, visite, "createSShellDettagliVisita","createSShellRegistraVisita",VisitaTableView.this, vd, "VisitaTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -503,4 +547,267 @@ public class VisitaTableView extends ViewPart {
 				});
 	}
 
+	/**
+	 * This method initializes sShellRegistraVisita	
+	 *
+	 */
+	public void createSShellRegistraVisita() {
+		sShellRegistraVisita = new Shell();
+		//sShellRegistraVisita.setLayout(new GridLayout());
+		sShellRegistraVisita.setSize(new Point(543, 532));
+		sShellRegistraVisita.setText("Registra visita");
+		
+        labelSelezPrenotaz = new Label(sShellRegistraVisita, SWT.WRAP);
+        labelSelezPrenotaz.setBounds(new Rectangle(10, 15, 141, 32));
+        labelSelezPrenotaz.setText("* Seleziona la prenotazione per la data odierna:");
+        createComboPrenotazOdierne();
+        textAreaInfoPrenotazione = new Text(sShellRegistraVisita, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        textAreaInfoPrenotazione.setBounds(new Rectangle(161, 50, 308, 82));
+        textAreaInfoPrenotazione.setEditable(false);
+        labelInfoPrenotazione = new Label(sShellRegistraVisita, SWT.WRAP);
+        labelInfoPrenotazione.setBounds(new Rectangle(10, 50, 143, 39));
+        labelInfoPrenotazione.setText("Info sulla prenotazione selezionata:");
+        labelSelezMedico = new Label(sShellRegistraVisita, SWT.WRAP);
+        labelSelezMedico.setBounds(new Rectangle(10, 142, 144, 32));
+        labelSelezMedico.setText("* Seleziona il medico che ha effettuato la visita:");
+        createComboMedicoVisita();
+        labelOraInizioVisita = new Label(sShellRegistraVisita, SWT.NONE);
+        labelOraInizioVisita.setBounds(new Rectangle(10, 200, 117, 20));
+        labelOraInizioVisita.setText("* Ora inizio visita:");
+        final DateTime timeInizioVisita = new DateTime(sShellRegistraVisita, SWT.TIME | SWT.SHORT);
+        timeInizioVisita.setBounds(130, 200, 70, 20);
+        labelOraFineVisita = new Label(sShellRegistraVisita, SWT.NONE);
+        labelOraFineVisita.setBounds(new Rectangle(10, 230, 117, 20));
+        labelOraFineVisita.setText("* Ora fine visita:");
+        final DateTime timeFineVisita = new DateTime(sShellRegistraVisita, SWT.TIME | SWT.SHORT);
+        timeFineVisita.setBounds(130, 230, 70, 20);
+        labelMotivazioni = new Label(sShellRegistraVisita, SWT.NONE);
+        labelMotivazioni.setBounds(new Rectangle(10, 275, 129, 22));
+        labelMotivazioni.setText("Motivazioni della visita:");
+        textAreaMotivazioni = new Text(sShellRegistraVisita, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        textAreaMotivazioni.setBounds(new Rectangle(157, 274, 344, 55));
+        labelNote = new Label(sShellRegistraVisita, SWT.NONE);
+        labelNote.setBounds(new Rectangle(12, 341, 41, 17));
+        labelNote.setText("Note:");
+        textAreaNote = new Text(sShellRegistraVisita, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        textAreaNote.setBounds(new Rectangle(60, 342, 398, 115));
+        buttonRegistraVisita = new Button(sShellRegistraVisita, SWT.NONE);
+        buttonRegistraVisita.setBounds(new Rectangle(354, 467, 147, 25));
+        buttonRegistraVisita.setText("Registra visita");
+        createGroupPrenotazione();
+        createGroupDataVisita();
+        labelFatturaAssociata = new Label(sShellRegistraVisita, SWT.NONE);
+        labelFatturaAssociata.setBounds(new Rectangle(11, 467, 332, 24));
+        labelFatturaAssociata.setText("Visita correttamente registrata");
+        labelFatturaAssociata.setVisible(false);
+        buttonRegistraVisita
+        		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+        			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+        				String formato = "yyyy-MM-dd HH:mm:ss";
+        				Date now = new Date();
+        				String dataInizioString =  Integer.toString(now.getYear()+1900)+"-"+((now.getMonth()+1) < 10 ? "0" : "") + (now.getMonth()+1)+"-"+Integer.toString(now.getDate())+" "+timeInizioVisita.getHours()+":"+(timeInizioVisita.getMinutes () < 10 ? "0" : "") + timeInizioVisita.getMinutes ()+":00";
+        				String dataFineString =  Integer.toString(now.getYear()+1900)+"-"+((now.getMonth()+1) < 10 ? "0" : "") + (now.getMonth()+1)+"-"+Integer.toString(now.getDate())+" "+timeFineVisita.getHours()+":"+(timeFineVisita.getMinutes () < 10 ? "0" : "") + timeFineVisita.getMinutes ()+":00";
+        				System.out.println(dataInizioString+"____"+dataFineString);
+        				Date dataInizioVisita = Utils.convertStringToDate(dataInizioString, formato);   
+        				Date dataFineVisita = Utils.convertStringToDate(dataFineString, formato);   
+        				Prenotazione pren = prenotazioniOdierne.get(comboPrenotazOdierne.getSelectionIndex());
+        				int idPren = pren.getIdPrenotazione();
+        				Prenotazione prenotazione = VisitaDAO.getPrenotazioneByID(idPren);
+        				Medico medico = medici.get(comboMedicoVisita.getSelectionIndex());
+        				VisitaDAO visita = new VisitaDAO();
+        				visita.registraVisita(dataInizioVisita, dataFineVisita, textAreaMotivazioni.getText(), textAreaNote.getText(), medico, prenotazione);
+        				labelFatturaAssociata.setVisible(true);
+        				System.out.println("visita registrata");
+        				
+        				classVis.getTableVisualizzazione().removeAll(); //rimuove le righe
+        				//rimuove le colonne
+        				int k = 0;
+        				while (k<classVis.getTableVisualizzazione().getColumnCount()) {
+        					classVis.getTableVisualizzazione().getColumn(k).dispose();
+        				}
+        				visite = VisitaDAO.getVisite();
+        				classVis.riempiTabella(visite, "VisitaTableView");
+        				classVis.nascondiColonne(new int[] {0,1,2,3,6,7,8});
+        				aggiungiColonne(classVis, visite);    				
+        				classVis.aggiornaCombo();
+        				classVis.ordinamentoData(classVis.getTableVisualizzazione(), 4);
+        				classVis.ordinamentoData(classVis.getTableVisualizzazione(), 5);
+        				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 9);
+        				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 10);
+        				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 11);
+
+        				sShellRegistraVisita.close();
+        			}
+        		});
+		sShellRegistraVisita.open();
+	}
+		
+
+	private void createComboPrenotazOdierne() {
+		comboPrenotazOdierne = new Combo(sShellRegistraVisita, SWT.READ_ONLY);
+		comboPrenotazOdierne.setBounds(new Rectangle(161, 15, 260, 25));
+		Date now = new Date();
+		prenotazioni = (ArrayList<Prenotazione>) VisitaDAO.getPrenotazioni();
+		ArrayList<String> pren = new ArrayList<String>();
+		//final ArrayList<Prenotazione> prenotazioniOdierne = new ArrayList<Prenotazione>();
+		int index = 0;
+		for (Prenotazione prenotazione : prenotazioni) {
+			if (prenotazione.getDataOra().getDate()== now.getDate() && 
+					prenotazione.getDataOra().getMonth()== now.getMonth() &&
+					prenotazione.getDataOra().getYear()== now.getYear()) { 
+				prenotazioniOdierne.add(index, prenotazione);
+				index++;
+				pren.add(prenotazione.getPaziente().getCognome()+" "+prenotazione.getPaziente().getNome()+"  - "+prenotazione.getTipologiavisita().getTipologia());
+			}
+		}
+		String[] prenotazioniArray = (String[]) pren.toArray((new String[0]));
+		comboPrenotazOdierne.setItems(prenotazioniArray);
+		comboPrenotazOdierne
+				.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						int selez = comboPrenotazOdierne.getSelectionIndex();
+						textAreaInfoPrenotazione.setText("Paziente: "+prenotazioniOdierne.get(selez).getPaziente().getCognome()+" "+prenotazioniOdierne.get(selez).getPaziente().getNome()+"\n"+
+															"Data di nascita paziente: "+prenotazioniOdierne.get(selez).getPaziente().getDataNascita()+"\n"+
+															"Codice fiscale paziente: "+prenotazioniOdierne.get(selez).getPaziente().getCodiceFiscale()+"\n"+
+															"Indirizzo paziente: "+prenotazioniOdierne.get(selez).getPaziente().getCitta()+"  "+prenotazioniOdierne.get(selez).getPaziente().getIndirizzo()+"\n"+
+															"Tessera sanitaria paziente: "+prenotazioniOdierne.get(selez).getPaziente().getNumTesseraSanitaria()+"\n\n"+
+															"Tipologia visita prenotata: "+prenotazioniOdierne.get(selez).getTipologiavisita().getTipologia()+"\n"+
+															"Costo visita prenotata: "+prenotazioniOdierne.get(selez).getTipologiavisita().getCostoVisita()+"\n"+
+															"Data e ora prenotazione: "+prenotazioniOdierne.get(selez).getDataOra()+"\n"+
+															"Eventuali note sulla prenotazione: "+prenotazioniOdierne.get(selez).getNote());	
+					}
+					public void widgetDefaultSelected(
+							org.eclipse.swt.events.SelectionEvent e) {
+					}
+				});
+		
+	}
+
+
+	private void createComboMedicoVisita() {
+		comboMedicoVisita = new Combo(sShellRegistraVisita, SWT.READ_ONLY);
+		comboMedicoVisita.setBounds(new Rectangle(165, 147, 209, 22));
+		medici = (ArrayList<Medico>) MedicoDAO.getMedici();
+		ArrayList<String> med = new ArrayList<String>();
+		for (Medico medico : medici) {
+			med.add(medico.getCognome()+"_"+medico.getNome());
+		}
+		String[] mediciArray = (String[]) med.toArray((new String[0]));
+		comboMedicoVisita.setItems(mediciArray);
+	}
+
+	private void createComboGiornoVisita() {
+		comboGiornoVisita = new Combo(sShellRegistraVisita, SWT.READ_ONLY);
+		comboGiornoVisita.setBounds(new Rectangle(165, 192, 91, 23));
+		for (int i = 1; i < 32; i++) {
+			comboGiornoVisita.add(""+i);
+		}
+		//comboGiornoVisita.setItems(new String [] {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"});
+		comboGiornoVisita.setText(comboGiornoVisita.getItem(0));
+	}
+
+	
+	private void createGroupPrenotazione() {
+		groupPrenotazione = new Group(sShellRegistraVisita, SWT.NONE);
+		groupPrenotazione.setLayout(new GridLayout());
+		groupPrenotazione.setBounds(new Rectangle(5, 1, 474, 136));
+		groupPrenotazione.setText("Prenotazione");
+	}
+	
+	private void createGroupDataVisita() {
+		groupDataVisita = new Group(sShellRegistraVisita, SWT.NONE);
+		groupDataVisita.setLayout(new GridLayout());
+		groupDataVisita.setText("Data della visita");
+		groupDataVisita.setBounds(new Rectangle(7, 176, 300, 85));
+	}
+
+	/**
+	 * This method initializes sShellDettagliVisita	
+	 *
+	 */
+	public void createSShellDettagliVisita(final TableItem rigaTableClick) {
+		int idVis = Integer.parseInt(rigaTableClick.getText(0));
+		final Visita vis = VisitaDAO.getVisitaByID(idVis);
+		sShellDettagliVisita = new Shell();
+		//sShellDettagliVisita.setLayout(new GridLayout());
+		sShellDettagliVisita.setSize(new Point(382, 430));
+		sShellDettagliVisita.setText("Dettagli visita");
+		labelPazienteVis = new Label(sShellDettagliVisita, SWT.NONE);
+		labelPazienteVis.setBounds(new Rectangle(6, 9, 64, 22));
+		labelPazienteVis.setText("Paziente :");
+		textPazienteVis = new Text(sShellDettagliVisita, SWT.BORDER);
+		textPazienteVis.setBounds(new Rectangle(80, 9, 283, 22));
+		textPazienteVis.setEditable(false);
+		textPazienteVis.setText(vis.getPrenotazione().getPaziente().getCognome()+" "+vis.getPrenotazione().getPaziente().getNome());
+
+		labelTipologVis = new Label(sShellDettagliVisita, SWT.NONE);
+		labelTipologVis.setBounds(new Rectangle(6, 36, 98, 22));
+		labelTipologVis.setText("Tipologia visita :");
+		textTipologiaVis = new Text(sShellDettagliVisita, SWT.BORDER);
+		textTipologiaVis.setBounds(new Rectangle(114, 36, 248, 22));
+		textTipologiaVis.setEditable(false);
+		textTipologiaVis.setText(vis.getPrenotazione().getTipologiavisita().getTipologia());
+		labelCostoVisita = new Label(sShellDettagliVisita, SWT.NONE);
+		labelCostoVisita.setBounds(new Rectangle(6, 63, 98, 22));
+		labelCostoVisita.setText("Costo visita :");
+		textCostoVisita = new Text(sShellDettagliVisita, SWT.BORDER);
+		textCostoVisita.setBounds(new Rectangle(115, 63, 200, 22));
+		textCostoVisita.setEditable(false);
+		textCostoVisita.setText(""+vis.getPrenotazione().getTipologiavisita().getCostoVisita());
+		labelMedicoVis = new Label(sShellDettagliVisita, SWT.NONE);
+		labelMedicoVis.setBounds(new Rectangle(6, 89, 98, 22));
+		labelMedicoVis.setText("Medico :");
+		textMedicoVis = new Text(sShellDettagliVisita, SWT.BORDER);
+		textMedicoVis.setBounds(new Rectangle(115, 89, 200, 22));
+		textMedicoVis.setEditable(false);
+		textMedicoVis.setText(vis.getMedico().getCognome()+" "+vis.getMedico().getNome());
+		labelDataOraInizioVis = new Label(sShellDettagliVisita, SWT.NONE);
+		labelDataOraInizioVis.setBounds(new Rectangle(6, 116, 100, 22));
+		labelDataOraInizioVis.setText("Data e ora inizio :");
+		textDataOraInizioVis = new Text(sShellDettagliVisita, SWT.BORDER);
+		textDataOraInizioVis.setBounds(new Rectangle(115, 116, 200, 22));
+		textDataOraInizioVis.setEditable(false);
+		textDataOraInizioVis.setText(vis.getDataOraInizio().toLocaleString());
+		labelDataOraFineVis = new Label(sShellDettagliVisita, SWT.NONE);
+		labelDataOraFineVis.setBounds(new Rectangle(6, 144, 100, 22));
+		labelDataOraFineVis.setText("Data e ora fine :");
+		textDataOraFineVis = new Text(sShellDettagliVisita, SWT.BORDER);
+		textDataOraFineVis.setBounds(new Rectangle(115, 144, 200, 22));
+		textDataOraFineVis.setEditable(false);
+		textDataOraFineVis.setText(vis.getDataOraFine().toLocaleString());
+		labelStatoPagamento = new Label(sShellDettagliVisita, SWT.NONE);
+		labelStatoPagamento.setBounds(new Rectangle(6, 172, 105, 22));
+		labelStatoPagamento.setText("Stato pagamento :");
+		textStatoPagamento = new Text(sShellDettagliVisita, SWT.BORDER);
+		textStatoPagamento.setBounds(new Rectangle(114, 172, 200, 22));
+		textStatoPagamento.setEditable(false);
+		textStatoPagamento.setText(vis.getStatoPagamento());
+		labelMotivazioniVis = new Label(sShellDettagliVisita, SWT.NONE);
+		labelMotivazioniVis.setBounds(new Rectangle(6, 200, 83, 22));
+		labelMotivazioniVis.setText("Motivazioni :");
+		textAreaMotivazioniVis = new Text(sShellDettagliVisita, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaMotivazioniVis.setBounds(new Rectangle(96, 200, 255, 72));
+		textAreaMotivazioniVis.setEditable(false);
+		textAreaMotivazioniVis.setText(vis.getMotivazioni());
+		labelNoteVis = new Label(sShellDettagliVisita, SWT.NONE);
+		labelNoteVis.setBounds(new Rectangle(6, 281, 50, 22));
+		labelNoteVis.setText("Note :");
+		textAreaNoteVis = new Text(sShellDettagliVisita, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textAreaNoteVis.setBounds(new Rectangle(66, 281, 284, 72));
+		textAreaNoteVis.setEditable(false);
+		textAreaNoteVis.setText(vis.getNote());
+		buttonOk = new Button(sShellDettagliVisita, SWT.NONE);
+		buttonOk.setBounds(new Rectangle(229, 364, 120, 25));
+		buttonOk.setText("Ok");
+		buttonOk.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				sShellDettagliVisita.close();
+			}
+		});
+		
+		
+		sShellDettagliVisita.open();
+	}
+
+	
 }  //  @jve:decl-index=0:visual-constraint="10,10,310,351"
