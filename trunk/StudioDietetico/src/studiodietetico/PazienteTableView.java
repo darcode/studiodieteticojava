@@ -334,7 +334,7 @@ public class PazienteTableView extends ViewPart {
 		buttonRegistraPaz.setVisible(false);
 		buttonAggiornaPaz = new Button(sShellInserisciPaziente, SWT.NONE);
         buttonAggiornaPaz.setBounds(new Rectangle(321, 364, 102, 25));
-        buttonAggiornaPaz.setText("Aggiorna paziente");
+        buttonAggiornaPaz.setText("Aggiorna dati");
         buttonAggiornaPaz
 		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {

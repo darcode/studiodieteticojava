@@ -1,6 +1,7 @@
 package command;
 
 import hibernate.Medico;
+import hibernate.Paziente;
 import hibernate.Prestazione;
 import hibernate.PrestazioneId;
 import hibernate.Turno;
@@ -256,6 +257,42 @@ public class MedicoDAO extends BaseDAO {
 		commit();
 		begin();
 		getSession().delete(turni.get(0));
+		commit();
+		close();
+	}
+	
+	public static Medico getMedicoByID(int id) {
+		begin();
+		Query q = getSession().createQuery(
+				"FROM Medico m WHERE m.idMedico=" + id);
+		Medico medico = new Medico();
+		medico = (Medico) q.uniqueResult();
+		return medico;
+	}
+	
+	public void aggiornaMedico(Medico med, String cognome, String nome, String sesso,
+			Date datanascita, String codicefiscale, String indirizzo,
+			String citta, String cap, String provincia,
+			String specializzazione, String telefono1, String telefono2,
+			String email) {
+		// close();
+		getSession();
+		begin();
+		med.setCognome(cognome);
+		med.setNome(nome);
+		char ses = sesso.charAt(0);
+		med.setSesso(ses);
+		med.setDataNascita(datanascita);
+		med.setCodiceFiscale(codicefiscale);
+		med.setIndirizzo(indirizzo);
+		med.setCitta(citta);
+		med.setCap(cap);
+		med.setProvincia(provincia);
+		med.setSpecializzazione(specializzazione);
+		med.setTelefono1(telefono1);
+		med.setTelefono2(telefono2);
+		med.setEmail(email);
+		getSession().saveOrUpdate(med);
 		commit();
 		close();
 	}
