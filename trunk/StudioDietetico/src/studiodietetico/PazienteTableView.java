@@ -82,7 +82,6 @@ public class PazienteTableView extends ViewPart {
 		top = new Composite(parent, SWT.NONE);
 		pazienti = PazienteDAO.getPazientiObject();
 		PazienteDAO pd = new PazienteDAO();
-		//TODO aggiungere parametri
 		classVis = new TableForm(top, SWT.BORDER, pazienti, "createShellDettagliPaziente","createSShellInserisciPaziente",PazienteTableView.this, pd, "PazienteTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
