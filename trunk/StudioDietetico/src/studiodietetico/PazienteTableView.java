@@ -34,7 +34,6 @@ public class PazienteTableView extends ViewPart {
 	public static Paziente pazienteSel = null;
 	private Shell sShellInserisciPaziente = null;  //  @jve:decl-index=0:visual-constraint="18,376"
 
-	private Composite top1 = null;
 	private Label labelCognPaz = null;
 	private Text textCognPaz = null;
 	private Label labelNomePaz = null;
@@ -44,11 +43,8 @@ public class PazienteTableView extends ViewPart {
 	private Button radioButtonF = null;
 	private Label labelDataNascPaz = null;
 	private Combo comboGiorno = null;
-	private ComboViewer comboViewer = null;
 	private Combo comboMese = null;
-	private ComboViewer comboViewer1 = null;
 	private Combo comboAnno = null;
-	private ComboViewer comboViewer2 = null;
 	private Label labelCodFiscPaz = null;
 	private Text textCodFiscPaz = null;
 	private Label labelIndirizzoPaz = null;
@@ -139,7 +135,7 @@ public class PazienteTableView extends ViewPart {
 
 
 	public void createSShellInserisciPaziente() {
-		sShellInserisciPaziente = new Shell();
+		sShellInserisciPaziente = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
 		//sShellInserisciPaziente.setLayout(new GridLayout());
 		sShellInserisciPaziente.setSize(new Point(443, 430));
 		sShellInserisciPaziente.setText("Registra un nuovo paziente");
@@ -287,7 +283,6 @@ public class PazienteTableView extends ViewPart {
 	private void createComboGiorno() {
 		comboGiorno = new Combo(sShellInserisciPaziente, SWT.READ_ONLY);
 		comboGiorno.setBounds(new Rectangle(109, 78, 60, 23));
-		comboViewer = new ComboViewer(comboGiorno);
 		for (int i = 1; i < 32; i++) {
 			comboGiorno.add(""+i);
 		}
@@ -302,7 +297,6 @@ public class PazienteTableView extends ViewPart {
 	private void createComboMese() {
 		comboMese = new Combo(sShellInserisciPaziente, SWT.READ_ONLY);
 		comboMese.setBounds(new Rectangle(180, 77, 59, 23));
-		comboViewer1 = new ComboViewer(comboMese);
 		for (int i = 1; i < 13; i++) {
 			comboMese.add(""+i);
 		}
@@ -316,7 +310,6 @@ public class PazienteTableView extends ViewPart {
 	private void createComboAnno() {
 		comboAnno = new Combo(sShellInserisciPaziente, SWT.READ_ONLY);
 		comboAnno.setBounds(new Rectangle(251, 77, 61, 23));
-		comboViewer2 = new ComboViewer(comboAnno);
 		Date now = new Date();
 		//System.out.println(now.getYear()+1900);
 		for (int i = 1900; i < (now.getYear()+1901); i++) {
