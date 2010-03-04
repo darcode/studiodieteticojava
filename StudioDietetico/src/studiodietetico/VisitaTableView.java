@@ -115,6 +115,7 @@ public class VisitaTableView extends ViewPart {
 	private Label labelNoteVis = null;
 	private Text textAreaNoteVis = null;
 	private Button buttonOk = null;
+	private Button buttonAnnulla = null;
 	
 	public VisitaTableView() {}
 
@@ -426,7 +427,7 @@ public class VisitaTableView extends ViewPart {
 	 */
 	private void createSShellFatture() {
 		sShellFatture = new Shell();
-		compositeShell = new Composite(sShellFatture, SWT.NONE);
+		compositeShell = new Composite(sShellFatture, SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
 		compositeShell.setBounds(new Rectangle(3, 2, 590, 331));
 		sShellFatture.setText("Selezionare un conto dalla tabella");		
 		sShellFatture.setSize(new Point(611, 371));
@@ -552,7 +553,7 @@ public class VisitaTableView extends ViewPart {
 	 *
 	 */
 	public void createSShellRegistraVisita() {
-		sShellRegistraVisita = new Shell();
+		sShellRegistraVisita = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
 		//sShellRegistraVisita.setLayout(new GridLayout());
 		sShellRegistraVisita.setSize(new Point(543, 532));
 		sShellRegistraVisita.setText("Registra visita");
@@ -597,9 +598,18 @@ public class VisitaTableView extends ViewPart {
         createGroupPrenotazione();
         createGroupDataVisita();
         labelFatturaAssociata = new Label(sShellRegistraVisita, SWT.NONE);
-        labelFatturaAssociata.setBounds(new Rectangle(11, 467, 332, 24));
+        labelFatturaAssociata.setBounds(new Rectangle(11, 467, 166, 24));
         labelFatturaAssociata.setText("Visita correttamente registrata");
-        labelFatturaAssociata.setVisible(false);
+        labelFatturaAssociata.setVisible(true);
+        buttonAnnulla = new Button(sShellRegistraVisita, SWT.NONE);
+        buttonAnnulla.setBounds(new Rectangle(205, 467, 147, 25));
+        buttonAnnulla.setText("Annulla");
+        buttonAnnulla
+        		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+        			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+        				sShellRegistraVisita.close();
+        			}
+        		});
         buttonRegistraVisita
         		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
         			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -728,7 +738,7 @@ public class VisitaTableView extends ViewPart {
 	public void createSShellDettagliVisita(final TableItem rigaTableClick) {
 		int idVis = Integer.parseInt(rigaTableClick.getText(0));
 		final Visita vis = VisitaDAO.getVisitaByID(idVis);
-		sShellDettagliVisita = new Shell();
+		sShellDettagliVisita = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
 		//sShellDettagliVisita.setLayout(new GridLayout());
 		sShellDettagliVisita.setSize(new Point(382, 430));
 		sShellDettagliVisita.setText("Dettagli visita");

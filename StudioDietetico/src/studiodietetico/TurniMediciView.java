@@ -1,15 +1,11 @@
 package studiodietetico;
 
 import hibernate.Medico;
-import hibernate.Paziente;
 import hibernate.Prestazione;
 import hibernate.Turno;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
-
-import javax.swing.text.TableView.TableRow;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;

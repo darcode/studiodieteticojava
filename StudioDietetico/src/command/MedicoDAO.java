@@ -296,4 +296,13 @@ public class MedicoDAO extends BaseDAO {
 		commit();
 		close();
 	}
+	
+	public static Prestazione getPrestazioneByID(PrestazioneId pId) {
+		begin();
+		Query q = getSession().createQuery(
+				"FROM Prestazione p WHERE p.id=" + pId);
+		Prestazione prestazione = new Prestazione();
+		prestazione = (Prestazione) q.uniqueResult();
+		return prestazione;
+	}
 }

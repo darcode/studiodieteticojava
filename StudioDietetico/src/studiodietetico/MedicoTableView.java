@@ -95,7 +95,7 @@ public class MedicoTableView extends ViewPart {
 
 
 	public void createSShellInserisciMedico() {
-		sShellInserisciMedico = new Shell();
+		sShellInserisciMedico = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
 		//sShellInserisciMedico.setLayout(new GridLayout());
 		sShellInserisciMedico.setSize(new Point(413, 352));
 		sShellInserisciMedico.setText("Registra medico");
