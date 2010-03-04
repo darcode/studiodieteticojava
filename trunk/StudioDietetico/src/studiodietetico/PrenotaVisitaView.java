@@ -247,7 +247,7 @@ public class PrenotaVisitaView extends ViewPart {
 	 *
 	 */
 	private void createSShellCreaTipVisita() {
-		sShellCreaTipVisita = new Shell();
+		sShellCreaTipVisita = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
 		//sShellCreaTipVisita.setLayout(new GridLayout());
 		sShellCreaTipVisita.setSize(new Point(443, 150));
 		sShellCreaTipVisita.setText("Crea una nuova tipologia di visita");

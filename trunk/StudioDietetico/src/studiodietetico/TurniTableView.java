@@ -90,7 +90,7 @@ public class TurniTableView extends ViewPart {
 
 	}
 	
-	public void aggiornaTableView(){
+	private void aggiornaTableView(){
 		classVis.getTableVisualizzazione().removeAll(); //rimuove le righe
 		//rimuove le colonne
 		int k = 0;

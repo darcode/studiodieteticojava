@@ -1,12 +1,16 @@
 package studiodietetico;
 
 import hibernate.Paziente;
+import hibernate.Prenotazione;
+import hibernate.Tipologiavisita;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -16,14 +20,20 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 
 import command.PazienteDAO;
+import command.VisitaDAO;
+
 import org.eclipse.swt.widgets.Button;
 
 import service.Utils;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.DateTime;
 
 public class PazienteTableView extends ViewPart {
 	private Composite top = null;
@@ -33,7 +43,6 @@ public class PazienteTableView extends ViewPart {
 	private Shell sShellMessElimina;
 	public static Paziente pazienteSel = null;
 	private Shell sShellInserisciPaziente = null;  //  @jve:decl-index=0:visual-constraint="18,376"
-
 	private Label labelCognPaz = null;
 	private Text textCognPaz = null;
 	private Label labelNomePaz = null;
@@ -70,6 +79,31 @@ public class PazienteTableView extends ViewPart {
 	private Button buttonRegistraPaz = null;
 	private Button buttonAggiornaPaz = null;
 	private Button buttonAnnulla = null;
+	private Shell sShellPrenotaVisita = null;  //  @jve:decl-index=0:visual-constraint="477,93"
+	private Label labelTipolVisitPrenot = null;
+	private Label labelDataPrenotVisita = null;
+	private Label labelNote = null;
+	private Text textAreaNote = null;
+	private Button buttonPrenVisita = null;
+	private Button buttonSelezionaData = null;
+	private Table tableTipVisita = null;
+	private Button buttonCreaTipVisita = null;
+	private Button buttonAnnullaCreaTip = null;
+	private Shell ShellCalendario = null;  //  @jve:decl-index=0:visual-constraint="481,508"
+	private DateTime calendar = null;
+	private DateTime time = null;
+	private Text textAreaPrenotazioniOdierne = null;
+	private Button ok = null;
+	private Shell sShellCreaTipVisita = null;  //  @jve:decl-index=0:visual-constraint="768,509"
+	private Label labelTipologia = null;
+	private Text textTipologia = null;
+	private Label labelCosto = null;
+	private Text textCosto = null;
+	private Button buttonOk = null;
+	private Date dn = null;
+	private ArrayList<Tipologiavisita> tv;  //  @jve:decl-index=0:
+	
+	
 	
 	public PazienteTableView() {}
 
@@ -83,16 +117,17 @@ public class PazienteTableView extends ViewPart {
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
-		buttonPrenotaVisita = new Button(classVis.top, SWT.NONE);
-		buttonPrenotaVisita.setBounds(new Rectangle(260, 284, 110, 25));
-		buttonPrenotaVisita.setText("PrenotaVisita");
-		buttonPrenotaVisita.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		buttonPrenVisita = new Button(classVis.top, SWT.NONE);
+		buttonPrenVisita.setBounds(new Rectangle(260, 284, 110, 25));
+		buttonPrenVisita.setText("Prenota visita");
+		buttonPrenVisita.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				if(classVis.getTableVisualizzazione().getSelectionCount()>0) {
 					TableItem itemSel = classVis.getTableVisualizzazione().getItem(classVis.getTableVisualizzazione().getSelectionIndex());
 					int idPazienteSel = Integer.parseInt(itemSel.getText(0));
 					pazienteSel = PazienteDAO.getPazienteByID(idPazienteSel);
-					Utils.showView("StudioDietetico.prenotavisita"); 
+					createSShellPrenotaVisita();
+					//Utils.showView("StudioDietetico.prenotavisita"); 
 				} else {
 					createMessSelElemCanc();
 				}
@@ -387,6 +422,241 @@ public class PazienteTableView extends ViewPart {
 		textEmailPaz.setText(paz.getEmail());
 		textNumTessPaz.setText(paz.getNumTesseraSanitaria());
 		textAreaNotePaz.setText(paz.getNote());
+	}
+
+	/**
+	 * This method initializes sShellPrenotaVisita	
+	 *
+	 */
+	private void createSShellPrenotaVisita() {
+		sShellPrenotaVisita = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		//sShellPrenotaVisita.setLayout(new GridLayout());
+		sShellPrenotaVisita.setSize(new Point(462, 389));
+		sShellPrenotaVisita.setText("Prenotazione di una nuova visita");
+        labelTipolVisitPrenot = new Label(sShellPrenotaVisita, SWT.WRAP);
+        labelTipolVisitPrenot.setBounds(new Rectangle(15, 12, 206, 31));
+        labelTipolVisitPrenot.setText("Seleziona una tipologia di visita (se necessario, creane una nuova) :");
+
+        labelDataPrenotVisita = new Label(sShellPrenotaVisita, SWT.WRAP);
+        labelDataPrenotVisita.setBounds(new Rectangle(15, 167, 79, 27));
+        labelDataPrenotVisita.setText("Data visita :");
+        labelNote = new Label(sShellPrenotaVisita, SWT.NONE);
+        labelNote.setBounds(new Rectangle(15, 210, 36, 19));
+        labelNote.setText("Note:");
+        textAreaNote = new Text(sShellPrenotaVisita, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        textAreaNote.setBounds(new Rectangle(63, 208, 340, 104));
+        buttonPrenotaVisita = new Button(sShellPrenotaVisita, SWT.NONE);
+        buttonPrenotaVisita.setBounds(new Rectangle(290, 320, 115, 25));
+        buttonPrenotaVisita.setText("Prenota visita");
+        buttonPrenotaVisita.setEnabled(false);
+        buttonSelezionaData = new Button(sShellPrenotaVisita, SWT.NONE);
+        buttonSelezionaData.setBounds(new Rectangle(101, 166, 189, 27));
+        buttonSelezionaData.setText("Seleziona la data e l'ora della visita");
+        tableTipVisita = new Table(sShellPrenotaVisita, SWT.FILL | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL);
+        tableTipVisita.setHeaderVisible(true);
+        tableTipVisita.setLinesVisible(true);
+        tableTipVisita.setBounds(new Rectangle(15, 49, 415, 109));
+        buttonCreaTipVisita = new Button(sShellPrenotaVisita, SWT.NONE);
+        buttonCreaTipVisita.setBounds(new Rectangle(238, 15, 188, 28));
+        buttonCreaTipVisita.setText("Crea una nuova tipologia di visita");
+        buttonCreaTipVisita
+        		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+        			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+        				createSShellCreaTipVisita();
+        			}
+        		});
+        generaTabella();
+        
+        buttonSelezionaData
+        		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+        			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+        				createShellCalendario();
+        				ShellCalendario.open();
+        			}
+        		});
+        buttonPrenotaVisita
+        		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+        			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) { 
+        				if (tableTipVisita.getSelectionCount()>0) {
+        					TableItem[] itemSelez = tableTipVisita.getSelection();
+        	        		TableItem item = itemSelez[0];
+        	        		int idTipSelez = Integer.parseInt(item.getText(0));
+        	        		Tipologiavisita tipovisita = VisitaDAO.getTipVisitaByID(idTipSelez);
+            				//Paziente paziente = paz.get(listPazienti.getSelectionIndex());
+            				VisitaDAO v = new VisitaDAO();
+            				dn = createShellCalendario();
+            				// TODO controllare pazienteSel
+            				v.prenotaVisita(pazienteSel, tipovisita, dn, textAreaNote.getText());
+            				sShellPrenotaVisita.close();
+						} else {
+							createMessSel();
+						}
+        				        					
+        			}
+        		});
+		sShellPrenotaVisita.open();
+	}
+
+	/**
+	 * This method initializes ShellCalendario	
+	 *
+	 */
+	private Date createShellCalendario() {
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gridData.heightHint = 32;
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		ShellCalendario = new Shell(Display.getCurrent(), SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		ShellCalendario.setText("Seleziona data e ora");
+		ShellCalendario.setLayout(new GridLayout());
+		ShellCalendario.setSize(new Point(270, 300));
+		final DateTime calendar = new DateTime (ShellCalendario, SWT.CALENDAR | SWT.BORDER);
+		//final DateTime date = new DateTime (ShellCalendario, SWT.DATE | SWT.SHORT);
+		calendar.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				ArrayList<Prenotazione> prenotGiorno = VisitaDAO.getPrenotazioniGiorno(calendar.getYear (), (calendar.getMonth () + 1), calendar.getDay ());
+				textAreaPrenotazioniOdierne.setText("N. di prenotazioni per il "+calendar.getDay ()+"/"+(calendar.getMonth () + 1)+"/"+calendar.getYear ()+" = "+ prenotGiorno.size()+"\n");
+				for (Prenotazione prenotazione : prenotGiorno) {
+					textAreaPrenotazioniOdierne.append("ore: "+prenotazione.getDataOra().getHours()+":"+ (prenotazione.getDataOra().getMinutes() < 10 ? "0" : "") + prenotazione.getDataOra().getMinutes()+"  -paziente: "+prenotazione.getPaziente().getCognome()+" "+prenotazione.getPaziente().getNome()+"\n");
+				}
+				textAreaPrenotazioniOdierne.setTopIndex(0);
+				System.out.println("widgetSelected()"); 
+			}
+			public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
+			}
+		});
+		final DateTime time = new DateTime (ShellCalendario, SWT.TIME | SWT.SHORT);
+		textAreaPrenotazioniOdierne = new Text(ShellCalendario, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
+		textAreaPrenotazioniOdierne.setEditable(false);
+		textAreaPrenotazioniOdierne.setLayoutData(gridData);
+		//new Label (ShellCalendario, SWT.NONE);
+		//new Label (ShellCalendario, SWT.NONE);
+		Button ok = new Button (ShellCalendario, SWT.PUSH);
+		ok.setText ("OK");
+		ok.setLayoutData(new GridData (SWT.FILL, SWT.CENTER, false, false));
+		ok.addSelectionListener (new SelectionAdapter () {
+			public void widgetSelected (SelectionEvent e) {
+				System.out.println ("Calendar date selected (MM/DD/YYYY) = " + (calendar.getMonth () + 1) + "/" + calendar.getDay () + "/" + calendar.getYear ());
+				//System.out.println ("Date selected (MM/YYYY) = " + (date.getMonth () + 1) + "/" + date.getYear ());
+				System.out.println ("Time selected (HH:MM) = " + time.getHours () + ":" + (time.getMinutes () < 10 ? "0" : "") + time.getMinutes ());
+				String dateString = calendar.getYear ()+"-"+(calendar.getMonth () + 1)+"-"+calendar.getDay ()+" "+time.getHours () +":"+(time.getMinutes () < 10 ? "0" : "") + time.getMinutes ()+":00";
+				String formato = "yyyy-MM-dd HH:mm:ss";
+				dn = Utils.convertStringToDate(dateString, formato); 
+				ShellCalendario.close ();
+				buttonPrenotaVisita.setEnabled(true);
+			}
+		});
+		return dn ;
+	}
+
+	/**
+	 * This method initializes calendar	
+	 *
+	 */
+	private void createCalendar() {
+		calendar = new DateTime(ShellCalendario, SWT.CALENDAR | SWT.BORDER);
+	}
+
+	/**
+	 * This method initializes time	
+	 *
+	 */
+	private void createTime() {
+		time = new DateTime(ShellCalendario, SWT.TIME | SWT.SHORT);
+	}
+
+	/**
+	 * This method initializes sShellCreaTipVisita	
+	 *
+	 */
+	private void createSShellCreaTipVisita() {
+		sShellCreaTipVisita = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		//sShellCreaTipVisita.setLayout(new GridLayout());
+		sShellCreaTipVisita.setSize(new Point(443, 150));
+		sShellCreaTipVisita.setText("Crea una nuova tipologia di visita");
+		labelTipologia = new Label(sShellCreaTipVisita, SWT.NONE);
+		labelTipologia.setBounds(new Rectangle(10, 7, 125, 25));
+		labelTipologia.setText("Nome tipologia visita: ");
+		textTipologia = new Text(sShellCreaTipVisita, SWT.BORDER);
+		textTipologia.setBounds(new Rectangle(150, 7, 235, 25));
+		labelCosto = new Label(sShellCreaTipVisita, SWT.NONE);
+		labelCosto.setBounds(new Rectangle(10, 40, 125, 25));
+		labelCosto.setText("Costo tipologia visita:");
+		textCosto = new Text(sShellCreaTipVisita, SWT.BORDER);
+		textCosto.setBounds(new Rectangle(150, 40, 160, 25));
+		buttonOk = new Button(sShellCreaTipVisita, SWT.NONE);
+		buttonOk.setBounds(new Rectangle(150, 82, 130, 25));
+		buttonOk.setText("Ok");
+		buttonOk.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				Double costo = Double.parseDouble(textCosto.getText());
+				VisitaDAO.registraTipologiaVisita(textTipologia.getText(), costo);
+				tableTipVisita.removeAll(); //rimuove le righe
+				//rimuove le colonne
+				int k = 0;
+				while (k<tableTipVisita.getColumnCount()) {
+					tableTipVisita.getColumn(k).dispose();
+				}
+				//rigenera la tabella
+				generaTabella();
+				sShellCreaTipVisita.close();
+			}
+		});
+		buttonAnnullaCreaTip = new Button(sShellCreaTipVisita, SWT.NONE);
+		buttonAnnullaCreaTip.setBounds(new Rectangle(286, 82, 130, 25));
+		buttonAnnullaCreaTip.setText("Annulla");
+		buttonAnnullaCreaTip
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						sShellCreaTipVisita.close();
+					}
+				});
+		
+		
+		sShellCreaTipVisita.open();
+	}
+
+
+	private void createMessSel() {
+		createSShellMessElimina();
+		MessageBox messageBox = new MessageBox(sShellMessElimina, SWT.OK | SWT.ICON_ERROR);
+		messageBox.setMessage("Selezionare la tipologia di visita dalla tabella");
+		messageBox.setText("Errore: elemento non selezionato");
+		if (messageBox.open() == SWT.OK) {
+			sShellMessElimina.close();
+		}
+	}
+	
+	private void generaTabella() {
+		TableColumn colonnaId = new TableColumn(tableTipVisita, SWT.CENTER);	
+		colonnaId.setText("id");
+		colonnaId.setWidth(0);
+		colonnaId.setResizable(false);
+		TableColumn colonnaData = new TableColumn(tableTipVisita, SWT.CENTER);	
+		colonnaData.setText("Tipologia");
+		TableColumn colonnaDescrizione = new TableColumn(tableTipVisita, SWT.CENTER);	
+		colonnaDescrizione.setText("Costo (euro)");
+		tv = VisitaDAO.getTipologVisita();
+		for (int i = 0; i < tv.size(); i++) {
+			TableItem item = new TableItem(tableTipVisita, SWT.NONE);
+			item.setText(0, ""+tv.get(i).getIdTipologiaVisita());
+			item.setText(1, tv.get(i).getTipologia());
+			item.setText(2, ""+tv.get(i).getCostoVisita());
+		}
+		//nasconde la cifra decimale del prezzo della visita
+		for (TableItem item : tableTipVisita.getItems()) {
+			int i = 2;
+			String testoitem = item.getText(i);
+			int lunghezzaTestoItem = item.getText(i).length();
+			item.setText(i, testoitem.substring(0, lunghezzaTestoItem-2));
+		}
+		for (int i = 1; i < tableTipVisita.getColumnCount(); i++) {
+			tableTipVisita.getColumn(i).pack();
+			tableTipVisita.getColumn(i).setResizable(false);
+		}
+		TableForm.ordinamentoStringhe(tableTipVisita, 1);
+		TableForm.ordinamentoInteri(tableTipVisita, 2);
+		
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10,431,253"
