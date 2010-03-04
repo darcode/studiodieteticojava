@@ -306,6 +306,9 @@ public class TableForm extends ListComposite {
 				}
 			}
 		});
+		if (classeChiamante=="FattureTableView" | classeChiamante=="PrenotazioneTableView") {
+			buttonInsert.setVisible(false);
+		}
 		
 		buttonElimina = new Button(top, SWT.NONE);
 		buttonElimina.setText("Elimina");
@@ -321,6 +324,9 @@ public class TableForm extends ListComposite {
 				}
 			}
 		});
+		if (classeChiamante=="TurniTableView") {
+			buttonElimina.setVisible(false);
+		}
 		
 		riempiTabella(listaElementi, classeChiamante);
 

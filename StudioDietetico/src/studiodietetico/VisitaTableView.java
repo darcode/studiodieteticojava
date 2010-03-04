@@ -808,7 +808,7 @@ public class VisitaTableView extends ViewPart {
 		textAreaNoteVis.setText(vis.getNote());
 		buttonOk = new Button(sShellDettagliVisita, SWT.NONE);
 		buttonOk.setBounds(new Rectangle(229, 364, 120, 25));
-		buttonOk.setText("Ok");
+		buttonOk.setText("Chiudi dettagli");
 		buttonOk.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				sShellDettagliVisita.close();
