@@ -143,7 +143,8 @@ public class PazienteTableView extends ViewPart {
 					TableItem itemSel = classVis.getTableVisualizzazione().getItem(classVis.getTableVisualizzazione().getSelectionIndex());
 					int idPazienteSel = Integer.parseInt(itemSel.getText(0));
 					pazienteSel = PazienteDAO.getPazienteByID(idPazienteSel);
-					//TODO chiamare metodo creazione nuova prescrizione
+					InserisciPrescrizioneShell preShell = new InserisciPrescrizioneShell();
+					preShell.createShellInserisciPrescrizione();
 				} else {
 					createMessSelElemCanc();
 				}
