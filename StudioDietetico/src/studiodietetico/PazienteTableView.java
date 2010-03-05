@@ -85,6 +85,7 @@ public class PazienteTableView extends ViewPart {
 	private Label labelNote = null;
 	private Text textAreaNote = null;
 	private Button buttonPrenVisita = null;
+	private Button buttonCreaPrescrizione = null;
 	private Button buttonSelezionaData = null;
 	private Table tableTipVisita = null;
 	private Button buttonCreaTipVisita = null;
@@ -126,8 +127,23 @@ public class PazienteTableView extends ViewPart {
 					TableItem itemSel = classVis.getTableVisualizzazione().getItem(classVis.getTableVisualizzazione().getSelectionIndex());
 					int idPazienteSel = Integer.parseInt(itemSel.getText(0));
 					pazienteSel = PazienteDAO.getPazienteByID(idPazienteSel);
-					createSShellPrenotaVisita();
-					//Utils.showView("StudioDietetico.prenotavisita"); 
+					createSShellPrenotaVisita(); 
+				} else {
+					createMessSelElemCanc();
+				}
+			}
+		});
+		
+		buttonCreaPrescrizione = new Button(classVis.top, SWT.NONE);
+		buttonCreaPrescrizione.setBounds(new Rectangle(370, 284, 120, 25));
+		buttonCreaPrescrizione.setText("Prescrivi nuova dieta");
+		buttonCreaPrescrizione.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				if(classVis.getTableVisualizzazione().getSelectionCount()>0) {
+					TableItem itemSel = classVis.getTableVisualizzazione().getItem(classVis.getTableVisualizzazione().getSelectionIndex());
+					int idPazienteSel = Integer.parseInt(itemSel.getText(0));
+					pazienteSel = PazienteDAO.getPazienteByID(idPazienteSel);
+					//TODO chiamare metodo creazione nuova prescrizione
 				} else {
 					createMessSelElemCanc();
 				}
@@ -657,6 +673,10 @@ public class PazienteTableView extends ViewPart {
 		TableForm.ordinamentoStringhe(tableTipVisita, 1);
 		TableForm.ordinamentoInteri(tableTipVisita, 2);
 		
+	}
+	
+	public static Paziente getPazienteSelezionato(){
+		return pazienteSel;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10,431,253"

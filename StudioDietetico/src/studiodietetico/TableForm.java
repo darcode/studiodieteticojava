@@ -306,7 +306,8 @@ public class TableForm extends ListComposite {
 				}
 			}
 		});
-		if (classeChiamante=="FattureTableView" | classeChiamante=="PrenotazioneTableView") {
+		if (classeChiamante=="FattureTableView" | classeChiamante=="PrenotazioneTableView"
+			| classeChiamante=="PrescrizioneTableView") {
 			buttonInsert.setVisible(false);
 		}
 		
