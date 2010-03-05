@@ -10,6 +10,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
@@ -30,7 +31,7 @@ public class DietaTableView extends ViewPart {
 		diete = DietaDAO.getDieteObject();
 		DietaDAO dd = new DietaDAO();
 		//TODO aggiungere parametri
-		classVis = new TableForm(top, SWT.BORDER, diete, "","","", dd, "DietaTableView");
+		classVis = new TableForm(top, SWT.BORDER, diete, "","createShellInsSchemaDietetico",DietaTableView.this, dd, "DietaTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -48,8 +49,15 @@ public class DietaTableView extends ViewPart {
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 7);
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 8);
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 9);
-	}
+		
 
+	}
+	
+	public void createShellInsSchemaDietetico() {
+		InserisciDietaShell dietaShell = new InserisciDietaShell();
+		dietaShell.createShellInsSchemaDietetico();
+	}
+	
 	public static void aggiungiColonne(TableForm classVis, ArrayList<Object> diete) {
 		TableColumn colonna = new TableColumn(classVis.getTableVisualizzazione(), SWT.CENTER);
 		colonna.setText("Kcal");
