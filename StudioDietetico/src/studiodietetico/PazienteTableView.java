@@ -136,7 +136,7 @@ public class PazienteTableView extends ViewPart {
 		
 		buttonCreaPrescrizione = new Button(classVis.top, SWT.NONE);
 		buttonCreaPrescrizione.setBounds(new Rectangle(370, 284, 120, 25));
-		buttonCreaPrescrizione.setText("Prescrivi nuova dieta");
+		buttonCreaPrescrizione.setText("Prescrivi dieta");
 		buttonCreaPrescrizione.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				if(classVis.getTableVisualizzazione().getSelectionCount()>0) {
