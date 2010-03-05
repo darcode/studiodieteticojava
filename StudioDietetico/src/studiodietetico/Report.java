@@ -10,6 +10,11 @@ import java.util.Map;
 
 import org.eclipse.swt.graphics.Color;
 
+import service.GiornoDieta;
+import service.StrutAlimento;
+import service.StrutDieta;
+import service.StrutPasto;
+
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.domain.*;
@@ -251,6 +256,53 @@ String[] campiAux = new String[campi.length];
 
 			jp = JasperFillManager.fillReport("Report/"+fileJRXML+".jasper", parametri, ds);
 			 JasperViewer.viewReport(jp);   
+			JasperExportManager.exportReportToPdfFile(jp, "Report/Output/report"+fileJRXML+".pdf");
+		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void creaReportDieta(ArrayList<GiornoDieta> giorniDieta, String fileJRXML) {
+		String[] campi = {"giorno", "pasto", "alimento", "quantita"};
+		ArrayList<StrutDieta> dieta = new ArrayList<StrutDieta>();
+		ArrayList<Object> dietaObj = new ArrayList<Object>();
+		Object[] arr;
+		StrutDieta item;
+		for (GiornoDieta giorno : giorniDieta) {
+			
+			for (StrutPasto pasto : giorno.getPasti()) {
+			
+				for (StrutAlimento alimento : pasto.getAlimenti()) {				
+					item = new StrutDieta();
+					if (item.giorno.equals("")) 
+						item.giorno = giorno.getGiorno();
+					else
+						item.giorno = "";
+					if (item.pasto.equals("")) 
+						item.pasto = pasto.getNomePasto();
+					else
+						item.pasto = "";
+					item.alimento = alimento.getNomeAlimento();
+					item.quantita = 200;
+					dieta.add(item);
+					dietaObj.add(item);
+				}
+			}
+			
+		}
+	
+		try {
+			JasperDesign jasperDesign = JRXmlLoader.load("Report/"+fileJRXML+".jrxml");
+
+			JasperCompileManager.compileReportToFile(jasperDesign, "Report/"+fileJRXML+".jasper");
+			 
+			Report ds = new Report(dietaObj, campi);
+
+			JasperPrint jp;
+		
+			jp = JasperFillManager.fillReport("Report/"+fileJRXML+".jasper", null, ds);
+			 JasperViewer.viewReport(jp);   
 			//JasperExportManager.exportReportToPdfFile(jp, "Report/Output/report"+fileJRXML+".pdf");
 		} catch (JRException e) {
 			// TODO Auto-generated catch block
@@ -261,11 +313,9 @@ String[] campiAux = new String[campi.length];
 
 
 
-
-
 	public static void main(String[] args) throws Exception
 	{
-		DietaDAO dieta = new DietaDAO();
+		/*DietaDAO dieta = new DietaDAO();
 		List alimenti = dieta.getAlimentiList();  
 		Map parameters = new HashMap();
 		parameters.put("titolo", "Alimenti");
@@ -273,7 +323,20 @@ String[] campiAux = new String[campi.length];
 		//Report.creaReportDinamico(alimenti, fields, "Alimenti", "alimento");
 		List pazienti = PazienteDAO.getPazienti();
 		String[][] fields = new String[][] {{"nome", String.class.getName()}, {"tipologia", String.class.getName()}, {"calorie", Integer.class.getName()}};
-		Report.creaReportDinamico(alimenti, fields, "Alimenti", "alimento");
+		Report.creaReportDinamico(alimenti, fields, "Alimenti", "alimento");*/
+		
+		
+		ArrayList<GiornoDieta> dieta = new ArrayList<GiornoDieta>();
+		GiornoDieta g = new GiornoDieta();
+		g.setGiorno("Lunedi");
+		ArrayList<StrutPasto> p = new ArrayList<StrutPasto>();
+		StrutPasto pasto = new StrutPasto("primo");
+		pasto.addAlimento(new StrutAlimento("pasto1", "tipologia1", 100, 4));
+		pasto.addAlimento(new StrutAlimento("pasto2", "tipologia2", 200, 5));
+		p.add(pasto);
+		g.setPasti(p);
+		dieta.add(g);
+		creaReportDieta(dieta, "dieta");
 	}
 }
 
