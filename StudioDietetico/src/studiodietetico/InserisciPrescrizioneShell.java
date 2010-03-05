@@ -71,9 +71,10 @@ public class InserisciPrescrizioneShell {
 	private Button radioButtonTutti = null;
 	
 	
-	private void createShellInserisciPrescrizione() {
-		shellInserisciPrescrizione = new Shell();
+	public void createShellInserisciPrescrizione() {
+		shellInserisciPrescrizione = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
 		shellInserisciPrescrizione.setSize(new Point(838, 762));
+		shellInserisciPrescrizione.setText("Inserisci nuova prescrizione");
 		labelPaziente = new Label(shellInserisciPrescrizione, SWT.NONE);
 		labelPaziente.setBounds(new Rectangle(14, 10, 82, 24));
 		labelPaziente.setText("Paziente");
@@ -86,6 +87,7 @@ public class InserisciPrescrizioneShell {
 				PazienteTableView.getPazienteSelezionato().getDataNascita());
 
 		createGroupDieta();
+		shellInserisciPrescrizione.open();
 	}
 
 	
