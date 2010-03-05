@@ -1,6 +1,5 @@
 package studiodietetico;
 
-import forms.HomePazienteForm;
 import hibernate.Dieta;
 import hibernate.Specifichedieta;
 
@@ -219,7 +218,7 @@ public class InserisciPrescrizioneShell {
 					Date inizioDieta = new Date();
 					inizioDieta = service.Utils.convertStringToDate(data, formato);
 					//ArrayList<GiornoDieta> arrGiorni = dieta.getSchemiDieta(Integer.parseInt(tableSchemiDiete.getSelection()[0].getText(0)));
-					dietaDao.inserisciPrescrizione(inizioDieta, Integer.parseInt(spinCicli.getText()), textNote.getText(), HomePazienteForm.getPazienteSelezionato(), dieta);
+					dietaDao.inserisciPrescrizione(inizioDieta, Integer.parseInt(spinCicli.getText()), textNote.getText(), PazienteTableView.getPazienteSelezionato(), dieta);
 					//dieta.inserisciDieta(arrGiorni, textNomeDieta.getText(), textNote.getText(), checkBoxStandard.getSelection(), specifichedieta);
 				}else{
 					messageBox = new MessageBox(shellMsg,
