@@ -52,12 +52,12 @@ public class InserisciPrescrizioneShell {
 	private Spinner spinCicli = null;
 	private Label lNCicli = null;
 
-	private DietaDAO dietaDao = new DietaDAO();  //  @jve:decl-index=0:
+	private static DietaDAO dietaDao = new DietaDAO();  //  @jve:decl-index=0:
 	//private ArrayList<StrutAlimento> alimentiDB = null;
 	private Shell shellMsg = null;
 	
 	private Button bCreaSchema = null;
-	private Table tableSchemiDiete = null;
+	private static Table tableSchemiDiete = null;
 	private Label lSelezSchema = null;
 	private StyledText textVisSchema = null;
 
@@ -68,6 +68,10 @@ public class InserisciPrescrizioneShell {
 	public static final String VIEW_ID = "StudioDietetico.InserisciDietaView";
 	private Button radioButtonStandard = null;
 	private Button radioButtonTutti = null;
+
+	private Button buttonModificaDieta = null;
+
+	private Button buttonEliminaDieta = null;
 	
 	
 	public void createShellInserisciPrescrizione() {
@@ -127,15 +131,18 @@ public class InserisciPrescrizioneShell {
 		tableSchemiDiete.setHeaderVisible(true);
 		tableSchemiDiete.setLinesVisible(true);
 		tableSchemiDiete.setBounds(new Rectangle(14, 228, 207, 149));
-	
+		final TableColumn columnId = new TableColumn(tableSchemiDiete, SWT.NONE);
+		columnId.setText("Id Dieta");
+		columnId.setWidth(0);
+		columnId.setResizable(false);
 		final TableColumn columnNomeSchema = new TableColumn(tableSchemiDiete, SWT.NONE);
 		columnNomeSchema.setText("Nome");
 		final TableColumn columnNumGiorni = new TableColumn(tableSchemiDiete, SWT.NONE);
 		columnNumGiorni.setText("Durata Ciclo");
 		final TableColumn columnNoteSchema = new TableColumn(tableSchemiDiete, SWT.NONE);
 		columnNoteSchema.setText("Note");
-		final TableColumn columnId = new TableColumn(tableSchemiDiete, SWT.NONE);
-		columnId.setText("Id Dieta");
+		final TableColumn columnStandard = new TableColumn(tableSchemiDiete, SWT.NONE);
+		columnStandard.setText("Standard");
 		
 		
 
@@ -145,7 +152,7 @@ public class InserisciPrescrizioneShell {
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 						TableItem itemSel = tableSchemiDiete.getSelection()[0];
-						int id = Integer.parseInt(itemSel.getText(3));
+						int id = Integer.parseInt(itemSel.getText(0));
 						ArrayList<GiornoDieta> arrGior = dietaDao.getSchemiDieta(id);
 						String schema = "";
 						for (GiornoDieta giorno : arrGior) {
@@ -160,6 +167,8 @@ public class InserisciPrescrizioneShell {
 						}
 						
 						textVisSchema.setText(schema);
+						buttonModificaDieta.setEnabled(true);
+						buttonEliminaDieta.setEnabled(true);
 					}
 				});
 		
@@ -170,7 +179,7 @@ public class InserisciPrescrizioneShell {
 		
 		lSelezSchema = new Label(groupDieta, SWT.NONE);
 		lSelezSchema.setBounds(new Rectangle(11, 206, 155, 13));
-		lSelezSchema.setText("*Seleziona schema dietetico");
+		lSelezSchema.setText("*Seleziona dieta");
 		textVisSchema = new StyledText(groupDieta, SWT.NONE | SWT.V_SCROLL | SWT.READ_ONLY);
 		textVisSchema.setBounds(new Rectangle(230, 229, 479, 149));
 		textVisSchema.setEditable(false);
@@ -190,6 +199,43 @@ public class InserisciPrescrizioneShell {
 		radioButtonTutti.setBounds(new Rectangle(12, 380, 86, 16));
 		radioButtonTutti.setText("Tutti");
 		radioButtonTutti.setSelection(true);
+		buttonModificaDieta = new Button(groupDieta, SWT.NONE);
+		buttonModificaDieta.setBounds(new Rectangle(715, 258, 78, 23));
+		buttonModificaDieta.setText("Modifica");
+		buttonModificaDieta
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						TableItem itemSel = tableSchemiDiete.getSelection()[0];
+						int id = Integer.parseInt(itemSel.getText(0));
+						ArrayList<GiornoDieta> arrGior = dietaDao.getSchemiDieta(id);
+						boolean stand = false;
+						if (itemSel.getText(4).equals("si")) {
+							stand = true;
+						}
+						InserisciDietaShell dietaShell = new InserisciDietaShell(arrGior, itemSel.getText(1), itemSel.getText(3), stand);
+						shellMsg = new Shell();
+						boolean inserisci = true;
+						if (Integer.parseInt(spinCicli.getText())==0) {
+							inserisci = false;
+						}
+
+						if (inserisci) {
+							dietaShell.createShellInsSchemaDietetico();
+						}else{
+							messageBox = new MessageBox(shellMsg,
+									SWT.OK |
+									SWT.ICON_ERROR);
+							messageBox.setMessage("Attenzione completare tutti i campi obbligatori (*)");	
+							messageBox.open();		
+
+						}
+							
+					
+					}
+				});
+		buttonEliminaDieta = new Button(groupDieta, SWT.NONE);
+		buttonEliminaDieta.setBounds(new Rectangle(717, 285, 75, 23));
+		buttonEliminaDieta.setText("Cancella");
 		radioButtonTutti
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -207,7 +253,7 @@ public class InserisciPrescrizioneShell {
 
 				if (inserisci) {
 					Dieta dieta = new Dieta();
-					int idDieta = Integer.parseInt(tableSchemiDiete.getSelection()[0].getText(2));
+					int idDieta = Integer.parseInt(tableSchemiDiete.getSelection()[0].getText(0));
 				for (Dieta d : dietaDao.getDiete()) {
 					if(d.getIdDieta()==idDieta){
 						dieta = d;
@@ -261,10 +307,18 @@ public class InserisciPrescrizioneShell {
 					
 			}
 		});
-	
+		buttonModificaDieta.setEnabled(false);
+		buttonEliminaDieta.setEnabled(false);
+		buttonEliminaDieta
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						dietaDao.cancellaDieta(tableSchemiDiete.getSelection()[0]);
+						aggiornaDiete(false);
+					}
+				});
 	}
 
-	private void aggiornaDiete(boolean standard) {
+	public static void aggiornaDiete(boolean standard) {
 		tableSchemiDiete.removeAll();
 		TableItem itemSchema = null;
 		ArrayList<Dieta> diete = dietaDao.getDiete();
@@ -272,20 +326,26 @@ public class InserisciPrescrizioneShell {
 			for (Dieta dieta : diete) {
 				if (dieta.getDietaStandard()) {
 					itemSchema = new TableItem(tableSchemiDiete, SWT.NULL);
-					itemSchema.setText(0, dieta.getNome());
-					itemSchema.setText(1, ""+dieta.getDurataCiclo());
-					itemSchema.setText(2, dieta.getNote());
-					itemSchema.setText(3, ""+dieta.getIdDieta());
+					itemSchema.setText(0, ""+dieta.getIdDieta());
+					itemSchema.setText(1, dieta.getNome());
+					itemSchema.setText(2, ""+dieta.getDurataCiclo());
+					itemSchema.setText(3, dieta.getNote());
+					itemSchema.setText(4, "si");
 				}
 			}
 			}
 			else{
 				for (Dieta dieta : diete) {
 					itemSchema = new TableItem(tableSchemiDiete, SWT.NULL);
-					itemSchema.setText(0, dieta.getNome());
-					itemSchema.setText(1, ""+dieta.getDurataCiclo());
-					itemSchema.setText(2, dieta.getNote());
-					itemSchema.setText(3, ""+dieta.getIdDieta());
+					itemSchema.setText(0, ""+dieta.getIdDieta());
+					itemSchema.setText(1, dieta.getNome());
+					itemSchema.setText(2, ""+dieta.getDurataCiclo());
+					itemSchema.setText(3, dieta.getNote());
+					if (dieta.getDietaStandard()) 
+						itemSchema.setText(4, "si");
+					else
+						itemSchema.setText(4, "no");
+					
 			}
 			}
 	}
