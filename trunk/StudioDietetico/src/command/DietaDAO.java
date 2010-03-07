@@ -676,10 +676,40 @@ for (int i = 0; i < ris.size(); i++) {
 	public static void cancellaDieta(TableItem rigaTable) {
 		begin();
 		Criteria criteria = getSession().createCriteria(hibernate.Dieta.class);
-		int id = Integer.parseInt(rigaTable.getText(0));
-		criteria.add( Restrictions.eq("idDieta", id));
+		int idDieta = Integer.parseInt(rigaTable.getText(0));
+		criteria.add( Restrictions.eq("idDieta", idDieta));
 		List<Dieta> diete = (List<Dieta>)criteria.list();
 		commit();
+		//close();
+	/*	Specifichedieta specDieta = diete.get(0).getSpecifichedieta();
+		begin();
+		getSession().delete(specDieta);
+		commit();*/
+	
+	
+	
+		Set<Personalizzazionegiornata> persGior = diete.get(0).getPersonalizzazionegiornatas();
+		for (Personalizzazionegiornata pg : persGior) {
+			begin();
+			getSession().delete(pg);
+			commit();
+			//close();
+		
+			//close();
+			Schemadietetico sd = pg.getSchemadietetico();
+			Set<Costituzione> cost = (Set<Costituzione>)sd.getCostituziones();
+			for (Costituzione costituzione : cost) {
+				begin();
+				getSession().delete(costituzione);
+				commit();
+				//close();
+			}
+			
+			begin();
+			getSession().delete(sd);
+			commit();
+					
+		}
 		begin();
 		getSession().delete(diete.get(0));
 		commit();
@@ -698,5 +728,7 @@ for (int i = 0; i < ris.size(); i++) {
 		commit();
 		close();
 	}
+	
+
 	
 }
