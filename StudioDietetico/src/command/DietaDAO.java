@@ -432,7 +432,7 @@ public class DietaDAO extends BaseDAO{
 
 	}
 	
-	public static ArrayList<Dieta> getDiete(){
+	public ArrayList<Dieta> getDiete(){
 		Criteria criteria = getSession().createCriteria(hibernate.Dieta.class);
 		//criteria.add( Restrictions.eq("idSpecificheDieta", idSpecificheDieta));
 		begin();
