@@ -97,13 +97,25 @@ public class InserisciDietaShell {
 	private Shell shellMsg = null;
 	private Text textNoteDieta = null;
 	private Label labelNoteDieta = null;
-	
+	private String nomeDieta = "";  //  @jve:decl-index=0:
+	private String noteDieta = "";
+	private boolean standard = false;
 
+	
+	
 	public InserisciDietaShell() {
 		dieta = new DietaDAO();
 		giorniDieta = new ArrayList<GiornoDieta>();
+		
 	}
 
+	public InserisciDietaShell(ArrayList<GiornoDieta> giorniDieta, String nomeDieta, String note, boolean standard) {
+		dieta = new DietaDAO();
+		this.giorniDieta = giorniDieta;
+		this.nomeDieta = nomeDieta;
+		this.noteDieta = noteDieta;
+		this.standard = standard;
+	}
 	
 	public void createShellInsSchemaDietetico() {
 		//Display display = new Display();
@@ -240,6 +252,11 @@ public class InserisciDietaShell {
 	listGiorni = new List(groupSchemaDieta, SWT.NONE | SWT.V_SCROLL);
 	listGiorni.setBounds(new Rectangle(13, 98, 135, 179));
 	listGiorni.setFont(new Font(Display.getCurrent(), "Arial", 10, SWT.BOLD));
+	if (giorniDieta.size()!=0) {
+		for (GiornoDieta g : giorniDieta) {
+			listGiorni.add(g.getGiorno());
+		}
+	}
 	listGiorni.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 		public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 			if(listGiorni.getSelectionIndex()<giorniDieta.size()){
@@ -520,9 +537,13 @@ public class InserisciDietaShell {
 	labelNomeDieta.setText("*Nome dieta");
 	textNomeDieta = new Text(groupSchemaDieta, SWT.BORDER);
 	textNomeDieta.setBounds(new Rectangle(16, 41, 279, 19));
+	if (!nomeDieta.equals("")) {
+		textNomeDieta.setText(nomeDieta);
+	}
 	checkBoxStandard = new Button(groupSchemaDieta, SWT.CHECK);
 	checkBoxStandard.setBounds(new Rectangle(318, 42, 98, 16));
 	checkBoxStandard.setText("Dieta standard");
+	checkBoxStandard.setSelection(standard);
 	tableTipoDieta = new Table(groupSchemaDieta, SWT.NONE | SWT.FULL_SELECTION | SWT.V_SCROLL);
 	tableTipoDieta.setHeaderVisible(true);
 	tableTipoDieta.setLinesVisible(true);
@@ -552,6 +573,9 @@ public class InserisciDietaShell {
 	lTipoDieta.setText("*Seleziona tipo dieta");
 	textNoteDieta = new Text(groupSchemaDieta, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 	textNoteDieta.setBounds(new Rectangle(420, 39, 507, 30));
+	if (!noteDieta.equals("")) {
+		textNoteDieta.setText(noteDieta);
+	}
 	labelNoteDieta = new Label(groupSchemaDieta, SWT.NONE);
 	labelNoteDieta.setBounds(new Rectangle(418, 23, 54, 13));
 	labelNoteDieta.setText("Note dieta");
@@ -590,6 +614,8 @@ public class InserisciDietaShell {
 				messageBox.open();		
 
 			}
+
+	InserisciPrescrizioneShell.aggiornaDiete(false);
 
 
 		
