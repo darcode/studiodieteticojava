@@ -1,5 +1,6 @@
 package studiodietetico;
 
+import hibernate.Dieta;
 import hibernate.Specifichedieta;
 
 import java.text.Collator;
@@ -96,6 +97,7 @@ public class InserisciDietaShell {
 	private Shell shellMsg = null;
 	private Text textNoteDieta = null;
 	private Label labelNoteDieta = null;
+	
 
 	public InserisciDietaShell() {
 		dieta = new DietaDAO();
@@ -113,32 +115,8 @@ public class InserisciDietaShell {
 		shellInsSchemaDietetico.setText("Inserisci nuovo Schema Dietetico");
 		shellInsSchemaDietetico.setSize(new Point(942, 718));
 		shellInsSchemaDietetico.open();
-	/*	while (!shellInsSchemaDietetico.isDisposed()) {
-		      if (!display.readAndDispatch())
-		    	  display.sleep();
-		    }
-		display.dispose();*/
+		
 	}
-	
-	public static void aggiornaAlimenti() {
-		tableAlimenti.removeAll();
-		StrutAlimento stAli;
-		ArrayList<StrutAlimento> arrStrutAli = dieta.getAlimentiObj();
-		for (int i=0; i<arrStrutAli.size(); i++) {
-			stAli = new StrutAlimento();
-			stAli = arrStrutAli.get(i);
-			TableItem item = new TableItem (tableAlimenti, SWT.NONE);
-			item.setText (0, stAli.getNomeAlimento());
-			item.setText (1, stAli.getTipologia());
-			if (stAli.getCalorie() != 0) 
-				item.setText (2, ""+stAli.getCalorie());
-			item.setText (3, ""+stAli.getIdAlimento());
-		}	
-
-	}
-
-
-	
 
 	/**
 	 * This method initializes groupSchemaDieta	
@@ -539,7 +517,7 @@ public class InserisciDietaShell {
 	radioButton1.setText("Personalizzata");
 	labelNomeDieta = new Label(groupSchemaDieta, SWT.NONE);
 	labelNomeDieta.setBounds(new Rectangle(14, 25, 144, 13));
-	labelNomeDieta.setText("Nome dieta");
+	labelNomeDieta.setText("*Nome dieta");
 	textNomeDieta = new Text(groupSchemaDieta, SWT.BORDER);
 	textNomeDieta.setBounds(new Rectangle(16, 41, 279, 19));
 	checkBoxStandard = new Button(groupSchemaDieta, SWT.CHECK);
@@ -577,23 +555,45 @@ public class InserisciDietaShell {
 	labelNoteDieta = new Label(groupSchemaDieta, SWT.NONE);
 	labelNoteDieta.setBounds(new Rectangle(418, 23, 54, 13));
 	labelNoteDieta.setText("Note dieta");
-	TableColumn columnIdTipoDieta = new TableColumn(tableTipoDieta, SWT.NONE);
+	final TableColumn columnIdTipoDieta = new TableColumn(tableTipoDieta, SWT.NONE);
 	columnIdTipoDieta.setText("Id");
-	TableColumn columnKilocal = new TableColumn(tableTipoDieta, SWT.NONE);
+	final TableColumn columnKilocal = new TableColumn(tableTipoDieta, SWT.NONE);
 	columnKilocal.setText("Kilocalorie");
-	TableColumn columnIndicata = new TableColumn(tableTipoDieta, SWT.NONE);
+	final TableColumn columnIndicata = new TableColumn(tableTipoDieta, SWT.NONE);
 	columnIndicata.setText("Indicazioni");
-	TableColumn columnContPres = new TableColumn(tableTipoDieta, SWT.NONE);
+	final TableColumn columnContPres = new TableColumn(tableTipoDieta, SWT.NONE);
 	columnContPres.setText("Contenuto presente");
-	TableColumn columnContAss = new TableColumn(tableTipoDieta, SWT.NONE);
+	final TableColumn columnContAss = new TableColumn(tableTipoDieta, SWT.NONE);
 	columnContAss.setText("Contenuto assente");
+	final TableColumn[] columns2 = tableTipoDieta.getColumns();
+	aggiornaTipoDiete();
+	for (int i=0; i<columns2.length; i++) columns2[i].pack();
+	
+	
 	bConfSchema.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 		public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-			//TODO INSERIRE CONTROLLI VARI PER DIETA
-			//TODO passare al metodo inserisciDieta anche tutte le altre informazioni: n cicli ecc ecc
+			shellMsg = new Shell();
+			boolean inserisci = true;
+			if (textNomeDieta.getText().equalsIgnoreCase("") | tableTipoDieta.getSelectionCount()==0) {
+				inserisci = false;
+			}
 
-			Specifichedieta specifichedieta = dieta.getSpecificheDieta(Integer.parseInt(tableTipoDieta.getSelection()[0].getText(0)));
-			dieta.inserisciDieta(giorniDieta, textNomeDieta.getText(), textNoteDieta.getText(), checkBoxStandard.getSelection(), specifichedieta);
+			if (inserisci) {
+						
+				Specifichedieta specifichedieta = dieta.getSpecificheDieta(Integer.parseInt(tableTipoDieta.getSelection()[0].getText(0)));
+				dieta.inserisciDieta(giorniDieta, textNomeDieta.getText(), textNoteDieta.getText(), checkBoxStandard.getSelection(), specifichedieta);
+			}else{
+				messageBox = new MessageBox(shellMsg,
+						SWT.OK |
+						SWT.ICON_ERROR);
+				messageBox.setMessage("Attenzione completare tutti i campi obbligatori (*)");	
+				messageBox.open();		
+
+			}
+
+
+		
+			
 		}
 	});
 	bAddNote.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
@@ -666,8 +666,9 @@ public class InserisciDietaShell {
 		sShellSpecificheDieta = new Shell(Display.getCurrent(),
 				SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
 		sShellSpecificheDieta.setLayout(null);
-		sShellSpecificheDieta.setText("Inserisci nuova specifica dieta");
+		sShellSpecificheDieta.setText("Inserisci nuovo tipo dieta");
 		createGroupSpecificheDieta();
+		sShellSpecificheDieta.open();
 	}
 
 	/**
@@ -721,7 +722,7 @@ public class InserisciDietaShell {
 					textContPresente.setText("");
 					textIndicata.setText("");
 					sShellSpecificheDieta.close();
-					aggiornaTipoDiete();
+					
 				}else{
 					messageBox = new MessageBox(shellMsg,
 							SWT.OK |
@@ -730,6 +731,7 @@ public class InserisciDietaShell {
 					messageBox.open();	
 				
 			}
+				aggiornaTipoDiete();
 			}
 		});
 }
@@ -737,12 +739,11 @@ public class InserisciDietaShell {
 	
 
 private void aggiornaTipoDiete() {
-	TableItem itemSchema = null;
+	tableTipoDieta.removeAll();
 	//TODO
-	ArrayList<Specifichedieta> tipoDiete = new ArrayList<Specifichedieta>();
-	tipoDiete = dieta.getSpecificheDieta();
+	ArrayList<Specifichedieta> tipoDiete = dieta.getSpecificheDieta();
 	for (Specifichedieta tipodieta : tipoDiete) {
-		itemSchema = new TableItem(tableTipoDieta, SWT.NULL);
+		TableItem itemSchema = new TableItem(tableTipoDieta, SWT.NULL);
 		itemSchema.setText(0, ""+tipodieta.getIdSpecificheDieta());
 		itemSchema.setText(1, ""+tipodieta.getKilocalorie());
 		itemSchema.setText(2, tipodieta.getContenutoPresente());
@@ -750,5 +751,22 @@ private void aggiornaTipoDiete() {
 
 	}
 	
+}
+
+public static void aggiornaAlimenti() {
+	tableAlimenti.removeAll();
+	StrutAlimento stAli;
+	ArrayList<StrutAlimento> arrStrutAli = dieta.getAlimentiObj();
+	for (int i=0; i<arrStrutAli.size(); i++) {
+		stAli = new StrutAlimento();
+		stAli = arrStrutAli.get(i);
+		TableItem item = new TableItem (tableAlimenti, SWT.NONE);
+		item.setText (0, stAli.getNomeAlimento());
+		item.setText (1, stAli.getTipologia());
+		if (stAli.getCalorie() != 0) 
+			item.setText (2, ""+stAli.getCalorie());
+		item.setText (3, ""+stAli.getIdAlimento());
+	}	
+
 }
 }

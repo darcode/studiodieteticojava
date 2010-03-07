@@ -72,7 +72,7 @@ public class InserisciPrescrizioneShell {
 	
 	public void createShellInserisciPrescrizione() {
 		shellInserisciPrescrizione = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
-		shellInserisciPrescrizione.setSize(new Point(838, 762));
+		shellInserisciPrescrizione.setSize(new Point(838, 572));
 		shellInserisciPrescrizione.setText("Inserisci nuova prescrizione");
 		labelPaziente = new Label(shellInserisciPrescrizione, SWT.NONE);
 		labelPaziente.setBounds(new Rectangle(14, 10, 82, 24));
@@ -100,33 +100,33 @@ public class InserisciPrescrizioneShell {
 		groupDieta = new Group(shellInserisciPrescrizione, SWT.NONE);
 		groupDieta.setLayout(null);
 		groupDieta.setText("Prescrizione dieta");
-		groupDieta.setBounds(new Rectangle(11, 50, 816, 677));
+		groupDieta.setBounds(new Rectangle(11, 50, 816, 470));
 		lDataInizio = new Label(groupDieta, SWT.NONE);
-		lDataInizio.setBounds(new Rectangle(15, 176, 73, 13));
+		lDataInizio.setBounds(new Rectangle(11, 26, 73, 13));
 		lDataInizio.setText("*Data inizio");
 		calendar = new DateTime (groupDieta, SWT.NONE | SWT.CALENDAR | SWT.BORDER);
-		calendar.setBounds(new Rectangle(17, 196, 165, 144));
+		calendar.setBounds(new Rectangle(13, 46, 165, 144));
 		lNote = new Label(groupDieta, SWT.NONE);
-		lNote.setBounds(new Rectangle(223, 86, 60, 13));
+		lNote.setBounds(new Rectangle(225, 31, 60, 13));
 		lNote.setText("Note");
 		textNote = new Text(groupDieta, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-		textNote.setBounds(new Rectangle(225, 102, 438, 57));
+		textNote.setBounds(new Rectangle(226, 46, 565, 57));
 		spinCicli = new Spinner(groupDieta, SWT.NONE);
 		spinCicli.setMaximum(50);
 		spinCicli.setMinimum(1);
 		Font fontSpin = new Font(Display.getCurrent(),"Arial",14,SWT.BOLD);
 		spinCicli.setFont(fontSpin);
-		spinCicli.setBounds(new Rectangle(21, 112, 51, 24));
+		spinCicli.setBounds(new Rectangle(227, 144, 51, 24));
 		lNCicli = new Label(groupDieta, SWT.NONE);
-		lNCicli.setBounds(new Rectangle(18, 88, 108, 13));
+		lNCicli.setBounds(new Rectangle(224, 120, 108, 13));
 		lNCicli.setText("*Numero cicli");
 		bCreaSchema = new Button(groupDieta, SWT.NONE);
-		bCreaSchema.setBounds(new Rectangle(669, 376, 81, 23));
+		bCreaSchema.setBounds(new Rectangle(713, 232, 81, 23));
 		bCreaSchema.setText("Crea nuovo");
 		tableSchemiDiete = new Table(groupDieta, SWT.NONE | SWT.FULL_SELECTION | SWT.V_SCROLL);
 		tableSchemiDiete.setHeaderVisible(true);
 		tableSchemiDiete.setLinesVisible(true);
-		tableSchemiDiete.setBounds(new Rectangle(19, 372, 207, 149));
+		tableSchemiDiete.setBounds(new Rectangle(14, 228, 207, 149));
 	
 		final TableColumn columnNomeSchema = new TableColumn(tableSchemiDiete, SWT.NONE);
 		columnNomeSchema.setText("Nome");
@@ -137,9 +137,7 @@ public class InserisciPrescrizioneShell {
 		final TableColumn columnId = new TableColumn(tableSchemiDiete, SWT.NONE);
 		columnId.setText("Id Dieta");
 		
-		final TableColumn [] columns = tableSchemiDiete.getColumns ();
-		aggiornaDiete(true);
-		for (int i=0; i<columns.length; i++) columns[i].pack();
+		
 
 		
 		
@@ -147,7 +145,7 @@ public class InserisciPrescrizioneShell {
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 						TableItem itemSel = tableSchemiDiete.getSelection()[0];
-						int id = Integer.parseInt(itemSel.getText(0));
+						int id = Integer.parseInt(itemSel.getText(3));
 						ArrayList<GiornoDieta> arrGior = dietaDao.getSchemiDieta(id);
 						String schema = "";
 						for (GiornoDieta giorno : arrGior) {
@@ -165,20 +163,22 @@ public class InserisciPrescrizioneShell {
 					}
 				});
 		
-		
+		final TableColumn [] columns = tableSchemiDiete.getColumns ();
+		aggiornaDiete(false);
+		for (int i=0; i<columns.length; i++) columns[i].pack();
 		
 		
 		lSelezSchema = new Label(groupDieta, SWT.NONE);
-		lSelezSchema.setBounds(new Rectangle(16, 350, 155, 13));
+		lSelezSchema.setBounds(new Rectangle(11, 206, 155, 13));
 		lSelezSchema.setText("*Seleziona schema dietetico");
 		textVisSchema = new StyledText(groupDieta, SWT.NONE | SWT.V_SCROLL | SWT.READ_ONLY);
-		textVisSchema.setBounds(new Rectangle(229, 373, 438, 149));
+		textVisSchema.setBounds(new Rectangle(230, 229, 479, 149));
 		textVisSchema.setEditable(false);
 		buttonInserisci = new Button(groupDieta, SWT.NONE);
-		buttonInserisci.setBounds(new Rectangle(694, 555, 116, 32));
+		buttonInserisci.setBounds(new Rectangle(689, 411, 116, 32));
 		buttonInserisci.setText("Inserisci");
 		radioButtonStandard = new Button(groupDieta, SWT.RADIO);
-		radioButtonStandard.setBounds(new Rectangle(17, 523, 102, 16));
+		radioButtonStandard.setBounds(new Rectangle(92, 379, 102, 16));
 		radioButtonStandard.setText("Schemi standard");
 		radioButtonStandard
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
@@ -187,8 +187,9 @@ public class InserisciPrescrizioneShell {
 					}
 				});
 		radioButtonTutti = new Button(groupDieta, SWT.RADIO);
-		radioButtonTutti.setBounds(new Rectangle(19, 538, 86, 16));
+		radioButtonTutti.setBounds(new Rectangle(12, 380, 86, 16));
 		radioButtonTutti.setText("Tutti");
+		radioButtonTutti.setSelection(true);
 		radioButtonTutti
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -264,10 +265,9 @@ public class InserisciPrescrizioneShell {
 	}
 
 	private void aggiornaDiete(boolean standard) {
+		tableSchemiDiete.removeAll();
 		TableItem itemSchema = null;
-		//TODO
-		ArrayList<Dieta> diete = new ArrayList<Dieta>();
-		diete = dietaDao.getDiete();
+		ArrayList<Dieta> diete = dietaDao.getDiete();
 		if (standard) {
 			for (Dieta dieta : diete) {
 				if (dieta.getDietaStandard()) {
