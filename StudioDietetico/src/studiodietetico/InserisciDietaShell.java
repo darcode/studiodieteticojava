@@ -100,6 +100,8 @@ public class InserisciDietaShell {
 	private String nomeDieta = "";  //  @jve:decl-index=0:
 	private String noteDieta = "";
 	private boolean standard = false;
+	private boolean modifica = false;
+	private int idDieta;
 
 	
 	
@@ -109,12 +111,14 @@ public class InserisciDietaShell {
 		
 	}
 
-	public InserisciDietaShell(ArrayList<GiornoDieta> giorniDieta, String nomeDieta, String note, boolean standard) {
+	public InserisciDietaShell(ArrayList<GiornoDieta> giorniDieta, String nomeDieta, String note, boolean standard, int idDieta) {
 		dieta = new DietaDAO();
 		this.giorniDieta = giorniDieta;
 		this.nomeDieta = nomeDieta;
 		this.noteDieta = noteDieta;
 		this.standard = standard;
+		this.modifica = true;
+		this.idDieta = idDieta;
 	}
 	
 	public void createShellInsSchemaDietetico() {
@@ -461,6 +465,23 @@ public class InserisciDietaShell {
 	bDelAlimento.setBounds(new Rectangle(319, 280, 23, 23));
 	bDelAlimento.setText("-");
 	bDelAlimento.setEnabled(false);
+	bDelAlimento
+			.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					TableItem[] tabItem = tableAlimenti1.getItems();
+					ArrayList<Integer> indici = new ArrayList<Integer>();
+					for (int i = 0; i < tabItem.length; i++) {
+						if (tabItem[i].getChecked()) {
+							indici.add(i);
+						}
+					}
+					int[] indexElim = new int[indici.size()];
+				for (int i = 0; i < indici.size(); i++) {
+					indexElim[i] = indici.get(i);
+					}
+				tableAlimenti1.remove(indexElim);
+				}
+			});
 	lAlimentiPasto = new Label(groupSchemaDieta, SWT.NONE);
 	lAlimentiPasto.setBounds(new Rectangle(317, 80, 74, 13));
 	lAlimentiPasto.setText("Alimenti pasto");
@@ -512,6 +533,11 @@ public class InserisciDietaShell {
 	bDelNewAlim = new Button(groupSchemaDieta, SWT.NONE);
 	bDelNewAlim.setBounds(new Rectangle(685, 281, 23, 23));
 	bDelNewAlim.setText("-");
+	bDelNewAlim.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+		//TODO
+		}
+	});
 	bAddDesc = new Button(groupSchemaDieta, SWT.NONE);
 	bAddDesc.setBounds(new Rectangle(14, 399, 112, 23));
 	bAddDesc.setText("Aggiungi descrizione");
@@ -603,9 +629,13 @@ public class InserisciDietaShell {
 			}
 
 			if (inserisci) {
-						
-				Specifichedieta specifichedieta = dieta.getSpecificheDieta(Integer.parseInt(tableTipoDieta.getSelection()[0].getText(0)));
-				dieta.inserisciDieta(giorniDieta, textNomeDieta.getText(), textNoteDieta.getText(), checkBoxStandard.getSelection(), specifichedieta);
+						if (modifica) {
+							Specifichedieta specifichedieta = dieta.getSpecificheDieta(Integer.parseInt(tableTipoDieta.getSelection()[0].getText(0)));	
+							dieta.modificaDieta(idDieta, giorniDieta, textNomeDieta.getText(), textNoteDieta.getText(), checkBoxStandard.getSelection(), specifichedieta);
+						}else{
+							Specifichedieta specifichedieta = dieta.getSpecificheDieta(Integer.parseInt(tableTipoDieta.getSelection()[0].getText(0)));
+							dieta.inserisciDieta(giorniDieta, textNomeDieta.getText(), textNoteDieta.getText(), checkBoxStandard.getSelection(), specifichedieta);
+						}
 			}else{
 				messageBox = new MessageBox(shellMsg,
 						SWT.OK |

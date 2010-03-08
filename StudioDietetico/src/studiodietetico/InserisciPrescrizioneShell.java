@@ -212,7 +212,7 @@ public class InserisciPrescrizioneShell {
 						if (itemSel.getText(4).equals("si")) {
 							stand = true;
 						}
-						InserisciDietaShell dietaShell = new InserisciDietaShell(arrGior, itemSel.getText(1), itemSel.getText(3), stand);
+						InserisciDietaShell dietaShell = new InserisciDietaShell(arrGior, itemSel.getText(1), itemSel.getText(3), stand, Integer.parseInt(itemSel.getText(0)));
 						shellMsg = new Shell();
 						boolean inserisci = true;
 						if (Integer.parseInt(spinCicli.getText())==0) {
@@ -312,7 +312,7 @@ public class InserisciPrescrizioneShell {
 		buttonEliminaDieta
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						dietaDao.cancellaDieta(tableSchemiDiete.getSelection()[0]);
+						dietaDao.cancellaDieta(Integer.parseInt(tableSchemiDiete.getSelection()[0].getText(0)));
 						aggiornaDiete(false);
 					}
 				});
