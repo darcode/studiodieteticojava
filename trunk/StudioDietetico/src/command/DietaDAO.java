@@ -389,6 +389,13 @@ public class DietaDAO extends BaseDAO{
 
 	}
 
+	public void modificaDieta(int idDieta, ArrayList<GiornoDieta> gioniDieta, String nomeDieta, String note, 
+			boolean dietaStandard, Specifichedieta specifichedieta){
+		cancellaDieta(idDieta);
+		inserisciDieta(gioniDieta, nomeDieta, note, dietaStandard, specifichedieta);
+		
+	}
+	
 	private Pasto esistePasto(String nomePasto) {
 		begin();
 		Criteria criteria = getSession().createCriteria(hibernate.Pasto.class);
@@ -673,10 +680,10 @@ for (int i = 0; i < ris.size(); i++) {
 		return ris;
 	}
 	
-	public static void cancellaDieta(TableItem rigaTable) {
+	public static void cancellaDieta(int idDieta) {
 		begin();
 		Criteria criteria = getSession().createCriteria(hibernate.Dieta.class);
-		int idDieta = Integer.parseInt(rigaTable.getText(0));
+		//int idDieta = Integer.parseInt(rigaTable.getText(0));
 		criteria.add( Restrictions.eq("idDieta", idDieta));
 		List<Dieta> diete = (List<Dieta>)criteria.list();
 		commit();
