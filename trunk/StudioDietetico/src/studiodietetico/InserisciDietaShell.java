@@ -102,23 +102,24 @@ public class InserisciDietaShell {
 	private boolean standard = false;
 	private boolean modifica = false;
 	private int idDieta;
-
+private boolean daprescrizione = false;
 	
 	
-	public InserisciDietaShell() {
+	public InserisciDietaShell(boolean prescrizione) {
 		dieta = new DietaDAO();
 		giorniDieta = new ArrayList<GiornoDieta>();
-		
+		daprescrizione = prescrizione;
 	}
 
-	public InserisciDietaShell(ArrayList<GiornoDieta> giorniDieta, String nomeDieta, String note, boolean standard, int idDieta) {
+	public InserisciDietaShell(ArrayList<GiornoDieta> giorniDieta, String nomeDieta, String note, boolean standard, int idDieta, boolean prescrizione) {
 		dieta = new DietaDAO();
 		this.giorniDieta = giorniDieta;
 		this.nomeDieta = nomeDieta;
-		this.noteDieta = noteDieta;
+		this.noteDieta = note;
 		this.standard = standard;
 		this.modifica = true;
 		this.idDieta = idDieta;
+		daprescrizione = prescrizione;
 	}
 	
 	public void createShellInsSchemaDietetico() {
@@ -468,19 +469,34 @@ public class InserisciDietaShell {
 	bDelAlimento
 			.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					ArrayList<StrutPasto> pasti = giorniDieta.get(listGiorni.getSelectionIndex()).getPasti();
+					ArrayList<StrutAlimento> alimenti =  pasti.get(listPasti.getSelectionIndex()).getAlimenti();
+					ArrayList<StrutAlimento> newAlimenti = new ArrayList<StrutAlimento>(); 
+				
 					TableItem[] tabItem = tableAlimenti1.getItems();
-					ArrayList<Integer> indici = new ArrayList<Integer>();
-					for (int i = 0; i < tabItem.length; i++) {
-						if (tabItem[i].getChecked()) {
-							indici.add(i);
+					if (tabItem.length != 0) {
+						ArrayList<Integer> indici = new ArrayList<Integer>();
+						for (int i = 0; i < tabItem.length; i++) {
+							if (tabItem[i].getChecked()) {
+								for (StrutAlimento ali : alimenti) {
+									if (ali.getNomeAlimento().equals(tabItem[i].getText(0))) {
+										newAlimenti.add(ali);
+									}
+								}
+								indici.add(i);
+							
 						}
+						}
+						giorniDieta.get(listGiorni.getSelectionIndex()).getPasti().get(listPasti.getSelectionIndex()).removeAlimenti(newAlimenti);
+						int[] indexElim = new int[indici.size()];
+					for (int i = 0; i < indici.size(); i++) {
+						indexElim[i] = indici.get(i);
+						}
+					tableAlimenti1.remove(indexElim);
 					}
-					int[] indexElim = new int[indici.size()];
-				for (int i = 0; i < indici.size(); i++) {
-					indexElim[i] = indici.get(i);
-					}
-				tableAlimenti1.remove(indexElim);
+				
 				}
+				
 			});
 	lAlimentiPasto = new Label(groupSchemaDieta, SWT.NONE);
 	lAlimentiPasto.setBounds(new Rectangle(317, 80, 74, 13));
@@ -563,7 +579,7 @@ public class InserisciDietaShell {
 	labelNomeDieta.setText("*Nome dieta");
 	textNomeDieta = new Text(groupSchemaDieta, SWT.BORDER);
 	textNomeDieta.setBounds(new Rectangle(16, 41, 279, 19));
-	if (!nomeDieta.equals("")) {
+	if (modifica) {
 		textNomeDieta.setText(nomeDieta);
 	}
 	checkBoxStandard = new Button(groupSchemaDieta, SWT.CHECK);
@@ -599,7 +615,7 @@ public class InserisciDietaShell {
 	lTipoDieta.setText("*Seleziona tipo dieta");
 	textNoteDieta = new Text(groupSchemaDieta, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 	textNoteDieta.setBounds(new Rectangle(420, 39, 507, 30));
-	if (!noteDieta.equals("")) {
+	if (modifica) {
 		textNoteDieta.setText(noteDieta);
 	}
 	labelNoteDieta = new Label(groupSchemaDieta, SWT.NONE);
@@ -644,9 +660,10 @@ public class InserisciDietaShell {
 				messageBox.open();		
 
 			}
-
+if(daprescrizione){
 	InserisciPrescrizioneShell.aggiornaDiete(false);
-
+}else
+	DietaTableView.aggiornaTableView();
 
 		
 			

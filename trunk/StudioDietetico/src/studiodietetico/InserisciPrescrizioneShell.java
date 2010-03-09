@@ -212,7 +212,7 @@ public class InserisciPrescrizioneShell {
 						if (itemSel.getText(4).equals("si")) {
 							stand = true;
 						}
-						InserisciDietaShell dietaShell = new InserisciDietaShell(arrGior, itemSel.getText(1), itemSel.getText(3), stand, Integer.parseInt(itemSel.getText(0)));
+						InserisciDietaShell dietaShell = new InserisciDietaShell(arrGior, itemSel.getText(1), itemSel.getText(3), stand, Integer.parseInt(itemSel.getText(0)), true);
 						shellMsg = new Shell();
 						boolean inserisci = true;
 						if (Integer.parseInt(spinCicli.getText())==0) {
@@ -287,7 +287,7 @@ public class InserisciPrescrizioneShell {
 		
 		bCreaSchema.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				InserisciDietaShell dietaShell = new InserisciDietaShell();
+				InserisciDietaShell dietaShell = new InserisciDietaShell(true);
 				shellMsg = new Shell();
 				boolean inserisci = true;
 				if (Integer.parseInt(spinCicli.getText())==0) {
