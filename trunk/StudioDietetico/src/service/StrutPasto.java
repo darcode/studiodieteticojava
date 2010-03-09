@@ -38,6 +38,26 @@ public void setAlimenti(ArrayList<StrutAlimento> alimenti) {
 	this.alimenti = alimenti;
 }
 
+public void removeAlimenti(ArrayList<StrutAlimento> alimentiEli) {
+	int i;
+	for (StrutAlimento aliEli : alimentiEli) {
+		i = 0;
+		while (i<alimenti.size()) {
+			if (aliEli.getNomeAlimento().equals(alimenti.get(i).getNomeAlimento())) {
+				alimenti.remove(alimenti.get(i));
+			}else
+				i++;
+		}
+	}
+//	for (int i = 0; i < alimentiEli.size(); i++) {
+//		for (int j = 0; j < alimenti.size(); j++) {
+//			if (alimentiEli.get(i).equals(alimenti.get(j))) {
+//				alimentiEli.remove(alimentiEli.get(i));
+//			}
+//		}
+//	}
+}
+
 public void addAlimento(StrutAlimento alimento){
 	alimenti.add(alimento);
 }
