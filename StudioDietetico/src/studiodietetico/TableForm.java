@@ -197,6 +197,7 @@ public class TableForm extends ListComposite {
 					ordinamentoStringhe(tableVisualizzazione, 7);
 					ordinamentoStringhe(tableVisualizzazione, 8);
 					ordinamentoStringhe(tableVisualizzazione, 9);
+					ordinamentoStringhe(tableVisualizzazione, 10);
 				}
 				else if (classeChiamante.equalsIgnoreCase("PrescrizioneTableView")) {
 					nascondiColonne(new int[] {0,1,2,5});
