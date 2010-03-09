@@ -4,7 +4,9 @@ import hibernate.Attivitafisica;
 import hibernate.Farmacoassunto;
 import hibernate.Intervento;
 import hibernate.Intolleranzaallergia;
+import hibernate.Malattia;
 import hibernate.Paziente;
+import hibernate.Tipologiadietaspeciale;
 import hibernate.Tipologiaintervento;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -176,10 +179,44 @@ public class AnamnesiShell {
 	private Button buttonChiudiFarmacoVis;
 	
 	//MALATTIA
-	private Shell sShellInserimentoMalattie;
-	
-	
-	
+	private Shell sShellInserimentoMalattie;  //  @jve:decl-index=0:visual-constraint="14,1286"
+	private Label labelElencoMalattie;
+	private Table tableMalattie;
+	private Button buttonAnnullaMalattia;
+	private Button buttonInserMalattia;
+	private Malattia malattiaSelez;
+	private Tipologiadietaspeciale tipoDietaSpecSelez;
+	private Table tableTipoDietaSpeciale;
+	private Label labelElencoTipoDieta = null;
+	private Button buttonInsertPatologia;
+	private Button buttonEliminaPatologia;
+	private Label labelNomePatIns;
+	private Text textNomePatIns;
+	private Label labelNomeTipDietaIns;
+	private Text textNomeTipDietaIns;
+	private Label labelDescTipDietaIns;
+	private Text textDescTipDietaIns;
+	private Button checkBoxMalattiaEreditaria = null;
+	private Button buttonInsertTipoDieta;
+	private Button buttonInsertNewTipoDieta;
+	private Button buttonInsertNewPatologia;
+	private Button buttonAnnullaNewPatologia;
+	private Button buttonAnnullaNewTipoDieta;
+	private Shell sShellInserimentoDietaSpeciale;  //  @jve:decl-index=0:visual-constraint="771,898"
+	private Group gruppoInserimentoNewMalattia;
+	private Shell sShellDettagliMalattie;  //  @jve:decl-index=0:visual-constraint="10,4403"
+	private Label labelNomeMalattiaVis;
+	private Text textNomeMalattiaVis;
+	private Button checkBoxMalattiaEreditariaVis;
+	private Text textNomeDietaSpecVis;
+	private Text textDescrDietaSpecVis;
+	private Button buttonModificaMalattie;
+	private Button buttonAppyModMalattie;
+	private Label labelNomeDietaVis;
+	private Label labelDescDietaVis;
+	private Table tableTipoDietaSpecialeVis;
+	private Label labelElencoDieteVis;
+	private Tipologiadietaspeciale tipoDietaSpecSelezVis;
 	
 	public AnamnesiShell() {}
 
@@ -306,10 +343,6 @@ public class AnamnesiShell {
 		final AnamnesiDAO an = new AnamnesiDAO(); 
 		ArrayList<Object> listTipoInt = an.getListTipoInterventi();
 		
-		for (int i = 0; i < listTipoInt.size(); i++) {
-			System.out.println("ListaTipoInt("+i+"): "+listTipoInt.get(i));
-		}
-				
 		labelElencoTipoInt = new Label(sShellInserimentoInterventi, SWT.NONE);
 		labelElencoTipoInt.setBounds(new Rectangle(23, 207, 341, 17));
 		labelElencoTipoInt.setText("Selezionare la tipologia dell'intervento di interesse");
@@ -392,7 +425,7 @@ public class AnamnesiShell {
 		buttonEliminaTipoIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 						if(tableTipoInt.getSelectionCount()>0)
-							createMessConfermaCanc(tableTipoInt.getSelectionIndex());
+							createMessConfermaCanc(tableTipoInt.getSelectionIndex(), "tableTipoInt");
 						else
 							createMessNotSelElem();
 					}
@@ -1016,7 +1049,7 @@ public class AnamnesiShell {
 		final String principi = rigaTableClick.getText(6);
 		
 		sShellDettagliFarmaco = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
-		sShellDettagliFarmaco.setText("Dettagli Sport Selezionato");
+		sShellDettagliFarmaco.setText("Dettagli Farmaco Selezionato");
 		sShellDettagliFarmaco.setSize(new Point(727, 392));
 		
 		labelNomeFarmacoVis = new Label(sShellDettagliFarmaco, SWT.NONE);
@@ -1117,281 +1150,501 @@ public class AnamnesiShell {
 	
 	
 	//--------------------------------------MALATTIE-------------------------------------------------------------
-	/*public void createSShellInserimentoMalattie() {
+	public void createSShellInserimentoMalattia() {
 		sShellInserimentoMalattie = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
 		sShellInserimentoMalattie.setText("Inserimento Nuova Malattia Diagnosticata");
-		sShellInserimentoMalattie.setSize(new Point(725, 739));
+		sShellInserimentoMalattie.setSize(new Point(696, 769));
 		
 		final AnamnesiDAO an = new AnamnesiDAO(); 
-		ArrayList<Object> listMalattie = an.getListMalattie();
+		final ArrayList<Object> listMalattie = an.getListMalattie();
 		
-		for (int i = 0; i < listTipoInt.size(); i++) {
-			System.out.println("ListaTipoInt("+i+"): "+listTipoInt.get(i));
-		}
-				
-		labelElencoTipoInt = new Label(sShellInserimentoInterventi, SWT.NONE);
-		labelElencoTipoInt.setBounds(new Rectangle(23, 207, 341, 17));
-		labelElencoTipoInt.setText("Selezionare la tipologia dell'intervento di interesse");
+		//TABELLA MALATTIE
+		labelElencoMalattie = new Label(sShellInserimentoMalattie, SWT.NONE);
+		labelElencoMalattie.setBounds(new Rectangle(20, 25, 199, 20));
+		labelElencoMalattie.setText("Selezionare la patologia di interesse");
 		
-		tableTipoInt = new Table(sShellInserimentoInterventi, SWT.FILL | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
-		tableTipoInt.setHeaderVisible(true);
-		tableTipoInt.setLinesVisible(true);
-		tableTipoInt.setBounds(new Rectangle(22, 226, 639, 203));
-		tableTipoInt.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		tableMalattie = new Table(sShellInserimentoMalattie, SWT.FILL | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
+		tableMalattie.setHeaderVisible(true);
+		tableMalattie.setLinesVisible(true);
+		tableMalattie.setBounds(new Rectangle(20, 50, 625, 177));
+		tableMalattie.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						buttonEliminaTipoIntervento.setEnabled(true);
-						buttonModificaTipoIntervento.setEnabled(true);
-						interventoSelez = an.getTipoInterventiById(tableTipoInt.getSelection()[0].getText(0));
+						buttonEliminaPatologia.setEnabled(true);
+						malattiaSelez = an.getMalattiaById(tableMalattie.getSelection()[0].getText(0));
 						
-						textAreaDescrInt.setText(interventoSelez.getDescrizione());
-						textNomeInt.setText(interventoSelez.getNome());
-						textAreaLocalizzazione.setText(interventoSelez.getLocalizzazione());
 					}
 				});
 		
 		//Adatta la tabella, nasconde la prima colonna e applica l'ordinamento alle colonne
-		riempiTabellaTipoIntervento(tableTipoInt, listTipoInt);
-		for (TableColumn colonna : tableTipoInt.getColumns()) {
+		riempiTabellaMalattie(tableMalattie, listMalattie);
+		for (TableColumn colonna : tableMalattie.getColumns()) {
 			colonna.pack();
 			colonna.setResizable(false);
 		}
-		tableTipoInt.getColumn(0).setWidth(0);
-		TableForm.ordinamentoStringhe(tableTipoInt, 1);
-		TableForm.ordinamentoStringhe(tableTipoInt, 2);
-		TableForm.ordinamentoStringhe(tableTipoInt, 3);
+		tableMalattie.getColumn(0).setWidth(0);
+		tableMalattie.getColumn(1).setWidth(0);
 		
-		createGroupInserimentoInt();
+		//Aggiunge le colonna che visualizzano il nome e la descrizione della tipologia di dieta speciale
+		TableColumn colonnaNome = new TableColumn(tableMalattie, SWT.CENTER);
+		colonnaNome.setText("Nome Dieta Speciale");
+		TableColumn colonnaDesc = new TableColumn(tableMalattie, SWT.CENTER);
+		colonnaDesc.setText("Descrizione Dieta Speciale");
+		String nome = "", descriz = "";
+		TableItem itemSel = null;
+		//System.out.println("size list"+listMalattie.size());
+		for (int j = 0; j < listMalattie.size(); j++) {
+			if (((Malattia)listMalattie.get(j)).getTipologiadietaspeciale()!=null) {
+				nome = ((Malattia)listMalattie.get(j)).getTipologiadietaspeciale().getNome();
+				descriz = ((Malattia)listMalattie.get(j)).getTipologiadietaspeciale().getDescrizione();
+				itemSel = tableMalattie.getItem(j);
+				itemSel.setText(tableMalattie.getColumnCount()-2, nome);
+				itemSel.setText(tableMalattie.getColumnCount()-1, descriz);
+			}
+		}
 		
-		buttonInsertTipoIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
-		buttonInsertTipoIntervento.setBounds(new Rectangle(22, 435, 90, 25));
-		buttonInsertTipoIntervento.setText("Inserisci Nuovo");
-		buttonInsertTipoIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		colonnaNome.pack();
+		colonnaNome.setResizable(false);
+		colonnaDesc.pack();
+		colonnaDesc.setResizable(false);
+		
+		TableForm.ordinamentoStringhe(tableMalattie, 2);
+		TableForm.ordinamentoStringhe(tableMalattie, 2);
+		TableForm.ordinamentoStringhe(tableMalattie, 4);
+		TableForm.ordinamentoStringhe(tableMalattie, 5);
+		
+		buttonInsertPatologia = new Button(sShellInserimentoMalattie, SWT.NONE);
+		buttonInsertPatologia.setBounds(new Rectangle(20, 232, 90, 20));
+		buttonInsertPatologia.setText("Inserisci Nuova");
+		buttonInsertPatologia.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						groupInserimentoInt.setEnabled(true);
+						gruppoInserimentoNewMalattia.setEnabled(true);
+						labelNomePatIns.setEnabled(true);
+						textNomePatIns.setEnabled(true);
+						checkBoxMalattiaEreditaria.setEnabled(true);
+						labelElencoTipoDieta.setEnabled(true);
+						tableTipoDietaSpeciale.setEnabled(true);
+						buttonInsertTipoDieta.setEnabled(true);
+						buttonInsertNewPatologia.setEnabled(true);
+						buttonAnnullaNewPatologia.setEnabled(true);
 						
-						calendarInserimento.setEnabled(false);
-						spinnerNumInterventi.setEnabled(false);
-						tableTipoInt.setEnabled(false);
-						buttonInsertTipoIntervento.setEnabled(false);
-						buttonModificaTipoIntervento.setEnabled(false);
-						buttonEliminaTipoIntervento.setEnabled(false);
-						buttonInserIntervento.setEnabled(false);
-						buttonAnnullaIntervento.setEnabled(false);
+						labelElencoMalattie.setEnabled(false);
+						tableMalattie.setEnabled(false);
+						buttonInsertPatologia.setEnabled(false);
+						buttonInserMalattia.setEnabled(false);
+						buttonAnnullaMalattia.setEnabled(false);
+						buttonEliminaPatologia.setEnabled(false);
+						tableMalattie.deselectAll();
+						
 					}
 				});
 		
-		buttonModificaTipoIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
-		buttonModificaTipoIntervento.setBounds(new Rectangle(119, 435, 60, 25));
-		buttonModificaTipoIntervento.setText("Modifica");
-		buttonModificaTipoIntervento.setEnabled(false);
-		buttonModificaTipoIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		buttonEliminaPatologia = new Button(sShellInserimentoMalattie, SWT.NONE);
+		buttonEliminaPatologia.setBounds(new Rectangle(110, 232, 60, 20));
+		buttonEliminaPatologia.setText("Elimina");
+		buttonEliminaPatologia.setEnabled(false);
+		buttonEliminaPatologia.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						if(tableTipoInt.getSelectionCount()>0) {
-							attivaModifica = true;
-							groupInserimentoInt.setEnabled(true);
-						
-							calendarInserimento.setEnabled(false);
-							spinnerNumInterventi.setEnabled(false);
-							tableTipoInt.setEnabled(false);
-							buttonInsertTipoIntervento.setEnabled(false);
-							buttonModificaTipoIntervento.setEnabled(false);
-							buttonEliminaTipoIntervento.setEnabled(false);
-							buttonInserIntervento.setEnabled(false);
-							buttonAnnullaIntervento.setEnabled(false);
-						} else {
-							createMessNotSelElem();
-						}
-					}
-				});
-		
-		buttonEliminaTipoIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
-		buttonEliminaTipoIntervento.setBounds(new Rectangle(184, 435, 60, 25));
-		buttonEliminaTipoIntervento.setText("Elimina");
-		buttonEliminaTipoIntervento.setEnabled(false);
-		buttonEliminaTipoIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						if(tableTipoInt.getSelectionCount()>0)
-							createMessConfermaCanc(tableTipoInt.getSelectionIndex());
+						if(tableMalattie.getSelectionCount()>0)
+							createMessConfermaCanc(tableMalattie.getSelectionIndex(), "tableMalattie");
 						else
 							createMessNotSelElem();
 					}
 				});
 		
-		labelDataIntervento = new Label(sShellInserimentoInterventi, SWT.NONE);
-		labelDataIntervento.setBounds(new Rectangle(25, 34, 130, 20));
-		labelDataIntervento.setText("Data ultimo intervento");
-		calendarInserimento = new DateTime(sShellInserimentoInterventi, SWT.NONE | SWT.CALENDAR | SWT.BORDER);
-		calendarInserimento.setBackground(new Color(Display.getCurrent(),245,245,245));
-		calendarInserimento.setBounds(new Rectangle(163, 34, 227, 141));
-		
-		labelNumInterventi = new Label(sShellInserimentoInterventi, SWT.NONE);
-		labelNumInterventi.setBounds(new Rectangle(437, 37, 115, 20));
-		labelNumInterventi.setText("Numero di interventi");
-		spinnerNumInterventi = new Spinner(sShellInserimentoInterventi, SWT.NONE);
-		spinnerNumInterventi.setBounds(new Rectangle(563, 37, 68, 20));
-		spinnerNumInterventi.setMinimum(1);
-		buttonInserIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
-		buttonInserIntervento.setBounds(new Rectangle(520, 466, 89, 28));
-		buttonInserIntervento.setText("Inserisci");
-		buttonInserIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		buttonInserMalattia = new Button(sShellInserimentoMalattie, SWT.NONE);
+		buttonInserMalattia.setBounds(new Rectangle(467, 266, 89, 28));
+		buttonInserMalattia.setText("Conferma");
+		buttonInserMalattia.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 						AnamnesiDAO an = new AnamnesiDAO();
 						Paziente pazSelHome = AnamnesiTTableView.getPazienteSel();
-						//Paziente pazSelHome = PazienteDAO.getPazienti().get(3);
-						String data = calendarInserimento.getYear()+"-"+(calendarInserimento.getMonth()+1)+"-"+calendarInserimento.getDay();
-						String formato = "yyyy-MM-dd";
-						Date dataI = service.Utils.convertStringToDate(data, formato);
-						
-						if(interventoSelez == null) {
+						System.out.println("Associa-paz: "+pazSelHome.getIdPaziente()+", mal: "+malattiaSelez.getIdMalattia());
+						if(malattiaSelez == null) {
 							createMessNotSelElem();
 						} else {
-							if(an.getInterventiListByPazIdTipoInt(interventoSelez.getIdTipologiaIntervento(), pazSelHome.getIdPaziente())==null) {
-								an.registraIntervento(pazSelHome, interventoSelez, dataI, spinnerNumInterventi.getSelection());	
-								sShellInserimentoInterventi.close();
-							} else
+							if(an.esisteMalattiaPerPaziente(pazSelHome.getIdPaziente(), malattiaSelez.getIdMalattia())) {
 								createMessElemPresente();
+							} else {
+								System.out.println("else associa");
+								an.associaMalattiaPaziente(pazSelHome, malattiaSelez);	
+								sShellInserimentoMalattie.close();
+							}
 						}
-						
 						
 						//Aggiorna la tabella in AnamnesiTableView
 						Utils.getActiveView().dispose();
 						Utils.showView("StudioDietetico.AnamnesiTableView");
-						AnamnesiTTableView.selectTab(0);
+						AnamnesiTTableView.selectTab(4);
 					}
 				});
 		
-		buttonAnnullaIntervento = new Button(sShellInserimentoInterventi, SWT.NONE);
-		buttonAnnullaIntervento.setBounds(new Rectangle(617, 468, 84, 26));
-		buttonAnnullaIntervento.setText("Annulla");
-		buttonAnnullaIntervento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		buttonAnnullaMalattia = new Button(sShellInserimentoMalattie, SWT.NONE);
+		buttonAnnullaMalattia.setBounds(new Rectangle(564, 268, 84, 26));
+		buttonAnnullaMalattia.setText("Annulla");
+		buttonAnnullaMalattia.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						sShellInserimentoInterventi.close();
+						sShellInserimentoMalattie.close();
+						//Aggiorna la tabella in AnamnesiTableView
+						Utils.getActiveView().dispose();
+						Utils.showView("StudioDietetico.AnamnesiTableView");
+						AnamnesiTTableView.selectTab(4);
 					}
 				});
 		
-		sShellInserimentoInterventi.open();
-	}*/
+		//Inserimento nuova malattia
+		gruppoInserimentoNewMalattia = new Group(sShellInserimentoMalattie, SWT.NONE);
+		gruppoInserimentoNewMalattia.setBounds(new Rectangle(40, 320, 574, 404));
+		gruppoInserimentoNewMalattia.setText("Inserimento nuova patologia");
+		gruppoInserimentoNewMalattia.setEnabled(false);
+		
+		labelNomePatIns = new Label(gruppoInserimentoNewMalattia, SWT.NONE);
+		labelNomePatIns.setBounds(new Rectangle(20, 40, 145, 20));
+		labelNomePatIns.setText("Nome della patologia");
+		labelNomePatIns.setEnabled(false);
+		textNomePatIns = new Text(gruppoInserimentoNewMalattia, SWT.NONE);
+		textNomePatIns.setBounds(new Rectangle(180, 40, 300, 20));
+		//textNomePatIns.setEnabled(false);
+		//textNomePatIns.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		
+		checkBoxMalattiaEreditaria = new Button(gruppoInserimentoNewMalattia, SWT.CHECK);
+		checkBoxMalattiaEreditaria.setBounds(new Rectangle(20, 80, 237, 20));
+		checkBoxMalattiaEreditaria.setText(" Indicare se si tratta di malattia ereditaria");
+		checkBoxMalattiaEreditaria.setEnabled(false);
+		
+		//TABELLA TIPOLOGIA DIETA SPECIALE
+		labelElencoTipoDieta = new Label(gruppoInserimentoNewMalattia, SWT.NONE);
+		labelElencoTipoDieta.setBounds(new Rectangle(20, 120, 406, 20));
+		labelElencoTipoDieta.setText("Selezionare l'eventuale tipologia di Dieta speciale da associare alla patologia");
+		labelElencoTipoDieta.setEnabled(false);
+		
+		tableTipoDietaSpeciale = new Table(gruppoInserimentoNewMalattia, SWT.FILL | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
+		tableTipoDietaSpeciale.setHeaderVisible(true);
+		tableTipoDietaSpeciale.setLinesVisible(true);
+		tableTipoDietaSpeciale.setBounds(new Rectangle(20, 150, 420, 150));
+		tableTipoDietaSpeciale.setEnabled(false);
+		tableTipoDietaSpeciale.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						tipoDietaSpecSelez = an.getTipoDietaSpecById(tableTipoDietaSpeciale.getSelection()[0].getText(0));
+					}
+				});
+		
+		//Adatta la tabella, nasconde la prima colonna e applica l'ordinamento alle colonne
+		AnamnesiDAO ad = new AnamnesiDAO(); 
+		ArrayList<Object> listTipoDietaSpeciale = ad.getListTipoDietaSpeciale();
+		riempiTabellaTipoDietaSpeciale(tableTipoDietaSpeciale, listTipoDietaSpeciale);
+		for (TableColumn colonna : tableTipoDietaSpeciale.getColumns()) {
+			colonna.pack();
+			colonna.setResizable(false);
+		}
+		tableTipoDietaSpeciale.getColumn(0).setWidth(0);
+		//tableTipoDietaSpeciale.getColumn(1).setWidth(0);
+		TableForm.ordinamentoStringhe(tableTipoDietaSpeciale, 1);
+		TableForm.ordinamentoStringhe(tableTipoDietaSpeciale, 2);
+		
+		buttonInsertTipoDieta = new Button(gruppoInserimentoNewMalattia, SWT.NONE);
+		buttonInsertTipoDieta.setBounds(new Rectangle(20, 310, 167, 20));
+		buttonInsertTipoDieta.setText("Inserisci Nuova Dieta Speciale");
+		buttonInsertTipoDieta.setEnabled(false);
+		buttonInsertTipoDieta.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						createSShellInserimentoDietaSpeciale();
+					}
+				});
+		
+		buttonInsertNewPatologia = new Button(gruppoInserimentoNewMalattia, SWT.NONE);
+		buttonInsertNewPatologia.setBounds(new Rectangle(290, 360, 90, 28));
+		buttonInsertNewPatologia.setText("Conferma");
+		buttonInsertNewPatologia.setEnabled(false);
+		buttonInsertNewPatologia.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {						
+						if (textNomePatIns.getText()!=null) {
+							AnamnesiDAO ad = new AnamnesiDAO();
+							ad.registraMalattia(textNomePatIns.getText(), checkBoxMalattiaEreditaria.getSelection(), tipoDietaSpecSelez);
+							
+							//Aggiorna la tabella delle malattie
+							tableMalattie.removeAll();
+							int k = 0;
+							while (k<tableMalattie.getColumnCount()) {
+								tableMalattie.getColumn(k).dispose();
+							}
+							ArrayList<Object> listMalattie = an.getListMalattie();
+							riempiTabellaMalattie(tableMalattie, listMalattie);
+							for (TableColumn colonna : tableMalattie.getColumns()) {
+								colonna.pack();
+								colonna.setResizable(false);
+							}
+							tableMalattie.getColumn(0).setWidth(0);
+							tableMalattie.getColumn(1).setWidth(0);
+							
+							//Aggiunge le colonna che visualizzano il nome e la descrizione della tipologia di dieta speciale
+							TableColumn colonnaNome = new TableColumn(tableMalattie, SWT.CENTER);
+							colonnaNome.setText("Nome Dieta Speciale");
+							TableColumn colonnaDesc = new TableColumn(tableMalattie, SWT.CENTER);
+							colonnaDesc.setText("Descrizione Dieta Speciale");
+							String nome = "", descriz = "";
+							TableItem itemSel = null;
+							System.out.println("size list"+listMalattie.size());
+							for (int j = 0; j < listMalattie.size(); j++) {
+								if (((Malattia)listMalattie.get(j)).getTipologiadietaspeciale()!=null) {
+									nome = ((Malattia)listMalattie.get(j)).getTipologiadietaspeciale().getNome();
+									descriz = ((Malattia)listMalattie.get(j)).getTipologiadietaspeciale().getDescrizione();
+									itemSel = tableMalattie.getItem(j);
+									itemSel.setText(tableMalattie.getColumnCount()-2, nome);
+									itemSel.setText(tableMalattie.getColumnCount()-1, descriz);
+								}
+							}
+							
+							colonnaNome.pack();
+							colonnaNome.setResizable(false);
+							colonnaDesc.pack();
+							colonnaDesc.setResizable(false);
+							
+							//TableForm.ordinamentoStringhe(tableMalattie, 2);
+							TableForm.ordinamentoStringhe(tableMalattie, 2);
+							TableForm.ordinamentoStringhe(tableMalattie, 4);
+							TableForm.ordinamentoStringhe(tableMalattie, 5);
+						}
+						
+						gruppoInserimentoNewMalattia.setEnabled(false);
+						labelNomePatIns.setEnabled(false);
+						textNomePatIns.setEnabled(false);
+						checkBoxMalattiaEreditaria.setEnabled(false);
+						labelElencoTipoDieta.setEnabled(false);
+						tableTipoDietaSpeciale.setEnabled(false);
+						buttonInsertTipoDieta.setEnabled(false);
+						buttonInsertNewPatologia.setEnabled(false);
+						buttonAnnullaNewPatologia.setEnabled(false);
+						
+						
+						labelElencoMalattie.setEnabled(true);
+						tableMalattie.setEnabled(true);
+						buttonInsertPatologia.setEnabled(true);
+						buttonInserMalattia.setEnabled(true);
+						buttonAnnullaMalattia.setEnabled(true);
+					}
+				});
+		
+		buttonAnnullaNewPatologia = new Button(gruppoInserimentoNewMalattia, SWT.NONE);
+		buttonAnnullaNewPatologia.setBounds(new Rectangle(400, 360, 90, 28));
+		buttonAnnullaNewPatologia.setText("Annulla");
+		buttonAnnullaNewPatologia.setEnabled(false);
+		buttonAnnullaNewPatologia.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {						
+						gruppoInserimentoNewMalattia.setEnabled(false);
+						labelNomePatIns.setEnabled(false);
+						textNomePatIns.setEnabled(false);
+						checkBoxMalattiaEreditaria.setEnabled(false);
+						labelElencoTipoDieta.setEnabled(false);
+						tableTipoDietaSpeciale.setEnabled(false);
+						buttonInsertTipoDieta.setEnabled(false);
+						buttonInsertNewPatologia.setEnabled(false);
+						buttonAnnullaNewPatologia.setEnabled(false);
+						
+						labelElencoMalattie.setEnabled(true);
+						tableMalattie.setEnabled(true);
+						buttonInsertPatologia.setEnabled(true);
+						buttonInserMalattia.setEnabled(true);
+						buttonAnnullaMalattia.setEnabled(true);
+					}
+				});
+				
+		
+		
+		sShellInserimentoMalattie.open();
+	}	
 	
-	
-	
-	
-	
-	/*public void createSShellDettagliInterventi(final TableItem rigaTableClick) {
-		String idTipoInt = rigaTableClick.getText(2);
+	private void createSShellInserimentoDietaSpeciale() {
+		sShellInserimentoDietaSpeciale = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		//sShellInserimentoDietaSpeciale.setLayout(new GridLayout());
+		sShellInserimentoDietaSpeciale.setSize(new Point(630, 242));
+		sShellInserimentoDietaSpeciale.setText("Inserimento dieta speciale");
+		
+		labelNomeTipDietaIns = new Label(sShellInserimentoDietaSpeciale, SWT.NONE);
+		labelNomeTipDietaIns.setBounds(new Rectangle(20, 20, 145, 20));
+		labelNomeTipDietaIns.setText("* Nome dieta speciale");
+		textNomeTipDietaIns = new Text(sShellInserimentoDietaSpeciale, SWT.NONE);
+		textNomeTipDietaIns.setBounds(new Rectangle(180, 20, 375, 20));
+		
+		labelDescTipDietaIns = new Label(sShellInserimentoDietaSpeciale, SWT.NONE);
+		labelDescTipDietaIns.setBounds(new Rectangle(20, 60, 145, 20));
+		labelDescTipDietaIns.setText("Descrizione dieta speciale");
+		textDescTipDietaIns = new Text(sShellInserimentoDietaSpeciale, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textDescTipDietaIns.setBounds(new Rectangle(180, 60, 390, 60));
+		
+		buttonInsertNewTipoDieta = new Button(sShellInserimentoDietaSpeciale, SWT.NONE);
+		buttonInsertNewTipoDieta.setBounds(new Rectangle(400, 150, 90, 28));
+		buttonInsertNewTipoDieta.setText("Conferma");
+		buttonInsertNewTipoDieta.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {						
+				if(textNomeTipDietaIns.getText()!="") {
+					AnamnesiDAO ad = new AnamnesiDAO();
+					ad.registraDietaSpec(textNomeTipDietaIns.getText(),textDescTipDietaIns.getText());
+
+					tableTipoDietaSpeciale.removeAll();
+					int k = 0;
+					while (k<tableTipoDietaSpeciale.getColumnCount()) {
+						tableTipoDietaSpeciale.getColumn(k).dispose();
+					}
+					//AnamnesiDAO ad = new AnamnesiDAO(); 
+					ArrayList<Object> listTipoDietaSpeciale = ad.getListTipoDietaSpeciale();
+					riempiTabellaTipoDietaSpeciale(tableTipoDietaSpeciale, listTipoDietaSpeciale);
+					for (TableColumn colonna : tableTipoDietaSpeciale.getColumns()) {
+						colonna.pack();
+						colonna.setResizable(false);
+					}
+					tableTipoDietaSpeciale.getColumn(0).setWidth(0);
+					//tableTipoDietaSpeciale.getColumn(1).setWidth(0);
+					TableForm.ordinamentoStringhe(tableTipoDietaSpeciale, 1);
+					TableForm.ordinamentoStringhe(tableTipoDietaSpeciale, 2);
+				}
+				sShellInserimentoDietaSpeciale.close();
+			}
+		});
+		
+		buttonAnnullaNewTipoDieta = new Button(sShellInserimentoDietaSpeciale, SWT.NONE);
+		buttonAnnullaNewTipoDieta.setBounds(new Rectangle(500, 150, 90, 28));
+		buttonAnnullaNewTipoDieta.setText("Annulla");
+		buttonAnnullaNewTipoDieta.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {						
+						sShellInserimentoDietaSpeciale.close();
+					}
+				});
+		sShellInserimentoDietaSpeciale.open();
+	}
+		
+	public void createSShellDettagliMalattia(final TableItem rigaTableClick) {
+		final int idMalattia = Integer.parseInt(rigaTableClick.getText(0));
+		final String idTipoDietaSpec = rigaTableClick.getText(1);
 		AnamnesiDAO an = new AnamnesiDAO();
-		final Tipologiaintervento tipoInt = an.getTipoInterventiById(idTipoInt);
-		final String nome = rigaTableClick.getText(5);
-		final String descrizione = tipoInt.getDescrizione();
-		final String localizzazione = tipoInt.getLocalizzazione();
-		String[] dataSplit = rigaTableClick.getText(3).split("-");
-		int gg = Integer.parseInt(dataSplit[2]),
-			mm = Integer.parseInt(dataSplit[1]),
-			yy = Integer.parseInt(dataSplit[0]),
-			num = Integer.parseInt(rigaTableClick.getText(4));
+		final String nomeM = rigaTableClick.getText(2);
+		final String malattiaEredit = rigaTableClick.getText(3);
+		final String nomeDietaSpec = an.getTipoDietaSpecById(idTipoDietaSpec).getNome();
+		final String descDietaSpec = an.getTipoDietaSpecById(idTipoDietaSpec).getDescrizione();
 		
-		sShellDettagliInterventi = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
-		sShellDettagliInterventi.setText("Dettagli Intervento Selezionato");
-		sShellDettagliInterventi.setSize(new Point(712, 434));
+		sShellDettagliMalattie = new Shell(SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
+		sShellDettagliMalattie.setText("Dettagli Malattia Selezionata");
+		sShellDettagliMalattie.setSize(new Point(712, 345));
 		
-		labelNomeIntVis = new Label(sShellDettagliInterventi, SWT.NONE);
-		labelNomeIntVis.setBounds(new Rectangle(20, 20, 130, 20));
-		labelNomeIntVis.setText("Nome dell'intervento");
-		textNomeIntVis = new Text(sShellDettagliInterventi, SWT.NONE);
-		textNomeIntVis.setBounds(new Rectangle(170, 20, 480, 20));
-		textNomeIntVis.setEnabled(false);
-		textNomeIntVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
-		textNomeIntVis.setText(nome);
+		labelNomeMalattiaVis = new Label(sShellDettagliMalattie, SWT.NONE);
+		labelNomeMalattiaVis.setBounds(new Rectangle(20, 20, 190, 20));
+		labelNomeMalattiaVis.setText("Nome della patologia");
+		textNomeMalattiaVis = new Text(sShellDettagliMalattie, SWT.NONE);
+		textNomeMalattiaVis.setBounds(new Rectangle(220, 20, 435, 20));
+		textNomeMalattiaVis.setEnabled(false);
+		textNomeMalattiaVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textNomeMalattiaVis.setText(nomeM);
 		
-		labelDescrIntVis = new Label(sShellDettagliInterventi, SWT.NONE);
-		labelDescrIntVis.setBounds(new Rectangle(20, 60, 130, 20));
-		labelDescrIntVis.setText("Descrizione");
-		textAreaDescrIntVis = new Text(sShellDettagliInterventi, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textAreaDescrIntVis.setBounds(new Rectangle(170, 60, 500, 45));
-		textAreaDescrIntVis.setEnabled(false);
-		textAreaDescrIntVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
-		textAreaDescrIntVis.setText(descrizione);
+		checkBoxMalattiaEreditariaVis = new Button(sShellDettagliMalattie, SWT.CHECK);
+		checkBoxMalattiaEreditariaVis.setBounds(new Rectangle(20, 60, 124, 20));
+		checkBoxMalattiaEreditariaVis.setText(" Malattia ereditaria");
+		checkBoxMalattiaEreditariaVis.setEnabled(false);
+		if (malattiaEredit.equals("true")) {
+			checkBoxMalattiaEreditariaVis.setSelection(true);
+		}
 		
-		labelLocalizzazioneVis = new Label(sShellDettagliInterventi, SWT.NONE);
-		labelLocalizzazioneVis.setBounds(new Rectangle(20, 125, 130, 20));
-		labelLocalizzazioneVis.setText("Zona interessata");
-		textAreaLocalizzazioneVis = new Text(sShellDettagliInterventi, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textAreaLocalizzazioneVis.setBounds(new Rectangle(170, 125, 500, 45));
-		textAreaLocalizzazioneVis.setEnabled(false);
-		textAreaLocalizzazioneVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
-		textAreaLocalizzazioneVis.setText(localizzazione);
+		labelNomeDietaVis = new Label(sShellDettagliMalattie, SWT.NONE);
+		labelNomeDietaVis.setBounds(new Rectangle(20, 120, 190, 20));
+		labelNomeDietaVis.setText("Nome dieta speciale associata");
+		textNomeDietaSpecVis = new Text(sShellDettagliMalattie, SWT.NONE);
+		textNomeDietaSpecVis.setBounds(new Rectangle(220, 120, 435, 20));
+		textNomeDietaSpecVis.setEnabled(false);
+		textNomeDietaSpecVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textNomeDietaSpecVis.setText(nomeDietaSpec);
 		
-		labelDataIntVis = new Label(sShellDettagliInterventi, SWT.NONE);
-		labelDataIntVis.setBounds(new Rectangle(20, 190, 130, 20));
-		labelDataIntVis.setText("Data ultimo intervento");
-		calendar = new DateTime (sShellDettagliInterventi, SWT.NONE | SWT.CALENDAR | SWT.BORDER);
-		calendar.setBounds(new Rectangle(170, 190, 225, 145));
-		calendar.setVisible(false);
-		textDataIntVis = new Text(sShellDettagliInterventi, SWT.NONE);
-		textDataIntVis.setBounds(new Rectangle(170, 190, 225, 20));
-		textDataIntVis.setEnabled(false);
-		textDataIntVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
-		textDataIntVis.setText(gg+"/"+mm+"/"+yy);
+		labelDescDietaVis = new Label(sShellDettagliMalattie, SWT.NONE);
+		labelDescDietaVis.setBounds(new Rectangle(20, 160, 190, 20));
+		labelDescDietaVis.setText("Descrizione dieta speciale associata");
+		textDescrDietaSpecVis = new Text(sShellDettagliMalattie, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textDescrDietaSpecVis.setBounds(new Rectangle(220, 160, 450, 45));
+		textDescrDietaSpecVis.setEnabled(false);
+		textDescrDietaSpecVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
+		textDescrDietaSpecVis.setText(descDietaSpec);
 		
-		labelNumIntVis = new Label(sShellDettagliInterventi, SWT.NONE);
-		labelNumIntVis.setBounds(new Rectangle(430, 190, 120, 20));
-		labelNumIntVis.setText("Numero di interventi");
-		spinnerNumVis = new Spinner(sShellDettagliInterventi, SWT.READ_ONLY);
-		spinnerNumVis.setBounds(new Rectangle(570, 190, 45, 20));
-		spinnerNumVis.setEnabled(false);
-		spinnerNumVis.setBackground(new Color(Display.getCurrent(), 245, 245, 245));
-		spinnerNumVis.setMinimum(num);
-		
-		buttonModificaInterventi = new Button(sShellDettagliInterventi, SWT.NONE);
-		buttonModificaInterventi.setBounds(new Rectangle(400, 350, 70, 25));
-		buttonModificaInterventi.setText("Modifica");
-		buttonModificaInterventi.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		labelElencoDieteVis = new Label(sShellDettagliMalattie, SWT.NONE);
+		labelElencoDieteVis.setBounds(new Rectangle(20, 100, 215, 20));
+		labelElencoDieteVis.setText("Selezionare la dieta speciale da associare");
+		labelElencoDieteVis.setVisible(false);
+		tableTipoDietaSpecialeVis = new Table(sShellDettagliMalattie, SWT.FILL | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
+		tableTipoDietaSpecialeVis.setHeaderVisible(true);
+		tableTipoDietaSpecialeVis.setLinesVisible(true);
+		tableTipoDietaSpecialeVis.setBounds(new Rectangle(250, 100, 400, 150));
+		tableTipoDietaSpecialeVis.setVisible(false);
+		tableTipoDietaSpecialeVis.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						textDataIntVis.setVisible(false);
-						calendar.setVisible(true);
-						spinnerNumVis.setEnabled(true);
-						spinnerNumVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
-						
-						buttonAppyModInterventi.setEnabled(true);
-						buttonModificaInterventi.setEnabled(false);
+						AnamnesiDAO an = new AnamnesiDAO();
+						tipoDietaSpecSelezVis = an.getTipoDietaSpecById(tableTipoDietaSpecialeVis.getSelection()[0].getText(0));
 					}
 				});
 		
-		buttonAppyModInterventi = new Button(sShellDettagliInterventi, SWT.NONE);
-		buttonAppyModInterventi.setBounds(new Rectangle(480, 350, 110, 25));
-		buttonAppyModInterventi.setText("Applica Modifiche");
-		buttonAppyModInterventi.setEnabled(false);
-		buttonAppyModInterventi.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		//Adatta la tabella, nasconde la prima colonna e applica l'ordinamento alle colonne
+		AnamnesiDAO ad = new AnamnesiDAO(); 
+		ArrayList<Object> listTipoDietaSpeciale = ad.getListTipoDietaSpeciale();
+		riempiTabellaTipoDietaSpeciale(tableTipoDietaSpecialeVis, listTipoDietaSpeciale);
+		for (TableColumn colonna : tableTipoDietaSpecialeVis.getColumns()) {
+			colonna.pack();
+			colonna.setResizable(false);
+		}
+		tableTipoDietaSpecialeVis.getColumn(0).setWidth(0);
+		//tableTipoDietaSpeciale.getColumn(1).setWidth(0);
+		TableForm.ordinamentoStringhe(tableTipoDietaSpecialeVis, 1);
+		TableForm.ordinamentoStringhe(tableTipoDietaSpecialeVis, 2);
+		
+		buttonModificaMalattie = new Button(sShellDettagliMalattie, SWT.NONE);
+		buttonModificaMalattie.setBounds(new Rectangle(400, 270, 70, 25));
+		buttonModificaMalattie.setText("Modifica");
+		buttonModificaMalattie.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						Paziente pazSel = AnamnesiTTableView.getPazienteSel();
-						String data = calendar.getYear()+"-"+(calendar.getMonth()+1)+"-"+calendar.getDay();
-						String formato = "yyyy-MM-dd";
-						Date dataInt = service.Utils.convertStringToDate(data, formato);
-						int num = spinnerNumVis.getSelection();
-						AnamnesiDAO an = new AnamnesiDAO();
-						an.modificaIntervento(pazSel, tipoInt, dataInt, num);
+						textNomeMalattiaVis.setEnabled(true);
+						textNomeMalattiaVis.setBackground(new Color(Display.getCurrent(), 250, 250, 250));
+						checkBoxMalattiaEreditariaVis.setEnabled(true);
 						
-						sShellDettagliInterventi.close();
+						labelNomeDietaVis.setVisible(false);
+						textNomeDietaSpecVis.setVisible(false);
+						labelDescDietaVis.setVisible(false);
+						textDescrDietaSpecVis.setVisible(false);
+						labelElencoDieteVis.setVisible(true);
+						tableTipoDietaSpecialeVis.setVisible(true);
+						for (int i = 0; i < tableTipoDietaSpecialeVis.getItemCount(); i++) {
+							if(tableTipoDietaSpecialeVis.getItem(i).getText(0).equals(idTipoDietaSpec)) {
+								tableTipoDietaSpecialeVis.setSelection(i);
+							}
+						}
+						buttonAppyModMalattie.setEnabled(true);
+						buttonModificaMalattie.setEnabled(false);
+					}
+				});
+		
+		buttonAppyModMalattie = new Button(sShellDettagliMalattie, SWT.NONE);
+		buttonAppyModMalattie.setBounds(new Rectangle(480, 270, 110, 25));
+		buttonAppyModMalattie.setText("Applica Modifiche");
+		buttonAppyModMalattie.setEnabled(false);
+		buttonAppyModMalattie.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						AnamnesiDAO an = new AnamnesiDAO();
+						Tipologiadietaspeciale dietaSpec = an.getTipoDietaSpecById(tableTipoDietaSpecialeVis.getSelection()[0].getText(0));
+						an.modificaMalattia(idMalattia, textNomeMalattiaVis.getText(), checkBoxMalattiaEreditariaVis.getSelection(), dietaSpec);
+						
+						sShellDettagliMalattie.close();
 						
 						//Aggiornare la tabella degli interventi in AnamnesiTableView
 						Utils.getActiveView().dispose();
 						Utils.showView("StudioDietetico.AnamnesiTableView");
-						AnamnesiTTableView.selectTab(0);
+						AnamnesiTTableView.selectTab(4);
 					}
 				});
 	
-		buttonChiudi = new Button(sShellDettagliInterventi, SWT.NONE);
-		buttonChiudi.setBounds(new Rectangle(600, 350, 70, 25));
+		buttonChiudi = new Button(sShellDettagliMalattie, SWT.NONE);
+		buttonChiudi.setBounds(new Rectangle(600, 270, 70, 25));
 		buttonChiudi.setText("Chiudi");
 		buttonChiudi.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						sShellDettagliInterventi.close();
+						sShellDettagliMalattie.close();
 					}
 				});
-		sShellDettagliInterventi.open();
-	}*/
+		sShellDettagliMalattie.open();
+	}
 	
 	
-	//MESSAGE BOX
 	
 	//MESSAGE BOX
 	private void createSShellMessElimina() {
@@ -1400,21 +1653,52 @@ public class AnamnesiShell {
 		sShellMessElimina.setSize(new Point(377, 72));
 	}
 	
-	private void createMessConfermaCanc(int indiceItemSel) {
+	private void createMessConfermaCanc(int indiceItemSel, String tableCanc) {
 		createSShellMessElimina();
 		MessageBox messageBox = new MessageBox(sShellMessElimina, SWT.OK | SWT.CANCEL| SWT.ICON_WARNING);
 		messageBox.setMessage("Sei sicuro di voler eliminare questo elemento?");
 		messageBox.setText("Conferma cancellazione");
 		if (messageBox.open() == SWT.OK) {
-			AnamnesiDAO an = new AnamnesiDAO();
-			int idCanc = Integer.parseInt(tableTipoInt.getItem(indiceItemSel).getText());
-			if(an.getInterventiListByIdTipoInt(idCanc).isEmpty()) {
-				an.cancellaTipoIntervento(idCanc);
-				tableTipoInt.remove(indiceItemSel);
-			} else {
-				sShellMessElimina.close();
-				createMessElemCascade();
+			if (tableCanc.equalsIgnoreCase("tableTipoInt")) {
+				cancellaTipoInt(indiceItemSel); 
+			} 
+			else if (tableCanc.equalsIgnoreCase("tableMalattie")) {
+				cancellaMalattia(indiceItemSel);
 			}
+		}
+	}
+	
+	private void cancellaMalattia(int indiceItemSel) {
+		//System.out.println("Cancella Malattia entrato");
+		AnamnesiDAO an = new AnamnesiDAO();
+		int idCanc = Integer.parseInt(tableMalattie.getItem(indiceItemSel).getText());
+		int idPaz = AnamnesiTTableView.getPazienteSel().getIdPaziente();
+		//System.out.println("idPaz:"+idPaz);
+		int numPazienti = an.numPazientiPerMalattia(idPaz, idCanc);
+		System.out.println("num Paz:"+numPazienti);
+		if(numPazienti<1) {
+			an.cancellaMalattia(idCanc);
+			tableMalattie.remove(indiceItemSel);
+		} else {
+			sShellMessElimina.close();
+			createMessElemCascade();
+		}
+		/*sShellInserimentoMalattie.close();
+		//Aggiorna la tabella in AnamnesiTableView
+		Utils.getActiveView().dispose();
+		Utils.showView("StudioDietetico.AnamnesiTableView");
+		AnamnesiTTableView.selectTab(4);*/
+	}
+	
+	private void cancellaTipoInt(int indiceItemSel) {
+		AnamnesiDAO an = new AnamnesiDAO();
+		int idCanc = Integer.parseInt(tableTipoInt.getItem(indiceItemSel).getText());
+		if(an.getInterventiListByIdTipoInt(idCanc).isEmpty()) {
+			an.cancellaTipoIntervento(idCanc);
+			tableTipoInt.remove(indiceItemSel);
+		} else {
+			sShellMessElimina.close();
+			createMessElemCascade();
 		}
 	}
 	
@@ -1468,7 +1752,7 @@ public class AnamnesiShell {
 				int i = 0;
 				for (String colonna : colonne) {
 					valuesObj[i] = GenericBean.getProperty(colonna, item);
-					System.out.println("Val: "+valuesObj[i]);
+					//System.out.println("Val: "+valuesObj[i]);
 					if  (valuesObj[i] instanceof Tipologiaintervento) {  
 						valuesObj[i] = ((Tipologiaintervento)valuesObj[i]).getIdTipologiaIntervento();
 					} 
@@ -1482,5 +1766,78 @@ public class AnamnesiShell {
 			}
 		}
 	}
-
+	
+	private void riempiTabellaTipoDietaSpeciale(Table table, ArrayList<Object> lista) {
+		ArrayList<String> colonne = new ArrayList<String>();
+		colonne.add("idTipologiaDietaSpeciale");
+		colonne.add("nome");
+		colonne.add("descrizione");
+		for (String item : colonne) {
+			TableColumn colonna = new TableColumn(table, SWT.CENTER);
+			colonna.setWidth(item.length() * 15);
+			colonna.setText(item);
+		}
+		table.setHeaderVisible(true);
+		
+		if (!lista.isEmpty()) {
+			for (Object item : lista) {
+				TableItem tblItem = new TableItem(table, SWT.NONE);
+				Object[] valuesObj = new Object[4];
+				String[] values = new String[4];
+				int i = 0;
+				for (String colonna : colonne) {
+					valuesObj[i] = GenericBean.getProperty(colonna, item);
+					//System.out.println("Val: "+valuesObj[i]);
+					if  (valuesObj[i] instanceof Tipologiadietaspeciale) {  
+						valuesObj[i] = ((Tipologiadietaspeciale)valuesObj[i]).getIdTipologiaDietaSpeciale();
+					} 
+					i++;
+				}
+				for (int j = 0; j < valuesObj.length; j++) {
+					if (valuesObj[j]!=null)
+						values[j]=valuesObj[j].toString();
+				}			
+				tblItem.setText(values);
+			}
+		}
+	}
+	
+	private void riempiTabellaMalattie(Table table, ArrayList<Object> lista) {
+		ArrayList<String> colonne = new ArrayList<String>();
+		colonne.add("IdMalattia");
+		colonne.add("tipologiadietaspeciale");
+		colonne.add("patologia");
+		colonne.add("malattiaEreditaria");
+		for (String item : colonne) {
+			TableColumn colonna = new TableColumn(table, SWT.CENTER);
+			colonna.setWidth(item.length() * 15);
+			colonna.setText(item);
+		}
+		table.setHeaderVisible(true);
+		
+		if (!lista.isEmpty()) {
+			for (Object item : lista) {
+				TableItem tblItem = new TableItem(table, SWT.NONE);
+				Object[] valuesObj = new Object[5];
+				String[] values = new String[5];
+				int i = 0;
+				for (String colonna : colonne) {
+					valuesObj[i] = GenericBean.getProperty(colonna, item);
+					//System.out.println("Val: "+valuesObj[i]);
+					if  (valuesObj[i] instanceof Malattia) {  
+						valuesObj[i] = ((Malattia)valuesObj[i]).getIdMalattia();
+					}
+					if  (valuesObj[i] instanceof Tipologiadietaspeciale) {  
+						valuesObj[i] = ((Tipologiadietaspeciale)valuesObj[i]).getIdTipologiaDietaSpeciale();
+					}
+					i++;
+				}
+				for (int j = 0; j < valuesObj.length; j++) {
+					if (valuesObj[j]!=null)
+						values[j]=valuesObj[j].toString();
+				}			
+				tblItem.setText(values);
+			}
+		}
+	}
 }
