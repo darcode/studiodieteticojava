@@ -12,7 +12,6 @@ import org.eclipse.ui.PlatformUI;
  * This class controls all aspects of the application's execution
  */
 public class Application implements IApplication {
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
 	 */
@@ -24,11 +23,8 @@ public class Application implements IApplication {
 		maschera.setLocation(400, 400);
 		maschera.setVisible(true);
 		
-		//maschera.setAlwaysOnTop(true);
-		//maschera.setLocationByPlatform(true);
-		//maschera.show();
-		//maschera.
 		if(maschera.risultato == 1) {
+			
 			maschera.dispose();
 			Display display = PlatformUI.createDisplay();
 			try {
