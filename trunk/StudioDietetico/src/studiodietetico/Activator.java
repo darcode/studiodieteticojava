@@ -16,7 +16,7 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
-	public static final boolean IS_DEBUG = true;
+	public static final boolean IS_DEBUG = false;
 
 	/**
 	 * The constructor
@@ -33,6 +33,7 @@ public class Activator extends AbstractUIPlugin {
 	public static void setUser(Utente user) {
 //		TODO:costruire handler listener per abilitare i menu
 		utente = user;
+		
 	}
 
 	/*
