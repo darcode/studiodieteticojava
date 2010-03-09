@@ -245,10 +245,16 @@ public class TableForm extends ListComposite {
 					ordinamentoInteri(tableVisualizzazione, 5);
 				}
 				else if (classeChiamante.equalsIgnoreCase("FarmaciTableView")) {
-					/*TODO nascondiColonne(new int[]{0,1});
+					nascondiColonne(new int[]{0,1,3,6});
+					ordinamentoStringhe(tableVisualizzazione, 2);
+					ordinamentoStringhe(tableVisualizzazione, 4);
+					ordinamentoStringhe(tableVisualizzazione, 5);
+					
+				}
+				else if (classeChiamante.equalsIgnoreCase("MalattiaTableView")) {
+					nascondiColonne(new int[]{0,1});
 					ordinamentoStringhe(tableVisualizzazione, 2);
 					ordinamentoStringhe(tableVisualizzazione, 3);
-					ordinamentoStringhe(tableVisualizzazione, 4);*/
 				}
 				
 				
