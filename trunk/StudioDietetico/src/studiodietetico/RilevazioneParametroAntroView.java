@@ -49,15 +49,12 @@ public class RilevazioneParametroAntroView extends ViewPart {
 
 	public static final String ID = "studiodietetico.RilevazioneParametroAntroView"; // TODO Needs to be whatever is mentioned in plugin.xml
 	private Composite top = null;
-	private List listPaziente = null;
-	private Label labelPazVis = null;
 	private Table tableParametroAntropometrico = null;
 	private Button btnRegistra = null;
 	private Button buttonSelezionaData = null;
 	public TableViewer tableViewer = null;
 	private JComponent[] components;
 	private ArrayList<Paziente> paz;  //  @jve:decl-index=0:
-	private ListViewer listViewer = null;
 	ParametroAntropometricoDAO par = new ParametroAntropometricoDAO();  //  @jve:decl-index=0:
 	private Shell ShellCalendario = null;
 	private Combo cmbParametro = null;
@@ -70,17 +67,26 @@ public class RilevazioneParametroAntroView extends ViewPart {
 	private Text txtOsservazione = null;
 	private Button btnAggiungi = null;
 	private Label lblData = null;
+	private Label labelPaziente = null;
+	private Text textPaziente = null;
+	private static Paziente pazSelHome;
 	@Override
 	public void createPartControl(Composite parent) {
+		
 		// TODO Auto-generated method stub
 		top = new Composite(parent, SWT.NONE);
 		top.setLayout(null);
-		listPaziente = new List(top, SWT.NONE);
-		listPaziente.setBounds(new Rectangle(119, 15, 167, 77));
-		listViewer = new ListViewer(listPaziente);
-		labelPazVis = new Label(top, SWT.NONE);
-		labelPazVis.setBounds(new Rectangle(11, 15, 103, 13));
-		labelPazVis.setText("Selezione il paziente: ");
+		//Visualizzazione del paziente selezionato
+		labelPaziente = new Label(top, SWT.NONE);
+		labelPaziente.setBounds(new Rectangle(14, 31, 46, 13));
+		labelPaziente.setText("Paziente");
+		textPaziente = new Text(top, SWT.BORDER | SWT.BOLD);
+		textPaziente.setBounds(new Rectangle(76, 16, 263, 31));
+		textPaziente.setEnabled(false);
+		//pazSelHome = PazienteDAO.getPazienti().get(2);
+		pazSelHome = PazienteTableView.getPazienteSelezionato();
+		String dataNascPazSel = pazSelHome.getDataNascita().getDay()+"/"+pazSelHome.getDataNascita().getMonth()+"/"+pazSelHome.getDataNascita().getYear();
+		textPaziente.setText(pazSelHome.getCognome()+"   "+pazSelHome.getNome()+"   "+dataNascPazSel);
 		tableParametroAntropometrico = new Table(top, SWT.NONE);
 		tableParametroAntropometrico.setHeaderVisible(true);
 		tableParametroAntropometrico.setLinesVisible(true);
@@ -111,7 +117,11 @@ public class RilevazioneParametroAntroView extends ViewPart {
         			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
         				createShellCalendario();
         				ShellCalendario.open();
-        				System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
+        				cmbParametro.setEnabled(true);
+        				txtValore.setEnabled(true);
+        				txtOsservazione.setEnabled(true);
+        				btnAggiungi.setEnabled(true);
+        				btnRegistra.setEnabled(true);
         			}
         		});
 		lblParametro = new Label(top, SWT.NONE);
@@ -148,7 +158,7 @@ public class RilevazioneParametroAntroView extends ViewPart {
 		btnRegistra.setEnabled(false);
 		btnRegistra.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				Paziente paziente = paz.get(listPaziente.getSelectionIndex());
+				Paziente paziente = pazSelHome;
 				for (int i = 0; i <= tableParametroAntropometrico.getItemCount() - 1;++i){
 					TableItem item = tableParametroAntropometrico.getItem(i);
 					Parametroantropometrico parametro = par.getParametro(Integer.valueOf(item.getText(0)));
@@ -179,18 +189,6 @@ public class RilevazioneParametroAntroView extends ViewPart {
 			p.add(paziente.getCognome()+" "+paziente.getNome());
 		}
 		String[] pazientiArray = (String[]) p.toArray((new String[0]));
-        listPaziente.setItems(pazientiArray);
-        listPaziente
-        		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-        			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-        				cmbParametro.setEnabled(true);
-        				txtValore.setEnabled(true);
-        				txtOsservazione.setEnabled(true);
-        				btnAggiungi.setEnabled(true);
-        				btnRegistra.setEnabled(true);
-        			}
-        		});
-        listViewer = new ListViewer(listPaziente);
         caricacmbParametri();
 	}
 	

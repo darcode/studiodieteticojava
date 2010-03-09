@@ -42,7 +42,7 @@ public class PazienteTableView extends ViewPart {
 	private Button buttonPrenotaVisita = null;
 	private Shell sShellMessElimina;
 	public static Paziente pazienteSel = null;
-	private Shell sShellInserisciPaziente = null;  //  @jve:decl-index=0:visual-constraint="18,376"
+	private Shell sShellInserisciPaziente = null;  //  @jve:decl-index=0:visual-constraint="28,438"
 	private Label labelCognPaz = null;
 	private Text textCognPaz = null;
 	private Label labelNomePaz = null;
@@ -79,7 +79,7 @@ public class PazienteTableView extends ViewPart {
 	private Button buttonRegistraPaz = null;
 	private Button buttonAggiornaPaz = null;
 	private Button buttonAnnulla = null;
-	private Shell sShellPrenotaVisita = null;  //  @jve:decl-index=0:visual-constraint="477,93"
+	private Shell sShellPrenotaVisita = null;  //  @jve:decl-index=0:visual-constraint="843,157"
 	private Label labelTipolVisitPrenot = null;
 	private Label labelDataPrenotVisita = null;
 	private Label labelNote = null;
@@ -90,12 +90,12 @@ public class PazienteTableView extends ViewPart {
 	private Table tableTipVisita = null;
 	private Button buttonCreaTipVisita = null;
 	private Button buttonAnnullaCreaTip = null;
-	private Shell ShellCalendario = null;  //  @jve:decl-index=0:visual-constraint="481,508"
+	private Shell ShellCalendario = null;  //  @jve:decl-index=0:visual-constraint="487,568"
 	private DateTime calendar = null;
 	private DateTime time = null;
 	private Text textAreaPrenotazioniOdierne = null;
 	private Button ok = null;
-	private Shell sShellCreaTipVisita = null;  //  @jve:decl-index=0:visual-constraint="768,509"
+	private Shell sShellCreaTipVisita = null;  //  @jve:decl-index=0:visual-constraint="786,569"
 	private Label labelTipologia = null;
 	private Text textTipologia = null;
 	private Label labelCosto = null;
@@ -104,6 +104,8 @@ public class PazienteTableView extends ViewPart {
 	private Date dn = null;
 	private ArrayList<Tipologiavisita> tv;  //  @jve:decl-index=0:
 	private Button buttonGestioneAnamnesi;
+	private Button buttonRilevamentoParametri;
+	private Button buttonRilevamentoEsami;
 	
 	
 	
@@ -120,7 +122,7 @@ public class PazienteTableView extends ViewPart {
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
 		buttonPrenVisita = new Button(classVis.top, SWT.NONE);
-		buttonPrenVisita.setBounds(new Rectangle(260, 352, 110, 25));
+		buttonPrenVisita.setBounds(new Rectangle(240, 352, 110, 25));
 		buttonPrenVisita.setText("Prenotazione visita");
 		buttonPrenVisita.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -136,7 +138,7 @@ public class PazienteTableView extends ViewPart {
 		});
 		
 		buttonCreaPrescrizione = new Button(classVis.top, SWT.NONE);
-		buttonCreaPrescrizione.setBounds(new Rectangle(380, 352, 120, 25));
+		buttonCreaPrescrizione.setBounds(new Rectangle(360, 352, 120, 25));
 		buttonCreaPrescrizione.setText("Prescrizione dieta");
 		buttonCreaPrescrizione.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -153,7 +155,7 @@ public class PazienteTableView extends ViewPart {
 		});
 		
 		buttonGestioneAnamnesi = new Button(classVis.top, SWT.NONE);
-		buttonGestioneAnamnesi.setBounds(new Rectangle(510, 352, 120, 25));
+		buttonGestioneAnamnesi.setBounds(new Rectangle(490, 352, 120, 25));
 		buttonGestioneAnamnesi.setText("Gestione Anamnesi");
 		buttonGestioneAnamnesi.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -163,6 +165,40 @@ public class PazienteTableView extends ViewPart {
 					pazienteSel = PazienteDAO.getPazienteByID(idPazienteSel);
 					Utils.showView("StudioDietetico.AnamnesiTableView");	
 					AnamnesiTTableView.selectTab(0);
+				} else {
+					createMessSelElemCanc();
+				}
+			}
+		});
+		
+		buttonRilevamentoParametri = new Button(classVis.top, SWT.NONE);
+		buttonRilevamentoParametri.setBounds(new Rectangle(620, 352, 150, 25));
+		buttonRilevamentoParametri.setText("Rilevamento Parametri Antropometrici");
+		buttonRilevamentoParametri.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				if(classVis.getTableVisualizzazione().getSelectionCount()>0) {
+					TableItem itemSel = classVis.getTableVisualizzazione().getItem(classVis.getTableVisualizzazione().getSelectionIndex());
+					int idPazienteSel = Integer.parseInt(itemSel.getText(0));
+					pazienteSel = PazienteDAO.getPazienteByID(idPazienteSel);
+					Utils.showView("StudioDietetico.RilevazioneParametroAntroView");	
+					//AnamnesiTTableView.selectTab(0);
+				} else {
+					createMessSelElemCanc();
+				}
+			}
+		});
+		
+		buttonRilevamentoEsami = new Button(classVis.top, SWT.NONE);
+		buttonRilevamentoEsami.setBounds(new Rectangle(680, 352, 120, 25));
+		buttonRilevamentoEsami.setText("Rilevamento Esami Clinici");
+		buttonRilevamentoEsami.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				if(classVis.getTableVisualizzazione().getSelectionCount()>0) {
+					TableItem itemSel = classVis.getTableVisualizzazione().getItem(classVis.getTableVisualizzazione().getSelectionIndex());
+					int idPazienteSel = Integer.parseInt(itemSel.getText(0));
+					pazienteSel = PazienteDAO.getPazienteByID(idPazienteSel);
+					Utils.showView("StudioDietetico.RisultatoAnalisiView");	
+					//AnamnesiTTableView.selectTab(0);
 				} else {
 					createMessSelElemCanc();
 				}
@@ -698,4 +734,4 @@ public class PazienteTableView extends ViewPart {
 		return pazienteSel;
 	}
 
-}  //  @jve:decl-index=0:visual-constraint="10,10,431,253"
+}  //  @jve:decl-index=0:visual-constraint="10,10,857,512"
