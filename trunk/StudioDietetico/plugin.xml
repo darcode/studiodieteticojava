@@ -114,11 +114,6 @@
       <handler
             class="handler.MenuMedicoHandler"
             commandId="StudioDietetico.CommandMedico">
-         <enabledWhen>
-            <reference
-                  definitionId="StudioDietetico.reference1">
-            </reference>
-         </enabledWhen>
       </handler>
       <handler
             class="handler.MenuPazienteHandler"
@@ -191,24 +186,14 @@
                label="Gestione">
             <command
                   commandId="StudioDietetico.CommandMedicoRicerca"
+                  icon="icons/doctor_assistant-32.png"
                   label="Gestione Medico"
                   style="push">
             </command>
             <command
                   commandId="StudioDietetico.CommandPazienteRicerca"
-                  label="Gestione Paziente"
-                  style="push">
-            </command>
-            <command
-                  commandId="StudioDietetico.CommandMedico"
-                  icon="icons/doctor_assistant-32.png"
-                  label="Medico"
-                  style="push">
-            </command>
-            <command
-                  commandId="StudioDietetico.CommandPaziente"
                   icon="icons/user-group-32.png"
-                  label="Paziente"
+                  label="Gestione Paziente"
                   style="push">
             </command>
             <command
@@ -221,17 +206,6 @@
                   commandId="StudioDietetico.CommandEsameClinico"
                   icon="icons/Test Tubes_32x32.png"
                   label="Esame Clinico"
-                  style="push">
-            </command>
-            <command
-                  commandId="StudioDietetico.CommandAnamnesi"
-                  icon="icons/symbol-32x32.png"
-                  label="Anamnesi"
-                  style="push">
-            </command>
-            <command
-                  commandId="StudioDietetico.CommandRegistrazione"
-                  label="Gestione Utenti"
                   style="push">
             </command>
          </menu>
@@ -255,7 +229,13 @@
          <menu
                icon="icons/Mallette-32.png"
                id="StudioDietetico.Rilevazioni"
-               label="Rilevazioni">
+               label="Storia Clinica">
+            <command
+                  commandId="StudioDietetico.CommandAnamnesi"
+                  icon="icons/symbol-32x32.png"
+                  label="Anamnesi"
+                  style="push">
+            </command>
             <command
                   commandId="StudioDietetico.CommandRilevazioneParametroAntropometrico"
                   icon="icons/stethoscope.ico"
@@ -273,6 +253,12 @@
                icon="icons/Administrative Tools-32.png"
                id="StudioDietetico.Utilità"
                label="Utilità">
+            <command
+                  commandId="StudioDietetico.CommandRegistrazione"
+                  icon="icons/Padlocks_32.png"
+                  label="Gestione Accessi"
+                  style="push">
+            </command>
                   <command
                   commandId="StudioDietetico.CommandStatistiche"
                   label="Statistiche"
