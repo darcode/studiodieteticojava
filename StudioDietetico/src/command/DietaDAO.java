@@ -723,6 +723,42 @@ for (int i = 0; i < ris.size(); i++) {
 		close();
 	}
 	
+	public static void cancellaDieta(TableItem rigaTable) {
+		begin();
+		Criteria criteria = getSession().createCriteria(hibernate.Dieta.class);
+		int idDieta = Integer.parseInt(rigaTable.getText(0));
+		criteria.add( Restrictions.eq("idDieta", idDieta));
+		List<Dieta> diete = (List<Dieta>)criteria.list();
+		commit();
+	
+		Set<Personalizzazionegiornata> persGior = diete.get(0).getPersonalizzazionegiornatas();
+		for (Personalizzazionegiornata pg : persGior) {
+			begin();
+			getSession().delete(pg);
+			commit();
+			//close();
+		
+			//close();
+			Schemadietetico sd = pg.getSchemadietetico();
+			Set<Costituzione> cost = (Set<Costituzione>)sd.getCostituziones();
+			for (Costituzione costituzione : cost) {
+				begin();
+				getSession().delete(costituzione);
+				commit();
+				//close();
+			}
+			
+			begin();
+			getSession().delete(sd);
+			commit();
+					
+		}
+		begin();
+		getSession().delete(diete.get(0));
+		commit();
+		close();
+	}
+	
 	public static void cancellaPrescrizione(TableItem rigaTable) {
 		begin();
 		Criteria criteria = getSession().createCriteria(hibernate.Prescrizione.class);
