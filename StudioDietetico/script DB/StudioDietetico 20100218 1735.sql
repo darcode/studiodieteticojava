@@ -353,7 +353,9 @@ INSERT INTO `funzione` (`idFunzione`,`Descrizione`) VALUES
  (15,'MenuRegistraVisita'),
  (16,'MenuRegistrazione'),
  (17,'MenuRilevazioneParametroAntro'),
- (18,'MenuRisultatoAnalisi');
+ (18,'MenuRisultatoAnalisi'),
+ (19,'MenuMedicoRicerca'),
+ (20,'MenuPazienteRicerca');
 /*!40000 ALTER TABLE `funzione` ENABLE KEYS */;
 
 
@@ -936,7 +938,8 @@ CREATE TABLE `ruolo` (
 
 /*!40000 ALTER TABLE `ruolo` DISABLE KEYS */;
 INSERT INTO `ruolo` (`idRuolo`,`descrizione`) VALUES 
- (1,'Amministratore');
+ (1,'Amministratore'),
+ (2,'Segreteria');
 /*!40000 ALTER TABLE `ruolo` ENABLE KEYS */;
 
 
@@ -977,7 +980,10 @@ INSERT INTO `ruolo_funzione` (`idRuolo`,`idFunzione`) VALUES
  (1,15),
  (1,16),
  (1,17),
- (1,18);
+ (1,18),
+ (1,19),
+ (1,20),
+ (2,14);
 /*!40000 ALTER TABLE `ruolo_funzione` ENABLE KEYS */;
 
 
@@ -1197,6 +1203,7 @@ CREATE TABLE `utente` (
 /*!40000 ALTER TABLE `utente` DISABLE KEYS */;
 INSERT INTO `utente` (`idUtente`,`nomeUtente`,`password`,`idRuolo`) VALUES 
  (1,'Admin','admin',1);
+  (2,'segretaria','segretaria',2);
 /*!40000 ALTER TABLE `utente` ENABLE KEYS */;
 
 
