@@ -333,7 +333,7 @@ public class RegistrazioneForm extends ListComposite {
 
 	private void modificaRuolo() {
 		if (tblFunzioniUp.getSelectionIndices().length == 0) {
-			Utils.showMessageError("Selezioanre almeno una funzione");
+			Utils.showMessageError("Selezionare almeno una funzione");
 			return;
 		}
 		Ruolo ruolo = RuoloDAO.get(ruoloCombo.getText());
