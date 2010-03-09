@@ -130,9 +130,9 @@ public class ListComposite extends Composite {
 				colonne.add("dose");
 				colonne.add("frequenza");
 				colonne.add("principiAttivi");
-			} else if (classeChiamante.equalsIgnoreCase("MalattieTableView")) {
+			} else if (classeChiamante.equalsIgnoreCase("MalattiaTableView")) {
 				colonne.add("idMalattia");
-				colonne.add("idTipologiaDietaSpeciale");
+				colonne.add("idTipologiadietaspeciale");
 				colonne.add("patologia");
 				colonne.add("malattiaEreditaria");
 				colonne.add("idPaziente");
