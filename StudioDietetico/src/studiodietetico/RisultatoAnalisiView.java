@@ -55,13 +55,10 @@ public class RisultatoAnalisiView extends ViewPart {
 
 	public static final String ID = "studiodietetico.RilevazioneParametroAntroView"; // TODO Needs to be whatever is mentioned in plugin.xml
 	private Composite top = null;
-	private List listPaziente = null;
-	private Label labelPazVis = null;
 	private Table tableParametroClinico = null;
 	private Button btnRegistra = null;
 	public TableViewer tableViewer = null;
 	private ArrayList<Paziente> paz;  //  @jve:decl-index=0:
-	private ListViewer listViewer = null;
 	ParametroAntropometricoDAO par = new ParametroAntropometricoDAO();  //  @jve:decl-index=0:
 	private Button buttonSelezionaData = null;
 	private Date dn = null;
@@ -81,19 +78,26 @@ public class RisultatoAnalisiView extends ViewPart {
 	private EsameClinicoDAO es = new EsameClinicoDAO();
 	private ParametroClinicoDAO parclinico= new ParametroClinicoDAO();  //  @jve:decl-index=0:
 	private Esameclinico esamemem = new Esameclinico();  //  @jve:decl-index=0:
-	private Paziente pazientemem = new Paziente();
+	private Paziente pazientemem = new Paziente();  //  @jve:decl-index=0:
+	private Label labelPaziente = null;
+	private Text textPaziente = null;
 	
 	@Override
 	public void createPartControl(Composite parent) {
 		// TODO Auto-generated method stub
+		
 		top = new Composite(parent, SWT.NONE);
 		top.setLayout(null);
-		listPaziente = new List(top, SWT.NONE);
-		listPaziente.setBounds(new Rectangle(119, 15, 167, 77));
-		listViewer = new ListViewer(listPaziente);
-		labelPazVis = new Label(top, SWT.NONE);
-		labelPazVis.setBounds(new Rectangle(11, 15, 103, 13));
-		labelPazVis.setText("Seleziona paziente: ");
+		labelPaziente = new Label(top, SWT.NONE);
+		labelPaziente.setBounds(new Rectangle(36, 45, 49, 13));
+		labelPaziente.setText("Paziente");
+		textPaziente = new Text(top, SWT.BORDER | SWT.BOLD);
+		textPaziente.setBounds(new Rectangle(100, 30, 263, 31));
+		textPaziente.setEnabled(false);
+		//pazSelHome = PazienteDAO.getPazienti().get(2);
+		pazientemem = PazienteTableView.getPazienteSelezionato();
+		String dataNascPazSel = pazientemem.getDataNascita().getDay()+"/"+pazientemem.getDataNascita().getMonth()+"/"+pazientemem.getDataNascita().getYear();
+		textPaziente.setText(pazientemem.getCognome()+"   "+pazientemem.getNome()+"   "+dataNascPazSel);
 		tableParametroClinico = new Table(top, SWT.NONE);
 		tableParametroClinico.setHeaderVisible(true);
 		tableParametroClinico.setLinesVisible(true);
@@ -184,32 +188,15 @@ public class RisultatoAnalisiView extends ViewPart {
 					//p.registraMisurazione(parametro, paziente, setril, item.getText(3));
 					
 				}
-				statoiniziale();
+				statosecondario();
 			}
 		});
-		paz = PazienteDAO.getPazienti();
-		ArrayList<String> p = new ArrayList<String>();
-		for (Paziente paziente : paz) {
-			p.add(paziente.getCognome()+" "+paziente.getNome());
-		}
-		String[] pazientiArray = (String[]) p.toArray((new String[0]));
-        listPaziente.setItems(pazientiArray);
-        listPaziente
-        		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-        			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-        				Paziente paziente =  paz.get(listPaziente.getSelectionIndex());
-						pazientemem = paziente;
-        				statosecondario();
-        			}
-        		});
-        listViewer = new ListViewer(listPaziente);
         CaricaListEsami();
-        statoiniziale();
+        statosecondario();
 	}
 	
-	public void statoiniziale() {
-		listPaziente.setEnabled(true);
-		listEsameClinico.setEnabled(false);
+	public void statosecondario(){
+		listEsameClinico.setEnabled(true);
 		cmbParametro.setVisible(false);
 		txtValore.setVisible(false);
 		txtOsservazione.setVisible(false);
@@ -217,22 +204,10 @@ public class RisultatoAnalisiView extends ViewPart {
 		btnRegistra.setVisible(false);
 		tableParametroClinico.clearAll();
 		tableParametroClinico.removeAll();
-		//tutti gli altri a false
-	}
-	
-	public void statosecondario(){
-		listPaziente.setEnabled(false);
-		listEsameClinico.setEnabled(true);
-		cmbParametro.setVisible(false);
-		txtValore.setVisible(false);
-		txtOsservazione.setVisible(false);
-		btnAggiungi.setVisible(false);
-		btnRegistra.setVisible(false);
 		//tutto il resto a false
 	}
 	
 	public void statoterzo(){
-		listPaziente.setEnabled(false);
 		listEsameClinico.setEnabled(false);
 		caricacmbParametri();
 		cmbParametro.setVisible(true);
