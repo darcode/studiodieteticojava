@@ -5,7 +5,8 @@ import org.eclipse.core.commands.IHandler;
 
 public class MenuAnamnesiHandler extends MenuStudioDieteticoHandler implements IHandler {
 
-	static final String VIEW = "StudioDietetico.AnamnesiTableView";
+	//static final String VIEW = "StudioDietetico.AnamnesiTableView";
+	static final String VIEW = "StudioDietetico.PazienteTableView";
 	static final String MY_FUNCTION = "MenuAnamnesi";
 
 	String getMyFunction(){
