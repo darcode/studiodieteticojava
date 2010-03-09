@@ -11,6 +11,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
@@ -48,6 +49,13 @@ public class AnamnesiTTableView extends ViewPart {
 	//Malattie
 	private Composite compositeMalattie;
 	private ArrayList<Object> malattiePazList;
+	//Abitudini alimentari
+	private Composite compositeAbitudini;
+	private Object abitudinePazList;
+	private Label labelNumPasti;
+	private Composite topAbitudini;
+	private AbitudiniForm abitudini;
+	
 	
 	//Costruttore
 	public AnamnesiTTableView() {
@@ -75,7 +83,7 @@ public class AnamnesiTTableView extends ViewPart {
 	 */
 	private void createTabFolder() {
 		tabFolder = new TabFolder(top, SWT.TOP);
-		tabFolder.setBounds(new Rectangle(0, 0, 854, 416));
+		tabFolder.setBounds(new Rectangle(0, 0, 854, 680));
 		
 		//Visualizzazione del paziente selezionato
 		labelPaziente = new Label(tabFolder, SWT.NONE);
@@ -84,8 +92,8 @@ public class AnamnesiTTableView extends ViewPart {
 		textPaziente = new Text(tabFolder, SWT.BORDER | SWT.BOLD);
 		textPaziente.setBounds(new Rectangle(106, 30, 263, 31));
 		textPaziente.setEnabled(false);
-		pazSelHome = PazienteDAO.getPazienti().get(2);
-		//pazSelHome = HomePazienteForm.getPazienteSelezionato();
+		//pazSelHome = PazienteDAO.getPazienti().get(2);
+		pazSelHome = PazienteTableView.getPazienteSelezionato();
 		String dataNascPazSel = pazSelHome.getDataNascita().getDay()+"/"+pazSelHome.getDataNascita().getMonth()+"/"+pazSelHome.getDataNascita().getYear();
 		textPaziente.setText(pazSelHome.getCognome()+"   "+pazSelHome.getNome()+"   "+dataNascPazSel);
 		
@@ -99,7 +107,10 @@ public class AnamnesiTTableView extends ViewPart {
 		
 		createCompositeMalattie(tabFolder);
 		
+		createCompositeAbitudini(tabFolder);
+		
 	}
+	
 	public static void selectTab(int indexTab) {
 		tabFolder.setSelection(indexTab);
 	}
@@ -117,7 +128,7 @@ public class AnamnesiTTableView extends ViewPart {
 		//Richiama il costruttore della classe Form per gli interventi
 		AnamnesiShell aw = new AnamnesiShell();
 		classVis = new TableForm(compositeInterventi, SWT.BORDER, interventiPazList,"createSShellDettagliInterventi", "createSShellInserimentoInterventi", aw, ad, "InterventiTableView");
-		classVis.setBounds(new Rectangle(6, 50, 800, 332));
+		classVis.setBounds(new Rectangle(6, 50, 800, 600));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
@@ -179,7 +190,7 @@ public class AnamnesiTTableView extends ViewPart {
 		//Richiama il costruttore della classe Form per le allergie
 		AnamnesiShell aw = new AnamnesiShell();
 		classVis = new TableForm(compositeAllergie, SWT.BORDER, allergiePazList,"createSShellDettagliAllergie", "createSShellInserimentoAllergie", aw, ad, "AllergieTableView");
-		classVis.setBounds(new Rectangle(6, 50, 800, 332));
+		classVis.setBounds(new Rectangle(6, 50, 800, 600));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
@@ -209,7 +220,7 @@ public class AnamnesiTTableView extends ViewPart {
 		//Richiama il costruttore della classe Form per gli sport
 		AnamnesiShell aw = new AnamnesiShell();
 		classVis = new TableForm(compositeAttivitaFisica, SWT.BORDER, sportPazList,"createSShellDettagliSport", "createSShellInserimentoSport", aw, ad, "SportTableView");
-		classVis.setBounds(new Rectangle(6, 50, 800, 332));
+		classVis.setBounds(new Rectangle(6, 50, 800, 600));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
@@ -240,7 +251,7 @@ public class AnamnesiTTableView extends ViewPart {
 		//Richiama il costruttore della classe Form per gli sport
 		AnamnesiShell aw = new AnamnesiShell();
 		classVis = new TableForm(compositeFarmaci, SWT.BORDER, farmaciPazList,"createSShellDettagliFarmaco", "createSShellInserimentoFarmaco", aw, ad, "FarmaciTableView");
-		classVis.setBounds(new Rectangle(6, 50, 800, 332));
+		classVis.setBounds(new Rectangle(6, 50, 800, 600));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
@@ -258,7 +269,6 @@ public class AnamnesiTTableView extends ViewPart {
 		
 	}
 	
-	
 	//MALATTIE
 	private void createCompositeMalattie(TabFolder tabFolder) {
 		compositeMalattie = new Composite(tabFolder, SWT.TRANSPARENT);
@@ -270,22 +280,38 @@ public class AnamnesiTTableView extends ViewPart {
 		
 		//Richiama il costruttore della classe Form per gli sport
 		AnamnesiShell aw = new AnamnesiShell();
-		classVis = new TableForm(compositeMalattie, SWT.BORDER, malattiePazList,"createSShellDettagliMalattia", "createSShellInserimentoMalattia", aw, ad, "MalattieTableView");
-		classVis.setBounds(new Rectangle(6, 50, 800, 332));
+		classVis = new TableForm(compositeMalattie, SWT.BORDER, malattiePazList,"createSShellDettagliMalattia", "createSShellInserimentoMalattia", aw, ad, "MalattiaTableView");
+		classVis.setBounds(new Rectangle(6, 50, 800, 600));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
 		
 		//Nasconde le colonne che visualizzano gli id
-		//classVis.nascondiColonne(new int[]{0,1,3,6});
+		classVis.nascondiColonne(new int[]{0,1});
 		
 		//Aggiorna la combo con l'attributo aggiunto
 		classVis.aggiornaCombo();
 		
 		//Applica l'ordinamento alle colonne visualizzate
-		/*classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 2);
-		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 4);
-		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 5);*/
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 2);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 3);
+	}
+	
+	//ABITUDINI ALIMENTARI
+	private void createCompositeAbitudini(TabFolder tabFolder) {
+		compositeAbitudini = new Composite(tabFolder, SWT.TRANSPARENT);
+		TabItem tabItemAbitudine = new TabItem(tabFolder, SWT.NONE);
+		tabItemAbitudine.setText("Abitudini alimentari");
+		tabItemAbitudine.setControl(compositeAbitudini);
+		AnamnesiDAO ad = new AnamnesiDAO();
+		abitudinePazList = ad.getAbitudineByPaziente(pazSelHome);
+				
+		abitudini = new AbitudiniForm(compositeAbitudini, SWT.BORDER);
+		abitudini.setBounds(new Rectangle(6, 50, 800, 600));
+		abitudini.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		abitudini.setLayout(new GridLayout(1, true));
+		abitudini.setBackground(Utils.getStandardWhiteColor());
+		
 		
 	}
 	
