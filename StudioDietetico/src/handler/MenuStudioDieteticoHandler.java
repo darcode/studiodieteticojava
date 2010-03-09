@@ -9,6 +9,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import studiodietetico.Activator;
+import studiodietetico.AnamnesiTTableView;
 
 import command.UtenteDAO;
 import common.Utils;
@@ -36,6 +37,10 @@ public abstract class MenuStudioDieteticoHandler extends AbstractHandler {
 					if (UtenteDAO.canDo(user.getNomeUtente(), getMyFunction())) {
 						HandlerUtil.getActiveWorkbenchWindow(event)
 								.getActivePage().showView(getMyView());
+						if (getMyFunction() == "MenuAnamnesi") {
+							HandlerUtil.getActiveWorkbenchWindow(event)
+							.getActivePage();
+						}
 					} else {
 						Utils
 								.showMessageError("Operazione non consentita per il tuo profilo.");
