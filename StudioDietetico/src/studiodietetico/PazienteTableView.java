@@ -103,6 +103,7 @@ public class PazienteTableView extends ViewPart {
 	private Button buttonOk = null;
 	private Date dn = null;
 	private ArrayList<Tipologiavisita> tv;  //  @jve:decl-index=0:
+	private Button buttonGestioneAnamnesi;
 	
 	
 	
@@ -114,13 +115,13 @@ public class PazienteTableView extends ViewPart {
 		pazienti = PazienteDAO.getPazientiObject();
 		PazienteDAO pd = new PazienteDAO();
 		classVis = new TableForm(top, SWT.BORDER, pazienti, "createShellDettagliPaziente","createSShellInserisciPaziente",PazienteTableView.this, pd, "PazienteTableView");
-		classVis.setBounds(new Rectangle(6, 50, 800, 332));
+		classVis.setBounds(new Rectangle(6, 50, 800, 400));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
 		buttonPrenVisita = new Button(classVis.top, SWT.NONE);
-		buttonPrenVisita.setBounds(new Rectangle(260, 284, 110, 25));
-		buttonPrenVisita.setText("Prenota visita");
+		buttonPrenVisita.setBounds(new Rectangle(260, 352, 110, 25));
+		buttonPrenVisita.setText("Prenotazione visita");
 		buttonPrenVisita.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				if(classVis.getTableVisualizzazione().getSelectionCount()>0) {
@@ -135,8 +136,8 @@ public class PazienteTableView extends ViewPart {
 		});
 		
 		buttonCreaPrescrizione = new Button(classVis.top, SWT.NONE);
-		buttonCreaPrescrizione.setBounds(new Rectangle(370, 284, 120, 25));
-		buttonCreaPrescrizione.setText("Prescrivi dieta");
+		buttonCreaPrescrizione.setBounds(new Rectangle(380, 352, 120, 25));
+		buttonCreaPrescrizione.setText("Prescrizione dieta");
 		buttonCreaPrescrizione.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				if(classVis.getTableVisualizzazione().getSelectionCount()>0) {
@@ -145,6 +146,23 @@ public class PazienteTableView extends ViewPart {
 					pazienteSel = PazienteDAO.getPazienteByID(idPazienteSel);
 					InserisciPrescrizioneShell preShell = new InserisciPrescrizioneShell();
 					preShell.createShellInserisciPrescrizione();
+				} else {
+					createMessSelElemCanc();
+				}
+			}
+		});
+		
+		buttonGestioneAnamnesi = new Button(classVis.top, SWT.NONE);
+		buttonGestioneAnamnesi.setBounds(new Rectangle(510, 352, 120, 25));
+		buttonGestioneAnamnesi.setText("Gestione Anamnesi");
+		buttonGestioneAnamnesi.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				if(classVis.getTableVisualizzazione().getSelectionCount()>0) {
+					TableItem itemSel = classVis.getTableVisualizzazione().getItem(classVis.getTableVisualizzazione().getSelectionIndex());
+					int idPazienteSel = Integer.parseInt(itemSel.getText(0));
+					pazienteSel = PazienteDAO.getPazienteByID(idPazienteSel);
+					Utils.showView("StudioDietetico.AnamnesiTableView");	
+					AnamnesiTTableView.selectTab(0);
 				} else {
 					createMessSelElemCanc();
 				}
