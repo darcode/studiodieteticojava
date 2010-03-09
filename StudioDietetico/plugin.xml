@@ -98,12 +98,27 @@
             id="StudioDietetico.CommandRegistrazione"
             name="CommandRegistrazione">
       </command>
+      <command
+            categoryId="StudioDietetico.category1"
+            id="StudioDietetico.CommandMedicoRicerca"
+            name="CommandMedicoRicerca">
+      </command>
+      <command
+            categoryId="StudioDietetico.category1"
+            id="StudioDietetico.CommandPazienteRicerca"
+            name="CommandPazienteRicerca">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
       <handler
             class="handler.MenuMedicoHandler"
             commandId="StudioDietetico.CommandMedico">
+         <enabledWhen>
+            <reference
+                  definitionId="StudioDietetico.reference1">
+            </reference>
+         </enabledWhen>
       </handler>
       <handler
             class="handler.MenuPazienteHandler"
@@ -157,6 +172,14 @@
             class="handler.MenuRegistrazioneHandler"
             commandId="StudioDietetico.CommandRegistrazione">
       </handler>
+      <handler
+            class="handler.MenuMedicoRicercaHandler"
+            commandId="StudioDietetico.CommandMedicoRicerca">
+      </handler>
+      <handler
+            class="handler.MenuPazienteRicercaHandler"
+            commandId="StudioDietetico.CommandPazienteRicerca">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -166,6 +189,16 @@
                icon="icons/Options-32.png"
                id="StudioDietetico.MenuGestione"
                label="Gestione">
+            <command
+                  commandId="StudioDietetico.CommandMedicoRicerca"
+                  label="Gestione Medico"
+                  style="push">
+            </command>
+            <command
+                  commandId="StudioDietetico.CommandPazienteRicerca"
+                  label="Gestione Paziente"
+                  style="push">
+            </command>
             <command
                   commandId="StudioDietetico.CommandMedico"
                   icon="icons/doctor_assistant-32.png"
