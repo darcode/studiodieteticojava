@@ -5,7 +5,8 @@ Bundle-SymbolicName: StudioDietetico; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: studiodietetico.Activator
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.core.expressions
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: hibernate,
  javax.servlet,
