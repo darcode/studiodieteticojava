@@ -231,46 +231,6 @@
             </command>
          </menu>
          <menu
-               icon="icons/Medical-invoice-information.ico"
-               id="StudioDietetico.MenuVisita"
-               label="Visita">
-            <command
-                  commandId="StudioDietetico.CommandPrenotaVisita"
-                  icon="icons/SketchbookPlain-32.png"
-                  label="Prenota Visita"
-                  style="push">
-            </command>
-            <command
-                  commandId="StudioDietetico.CommandRegistraVisita"
-                  icon="icons/Register-32.png"
-                  label="Registra Visita"
-                  style="push">
-            </command>
-         </menu>
-         <menu
-               icon="icons/Mallette-32.png"
-               id="StudioDietetico.Rilevazioni"
-               label="Storia Clinica">
-            <command
-                  commandId="StudioDietetico.CommandAnamnesi"
-                  icon="icons/symbol-32x32.png"
-                  label="Anamnesi"
-                  style="push">
-            </command>
-            <command
-                  commandId="StudioDietetico.CommandRilevazioneParametroAntropometrico"
-                  icon="icons/stethoscope.ico"
-                  label="Rilevazione Parametri Antropometrici"
-                  style="push">
-            </command>
-            <command
-                  commandId="StudioDietetico.CommandRisultatoAnalisi"
-                  icon="icons/reportorium-32.png"
-                  label="Risultato Analisi"
-                  style="push">
-            </command>
-         </menu>
-         <menu
                icon="icons/doctor_assistant-32.png"
                id="StudioDietetico.Personale"
                label="Gestione Personale">
