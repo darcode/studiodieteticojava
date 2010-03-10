@@ -108,6 +108,21 @@
             id="StudioDietetico.CommandPazienteRicerca"
             name="CommandPazienteRicerca">
       </command>
+      <command
+            categoryId="StudioDietetico.category1"
+            id="StudioDietetico.CommandVisitaRicerca"
+            name="CommandVisitaRicerca">
+      </command>
+      <command
+            categoryId="StudioDietetico.category1"
+            id="StudioDietetico.CommandTurniRicerca"
+            name="CommandTurniRicerca">
+      </command>
+      <command
+            categoryId="StudioDietetico.category1"
+            id="StudioDietetico.CommandDietaRicerca"
+            name="CommandDietaRicerca">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -175,21 +190,27 @@
             class="handler.MenuPazienteRicercaHandler"
             commandId="StudioDietetico.CommandPazienteRicerca">
       </handler>
+      <handler
+            class="handler.MenuVisitaRicercaHandler"
+            commandId="StudioDietetico.CommandVisitaRicerca">
+      </handler>
+      <handler
+            class="handler.MenuTurniRicercaHandler"
+            commandId="StudioDietetico.CommandTurniRicerca">
+      </handler>
+      <handler
+            class="handler.MenuDietaRicercaHandler"
+            commandId="StudioDietetico.CommandDietaRicerca">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="menu:org.eclipse.ui.main.menu">
          <menu
-               icon="icons/Options-32.png"
+               icon="icons/Libra-32.png"
                id="StudioDietetico.MenuGestione"
-               label="Gestione">
-            <command
-                  commandId="StudioDietetico.CommandMedicoRicerca"
-                  icon="icons/doctor_assistant-32.png"
-                  label="Gestione Medico"
-                  style="push">
-            </command>
+               label="Studio Dietetico">
             <command
                   commandId="StudioDietetico.CommandPazienteRicerca"
                   icon="icons/user-group-32.png"
@@ -197,15 +218,15 @@
                   style="push">
             </command>
             <command
-                  commandId="StudioDietetico.CommandParametroAntropometrico"
-                  icon="icons/stethoscope.ico"
-                  label="Parametro Antropometrico"
+                  commandId="StudioDietetico.CommandVisitaRicerca"
+                  icon="icons/Medical-invoice-information.ico"
+                  label="Gestione Visite"
                   style="push">
             </command>
             <command
-                  commandId="StudioDietetico.CommandEsameClinico"
-                  icon="icons/Test Tubes_32x32.png"
-                  label="Esame Clinico"
+                  commandId="StudioDietetico.CommandDietaRicerca"
+                  icon="icons/Apple-32.png"
+                  label="Gestione Diete"
                   style="push">
             </command>
          </menu>
@@ -250,32 +271,67 @@
             </command>
          </menu>
          <menu
+               icon="icons/doctor_assistant-32.png"
+               id="StudioDietetico.Personale"
+               label="Gestione Personale">
+            <command
+                  commandId="StudioDietetico.CommandMedicoRicerca"
+                  icon="icons/doctor_assistant-32.png"
+                  label="Gestione Medico"
+                  style="push">
+            </command>
+            <command
+                  commandId="StudioDietetico.CommandTurniRicerca"
+                  icon="icons/Clock-32.png"
+                  label="Gestione Turni"
+                  style="push">
+            </command>
+         </menu>
+         <menu
                icon="icons/Administrative Tools-32.png"
                id="StudioDietetico.Utilità"
                label="Utilità">
+            <command
+                  commandId="StudioDietetico.CommandEsameClinico"
+                  icon="icons/Test Tubes_32x32.png"
+                  label="Esame Clinico"
+                  style="push">
+            </command>
+            <command
+                  commandId="StudioDietetico.CommandParametroAntropometrico"
+                  icon="icons/stethoscope.ico"
+                  label="Parametro Antropometrico"
+                  style="push">
+            </command>
             <command
                   commandId="StudioDietetico.CommandRegistrazione"
                   icon="icons/Padlocks_32.png"
                   label="Gestione Accessi"
                   style="push">
             </command>
-                  <command
+         </menu>
+         <menu
+               icon="icons/Stats-32.png"
+               id="StudioDietetico.Statistiche"
+               label="Statistiche">
+            <command
                   commandId="StudioDietetico.CommandStatistiche"
+                  icon="icons/Stats2-32.png"
                   label="Statistiche"
                   style="push">
             </command>
-                  <command
-                        commandId="StudioDietetico.CommandGrafici"
-                        icon="icons/Stats-32.png"
-                        label="Statistiche Automatiche"
-                        style="push">
-                  </command>
-                  <command
-                        commandId="StudioDietetico.CommandDinamiche"
-                        icon="icons/image201002020010_2.png.jpg"
-                        label="Interrogazioni Dinamiche"
-                        style="push">
-                  </command>
+            <command
+                  commandId="StudioDietetico.CommandDinamiche"
+                  icon="icons/image201002020010_2.png.jpg"
+                  label="Interrogazioni Dinamiche"
+                  style="push">
+            </command>
+            <command
+                  commandId="StudioDietetico.CommandGrafici"
+                  icon="icons/Stats-32.png"
+                  label="Statistiche Automatiche"
+                  style="push">
+            </command>
          </menu>
          <command
                commandId="StudioDietetico.CommandExit"
