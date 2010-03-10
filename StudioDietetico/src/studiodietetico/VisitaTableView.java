@@ -600,7 +600,7 @@ public class VisitaTableView extends ViewPart {
         labelFatturaAssociata = new Label(sShellRegistraVisita, SWT.NONE);
         labelFatturaAssociata.setBounds(new Rectangle(11, 467, 166, 24));
         labelFatturaAssociata.setText("Visita correttamente registrata");
-        labelFatturaAssociata.setVisible(true);
+        labelFatturaAssociata.setVisible(false);
         buttonAnnulla = new Button(sShellRegistraVisita, SWT.NONE);
         buttonAnnulla.setBounds(new Rectangle(205, 467, 147, 25));
         buttonAnnulla.setText("Annulla");
