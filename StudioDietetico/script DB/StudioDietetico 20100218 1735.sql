@@ -355,7 +355,10 @@ INSERT INTO `funzione` (`idFunzione`,`Descrizione`) VALUES
  (17,'MenuRilevazioneParametroAntro'),
  (18,'MenuRisultatoAnalisi'),
  (19,'MenuMedicoRicerca'),
- (20,'MenuPazienteRicerca');
+ (20,'MenuPazienteRicerca'),
+ (21,'MenuDietaRicerca'),
+ (22,'MenuTurniRicerca'),
+ (23,'MenuVisitaRicerca');
 /*!40000 ALTER TABLE `funzione` ENABLE KEYS */;
 
 
@@ -983,6 +986,9 @@ INSERT INTO `ruolo_funzione` (`idRuolo`,`idFunzione`) VALUES
  (1,18),
  (1,19),
  (1,20),
+ (1,21),
+ (1,22),
+ (1,23),
  (2,14);
 /*!40000 ALTER TABLE `ruolo_funzione` ENABLE KEYS */;
 
