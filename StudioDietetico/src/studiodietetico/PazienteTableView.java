@@ -122,7 +122,7 @@ public class PazienteTableView extends ViewPart {
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
 		buttonPrenVisita = new Button(classVis.top, SWT.NONE);
-		buttonPrenVisita.setBounds(new Rectangle(240, 352, 110, 25));
+		buttonPrenVisita.setBounds(new Rectangle(250, 352, 105, 25));
 		buttonPrenVisita.setText("Prenotazione visita");
 		buttonPrenVisita.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -138,7 +138,7 @@ public class PazienteTableView extends ViewPart {
 		});
 		
 		buttonCreaPrescrizione = new Button(classVis.top, SWT.NONE);
-		buttonCreaPrescrizione.setBounds(new Rectangle(360, 352, 120, 25));
+		buttonCreaPrescrizione.setBounds(new Rectangle(355, 352, 100, 25));
 		buttonCreaPrescrizione.setText("Prescrizione dieta");
 		buttonCreaPrescrizione.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -155,8 +155,8 @@ public class PazienteTableView extends ViewPart {
 		});
 		
 		buttonGestioneAnamnesi = new Button(classVis.top, SWT.NONE);
-		buttonGestioneAnamnesi.setBounds(new Rectangle(490, 352, 120, 25));
-		buttonGestioneAnamnesi.setText("Gestione Anamnesi");
+		buttonGestioneAnamnesi.setBounds(new Rectangle(455, 352, 65, 25));
+		buttonGestioneAnamnesi.setText("Anamnesi");
 		buttonGestioneAnamnesi.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				if(classVis.getTableVisualizzazione().getSelectionCount()>0) {
@@ -172,8 +172,8 @@ public class PazienteTableView extends ViewPart {
 		});
 		
 		buttonRilevamentoParametri = new Button(classVis.top, SWT.NONE);
-		buttonRilevamentoParametri.setBounds(new Rectangle(620, 352, 150, 25));
-		buttonRilevamentoParametri.setText("Rilevamento Parametri Antropometrici");
+		buttonRilevamentoParametri.setBounds(new Rectangle(520, 352, 140, 25));
+		buttonRilevamentoParametri.setText("Parametri antropometrici");
 		buttonRilevamentoParametri.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				if(classVis.getTableVisualizzazione().getSelectionCount()>0) {
@@ -189,8 +189,8 @@ public class PazienteTableView extends ViewPart {
 		});
 		
 		buttonRilevamentoEsami = new Button(classVis.top, SWT.NONE);
-		buttonRilevamentoEsami.setBounds(new Rectangle(680, 352, 120, 25));
-		buttonRilevamentoEsami.setText("Rilevamento Esami Clinici");
+		buttonRilevamentoEsami.setBounds(new Rectangle(660, 352, 90, 25));
+		buttonRilevamentoEsami.setText("Esami clinici");
 		buttonRilevamentoEsami.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				if(classVis.getTableVisualizzazione().getSelectionCount()>0) {
