@@ -190,6 +190,24 @@ public class Utils implements ICommonConstants {
 			getActiveView().setFocus();
 		}
 	}
+	
+	public static void showViewNotUnique(String viewId) {
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		IViewReference[] views = workbench.getActiveWorkbenchWindow()
+				.getActivePage().getViewReferences();
+		if (views.length == 0 || !views[0].getId().equals(viewId)) {
+			//workbench.getActiveWorkbenchWindow().getActivePage()
+			//		.resetPerspective();
+
+			try {
+				workbench.getActiveWorkbenchWindow().getActivePage().showView(
+						viewId);
+			} catch (PartInitException e) {
+				e.printStackTrace();
+			}
+			getActiveView().setFocus();
+		}
+	}
 
 	public static void showMainView() {
 		IWorkbench workbench = PlatformUI.getWorkbench();
