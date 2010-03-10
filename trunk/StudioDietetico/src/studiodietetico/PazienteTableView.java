@@ -163,7 +163,8 @@ public class PazienteTableView extends ViewPart {
 					TableItem itemSel = classVis.getTableVisualizzazione().getItem(classVis.getTableVisualizzazione().getSelectionIndex());
 					int idPazienteSel = Integer.parseInt(itemSel.getText(0));
 					pazienteSel = PazienteDAO.getPazienteByID(idPazienteSel);
-					Utils.showView("StudioDietetico.AnamnesiTableView");	
+					common.Utils.showViewNotUnique("StudioDietetico.AnamnesiTableView");
+					//Utils.showView("StudioDietetico.AnamnesiTableView");	
 					AnamnesiTTableView.selectTab(0);
 				} else {
 					createMessSelElemCanc();
@@ -180,7 +181,8 @@ public class PazienteTableView extends ViewPart {
 					TableItem itemSel = classVis.getTableVisualizzazione().getItem(classVis.getTableVisualizzazione().getSelectionIndex());
 					int idPazienteSel = Integer.parseInt(itemSel.getText(0));
 					pazienteSel = PazienteDAO.getPazienteByID(idPazienteSel);
-					Utils.showView("StudioDietetico.RilevazioneParametroAntroView");	
+					common.Utils.showViewNotUnique("StudioDietetico.RilevazioneParametroAntroView");
+					//Utils.showView("StudioDietetico.RilevazioneParametroAntroView");	
 					//AnamnesiTTableView.selectTab(0);
 				} else {
 					createMessSelElemCanc();
@@ -197,7 +199,8 @@ public class PazienteTableView extends ViewPart {
 					TableItem itemSel = classVis.getTableVisualizzazione().getItem(classVis.getTableVisualizzazione().getSelectionIndex());
 					int idPazienteSel = Integer.parseInt(itemSel.getText(0));
 					pazienteSel = PazienteDAO.getPazienteByID(idPazienteSel);
-					Utils.showView("StudioDietetico.RisultatoAnalisiView");	
+					common.Utils.showViewNotUnique("StudioDietetico.RisultatoAnalisiView");
+					//Utils.showView("StudioDietetico.RisultatoAnalisiView");	
 					//AnamnesiTTableView.selectTab(0);
 				} else {
 					createMessSelElemCanc();
