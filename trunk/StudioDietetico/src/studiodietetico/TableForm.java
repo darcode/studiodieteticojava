@@ -318,6 +318,9 @@ public class TableForm extends ListComposite {
 			| classeChiamante=="PrescrizioneTableView") {
 			buttonInsert.setVisible(false);
 		}
+		if (classeChiamante=="VisitaTableView") {
+			buttonInsert.setText("Registra nuova visita");
+		}
 		
 		buttonElimina = new Button(top, SWT.NONE);
 		buttonElimina.setText("Elimina");
