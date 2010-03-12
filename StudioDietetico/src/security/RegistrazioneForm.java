@@ -1,21 +1,5 @@
 package security;
 
-import java.sql.DriverManager;
-import java.util.ArrayList;
-
-import grafici.FattureBarChart;
-import grafici.FatturePieChart;
-import grafici.FattureTimeSeriesChart;
-import grafici.MediciBarChart;
-import grafici.MediciPieChart;
-import grafici.MediciTimeSeriesChart;
-import grafici.PazientiBarChart;
-import grafici.PazientiPieChart;
-import grafici.PazientiTimeSeriesChart;
-import grafici.PrenotazioneTimeSeriesChart;
-import grafici.PrenotazioniBarChart;
-import grafici.PrenotazioniPieChart;
-import hibernate.Funzione;
 import hibernate.Ruolo;
 import hibernate.Utente;
 
@@ -35,8 +19,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
-import com.mysql.jdbc.Statement;
-
 import command.FunzioneDAO;
 import command.RuoloDAO;
 import command.UtenteDAO;
@@ -45,8 +27,8 @@ import common.ui.ListComposite;
 
 public class RegistrazioneForm extends ListComposite {
 
-	private static final Font font = Utils.getFont("Arial", 13, SWT.BOLD);
-	private static final Font fontTitle = Utils.getFont("Arial", 16, SWT.BOLD);
+	private static final Font font = Utils.getFont("Arial", 8, SWT.BOLD);
+	private static final Font fontTitle = Utils.getFont("Arial", 12, SWT.BOLD);
 	private Text password;
 	private Text utente;
 	private Combo profilo;
@@ -78,10 +60,10 @@ public class RegistrazioneForm extends ListComposite {
 		gdCmp.horizontalAlignment = SWT.FILL;
 		gdCmp.verticalAlignment = SWT.FILL;
 		gdCmp.horizontalSpan = 2;
-		gdCmp.heightHint = 300;
+		gdCmp.heightHint = 350;
 		cmp.setLayoutData(gdCmp);
 		// cmp.setLayoutData(new GridData());
-		cmp.setLayout(new GridLayout(2, true));
+		cmp.setLayout(new GridLayout(2, false));
 		cmp.setBackground(white);
 		Label lblTitolo = new Label(cmp, SWT.FILL);
 		GridData gdLblTitolo = new GridData();
@@ -109,7 +91,6 @@ public class RegistrazioneForm extends ListComposite {
 		layoutData.verticalAlignment = SWT.FILL;
 		layoutData.horizontalAlignment = SWT.FILL;
 		layoutData.grabExcessVerticalSpace = true;
-		layoutData.heightHint = 40;
 
 		utente.setFont(font);
 		utente.setLayoutData(layoutData);
@@ -132,6 +113,7 @@ public class RegistrazioneForm extends ListComposite {
 		lblPrfilo.setFont(font);
 		profilo.setFont(font);
 
+		Label blbFIll3 = new Label(cmp, SWT.NONE);
 		Button registra = new Button(cmp, SWT.NONE);
 		registra.setText("Registra");
 		registra.setFont(font);
@@ -148,6 +130,8 @@ public class RegistrazioneForm extends ListComposite {
 
 			}
 		});
+		Label blbFIll1 = new Label(cmp, SWT.NONE);
+		Label blbFIll4 = new Label(cmp, SWT.NONE);
 		Button nuovoRuolo = new Button(cmp, SWT.NONE);
 		nuovoRuolo.setText("Nuovo Ruolo");
 		nuovoRuolo.setFont(font);
@@ -187,7 +171,7 @@ public class RegistrazioneForm extends ListComposite {
 		gdCmpNuovoRuolo.verticalAlignment = SWT.FILL;
 		cmpNuovoRuolo.setLayoutData(gdCmpNuovoRuolo);
 		// cmp.setLayoutData(new GridData());
-		cmpNuovoRuolo.setLayout(new GridLayout(2, true));
+		cmpNuovoRuolo.setLayout(new GridLayout(2, false));
 		cmpNuovoRuolo.setBackground(white);
 
 		Label lblTitolo1 = new Label(cmpNuovoRuolo, SWT.FILL);
@@ -249,6 +233,10 @@ public class RegistrazioneForm extends ListComposite {
 
 			}
 		});
+		GridData gdIns = new GridData();
+		gdIns.horizontalSpan =2;
+		gdIns.horizontalAlignment = SWT.CENTER;
+		inserisci.setLayoutData(gdIns);
 		cmpModificaRoulo = new Composite(this, SWT.BORDER);
 		GridData gdCmp1 = new GridData(SWT.BORDER);
 		gdCmp1.grabExcessHorizontalSpace = true;
@@ -257,7 +245,7 @@ public class RegistrazioneForm extends ListComposite {
 		gdCmp1.verticalAlignment = SWT.FILL;
 		cmpModificaRoulo.setLayoutData(gdCmp1);
 		// cmp.setLayoutData(new GridData());
-		cmpModificaRoulo.setLayout(new GridLayout(2, true));
+		cmpModificaRoulo.setLayout(new GridLayout(2, false));
 		cmpModificaRoulo.setBackground(white);
 
 		Label lblTitolo2 = new Label(cmpModificaRoulo, SWT.FILL);
@@ -297,6 +285,10 @@ public class RegistrazioneForm extends ListComposite {
 		Button modifica = new Button(cmpModificaRoulo, SWT.NONE);
 		modifica.setText("Modifica");
 		modifica.setFont(font);
+		GridData gdMod = new GridData();
+		gdMod.horizontalSpan =2;
+		gdMod.horizontalAlignment = SWT.CENTER;
+		modifica.setLayoutData(gdMod);
 		modifica.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -352,7 +344,7 @@ public class RegistrazioneForm extends ListComposite {
 
 	private void insertRuolo() {
 		if (tblFunzioni.getSelectionIndices().length == 0) {
-			Utils.showMessageError("Selezioanre almeno una funzione");
+			Utils.showMessageError("Selezionare almeno una funzione");
 			return;
 		}
 		if (RuoloDAO.get(nomeRuolo.getText()) != null) {
