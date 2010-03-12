@@ -273,7 +273,7 @@
          <menu
                icon="icons/Stats-32.png"
                id="StudioDietetico.Statistiche"
-               label="Statistiche">
+               label="Interrogazioni">
             <command
                   commandId="StudioDietetico.CommandStatistiche"
                   icon="icons/Stats2-32.png"
@@ -283,7 +283,7 @@
             <command
                   commandId="StudioDietetico.CommandDinamiche"
                   icon="icons/image201002020010_2.png.jpg"
-                  label="Interrogazioni Dinamiche"
+                  label="Dinamiche"
                   style="push">
             </command>
             <command
