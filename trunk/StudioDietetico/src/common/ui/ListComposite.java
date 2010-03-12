@@ -7,6 +7,7 @@ import hibernate.Dieta;
 import hibernate.Esameclinico;
 import hibernate.Farmacoassunto;
 import hibernate.Fattura;
+import hibernate.Funzione;
 import hibernate.Ingrediente;
 import hibernate.Intolleranzaallergia;
 import hibernate.Malattia;
@@ -151,7 +152,8 @@ public class ListComposite extends Composite {
 			colonne = GenericBean.getFieldsNamesPerQuery(lista.get(0));
 			for (String item : colonne) {
 				TableColumn colonna = new TableColumn(table, SWT.CENTER);
-				//colonna.setWidth(item.length() * 15);
+//				non cancellare questa riga altrimneti se il campo è troppo lungo non si vede..e sembra vuota la tabella
+				colonna.setWidth(item.length() * 18);
 				colonna.setText(item);
 			}
 
@@ -252,7 +254,6 @@ public class ListComposite extends Composite {
 					else if  (valuesObj[i] instanceof Visita) {  
 						valuesObj[i] = ((Visita)valuesObj[i]).getIdVisita();
 					}
-
 					i++;
 				}
 
