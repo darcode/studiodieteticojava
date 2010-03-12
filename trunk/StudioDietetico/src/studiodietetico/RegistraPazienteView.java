@@ -9,6 +9,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -68,7 +70,18 @@ public class RegistraPazienteView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-        top = new Composite(parent, SWT.NONE);
+		top = new Composite(parent, SWT.NONE);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		top.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(2, false);
+		top.setLayout(glForm);
+		
+        
         labelCognPaz = new Label(top, SWT.NONE);
         labelCognPaz.setBounds(new Rectangle(6, 7, 67, 20));
         labelCognPaz.setText("* Cognome");
