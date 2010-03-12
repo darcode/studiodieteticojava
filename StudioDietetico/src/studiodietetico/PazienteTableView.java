@@ -114,6 +114,15 @@ public class PazienteTableView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		top = new Composite(parent, SWT.NONE);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		top.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(2, false);
+		top.setLayout(glForm);
 		pazienti = PazienteDAO.getPazientiObject();
 		PazienteDAO pd = new PazienteDAO();
 		classVis = new TableForm(top, SWT.BORDER, pazienti, "createShellDettagliPaziente","createSShellInserisciPaziente",PazienteTableView.this, pd, "PazienteTableView");
