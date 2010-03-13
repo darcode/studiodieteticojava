@@ -67,8 +67,16 @@ public class TurniMediciView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-        top = new Composite(parent, SWT.NONE);
-        
+		top = new Composite(parent, SWT.NONE);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		top.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(1, false);
+		top.setLayout(glForm);
         final DateTime timeInizioTurno = new DateTime(top, SWT.TIME | SWT.SHORT);
         final DateTime timeFineTurno = new DateTime(top, SWT.TIME | SWT.SHORT);
         labelSelezMese = new Label(top, SWT.NONE);

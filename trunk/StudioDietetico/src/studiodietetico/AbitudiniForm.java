@@ -93,6 +93,11 @@ public class AbitudiniForm extends ListComposite{
 			preferenzaSchemaAb = abitudineSel.getPreferenzaSchemaDietetico();
 			noteAb = abitudineSel.getNote();
 		}
+		GridData gdTable =  new GridData();
+		gdTable.horizontalAlignment = SWT.FILL;
+		gdTable.verticalAlignment = SWT.FILL;
+		gdTable.grabExcessHorizontalSpace = true;
+		gdTable.grabExcessVerticalSpace = true;
 			
 		GridData gdForm = new GridData(SWT.BORDER);
 		gdForm.grabExcessHorizontalSpace = true;
@@ -100,7 +105,7 @@ public class AbitudiniForm extends ListComposite{
 		gdForm.verticalAlignment = SWT.FILL;
 		gdForm.grabExcessVerticalSpace = true;
 		this.setLayoutData(gdForm);
-		GridLayout glForm = new GridLayout(1, true);
+		GridLayout glForm = new GridLayout(1,false);
 		this.setLayout(glForm);
 		this.setBackground(common.Utils.getStandardWhiteColor());
 		
@@ -108,50 +113,51 @@ public class AbitudiniForm extends ListComposite{
 		gdTop.horizontalAlignment = SWT.FILL;
 		gdTop.verticalAlignment = SWT.FILL;
 		gdTop.grabExcessHorizontalSpace = true;
-		gdTop.grabExcessVerticalSpace = true;
 		
-		top = new Composite(this, SWT.BORDER);
-		//top.setLayout(new GridLayout(2, true));
-		//top.setBounds(new Rectangle(7, 7, 600, 500));
+		top = new Composite(this, SWT.NONE);
+		top.setLayout(new GridLayout(3, false));
 		top.setLayoutData(gdTop);
+		GridData gdLabel =  new GridData();
+		gdLabel.horizontalAlignment = SWT.FILL;
 		
 		labelSelItem = new Label(top, SWT.NONE);
 		labelSelItem.setText("* Numero di pasti consumati in una giornata");
-		labelSelItem.setBounds(new Rectangle(20, 10, 236, 20));
+		labelSelItem.setLayoutData(gdLabel);
 		spinnerNumPasti = new Spinner(top, SWT.LEFT);
 		spinnerNumPasti.setMinimum(1);
-		spinnerNumPasti.setBounds(new Rectangle(270, 10, 50, 20));
 		spinnerNumPasti.setSelection(numPastiAb);
 		
 		checkBoxColazione = new Button(top, SWT.CHECK);
 		checkBoxColazione.setText("* Indicare se si consuma abitualmente la prima colazione");
-		checkBoxColazione.setBounds(new Rectangle(400, 10, 320, 20));
 		checkBoxColazione.setSelection(colazioneAb);
 		
 		labelIntegratori = new Label(top, SWT.NONE);
 		labelIntegratori.setText("Eventuali integratori assunti");
-		labelIntegratori.setBounds(new Rectangle(20, 45, 230, 20));
-		textAreaIntegratori = new Text(top, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textAreaIntegratori.setBounds(new Rectangle(250, 45, 480, 40));
+		labelIntegratori.setLayoutData(gdLabel);
+		textAreaIntegratori = new Text(top, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		textAreaIntegratori.setText(integratoriAb);
+		GridData gdTxtInte = new GridData(SWT.BORDER);
+		gdTxtInte.horizontalSpan = 2;
+		gdTxtInte.grabExcessHorizontalSpace = true;
+		gdTxtInte.horizontalAlignment = SWT.FILL;
+		textAreaIntegratori.setLayoutData(gdTxtInte);
 		
 		labelCibiNonGraditi = new Label(top, SWT.NONE);
 		labelCibiNonGraditi.setText("Cibi non graditi");
-		labelCibiNonGraditi.setBounds(new Rectangle(20, 100, 230, 20));
-		textAreaCibiNonGraditi = new Text(top, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textAreaCibiNonGraditi.setBounds(new Rectangle(250, 100, 480, 40));
+		labelCibiNonGraditi.setLayoutData(gdLabel);
+		textAreaCibiNonGraditi = new Text(top, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		textAreaCibiNonGraditi.setText(gradimentoCibiAb);
+		textAreaCibiNonGraditi.setLayoutData(gdTxtInte);
 		
 		labelPreferenzaSchema = new Label(top, SWT.NONE);
 		labelPreferenzaSchema.setText("Organizzazione schema dietetico preferita");
-		labelPreferenzaSchema.setBounds(new Rectangle(20, 155, 230, 20));
-		textAreaPreferenzaSchema = new Text(top, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textAreaPreferenzaSchema.setBounds(new Rectangle(250, 155, 480, 40));
+		labelPreferenzaSchema.setLayoutData(gdLabel);
+		textAreaPreferenzaSchema = new Text(top, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		textAreaPreferenzaSchema.setText(preferenzaSchemaAb);
+		textAreaPreferenzaSchema.setLayoutData(gdTxtInte);
 		
-		checkBoxPastoFuori = new Button(top, SWT.CHECK);
+		checkBoxPastoFuori = new Button(top, SWT.CHECK | SWT.TOP);
 		checkBoxPastoFuori.setText("Assunzione pasti fuori casa");
-		checkBoxPastoFuori.setBounds(new Rectangle(20, 200, 230, 20));
 		checkBoxPastoFuori.setSelection(pastiFuoriAb);
 		checkBoxPastoFuori.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -162,15 +168,42 @@ public class AbitudiniForm extends ListComposite{
 					}
 				});
 		
-		gruppoPastiFuori = new Group(top, SWT.CHECK);
-		gruppoPastiFuori.setBounds(new Rectangle(20, 225, 716, 138));
+		GridData gdCenter = new GridData();
+		gdCenter.horizontalAlignment = SWT.FILL;
+		gdCenter.verticalAlignment = SWT.FILL;
+		gdCenter.grabExcessHorizontalSpace = true;
+		gdCenter.grabExcessVerticalSpace = true;
+		
+		Composite center = new Composite(this, SWT.NONE);
+		center.setLayout(new GridLayout(2, false));
+		center.setLayoutData(gdCenter);
+		
+		gruppoPastiFuori = new Group(top, SWT.NONE);
+		GridData gdgruppoPastiFuori =  new GridData();
+		gdgruppoPastiFuori.horizontalAlignment = SWT.FILL;
+		gdgruppoPastiFuori.verticalAlignment = SWT.FILL;
+		gdgruppoPastiFuori.grabExcessHorizontalSpace = true;
+		gdgruppoPastiFuori.grabExcessVerticalSpace = true;
+		gdgruppoPastiFuori.horizontalSpan = 2;
+		gruppoPastiFuori.setLayoutData(gdgruppoPastiFuori);
+		gruppoPastiFuori.setLayout(new GridLayout(1,true));
 		gruppoPastiFuori.setText("Modalità pasti fuori");
 		gruppoPastiFuori.setEnabled(false);
-		
+		GridData gdTblGiorni = new GridData();
+		gdTblGiorni.horizontalAlignment = SWT.FILL;
+		gdTblGiorni.verticalAlignment = SWT.FILL;
+		gdTblGiorni.grabExcessHorizontalSpace = true;
+		gdTblGiorni.grabExcessVerticalSpace = true;
 		tableGiornoSettimanale = new Table(gruppoPastiFuori, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		tableGiornoSettimanale.setLinesVisible(true);
 		tableGiornoSettimanale.setHeaderVisible(true);
-		tableGiornoSettimanale.setBounds(new Rectangle(20, 20, 667, 106));
+		tableGiornoSettimanale.setLayoutData(gdTblGiorni);
+		
+		GridData gdtableGiornoSettimanale =  new GridData();
+		gdtableGiornoSettimanale.horizontalAlignment = SWT.FILL;
+		gdtableGiornoSettimanale.verticalAlignment = SWT.FILL;
+		gdtableGiornoSettimanale.grabExcessHorizontalSpace = true;
+		gdtableGiornoSettimanale.grabExcessVerticalSpace = true;
 		final TableEditor editorPastoFuori = new TableEditor(tableGiornoSettimanale);
 	    editorPastoFuori.horizontalAlignment = SWT.LEFT;
 	    editorPastoFuori.grabHorizontal = true;
@@ -297,16 +330,34 @@ public class AbitudiniForm extends ListComposite{
 			}
 			
 		}
+		tableGiornoSettimanale.setLayoutData(gdtableGiornoSettimanale);
+		
+		GridData gdBottom = new GridData();
+		gdBottom.horizontalAlignment = SWT.FILL;
+		gdBottom.verticalAlignment = SWT.FILL;
+		gdBottom.grabExcessHorizontalSpace = true;
+		
+		
 		
 		//ASSUNZIONE BEVANDE
-		gruppoBevande = new Group(top, SWT.NONE);
-		gruppoBevande.setBounds(new Rectangle(20, 370, 716, 155));
+		gruppoBevande = new Group(center, SWT.NONE);
 		gruppoBevande.setText("Assunzione bavande");
-		
-		tableBevande = new Table(gruppoBevande, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		GridData gdgruppoBevande =  new GridData();
+		gdgruppoBevande.horizontalAlignment = SWT.FILL;
+		gdgruppoBevande.verticalAlignment = SWT.FILL;
+		gdgruppoBevande.grabExcessHorizontalSpace = true;
+		gdgruppoBevande.grabExcessVerticalSpace = true;
+		gruppoBevande.setLayoutData(gdgruppoBevande);
+		gruppoBevande.setLayout(new GridLayout(1,false));
+		tableBevande = new Table(gruppoBevande,SWT.BORDER| SWT.CHECK | SWT.V_SCROLL | SWT.H_SCROLL);
+		GridData gdTblBevande = new GridData();
+		gdTblBevande.horizontalAlignment = SWT.FILL;
+		gdTblBevande.verticalAlignment = SWT.FILL;
+		gdTblBevande.grabExcessHorizontalSpace = true;
+		gdTblBevande.grabExcessVerticalSpace = true;
+		tableBevande.setLayoutData(gdTblBevande);
 		tableBevande.setLinesVisible(true);
 		tableBevande.setHeaderVisible(true);
-		tableBevande.setBounds(new Rectangle(20, 20, 545, 130));
 		
 		//AnamnesiDAO ad = new AnamnesiDAO(); 
 		ArrayList<Object> listBevande = ad.getListTipoBevande();
@@ -410,24 +461,29 @@ public class AbitudiniForm extends ListComposite{
 			}
 		});
 	    
-		buttonInsertBevanda = new Button(gruppoBevande, SWT.NONE);
-		buttonInsertBevanda.setBounds(new Rectangle(574, 126, 135, 23));
+		buttonInsertBevanda = new Button(center, SWT.NONE);
 		buttonInsertBevanda.setText("Inserisci nuova bevanda");
 		buttonInsertBevanda.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {						
 				createSShellInserimentoBevanda();
 			}
 		});
+		Composite bottom = new Composite(this, SWT.BORDER);
+		bottom.setLayout(new GridLayout(2, false));
+		bottom.setLayoutData(gdBottom);
 		
-	    labelNote = new Label(top, SWT.NONE);
+	    labelNote = new Label(bottom, SWT.NONE);
 		labelNote.setText("Note");
-		labelNote.setBounds(new Rectangle(19, 530, 50, 20));
-		textAreaNote = new Text(top, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textAreaNote.setBounds(new Rectangle(20, 550, 571, 30));	
+		labelNote.setLayoutData(gdLabel);
+		textAreaNote = new Text(bottom, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		textAreaNote.setText(noteAb);
+		GridData gdTxtNote = new GridData(SWT.BORDER);
+		gdTxtNote.grabExcessHorizontalSpace = true;
+		gdTxtNote.horizontalAlignment = SWT.FILL;
+		gdTxtNote.heightHint = 40;
+		textAreaNote.setLayoutData(gdTxtNote);
 		
-		buttonInsertAbitudine = new Button(top, SWT.NONE);
-		buttonInsertAbitudine.setBounds(new Rectangle(640, 550, 100, 28));
+		buttonInsertAbitudine = new Button(this, SWT.CENTER);
 		buttonInsertAbitudine.setText("Conferma");
 		buttonInsertAbitudine.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {						

@@ -45,6 +45,15 @@ public class FattureTableView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		top = new Composite(parent, SWT.NONE);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		top.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(1, false);
+		top.setLayout(glForm);
 		fatture = FatturaDAO.getFattureObject();
 		FatturaDAO fd = new FatturaDAO();
 		classVis = new TableForm(top, SWT.BORDER, fatture, "createSShellDettagliFattura","",FattureTableView.this, fd, "FattureTableView");

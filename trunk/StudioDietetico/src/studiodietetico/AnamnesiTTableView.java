@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.TabItem;
@@ -65,6 +66,25 @@ public class AnamnesiTTableView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
         top = new Composite(parent, SWT.NONE);
+        GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		top.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(2, false);
+		top.setLayout(glForm);
+		//Visualizzazione del paziente selezionato
+		labelPaziente = new Label(top, SWT.NONE);
+		labelPaziente.setText("Paziente");
+		textPaziente = new Text(top, SWT.BORDER | SWT.BOLD);
+		textPaziente.setEnabled(false);
+		//pazSelHome = PazienteDAO.getPazienti().get(2);
+		pazSelHome = PazienteTableView.getPazienteSelezionato();
+		String dataNascPazSel = pazSelHome.getDataNascita().getDay()+"/"+pazSelHome.getDataNascita().getMonth()+"/"+pazSelHome.getDataNascita().getYear();
+		textPaziente.setText(pazSelHome.getCognome()+"   "+pazSelHome.getNome()+"   "+dataNascPazSel);
+		
         createTabFolder();
 	}
 
@@ -83,19 +103,14 @@ public class AnamnesiTTableView extends ViewPart {
 	 */
 	private void createTabFolder() {
 		tabFolder = new TabFolder(top, SWT.TOP);
-		tabFolder.setBounds(new Rectangle(0, 0, 854, 680));
-		
-		//Visualizzazione del paziente selezionato
-		labelPaziente = new Label(tabFolder, SWT.NONE);
-		labelPaziente.setBounds(new Rectangle(14, 30, 82, 24));
-		labelPaziente.setText("Paziente");
-		textPaziente = new Text(tabFolder, SWT.BORDER | SWT.BOLD);
-		textPaziente.setBounds(new Rectangle(106, 30, 263, 31));
-		textPaziente.setEnabled(false);
-		//pazSelHome = PazienteDAO.getPazienti().get(2);
-		pazSelHome = PazienteTableView.getPazienteSelezionato();
-		String dataNascPazSel = pazSelHome.getDataNascita().getDay()+"/"+pazSelHome.getDataNascita().getMonth()+"/"+pazSelHome.getDataNascita().getYear();
-		textPaziente.setText(pazSelHome.getCognome()+"   "+pazSelHome.getNome()+"   "+dataNascPazSel);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.horizontalSpan = 2;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		tabFolder.setLayoutData(gdForm);
 		
 		createCompositeInterventi(tabFolder);
 		
@@ -118,7 +133,17 @@ public class AnamnesiTTableView extends ViewPart {
 	
 	//INTERVENTI
 	public void createCompositeInterventi(TabFolder tabFolder) {
-		compositeInterventi = new Composite(tabFolder, SWT.TRANSPARENT);
+		compositeInterventi = new Composite(tabFolder, SWT.NONE);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		compositeInterventi.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(1, false);
+		compositeInterventi.setLayout(glForm);
+		
 		TabItem tabItemInterventi = new TabItem(tabFolder, SWT.NONE);
 		tabItemInterventi.setText("Interventi");
 		tabItemInterventi.setControl(compositeInterventi);
@@ -127,7 +152,7 @@ public class AnamnesiTTableView extends ViewPart {
 				
 		//Richiama il costruttore della classe Form per gli interventi
 		AnamnesiShell aw = new AnamnesiShell();
-		classVis = new TableForm(compositeInterventi, SWT.BORDER, interventiPazList,"createSShellDettagliInterventi", "createSShellInserimentoInterventi", aw, ad, "InterventiTableView");
+		classVis = new TableForm(compositeInterventi, SWT.NONE, interventiPazList,"createSShellDettagliInterventi", "createSShellInserimentoInterventi", aw, ad, "InterventiTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 600));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -180,7 +205,17 @@ public class AnamnesiTTableView extends ViewPart {
 		
 	//ALLERGIE
 	private void createCompositeAllergie(TabFolder tabFolder) {
-		compositeAllergie = new Composite(tabFolder, SWT.TRANSPARENT);
+		compositeAllergie = new Composite(tabFolder, SWT.NONE);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		compositeAllergie.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(1, false);
+		compositeAllergie.setLayout(glForm);
+		
 		TabItem tabItemAllergie = new TabItem(tabFolder, SWT.NONE);
 		tabItemAllergie.setText("Allergie/Intolleranze");
 		tabItemAllergie.setControl(compositeAllergie);
@@ -189,7 +224,7 @@ public class AnamnesiTTableView extends ViewPart {
 		
 		//Richiama il costruttore della classe Form per le allergie
 		AnamnesiShell aw = new AnamnesiShell();
-		classVis = new TableForm(compositeAllergie, SWT.BORDER, allergiePazList,"createSShellDettagliAllergie", "createSShellInserimentoAllergie", aw, ad, "AllergieTableView");
+		classVis = new TableForm(compositeAllergie, SWT.NONE, allergiePazList,"createSShellDettagliAllergie", "createSShellInserimentoAllergie", aw, ad, "AllergieTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 600));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -210,7 +245,17 @@ public class AnamnesiTTableView extends ViewPart {
 	
 	//ATTIVITA' FISICA
 	private void createCompositeAttivitaFisica(TabFolder tabFolder) {
-		compositeAttivitaFisica = new Composite(tabFolder, SWT.TRANSPARENT);
+		compositeAttivitaFisica = new Composite(tabFolder, SWT.NONE);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		compositeAttivitaFisica.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(1, false);
+		compositeAttivitaFisica.setLayout(glForm);
+		
 		TabItem tabItemAttivitaFisica = new TabItem(tabFolder, SWT.NONE);
 		tabItemAttivitaFisica.setText("Attività Fisica");
 		tabItemAttivitaFisica.setControl(compositeAttivitaFisica);
@@ -219,7 +264,7 @@ public class AnamnesiTTableView extends ViewPart {
 		
 		//Richiama il costruttore della classe Form per gli sport
 		AnamnesiShell aw = new AnamnesiShell();
-		classVis = new TableForm(compositeAttivitaFisica, SWT.BORDER, sportPazList,"createSShellDettagliSport", "createSShellInserimentoSport", aw, ad, "SportTableView");
+		classVis = new TableForm(compositeAttivitaFisica, SWT.NONE, sportPazList,"createSShellDettagliSport", "createSShellInserimentoSport", aw, ad, "SportTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 600));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -241,7 +286,17 @@ public class AnamnesiTTableView extends ViewPart {
 	
 	//FARMACI
 	private void createCompositeFarmaci(TabFolder tabFolder) {
-		compositeFarmaci = new Composite(tabFolder, SWT.TRANSPARENT);
+		compositeFarmaci = new Composite(tabFolder, SWT.NONE);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		compositeFarmaci.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(1, false);
+		compositeFarmaci.setLayout(glForm);
+		
 		TabItem tabItemFarmaci = new TabItem(tabFolder, SWT.NONE);
 		tabItemFarmaci.setText("Farmaci");
 		tabItemFarmaci.setControl(compositeFarmaci);
@@ -250,7 +305,7 @@ public class AnamnesiTTableView extends ViewPart {
 		
 		//Richiama il costruttore della classe Form per gli sport
 		AnamnesiShell aw = new AnamnesiShell();
-		classVis = new TableForm(compositeFarmaci, SWT.BORDER, farmaciPazList,"createSShellDettagliFarmaco", "createSShellInserimentoFarmaco", aw, ad, "FarmaciTableView");
+		classVis = new TableForm(compositeFarmaci, SWT.NONE, farmaciPazList,"createSShellDettagliFarmaco", "createSShellInserimentoFarmaco", aw, ad, "FarmaciTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 600));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -271,7 +326,16 @@ public class AnamnesiTTableView extends ViewPart {
 	
 	//MALATTIE
 	private void createCompositeMalattie(TabFolder tabFolder) {
-		compositeMalattie = new Composite(tabFolder, SWT.TRANSPARENT);
+		compositeMalattie = new Composite(tabFolder, SWT.NONE);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		compositeMalattie.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(1, false);
+		compositeMalattie.setLayout(glForm);
 		TabItem tabItemMalattie = new TabItem(tabFolder, SWT.NONE);
 		tabItemMalattie.setText("Malattie");
 		tabItemMalattie.setControl(compositeMalattie);
@@ -280,7 +344,7 @@ public class AnamnesiTTableView extends ViewPart {
 		
 		//Richiama il costruttore della classe Form per gli sport
 		AnamnesiShell aw = new AnamnesiShell();
-		classVis = new TableForm(compositeMalattie, SWT.BORDER, malattiePazList,"createSShellDettagliMalattia", "createSShellInserimentoMalattia", aw, ad, "MalattiaTableView");
+		classVis = new TableForm(compositeMalattie, SWT.NONE, malattiePazList,"createSShellDettagliMalattia", "createSShellInserimentoMalattia", aw, ad, "MalattiaTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 600));
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
@@ -299,18 +363,27 @@ public class AnamnesiTTableView extends ViewPart {
 	
 	//ABITUDINI ALIMENTARI
 	private void createCompositeAbitudini(TabFolder tabFolder) {
-		compositeAbitudini = new Composite(tabFolder, SWT.TRANSPARENT);
+		compositeAbitudini = new Composite(tabFolder, SWT.NONE);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		compositeAbitudini.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(1, false);
+		compositeAbitudini.setLayout(glForm);
+		
 		TabItem tabItemAbitudine = new TabItem(tabFolder, SWT.NONE);
 		tabItemAbitudine.setText("Abitudini alimentari");
 		tabItemAbitudine.setControl(compositeAbitudini);
 		AnamnesiDAO ad = new AnamnesiDAO();
 		abitudinePazList = ad.getAbitudineByPaziente(pazSelHome);
 				
-		abitudini = new AbitudiniForm(compositeAbitudini, SWT.BORDER);
-		abitudini.setBounds(new Rectangle(6, 50, 800, 600));
+		abitudini = new AbitudiniForm(compositeAbitudini, SWT.NONE);
 		abitudini.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		abitudini.setLayout(new GridLayout(1, true));
-		abitudini.setBackground(Utils.getStandardWhiteColor());
+		abitudini.setBackground(compositeAbitudini.getBackground());
 		
 		
 	}

@@ -17,6 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 
@@ -70,7 +71,16 @@ public class RegistraFatturaView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-        top = new Composite(parent, SWT.NONE);
+		top = new Composite(parent, SWT.NONE);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		top.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(1, false);
+		top.setLayout(glForm);
         labelFattura = new Label(top, SWT.WRAP);
         labelFattura.setBounds(new Rectangle(10, 9, 155, 48));
         labelFattura.setText("Si desidera creare una nuova fattura o associare una fattura esistente?");
