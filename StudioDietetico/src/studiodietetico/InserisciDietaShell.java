@@ -43,7 +43,7 @@ public class InserisciDietaShell {
 	private Label lShellIns = null;
 	private int nGiorni = 0;
 
-	private Shell shellInsSchemaDietetico = null;  //  @jve:decl-index=0:visual-constraint="10,4"
+	public Shell shellInsSchemaDietetico = null;  //  @jve:decl-index=0:visual-constraint="10,4"
 	private Group groupSchemaDieta = null;
 	private Label lDescrizione = null;
 	private Text textDescrizione = null;
