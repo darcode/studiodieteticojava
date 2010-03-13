@@ -85,7 +85,7 @@ public class RisultatoAnalisiView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		top = new Composite(parent, SWT.NONE);
-		GridData gdForm = new GridData(SWT.NONE);
+/*		GridData gdForm = new GridData(SWT.NONE);
 		gdForm.grabExcessVerticalSpace = true;
 		gdForm.grabExcessHorizontalSpace = true;
 		gdForm.horizontalAlignment = SWT.FILL;
@@ -93,7 +93,7 @@ public class RisultatoAnalisiView extends ViewPart {
 		gdForm.verticalAlignment = SWT.FILL;
 		top.setLayoutData(gdForm);
 		GridLayout glForm = new GridLayout(1, false);
-		top.setLayout(glForm);
+		top.setLayout(glForm);*/
 		labelPaziente = new Label(top, SWT.NONE);
 		labelPaziente.setBounds(new Rectangle(36, 45, 49, 13));
 		labelPaziente.setText("Paziente");
