@@ -368,7 +368,9 @@ INSERT INTO `funzione` (`idFunzione`,`Descrizione`) VALUES
  (30,'FUNZIONE_FATTURA_VISITA'),
  (31,'FUNZIONE_VISITA_CONT'),
  (32,'FUNZIONE_MEDICO_INS'),
- (33,'FUNZIONE_MEDICO_UPDATE');
+ (33,'FUNZIONE_MEDICO_UPDATE'),
+ (34,'MenuEsameClinicoRicerca'),
+ (35,'MenuParametroAntropometricoRicerca');
 /*!40000 ALTER TABLE `funzione` ENABLE KEYS */;
 
 
@@ -1047,7 +1049,9 @@ INSERT INTO `ruolo_funzione` (`idRuolo`,`idFunzione`) VALUES
  (3,32),
  (1,33),
  (2,33),
- (3,33);
+ (3,33),
+ (1,34),
+ (1,35);
 /*!40000 ALTER TABLE `ruolo_funzione` ENABLE KEYS */;
 
 
