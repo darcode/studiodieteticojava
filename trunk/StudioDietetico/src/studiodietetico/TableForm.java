@@ -267,6 +267,16 @@ public class TableForm extends ListComposite {
 					ordinamentoStringhe(tableVisualizzazione, 5);
 					
 				}
+				else if (classeChiamante.equalsIgnoreCase("EsameClinicoTableView")) {
+					nascondiColonne(new int[]{0});
+					ordinamentoStringhe(tableVisualizzazione, 1);
+					ordinamentoStringhe(tableVisualizzazione, 2);
+				}
+				else if (classeChiamante.equalsIgnoreCase("ParametroAntropometricoTableView")) {
+					nascondiColonne(new int[]{0});
+					ordinamentoStringhe(tableVisualizzazione, 1);
+					ordinamentoStringhe(tableVisualizzazione, 2);
+				}
 				else if (classeChiamante.equalsIgnoreCase("MalattiaTableView")) {
 					nascondiColonne(new int[]{0,1});
 					ordinamentoStringhe(tableVisualizzazione, 2);
@@ -336,6 +346,12 @@ public class TableForm extends ListComposite {
 		}
 		if (classeChiamante=="VisitaTableView") {
 			buttonInsert.setText("Registra nuova visita");
+		}
+		if (classeChiamante=="VisitaTableView") {
+			buttonInsert.setText("Registra nuovo esame clinico");
+		}
+		if (classeChiamante=="VisitaTableView") {
+			buttonInsert.setText("Registra nuovo parametro");
 		}
 		
 		buttonElimina = new Button(top, SWT.NONE);
