@@ -88,6 +88,7 @@ public class DietaTableView extends ViewPart {
 						.parseInt(itemSel.getText(0)), false);
 
 		dietaShell.createShellInsSchemaDietetico();
+		dietaShell.shellInsSchemaDietetico.setText("Modifica Schema Dietetico");
 	}
 
 	public static void aggiungiColonne(TableForm classVis,
