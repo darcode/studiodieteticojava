@@ -122,6 +122,15 @@ public class VisitaTableView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		top = new Composite(parent, SWT.NONE);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		top.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(1, false);
+		top.setLayout(glForm);
 		visite = VisitaDAO.getVisite();
 		VisitaDAO vd = new VisitaDAO();
 		classVis = new TableForm(top, SWT.BORDER, visite, "createSShellDettagliVisita","createSShellRegistraVisita",VisitaTableView.this, vd, "VisitaTableView");

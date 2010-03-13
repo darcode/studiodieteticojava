@@ -261,7 +261,6 @@ public class ListComposite extends Composite {
 					if (valuesObj[j]!=null)
 						values[j]=valuesObj[j].toString();
 				}
-
 				tblItem.setText(values);
 			}
 		}

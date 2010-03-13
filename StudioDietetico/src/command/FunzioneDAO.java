@@ -26,13 +26,10 @@ public class FunzioneDAO extends BaseDAO {
 	public static Set getFunzioniAsSet(int[] id) throws Exception {
 		Set funzioni = new HashSet();
 		try {
-			begin();
-			
 			for(int item:id){
 				Query q = getSession().createQuery("from Funzione where idFunzione = " + (item+1));
 				funzioni.add(q.uniqueResult());
 			}
-			commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

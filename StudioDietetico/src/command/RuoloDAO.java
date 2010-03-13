@@ -68,9 +68,9 @@ public class RuoloDAO extends BaseDAO{
 		try {
 			begin();
 			ruolo.setFunziones(FunzioneDAO.getFunzioniAsSet(idFunzioni));
-			getSession().update(ruolo);
+			getSession().saveOrUpdate(ruolo);
 			commit();
-			getSession().flush();
+			close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

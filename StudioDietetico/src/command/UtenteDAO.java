@@ -10,6 +10,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 
+import studiodietetico.Activator;
+
 public class UtenteDAO extends BaseDAO {
 	public UtenteDAO() {
 	}
@@ -116,6 +118,24 @@ public class UtenteDAO extends BaseDAO {
 			Set functions  = utente.getRuolo().getFunziones();
 				for(Object item: functions){
 					if(function.equals(((Funzione)item).getDescrizione()))
+						return true;
+				}
+				return false;
+		}
+		else
+			return false;
+		
+	}
+	public static boolean hasFunction(int function) {
+		begin();
+		Utente utente = Activator.getUser();
+		if (utente == null) return false;
+
+		if(utente!= null && utente.getRuolo()!= null && utente.getRuolo().getFunziones()!= null){
+			
+			Set functions  = utente.getRuolo().getFunziones();
+				for(Object item: functions){
+					if(function == (((Funzione)item).getIdFunzione()))
 						return true;
 				}
 				return false;

@@ -16,6 +16,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
@@ -70,7 +72,15 @@ public class InserisciRicettaView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		top = new Composite(parent, SWT.NONE);
-		
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		top.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(1, false);
+		top.setLayout(glForm);
 		lNomeRicetta = new Label(top, SWT.NONE);
         lNomeRicetta.setBounds(new Rectangle(19, 213, 74, 20));
         lNomeRicetta.setText("*Nome ricetta");

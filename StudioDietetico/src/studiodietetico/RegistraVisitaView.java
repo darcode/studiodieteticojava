@@ -18,6 +18,8 @@ import org.eclipse.swt.widgets.Button;
 
 import command.MedicoDAO;
 import command.VisitaDAO;
+
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Group;
 
@@ -51,8 +53,16 @@ public class RegistraVisitaView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-        top = new Composite(parent, SWT.NONE);
-
+		top = new Composite(parent, SWT.NONE);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		top.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(1, false);
+		top.setLayout(glForm);
         labelSelezPrenotaz = new Label(top, SWT.WRAP);
         labelSelezPrenotaz.setBounds(new Rectangle(10, 15, 141, 32));
         labelSelezPrenotaz.setText("* Seleziona la prenotazione per la data odierna:");

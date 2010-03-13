@@ -60,7 +60,7 @@ public class RegistrazioneForm extends ListComposite {
 		gdCmp.horizontalAlignment = SWT.FILL;
 		gdCmp.verticalAlignment = SWT.FILL;
 		gdCmp.horizontalSpan = 2;
-		gdCmp.heightHint = 350;
+		gdCmp.minimumHeight = 250;
 		cmp.setLayoutData(gdCmp);
 		// cmp.setLayoutData(new GridData());
 		cmp.setLayout(new GridLayout(2, false));
@@ -88,9 +88,7 @@ public class RegistrazioneForm extends ListComposite {
 		utente = new Text(cmp, SWT.BORDER);
 		GridData layoutData = new GridData(SWT.FILL);
 		layoutData.grabExcessHorizontalSpace = true;
-		layoutData.verticalAlignment = SWT.FILL;
 		layoutData.horizontalAlignment = SWT.FILL;
-		layoutData.grabExcessVerticalSpace = true;
 
 		utente.setFont(font);
 		utente.setLayoutData(layoutData);
@@ -329,13 +327,13 @@ public class RegistrazioneForm extends ListComposite {
 			return;
 		}
 		Ruolo ruolo = RuoloDAO.get(ruoloCombo.getText());
+		System.out.println(ruolo.getIdRuolo());
 		if (ruolo == null) {
 			Utils.showMessageError("Ruolo non esistente");
 		} else {
 			if (RuoloDAO
 					.updateRuolo(ruolo, tblFunzioniUp.getSelectionIndices())) {
 				Utils.showMessageInfo("Operazione eseguita con successo");
-				profilo.add(nomeRuolo.getText());
 			} else {
 				Utils.showMessageError("Modifica non riuscita");
 			}

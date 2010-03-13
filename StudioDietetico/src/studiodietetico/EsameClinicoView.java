@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.swing.text.TabExpander;
 
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -73,9 +74,16 @@ public class EsameClinicoView extends ViewPart {
 	private TableViewer tableViewer = null;
 	@Override
 	public void createPartControl(Composite parent) {
-		// TODO Auto-generated method stub
 		top = new Composite(parent, SWT.NONE);
-		top.setLayout(null);
+		GridData gdForm = new GridData(SWT.NONE);
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.verticalAlignment = SWT.FILL;
+		top.setLayoutData(gdForm);
+		GridLayout glForm = new GridLayout(1, false);
+		top.setLayout(glForm);
 		btnAnnulla = new Button(top, SWT.NONE);
 		btnAnnulla.setText("Annulla");
 		btnAnnulla.setBounds(new Rectangle(537, 501, 65, 23));
