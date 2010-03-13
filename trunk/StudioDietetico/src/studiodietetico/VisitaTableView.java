@@ -28,11 +28,13 @@ import org.eclipse.ui.part.ViewPart;
 
 import command.FatturaDAO;
 import command.MedicoDAO;
+import command.UtenteDAO;
 import command.VisitaDAO;
 
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Combo;
 
+import security.IFunzioniConstants;
 import service.Utils;
 
 public class VisitaTableView extends ViewPart {
@@ -138,7 +140,8 @@ public class VisitaTableView extends ViewPart {
 		classVis.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
-		
+		classVis.getButtonElimina().setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_VISITA));
+		classVis.getButtonInsert().setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_VISITA));
 		classVis.nascondiColonne(new int[] {0,1,2,3,6,7,8});
 
 		aggiungiColonne(classVis, visite);
@@ -163,10 +166,11 @@ public class VisitaTableView extends ViewPart {
 				}
 			}
 		});
-		
+		buttonCreaAssociaFattura.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_FATTURA_VISITA));
 		Button buttonAssociaFattura = new Button(classVis.top, SWT.NONE);
 		buttonAssociaFattura.setBounds(420, 284, 150, 25);
 		buttonAssociaFattura.setText("Associa ad un conto");
+		buttonAssociaFattura.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_FATTURA_VISITA));
 		buttonAssociaFattura.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				if(classVis.getTableVisualizzazione().getSelectionCount()>0) {
@@ -276,6 +280,9 @@ public class VisitaTableView extends ViewPart {
 		textAreaNoteFattura = new Text(sShellNuovaFattura, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		textAreaNoteFattura.setBounds(new Rectangle(124, 172, 276, 84));
 		buttonRegistraFattura = new Button(sShellNuovaFattura, SWT.NONE);
+		//		GESTIONE SICUREZZA - RUOLO
+		buttonRegistraFattura.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_FATTURA_VISITA));
+
 		buttonRegistraFattura.setBounds(new Rectangle(135, 270, 142, 29));
 		buttonRegistraFattura.setText("Registra/Associa fattura");
 		buttonRegistraFattura
@@ -312,6 +319,7 @@ public class VisitaTableView extends ViewPart {
 		buttonAnnullaFattura = new Button(sShellNuovaFattura, SWT.NONE);
 		buttonAnnullaFattura.setBounds(new Rectangle(286, 270, 107, 29));
 		buttonAnnullaFattura.setText("Annulla");
+		buttonAnnullaFattura.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_FATTURA_VISITA));
 		createCompositeAcconto();
 		labelDescrizioneFattura = new Label(sShellNuovaFattura, SWT.WRAP);
 		labelDescrizioneFattura.setBounds(new Rectangle(8, 6, 62, 35));
@@ -322,6 +330,7 @@ public class VisitaTableView extends ViewPart {
 		buttonAggiornaFattura.setBounds(new Rectangle(135, 270, 142, 29));
 		buttonAggiornaFattura.setText("Aggiorna/Associa fattura");
 		buttonAggiornaFattura.setVisible(false);
+		buttonAggiornaFattura.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_FATTURA_VISITA));
 		buttonAggiornaFattura
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {

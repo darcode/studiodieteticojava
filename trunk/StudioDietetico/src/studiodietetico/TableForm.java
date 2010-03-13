@@ -37,6 +37,22 @@ public class TableForm extends ListComposite {
 	private Label labelSelItem;
 	private Table tableVisualizzazione = null;
 	private Button buttonInsert;
+	public Button getButtonInsert() {
+		return buttonInsert;
+	}
+
+	public void setButtonInsert(Button buttonInsert) {
+		this.buttonInsert = buttonInsert;
+	}
+
+	public Button getButtonElimina() {
+		return buttonElimina;
+	}
+
+	public void setButtonElimina(Button buttonElimina) {
+		this.buttonElimina = buttonElimina;
+	}
+
 	private Button buttonElimina;
 	private TableItem rigaTableClick;
 	private CCombo cComboColonne = null;
