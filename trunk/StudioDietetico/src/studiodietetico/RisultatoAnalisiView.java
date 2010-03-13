@@ -299,7 +299,7 @@ public class RisultatoAnalisiView extends ViewPart {
 				String dateString = calendar.getYear ()+"-"+(calendar.getMonth () + 1)+"-"+calendar.getDay ()+" 00:00:00";
 				String formato = "yyyy-MM-dd HH:mm:ss";
 				dn = Utils.convertStringToDate(dateString, formato);
-				lblData.setText(dn.toString());
+				lblData.setText("" + dateString);
 				ShellCalendario.close ();
 			}
 		});
