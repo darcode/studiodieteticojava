@@ -5,11 +5,21 @@ import hibernate.Parametroesame;
 
 import java.util.ArrayList;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 
 
 public class EsameClinicoDAO extends BaseDAO{
 
+	public static ArrayList<Object> getEsameClinicoObject(){
+		Criteria criteria = getSession().createCriteria(hibernate.Esameclinico.class);
+		begin();
+		ArrayList<Object> ris = (ArrayList<Object>)criteria.list();
+		commit();
+		//close();
+		return ris;
+	}
+	
 	public Esameclinico registranewEsame(String nome,String descrizione){
 		//close();
 		getSession();
@@ -62,6 +72,16 @@ public class EsameClinicoDAO extends BaseDAO{
 		getSession();
 		begin();
 		Query q = getSession().createQuery(" FROM Esameclinico p where Nome ='" + nomeesame +  "'");
+		commit();
+		Esameclinico esame = (Esameclinico)q.uniqueResult();
+		return esame;
+
+	}
+	
+	public static Esameclinico getEsameClinico(Integer idesame) {
+		getSession();
+		begin();
+		Query q = getSession().createQuery(" FROM Esameclinico p where id ='" + idesame +  "'");
 		commit();
 		Esameclinico esame = (Esameclinico)q.uniqueResult();
 		return esame;
