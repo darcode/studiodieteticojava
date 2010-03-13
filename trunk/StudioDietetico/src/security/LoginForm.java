@@ -33,25 +33,29 @@ public class LoginForm extends ListComposite {
 		gdForm.horizontalAlignment = SWT.CENTER;
 		gdForm.verticalAlignment = SWT.CENTER;
 		this.setLayoutData(gdForm);
-		GridLayout glForm = new GridLayout(1, true);
+		GridLayout glForm = new GridLayout(2, false);
 		this.setLayout(glForm);
 		Color white = Utils.getStandardWhiteColor();
 		this.setBackground(white);
-		Label label = new Label(this, SWT.NONE);
+		Text label = new Text(this, SWT.MULTI | SWT.NONE);
 		label.setBackground(Utils.getStandardWhiteColor());
 		GridData gdLabel = new GridData();
 		gdLabel.horizontalAlignment = SWT.CENTER;
 		gdLabel.grabExcessHorizontalSpace = true;
-		gdLabel.heightHint = 100;
 		label.setLayoutData(gdLabel);
 		label.setFont(font);
-		label.setText("Benvenuto " + Activator.getUser().getNomeUtente());
+		label.setText("Piatto ricco mi ci ficco\n\n" +
+				"Se non è zuppa è pan bagnato\n\n" +
+				"Tutto ciò che è proibito, è boccon dell'appetito\n\n" +
+				"Non si vive di solo pane\n\n" +
+				"La cipolla ha parecchie virtù, e una almeno la senti anche tu\n\n" +
+				"Il pane mangiato è presto dimenticato");
 		Composite cmp = new Composite(this, SWT.BORDER);
 		GridData gdCmp = new GridData(SWT.BORDER);
 		gdCmp.heightHint = 400;
 		gdCmp.widthHint = 400;
 		gdCmp.horizontalAlignment = SWT.CENTER;
-		gdCmp.verticalAlignment = SWT.CENTER;
+		gdCmp.verticalAlignment = SWT.BOTTOM;
 		cmp.setLayoutData(gdCmp);
 		// cmp.setLayoutData(new GridData());
 		cmp.setLayout(new GridLayout(1, false));
