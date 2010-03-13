@@ -1,7 +1,7 @@
 -- MySQL Administrator dump 1.4
 --
 -- ------------------------------------------------------
--- Server version	5.0.45-community-nt
+-- Server version	5.0.88-community-nt
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -328,7 +328,7 @@ CREATE TABLE `funzione` (
   `idFunzione` int(10) unsigned NOT NULL auto_increment,
   `Descrizione` varchar(45) NOT NULL,
   PRIMARY KEY  (`idFunzione`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `funzione`
@@ -358,7 +358,17 @@ INSERT INTO `funzione` (`idFunzione`,`Descrizione`) VALUES
  (20,'MenuPazienteRicerca'),
  (21,'MenuDietaRicerca'),
  (22,'MenuTurniRicerca'),
- (23,'MenuVisitaRicerca');
+ (23,'MenuVisitaRicerca'),
+ (24,'FUNZIONE_PAZIENTE'),
+ (25,'FUNZIONE_PRENOTAZIONE_VISITA'),
+ (26,'FUNZIONE_DIETA'),
+ (27,'FUNZIONE_ANAMNESI'),
+ (28,'FUNZIONE_VISITA'),
+ (29,'FUNZIONE_REGISTRAZIONE'),
+ (30,'FUNZIONE_FATTURA_VISITA'),
+ (31,'FUNZIONE_VISITA_CONT'),
+ (32,'FUNZIONE_MEDICO_INS'),
+ (33,'FUNZIONE_MEDICO_UPDATE');
 /*!40000 ALTER TABLE `funzione` ENABLE KEYS */;
 
 
@@ -712,8 +722,9 @@ CREATE TABLE `prenotazione` (
   PRIMARY KEY  (`idPrenotazione`),
   KEY `FK8_Paziente` (`idPaziente`),
   KEY `FK_TipologiaVisita1` USING BTREE (`idTipologiaVisita`),
+  KEY `FK_TipologiaVisita` (`idTipologiaVisita`),
   CONSTRAINT `FK8_Paziente` FOREIGN KEY (`idPaziente`) REFERENCES `paziente` (`idPaziente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_TipologiaVisita` FOREIGN KEY (`idTipologiaVIsita`) REFERENCES `tipologiavisita` (`idTipologiaVisita`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK_TipologiaVisita` FOREIGN KEY (`idTipologiaVisita`) REFERENCES `tipologiavisita` (`idTipologiaVisita`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 --
@@ -933,7 +944,7 @@ CREATE TABLE `ruolo` (
   `idRuolo` int(10) unsigned NOT NULL auto_increment,
   `descrizione` varchar(45) NOT NULL,
   PRIMARY KEY  (`idRuolo`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ruolo`
@@ -942,7 +953,8 @@ CREATE TABLE `ruolo` (
 /*!40000 ALTER TABLE `ruolo` DISABLE KEYS */;
 INSERT INTO `ruolo` (`idRuolo`,`descrizione`) VALUES 
  (1,'Amministratore'),
- (2,'Segreteria');
+ (2,'Segreteria'),
+ (3,'Medico');
 /*!40000 ALTER TABLE `ruolo` ENABLE KEYS */;
 
 
@@ -967,29 +979,79 @@ CREATE TABLE `ruolo_funzione` (
 /*!40000 ALTER TABLE `ruolo_funzione` DISABLE KEYS */;
 INSERT INTO `ruolo_funzione` (`idRuolo`,`idFunzione`) VALUES 
  (1,1),
+ (2,1),
  (1,2),
+ (3,2),
  (1,3),
+ (2,3),
  (1,4),
+ (2,4),
+ (3,4),
  (1,5),
+ (3,5),
  (1,6),
+ (3,6),
  (1,7),
+ (3,7),
  (1,8),
+ (3,8),
  (1,9),
+ (3,9),
  (1,10),
+ (3,10),
  (1,11),
+ (2,11),
+ (3,11),
  (1,12),
+ (3,12),
  (1,13),
+ (2,13),
+ (3,13),
  (1,14),
+ (2,14),
  (1,15),
+ (2,15),
+ (3,15),
  (1,16),
  (1,17),
+ (3,17),
  (1,18),
+ (3,18),
  (1,19),
+ (2,19),
+ (3,19),
  (1,20),
+ (2,20),
+ (3,20),
  (1,21),
+ (3,21),
  (1,22),
+ (2,22),
+ (3,22),
  (1,23),
- (2,14);
+ (2,23),
+ (3,23),
+ (1,24),
+ (2,24),
+ (3,24),
+ (1,25),
+ (2,25),
+ (1,26),
+ (3,26),
+ (1,27),
+ (3,27),
+ (1,28),
+ (3,28),
+ (1,29),
+ (1,30),
+ (2,30),
+ (1,31),
+ (2,31),
+ (1,32),
+ (2,32),
+ (1,33),
+ (2,33),
+ (3,33);
 /*!40000 ALTER TABLE `ruolo_funzione` ENABLE KEYS */;
 
 
@@ -1056,13 +1118,16 @@ CREATE TABLE `tipologiabevanda` (
   `Nome` varchar(45) NOT NULL,
   `Descrizione` varchar(45) default NULL,
   PRIMARY KEY  (`idTipologiaBevanda`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tipologiabevanda`
 --
 
 /*!40000 ALTER TABLE `tipologiabevanda` DISABLE KEYS */;
+INSERT INTO `tipologiabevanda` (`idTipologiaBevanda`,`Nome`,`Descrizione`) VALUES 
+ (1,'Taurina','elemento energizzante'),
+ (2,'Aranciata','naturale');
 /*!40000 ALTER TABLE `tipologiabevanda` ENABLE KEYS */;
 
 
@@ -1200,7 +1265,7 @@ CREATE TABLE `utente` (
   PRIMARY KEY  (`idUtente`),
   KEY `FK_utente_ruolo` (`idRuolo`),
   CONSTRAINT `FK_utente_ruolo` FOREIGN KEY (`idRuolo`) REFERENCES `ruolo` (`idRuolo`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `utente`
@@ -1208,8 +1273,9 @@ CREATE TABLE `utente` (
 
 /*!40000 ALTER TABLE `utente` DISABLE KEYS */;
 INSERT INTO `utente` (`idUtente`,`nomeUtente`,`password`,`idRuolo`) VALUES 
- (1,'Admin','admin',1);
-  (2,'segretaria','segretaria',2);
+ (1,'Admin','admin',1),
+ (2,'segretaria','segretaria',2),
+ (3,'Medico','medico',3);
 /*!40000 ALTER TABLE `utente` ENABLE KEYS */;
 
 
