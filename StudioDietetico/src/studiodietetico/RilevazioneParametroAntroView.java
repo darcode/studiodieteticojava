@@ -266,12 +266,6 @@ public class RilevazioneParametroAntroView extends ViewPart {
 								.getPrenotazioniGiorno(calendar.getYear(),
 										(calendar.getMonth() + 1), calendar
 												.getDay());
-						textAreaPrenotazioniOdierne
-								.setText("N. di prenotazioni per il "
-										+ calendar.getDay() + "/"
-										+ (calendar.getMonth() + 1) + "/"
-										+ calendar.getYear() + " = "
-										+ prenotGiorno.size() + "\n");
 						for (Prenotazione prenotazione : prenotGiorno) {
 							textAreaPrenotazioniOdierne
 									.append("ore: "
@@ -329,7 +323,7 @@ public class RilevazioneParametroAntroView extends ViewPart {
 						+ " 00:00:00";
 				String formato = "yyyy-MM-dd HH:mm:ss";
 				dn = Utils.convertStringToDate(dateString, formato);
-				lblData.setText(dn.toString());
+				lblData.setText("" + dateString);
 				ShellCalendario.close();
 			}
 		});
