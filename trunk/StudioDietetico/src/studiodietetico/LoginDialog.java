@@ -120,9 +120,6 @@ public class LoginDialog extends JDialog {
 		Utente ute = UtenteDAO.get(username, password);
 		if( ute != null){
 			Activator.setUser(ute);
-			MessageBox msg = new MessageBox(new Shell());
-			msg.setMessage("Benvenuto "+ username);
-			msg.open();
 			risultato = 1;
 			this.dispose();
 		}else{

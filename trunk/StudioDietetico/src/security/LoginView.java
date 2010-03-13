@@ -17,7 +17,7 @@ import common.Utils;
 public class LoginView extends ViewPart implements
 		 ICommonConstants {
 
-	public static final String ID_VIEW = graficiViewID;
+	public static final String ID_VIEW = loginViewID;
 	private Color whiteColor = Utils.getStandardWhiteColor();
 	private LoginForm form;
 
