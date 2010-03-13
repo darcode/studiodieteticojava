@@ -29,6 +29,7 @@ public class InserisciParametroAntropometricoShell {
 	private ParametroAntropometricoDAO parametroDAO;
 	int idparametro  = 0;
 	private Parametroantropometrico parametromem =  null;
+	private Button buttonChiudi = null;
 	
 
 	public InserisciParametroAntropometricoShell() {
@@ -49,18 +50,27 @@ public class InserisciParametroAntropometricoShell {
 		sShell.setSize(new Point(275, 217));
 		sShell.setLayout(null);
 		label = new Label(sShell, SWT.NONE);
-		label.setBounds(new Rectangle(15, 14, 33, 13));
+		label.setBounds(new Rectangle(15, 14, 46, 13));
 		label.setText("*Nome");
 		label1 = new Label(sShell, SWT.NONE);
-		label1.setBounds(new Rectangle(16, 76, 54, 13));
+		label1.setBounds(new Rectangle(16, 76, 65, 13));
 		label1.setText("Descrizione");
 		txtnome = new Text(sShell, SWT.BORDER);
 		txtnome.setBounds(new Rectangle(14, 34, 123, 19));
 		txtDescrizione = new Text(sShell, SWT.BORDER);
 		txtDescrizione.setBounds(new Rectangle(15, 95, 126, 19));
 		btnRegistra = new Button(sShell, SWT.NONE);
-		btnRegistra.setBounds(new Rectangle(135, 134, 105, 23));
+		btnRegistra.setBounds(new Rectangle(145, 134, 110, 23));
 		btnRegistra.setText("Registra Parametro");
+		buttonChiudi = new Button(sShell, SWT.NONE);
+		buttonChiudi.setBounds(new Rectangle(50, 134, 90, 23));
+		buttonChiudi.setText("Chiudi");
+		buttonChiudi
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						sShell.close();
+					}
+				});
 		btnRegistra.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				ParametroAntropometricoDAO p = new ParametroAntropometricoDAO();

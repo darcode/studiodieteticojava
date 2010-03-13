@@ -57,6 +57,7 @@ public class InserisciEsameClinicoShell {
 	private EsameClinicoDAO esameClinicoDao ;
 	private Button btnRegistra = null;
 	private Esameclinico esamemem = null;  //  @jve:decl-index=0:
+	private Button buttonChiudi = null;
 
 
 	public InserisciEsameClinicoShell() {
@@ -135,8 +136,17 @@ public class InserisciEsameClinicoShell {
 		createGroupEsame();
 		createGroupParametroEsame();
 		btnRegistra = new Button(sShell, SWT.NONE);
-		btnRegistra.setBounds(new Rectangle(535, 368, 86, 23));
+		btnRegistra.setBounds(new Rectangle(535, 368, 98, 23));
 		btnRegistra.setText("Registra Esame");
+		buttonChiudi = new Button(sShell, SWT.NONE);
+		buttonChiudi.setBounds(new Rectangle(432, 368, 98, 23));
+		buttonChiudi.setText("Chiudi");
+		buttonChiudi
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						sShell.close();
+					}
+				});
 		btnRegistra.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				Esameclinico esame;
@@ -195,12 +205,12 @@ public class InserisciEsameClinicoShell {
 		txtDescrizione = new Text(groupEsame, SWT.BORDER);
 		txtDescrizione.setBounds(new Rectangle(146, 32, 118, 19));
 		label1 = new Label(groupEsame, SWT.NONE);
-		label1.setBounds(new Rectangle(146, 19, 54, 13));
+		label1.setBounds(new Rectangle(146, 19, 67, 13));
 		label1.setText("Descrizione");
 		txtnome = new Text(groupEsame, SWT.BORDER);
 		txtnome.setBounds(new Rectangle(6, 33, 109, 19));
 		label = new Label(groupEsame, SWT.NONE);
-		label.setBounds(new Rectangle(7, 19, 33, 13));
+		label.setBounds(new Rectangle(7, 19, 49, 13));
 		label.setText("*Nome");
 	}
 
@@ -216,20 +226,20 @@ public class InserisciEsameClinicoShell {
 		txtnomeparametro = new Text(groupParametroEsame, SWT.BORDER);
 		txtnomeparametro.setBounds(new Rectangle(7, 28, 106, 19));
 		label2 = new Label(groupParametroEsame, SWT.NONE);
-		label2.setBounds(new Rectangle(7, 14, 33, 13));
+		label2.setBounds(new Rectangle(7, 14, 48, 13));
 		label2.setText("*Nome");
 		txtDescrizioneParametro = new Text(groupParametroEsame, SWT.BORDER);
 		txtDescrizioneParametro.setBounds(new Rectangle(128, 27, 106, 19));
 		label11 = new Label(groupParametroEsame, SWT.NONE);
-		label11.setBounds(new Rectangle(129, 13, 60, 13));
+		label11.setBounds(new Rectangle(129, 13, 68, 13));
 		label11.setText("Descrizione");
 		txtMinUomo = new Text(groupParametroEsame, SWT.BORDER);
 		txtMinUomo.setBounds(new Rectangle(6, 73, 76, 19));
 		label21 = new Label(groupParametroEsame, SWT.NONE);
-		label21.setBounds(new Rectangle(5, 60, 76, 13));
+		label21.setBounds(new Rectangle(5, 60, 86, 13));
 		label21.setText("Val. Min. Uomo");
 		label22 = new Label(groupParametroEsame, SWT.NONE);
-		label22.setBounds(new Rectangle(104, 60, 79, 13));
+		label22.setBounds(new Rectangle(104, 60, 88, 13));
 		label22.setText("Val. Max. Uomo");
 		txtMaxUomo = new Text(groupParametroEsame, SWT.BORDER);
 		txtMaxUomo.setBounds(new Rectangle(105, 72, 76, 19));
@@ -238,23 +248,23 @@ public class InserisciEsameClinicoShell {
 		txtMaxDonna = new Text(groupParametroEsame, SWT.BORDER);
 		txtMaxDonna.setBounds(new Rectangle(304, 72, 76, 19));
 		label211 = new Label(groupParametroEsame, SWT.NONE);
-		label211.setBounds(new Rectangle(204, 59, 79, 13));
+		label211.setBounds(new Rectangle(204, 59, 89, 13));
 		label211.setText("Val. Min. Donna");
 		label221 = new Label(groupParametroEsame, SWT.NONE);
-		label221.setBounds(new Rectangle(302, 60, 83, 13));
+		label221.setBounds(new Rectangle(302, 60, 89, 13));
 		label221.setText("Val. Max. Donna");
 		txtMinBambino = new Text(groupParametroEsame, SWT.BORDER);
 		txtMinBambino.setBounds(new Rectangle(408, 73, 76, 19));
 		txtMaxBambino = new Text(groupParametroEsame, SWT.BORDER);
 		txtMaxBambino.setBounds(new Rectangle(512, 71, 76, 19));
 		label212 = new Label(groupParametroEsame, SWT.NONE);
-		label212.setBounds(new Rectangle(408, 61, 88, 13));
+		label212.setBounds(new Rectangle(408, 61, 98, 13));
 		label212.setText("Val. Min. Bambino");
 		label222 = new Label(groupParametroEsame, SWT.NONE);
-		label222.setBounds(new Rectangle(513, 58, 90, 13));
+		label222.setBounds(new Rectangle(513, 58, 97, 13));
 		label222.setText("Val. Max. Bambino");
 		btnAggiungiParametro = new Button(groupParametroEsame, SWT.NONE);
-		btnAggiungiParametro.setBounds(new Rectangle(295, 106, 104, 23));
+		btnAggiungiParametro.setBounds(new Rectangle(282, 106, 117, 23));
 		btnAggiungiParametro.setText("Aggiungi Parametro");
 		btnAggiungiParametro
 		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
@@ -288,7 +298,7 @@ public class InserisciEsameClinicoShell {
 			}
 		});
 		btnEliminaParametro = new Button(groupParametroEsame, SWT.NONE);
-		btnEliminaParametro.setBounds(new Rectangle(408, 106, 101, 23));
+		btnEliminaParametro.setBounds(new Rectangle(408, 106, 107, 23));
 		btnEliminaParametro.setText("Elimina Parametro");
 		btnEliminaParametro
 		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
