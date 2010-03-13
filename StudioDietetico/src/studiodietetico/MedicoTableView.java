@@ -18,10 +18,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 
 import command.MedicoDAO;
+import command.UtenteDAO;
 
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.graphics.Point;
 
+import security.IFunzioniConstants;
 import service.Utils;
 
 public class MedicoTableView extends ViewPart {
@@ -83,6 +85,8 @@ public class MedicoTableView extends ViewPart {
 		classVis.setLayout(new GridLayout(1, true));
 		classVis.setBackground(Utils.getStandardWhiteColor());
 		
+		classVis.getButtonInsert().setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_MEDICO_INS));
+		classVis.getButtonElimina().setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_MEDICO_UPDATE));
 		classVis.nascondiColonne(new int[] {0,1,4,5,8,9,13});
 		
 		classVis.aggiornaCombo();
