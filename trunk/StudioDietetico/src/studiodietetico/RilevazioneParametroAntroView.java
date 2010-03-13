@@ -81,7 +81,7 @@ public class RilevazioneParametroAntroView extends ViewPart {
 	public void createPartControl(Composite parent) {
 
 		top = new Composite(parent, SWT.NONE);
-		GridData gdForm = new GridData(SWT.NONE);
+/*		GridData gdForm = new GridData(SWT.NONE);
 		gdForm.grabExcessVerticalSpace = true;
 		gdForm.grabExcessHorizontalSpace = true;
 		gdForm.horizontalAlignment = SWT.FILL;
@@ -89,7 +89,7 @@ public class RilevazioneParametroAntroView extends ViewPart {
 		gdForm.verticalAlignment = SWT.FILL;
 		top.setLayoutData(gdForm);
 		GridLayout glForm = new GridLayout(1, false);
-		top.setLayout(glForm);
+		top.setLayout(glForm);*/
 		// Visualizzazione del paziente selezionato
 		labelPaziente = new Label(top, SWT.NONE);
 		labelPaziente.setBounds(new Rectangle(14, 31, 46, 13));
