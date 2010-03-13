@@ -3,10 +3,21 @@ package command;
 import java.util.ArrayList;
 import hibernate.Parametroantropometrico;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 
 public class ParametroAntropometricoDAO extends BaseDAO {
 
+	
+	public static ArrayList<Object> getParametroAntropometricoObject(){
+		Criteria criteria = getSession().createCriteria(hibernate.Parametroantropometrico.class);
+		begin();
+		ArrayList<Object> ris = (ArrayList<Object>)criteria.list();
+		commit();
+		//close();
+		return ris;
+	}
+	
 	public void registraParametro(int idparametro,String nome,String descrizione){
 			//close();
 			getSession();
