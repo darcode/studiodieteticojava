@@ -1,8 +1,11 @@
 package studiodietetico;
 
+import hibernate.Utente;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -13,6 +16,7 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
 import common.ICommonConstants;
+import common.Messages;
 import common.ui.OpenViewAction;
 
 /**
@@ -112,5 +116,13 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	@Override
 	protected void fillCoolBar(ICoolBarManager coolBar) {
 	}
-
+	@Override
+	protected void fillStatusLine(IStatusLineManager statusLine) {
+		// TODO Auto-generated method stub
+		super.fillStatusLine(statusLine);
+		Utente user = Activator.getUser();
+		if(user != null)
+			Messages.setStatusline("Utente: " + user.getNomeUtente() + " - Ruolo " + user.getRuolo().getDescrizione());
+		statusLine.update(true);
+	}
 }
