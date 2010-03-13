@@ -587,6 +587,8 @@ CREATE TABLE `parametroantropometrico` (
 --
 
 /*!40000 ALTER TABLE `parametroantropometrico` DISABLE KEYS */;
+insert into parametroantropometrico values (1,'altezza','altezza'),
+insert into parametroantropometrico values (2,'peso','peso');
 /*!40000 ALTER TABLE `parametroantropometrico` ENABLE KEYS */;
 
 
