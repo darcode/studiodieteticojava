@@ -347,11 +347,23 @@ public class TableForm extends ListComposite {
 		if (classeChiamante=="VisitaTableView") {
 			buttonInsert.setText("Registra nuova visita");
 		}
-		if (classeChiamante=="VisitaTableView") {
-			buttonInsert.setText("Registra nuovo esame clinico");
+		else if (classeChiamante=="EsameClinicoTableView") {
+			buttonInsert.setText("Inserisci nuovo esame clinico");
 		}
-		if (classeChiamante=="VisitaTableView") {
-			buttonInsert.setText("Registra nuovo parametro");
+		else if (classeChiamante=="ParametroAntropometricoTableView") {
+			buttonInsert.setText("Inserisci nuovo parametro");
+		}
+		else if (classeChiamante=="DietaTableView") {
+			buttonInsert.setText("Inserisci nuovo schema dietetico");
+		}
+		else if (classeChiamante=="PazienteTableView") {
+			buttonInsert.setText("Registra nuovo paziente");
+		}
+		else if (classeChiamante=="MedicoTableView") {
+			buttonInsert.setText("Registra nuovo medico");
+		}
+		else if (classeChiamante=="TurniTableView") {
+			buttonInsert.setText("Inserisci nuovo turno");
 		}
 		
 		buttonElimina = new Button(top, SWT.NONE);
