@@ -123,6 +123,16 @@
             id="StudioDietetico.CommandDietaRicerca"
             name="CommandDietaRicerca">
       </command>
+      <command
+            categoryId="StudioDietetico.category1"
+            id="StudioDietetico.CommandEsameClinicoRicerca"
+            name="CommandEsameClinicoRicerca">
+      </command>
+      <command
+            categoryId="StudioDietetico.category1"
+            id="StudioDietetico.CommandParametroAntropometricoRicerca"
+            name="CommandParametroAntropometricoRicerca">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -202,6 +212,14 @@
             class="handler.MenuDietaRicercaHandler"
             commandId="StudioDietetico.CommandDietaRicerca">
       </handler>
+      <handler
+            class="handler.MenuEsameClinicoRicercaHandler"
+            commandId="StudioDietetico.CommandEsameClinicoRicerca">
+      </handler>
+      <handler
+            class="handler.MenuParametroAntropometricoRicercaHandler"
+            commandId="StudioDietetico.CommandParametroAntropometricoRicerca">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -229,6 +247,18 @@
                   label="Gestione Diete"
                   style="push">
             </command>
+            <command
+                  commandId="StudioDietetico.CommandEsameClinicoRicerca"
+                  icon="icons/Test Tubes_32x32.png"
+                  label="Gestione Esami Clinici"
+                  style="push">
+            </command>
+            <command
+                  commandId="StudioDietetico.CommandParametroAntropometricoRicerca"
+                  icon="icons/stethoscope.ico"
+                  label="Gestione Parametro Antropometrico"
+                  style="push">
+            </command>
          </menu>
          <menu
                icon="icons/doctor_assistant-32.png"
@@ -251,18 +281,6 @@
                icon="icons/Administrative Tools-32.png"
                id="StudioDietetico.Utilità"
                label="Utilità">
-            <command
-                  commandId="StudioDietetico.CommandEsameClinico"
-                  icon="icons/Test Tubes_32x32.png"
-                  label="Esame Clinico"
-                  style="push">
-            </command>
-            <command
-                  commandId="StudioDietetico.CommandParametroAntropometrico"
-                  icon="icons/stethoscope.ico"
-                  label="Parametro Antropometrico"
-                  style="push">
-            </command>
             <command
                   commandId="StudioDietetico.CommandRegistrazione"
                   icon="icons/Padlocks_32.png"
@@ -471,6 +489,18 @@
             class="studiodietetico.FattureTableView"
             id="StudioDietetico.FattureTableView"
             name="Fatture"
+            restorable="true">
+      </view>
+      <view
+            class="studiodietetico.EsameClinicoTableView"
+            id="StudioDietetico.EsameClinicoTableView"
+            name="Esame Clinico"
+            restorable="true">
+      </view>
+      <view
+            class="studiodietetico.ParametroAntropometricoTableView"
+            id="StudioDietetico.ParametroAntropometricoTableView"
+            name="Parametro Antropometrico"
             restorable="true">
       </view>
    </extension>
