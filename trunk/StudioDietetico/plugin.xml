@@ -232,7 +232,7 @@
             <command
                   commandId="StudioDietetico.CommandPazienteRicerca"
                   icon="icons/user-group-32.png"
-                  label="Gestione Paziente"
+                  label="Gestione Pazienti"
                   style="push">
             </command>
             <command
@@ -256,7 +256,7 @@
             <command
                   commandId="StudioDietetico.CommandParametroAntropometricoRicerca"
                   icon="icons/stethoscope.ico"
-                  label="Gestione Parametro Antropometrico"
+                  label="Gestione Parametri Antropometrici"
                   style="push">
             </command>
          </menu>
@@ -267,7 +267,7 @@
             <command
                   commandId="StudioDietetico.CommandMedicoRicerca"
                   icon="icons/doctor_assistant-32.png"
-                  label="Gestione Medico"
+                  label="Gestione Medici"
                   style="push">
             </command>
             <command
@@ -494,13 +494,13 @@
       <view
             class="studiodietetico.EsameClinicoTableView"
             id="StudioDietetico.EsameClinicoTableView"
-            name="Esame Clinico"
+            name="Esami Clinici"
             restorable="true">
       </view>
       <view
             class="studiodietetico.ParametroAntropometricoTableView"
             id="StudioDietetico.ParametroAntropometricoTableView"
-            name="Parametro Antropometrico"
+            name="Parametri Antropometrici"
             restorable="true">
       </view>
    </extension>
