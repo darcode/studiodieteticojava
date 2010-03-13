@@ -11,10 +11,12 @@ import java.util.HashMap;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -190,14 +192,14 @@ public class Utils implements ICommonConstants {
 			getActiveView().setFocus();
 		}
 	}
-	
+
 	public static void showViewNotUnique(String viewId) {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IViewReference[] views = workbench.getActiveWorkbenchWindow()
 				.getActivePage().getViewReferences();
 		if (views.length == 0 || !views[0].getId().equals(viewId)) {
-			//workbench.getActiveWorkbenchWindow().getActivePage()
-			//		.resetPerspective();
+			// workbench.getActiveWorkbenchWindow().getActivePage()
+			// .resetPerspective();
 
 			try {
 				workbench.getActiveWorkbenchWindow().getActivePage().showView(
@@ -261,5 +263,11 @@ public class Utils implements ICommonConstants {
 		msg.setMessage(message);
 		msg.setText("Info");
 		msg.open();
+	}
+
+	public static Image getImageFromFile(String fileName) {
+		ImageDescriptor imgDesc = studiodietetico.Activator.getImageDescriptor(fileName);
+		final Image img = imgDesc.createImage();
+		return img;
 	}
 }
