@@ -68,7 +68,7 @@ public class EsameClinicoView extends ViewPart {
 	private EsameClinicoDAO es = new EsameClinicoDAO();  //  @jve:decl-index=0:
 	private ParametroClinicoDAO par = new ParametroClinicoDAO();  //  @jve:decl-index=0:
 	Esameclinico esamemem = new Esameclinico();
-	Parametroesame parametromem = new Parametroesame();
+	Parametroesame parametromem = new Parametroesame();  //  @jve:decl-index=0:
 	int indicerow = -1;
 
 	private TableViewer tableViewer = null;
@@ -82,19 +82,18 @@ public class EsameClinicoView extends ViewPart {
 		gdForm.grabExcessVerticalSpace = true;
 		gdForm.verticalAlignment = SWT.FILL;
 		top.setLayoutData(gdForm);
-		GridLayout glForm = new GridLayout(1, false);
-		top.setLayout(glForm);
+		top.setLayout(null);
 		btnAnnulla = new Button(top, SWT.NONE);
 		btnAnnulla.setText("Annulla");
-		btnAnnulla.setBounds(new Rectangle(537, 501, 65, 23));
+		btnAnnulla.setBounds(new Rectangle(5, 5, 47, 23));
 		btnAnnulla.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				statoiniziale();
 			}
 		});
 		btnElimina = new Button(top, SWT.NONE);
-		btnElimina.setBounds(new Rectangle(430, 500, 97, 23));
 		btnElimina.setText("Elimina Esame");
+		btnElimina.setBounds(new Rectangle(5, 33, 78, 23));
 		btnElimina.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				if (esamemem.getIdEsameClinico() == 0) {  //non cè nulla da eliminare(è un esame nuovo)
@@ -110,8 +109,8 @@ public class EsameClinicoView extends ViewPart {
 			}
 		});
 		btnRegistra = new Button(top, SWT.NONE);
-		btnRegistra.setBounds(new Rectangle(317, 500, 105, 23));
 		btnRegistra.setText("Registra Esame");
+		btnRegistra.setBounds(new Rectangle(5, 61, 86, 23));
 		btnRegistra.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				Esameclinico esame;
@@ -131,8 +130,8 @@ public class EsameClinicoView extends ViewPart {
 			}
 		});
 		btnAggiungiNuovo = new Button(top, SWT.NONE);
-		btnAggiungiNuovo.setBounds(new Rectangle(203, 25, 146, 23));
 		btnAggiungiNuovo.setText("Aggiungi nuovo esame clinico");
+		btnAggiungiNuovo.setBounds(new Rectangle(5, 89, 151, 23));
 		btnAggiungiNuovo
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -140,7 +139,7 @@ public class EsameClinicoView extends ViewPart {
 					}
 				});
 		listEsameClinico = new List(top, SWT.NONE);
-		listEsameClinico.setBounds(new Rectangle(14, 26, 181, 64));
+		listEsameClinico.setBounds(new Rectangle(5, 117, 67, 64));
 		listEsameClinico
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -153,14 +152,14 @@ public class EsameClinicoView extends ViewPart {
 					}
 				});
 		lblParametro = new Label(top, SWT.NONE);
-		lblParametro.setBounds(new Rectangle(12, 12, 66, 13));
 		lblParametro.setText("Esami Clinici");
+		lblParametro.setBounds(new Rectangle(5, 186, 56, 13));
 		createGroupParametroEsame();
 		tableParametri = new Table(top, SWT.SINGLE | SWT.FULL_SELECTION
 		        | SWT.HIDE_SELECTION);
 		tableParametri.setHeaderVisible(true);
 		tableParametri.setLinesVisible(true);
-		tableParametri.setBounds(new Rectangle(13, 335, 612, 145));
+		tableParametri.setBounds(new Rectangle(5, 355, 629, 37));
 		tableParametri.setCapture(true);
 		tableParametri.setLinesVisible(true);
 		tableParametri.showSelection();
@@ -237,7 +236,7 @@ public class EsameClinicoView extends ViewPart {
 		groupParametroEsame = new Group(top, SWT.NONE);
 		groupParametroEsame.setLayout(null);
 		groupParametroEsame.setText("Parametro Esame Clinico");
-		groupParametroEsame.setBounds(new Rectangle(11, 180, 612, 141));
+		groupParametroEsame.setBounds(new Rectangle(5, 204, 609, 146));
 		txtnomeparametro = new Text(groupParametroEsame, SWT.BORDER);
 		txtnomeparametro.setBounds(new Rectangle(7, 28, 106, 19));
 		label2 = new Label(groupParametroEsame, SWT.NONE);
@@ -389,7 +388,7 @@ public class EsameClinicoView extends ViewPart {
 		groupEsame = new Group(top, SWT.NONE);
 		groupEsame.setLayout(null);
 		groupEsame.setText("Esame Clinico");
-		groupEsame.setBounds(new Rectangle(15, 98, 288, 62));
+		groupEsame.setBounds(new Rectangle(5, 397, 270, 68));
 		txtDescrizione = new Text(groupEsame, SWT.BORDER);
 		txtDescrizione.setBounds(new Rectangle(146, 32, 118, 19));
 		label1 = new Label(groupEsame, SWT.NONE);
