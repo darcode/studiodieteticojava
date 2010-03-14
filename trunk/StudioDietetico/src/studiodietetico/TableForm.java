@@ -110,7 +110,7 @@ public class TableForm extends ListComposite {
 	 */
 	private void initialize(ArrayList<Object> listaElementi, String classe) {
 		classeChiamante = classe;
-		final ArrayList<Object> listaElementiTable = listaElementi;
+		//final ArrayList<Object> listaElementiTable = listaElementi;
 		GridData gdForm = new GridData(SWT.BORDER);
 		gdForm.grabExcessHorizontalSpace = true;
 		gdForm.horizontalAlignment = SWT.FILL;
@@ -253,7 +253,8 @@ public class TableForm extends ListComposite {
 				//TODO nasconde, aggiorna e ordina le colonne in base alla classe chiamante 
 				if (classeChiamante.equalsIgnoreCase("VisitaTableView")) {
 					nascondiColonne(new int[] {0,1,2,3,6,7,8});
-					VisitaTableView.aggiungiColonne(TableForm.this, listaElementiTable);
+					oggettiTabella = VisitaDAO.getVisiteObject();
+					VisitaTableView.aggiungiColonne(TableForm.this, oggettiTabella);
 					ordinamentoData(tableVisualizzazione, 4);
 					ordinamentoData(tableVisualizzazione, 5);
 					ordinamentoStringhe(tableVisualizzazione, 9);
@@ -281,14 +282,16 @@ public class TableForm extends ListComposite {
 				}
 				else if (classeChiamante.equalsIgnoreCase("PrenotazioneTableView")) {
 					nascondiColonne(new int[] {0,1,2,4});
-					PrenotazioneTableView.aggiungiColonne(TableForm.this, listaElementiTable);
+					oggettiTabella = VisitaDAO.getPrenotazioniObject();
+					PrenotazioneTableView.aggiungiColonne(TableForm.this, oggettiTabella);
 					ordinamentoData(tableVisualizzazione, 3);
 					ordinamentoStringhe(tableVisualizzazione, 5);
 					ordinamentoStringhe(tableVisualizzazione, 6);
 				}
 				else if (classeChiamante.equalsIgnoreCase("DietaTableView")) {
 					nascondiColonne(new int[] {0,1,4,5});
-					DietaTableView.aggiungiColonne(TableForm.this, listaElementiTable);
+					oggettiTabella = DietaDAO.getDieteObject();
+					DietaTableView.aggiungiColonne(TableForm.this, oggettiTabella);
 					ordinamentoStringhe(tableVisualizzazione, 2);
 					ordinamentoInteri(tableVisualizzazione, 3);
 					ordinamentoInteri(tableVisualizzazione, 6);
@@ -299,7 +302,8 @@ public class TableForm extends ListComposite {
 				}
 				else if (classeChiamante.equalsIgnoreCase("PrescrizioneTableView")) {
 					nascondiColonne(new int[] {0,1,2,5});
-					PrescrizioneTableView.aggiungiColonne(TableForm.this, listaElementiTable);
+					oggettiTabella = DietaDAO.getPrescrizioniObject();
+					PrescrizioneTableView.aggiungiColonne(TableForm.this, oggettiTabella);
 					ordinamentoData(tableVisualizzazione, 3);
 					ordinamentoInteri(tableVisualizzazione, 4);
 					ordinamentoStringhe(tableVisualizzazione, 6);
@@ -307,13 +311,15 @@ public class TableForm extends ListComposite {
 				}
 				else if (classeChiamante.equalsIgnoreCase("TurniTableView")) {
 					nascondiColonne(new int[] {0,1,2});
-					TurniTableView.aggiungiColonne(TableForm.this, listaElementiTable);
+					oggettiTabella = MedicoDAO.getPrestazioniObject();
+					TurniTableView.aggiungiColonne(TableForm.this, oggettiTabella);
 					ordinamentoData(tableVisualizzazione, 3);
 					ordinamentoStringhe(tableVisualizzazione, 6);
 				}
 				else if (classeChiamante.equalsIgnoreCase("FattureTableView")) {
 					nascondiColonne(new int[] {0});
-					FattureTableView.modificaColonna(TableForm.this, listaElementiTable);
+					oggettiTabella = FatturaDAO.getFattureObject();
+					FattureTableView.modificaColonna(TableForm.this, oggettiTabella);
 					ordinamentoInteri(tableVisualizzazione, 1);
 					ordinamentoInteri(tableVisualizzazione, 2);
 					ordinamentoInteri(tableVisualizzazione, 3);
@@ -323,7 +329,10 @@ public class TableForm extends ListComposite {
 				}
 				else if (classeChiamante.equalsIgnoreCase("InterventiTableView")) {
 					nascondiColonne(new int[]{0,1,2});
-					AnamnesiTTableView.aggiungiColonnaIntervento(TableForm.this, listaElementiTable);
+					Paziente pazSelHome = PazienteTableView.getPazienteSelezionato();
+					AnamnesiDAO ad = new AnamnesiDAO();
+					oggettiTabella = ad.getInterventiListByPaziente(pazSelHome);
+					AnamnesiTTableView.aggiungiColonnaIntervento(TableForm.this, oggettiTabella);
 					ordinamentoInteri(tableVisualizzazione, 4);
 					ordinamentoStringhe(tableVisualizzazione, 5);
 					ordinamentoData(tableVisualizzazione, 3);
