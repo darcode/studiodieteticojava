@@ -133,7 +133,7 @@ public class VisitaTableView extends ViewPart {
 		top.setLayoutData(gdForm);
 		GridLayout glForm = new GridLayout(1, false);
 		top.setLayout(glForm);
-		visite = VisitaDAO.getVisite();
+		visite = VisitaDAO.getVisiteObject();
 		VisitaDAO vd = new VisitaDAO();
 		classVis = new TableForm(top, SWT.BORDER, visite, "createSShellDettagliVisita","createSShellRegistraVisita",VisitaTableView.this, vd, "VisitaTableView");
 		classVis.setBounds(new Rectangle(6, 50, 800, 332));
@@ -827,7 +827,7 @@ public class VisitaTableView extends ViewPart {
 		while (k<classVis.getTableVisualizzazione().getColumnCount()) {
 			classVis.getTableVisualizzazione().getColumn(k).dispose();
 		}
-		visite = VisitaDAO.getVisite();
+		visite = VisitaDAO.getVisiteObject();
 		classVis.riempiTabella(visite, "VisitaTableView");
 		classVis.nascondiColonne(new int[] {0,1,2,3,6,7,8});
 		aggiungiColonne(classVis, visite);    				
