@@ -1,5 +1,7 @@
 package studiodietetico;
 
+import hibernate.Paziente;
+
 import java.lang.reflect.Method;
 import java.lang.Integer;
 import java.text.Collator;
@@ -21,6 +23,14 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
+import command.AnamnesiDAO;
+import command.DietaDAO;
+import command.EsameClinicoDAO;
+import command.FatturaDAO;
+import command.MedicoDAO;
+import command.ParametroAntropometricoDAO;
+import command.PazienteDAO;
+import command.VisitaDAO;
 import common.ui.ListComposite;
 
 import org.eclipse.swt.graphics.Point;
@@ -65,6 +75,7 @@ public class TableForm extends ListComposite {
 	private Object classeDAO = null;
 	int numeroCol;
 	private String classeChiamante = "";  //  @jve:decl-index=0:
+	private ArrayList<Object> oggettiTabella;
 	
 	/**
 	 * Costuttore della classe: crea una table con ricerca dell'item con scelta dell'attributo e ordinamento delle colonne. Permette di 
@@ -166,7 +177,70 @@ public class TableForm extends ListComposite {
 					tableVisualizzazione.getColumn(k).dispose();
 				}
 				
-				riempiTabella(listaElementiTable, classeChiamante);
+				//TODO riempie la tabella aggiornata in base alla classe chiamante
+				Paziente pazSelHome = PazienteTableView.getPazienteSelezionato();
+				AnamnesiDAO ad = new AnamnesiDAO();
+				if (classeChiamante.equalsIgnoreCase("VisitaTableView")) {
+					oggettiTabella = VisitaDAO.getVisiteObject();
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				else if (classeChiamante.equalsIgnoreCase("PazienteTableView")) {
+					oggettiTabella = PazienteDAO.getPazientiObject();
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				else if (classeChiamante.equalsIgnoreCase("MedicoTableView")) {
+					oggettiTabella = MedicoDAO.getMediciObject();
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				else if (classeChiamante.equalsIgnoreCase("PrenotazioneTableView")) {
+					oggettiTabella = VisitaDAO.getPrenotazioniObject();
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				else if (classeChiamante.equalsIgnoreCase("DietaTableView")) {
+					oggettiTabella = DietaDAO.getDieteObject();
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				else if (classeChiamante.equalsIgnoreCase("PrescrizioneTableView")) {
+					oggettiTabella = DietaDAO.getPrescrizioniObject();
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				else if (classeChiamante.equalsIgnoreCase("TurniTableView")) {
+					oggettiTabella = MedicoDAO.getPrestazioniObject();
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				else if (classeChiamante.equalsIgnoreCase("FattureTableView")) {
+					oggettiTabella = FatturaDAO.getFattureObject();
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				else if (classeChiamante.equalsIgnoreCase("InterventiTableView")) {
+					oggettiTabella = ad.getInterventiListByPaziente(pazSelHome);
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				else if (classeChiamante.equalsIgnoreCase("AllergieTableView")) {
+					oggettiTabella = ad.getAllergieListByPaziente(pazSelHome);
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				else if (classeChiamante.equalsIgnoreCase("SportTableView")) {
+					oggettiTabella = ad.getSportListByPaziente(pazSelHome);
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				else if (classeChiamante.equalsIgnoreCase("FarmaciTableView")) {
+					oggettiTabella = ad.getFarmaciListByPaziente(pazSelHome);
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				else if (classeChiamante.equalsIgnoreCase("MalattiaTableView")) {
+					oggettiTabella = ad.getMalattieListByPaziente(pazSelHome);
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				else if (classeChiamante.equalsIgnoreCase("EsameClinicoTableView")) {
+					oggettiTabella = EsameClinicoDAO.getEsameClinicoObject();
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				else if (classeChiamante.equalsIgnoreCase("ParametroAntropometricoTableView")) {
+					oggettiTabella = ParametroAntropometricoDAO.getParametroAntropometricoObject();
+					riempiTabella(oggettiTabella, classeChiamante);
+				}
+				
 
 				//TODO nasconde, aggiorna e ordina le colonne in base alla classe chiamante 
 				if (classeChiamante.equalsIgnoreCase("VisitaTableView")) {
