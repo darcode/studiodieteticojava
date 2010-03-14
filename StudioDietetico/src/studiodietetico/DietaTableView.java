@@ -184,7 +184,7 @@ public class DietaTableView extends ViewPart {
 		classVis.riempiTabella(diete, "DietaTableView");
 		classVis.nascondiColonne(new int[] { 0, 1, 4, 5 });
 		aggiungiColonne(classVis, diete);
-		classVis.aggiornaCombo();
+		//classVis.aggiornaCombo();
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 2);
 		classVis.ordinamentoInteri(classVis.getTableVisualizzazione(), 3);
 		classVis.ordinamentoInteri(classVis.getTableVisualizzazione(), 6);

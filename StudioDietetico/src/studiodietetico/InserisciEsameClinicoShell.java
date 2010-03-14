@@ -153,9 +153,13 @@ public class InserisciEsameClinicoShell {
 					if (esamemem != null) {  //esame già esistente
 						esamemem.setNome(txtnome.getText());
 						esamemem.setDescrizione(txtDescrizione.getText());
-						 esame =  esameClinicoDao.registraEsame(esamemem);
+						esame =  esameClinicoDao.registraEsame(esamemem);
+						EsameClinicoTableView.aggiornaTableView();
+						sShell.close();
 					}else {  //nuovo esame
 						esame =  esameClinicoDao.registranewEsame(txtnome.getText(), txtDescrizione.getText());
+						EsameClinicoTableView.aggiornaTableView();
+						sShell.close();
 					}
 					
 					for (int i =0; i<= tableParametri.getItemCount() - 1; ++i) {

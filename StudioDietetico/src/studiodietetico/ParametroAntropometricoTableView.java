@@ -133,8 +133,8 @@ public class ParametroAntropometricoTableView extends ViewPart {
 		parametri = ParametroAntropometricoDAO.getParametroAntropometricoObject();
 		classVis.riempiTabella(parametri, "ParametroAntropometricoTableView");
 		classVis.nascondiColonne(new int[] {0});
-		aggiungiColonne(classVis, parametri);
-		classVis.aggiornaCombo();
+		//aggiungiColonne(classVis, parametri);
+		//classVis.aggiornaCombo();
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 1);
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 2);
 	}

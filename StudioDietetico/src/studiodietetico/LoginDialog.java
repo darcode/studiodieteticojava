@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import javax.swing.JButton;
 import java.awt.Rectangle;
 import javax.swing.JPasswordField;
+import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 
@@ -55,10 +56,10 @@ public class LoginDialog extends JDialog {
 	private JPanel getJPanel() {
 		if (jPanel == null) {
 			lblPassword = new JLabel();
-			lblPassword.setBounds(new Rectangle(68, 66, 58, 16));
+			lblPassword.setBounds(new Rectangle(70, 65, 60, 20));
 			lblPassword.setText("Password");
 			lblUsername = new JLabel();
-			lblUsername.setBounds(new Rectangle(71, 32, 59, 16));
+			lblUsername.setBounds(new Rectangle(70, 28, 60, 20));
 			lblUsername.setText("Username");
 			jPanel = new JPanel();
 			jPanel.setLayout(null);
@@ -79,13 +80,15 @@ public class LoginDialog extends JDialog {
 	private JButton getBtnEntra() {
 		if (btnEntra == null) {
 			btnEntra = new JButton();
-			btnEntra.setBounds(new Rectangle(119, 119, 76, 21));
+			btnEntra.setBounds(new Rectangle(99, 119, 96, 21));
 			btnEntra.setText("Entra");
 			btnEntra.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					abilita(txtUsername.getText().trim(), txtPassword.getText().trim());
 				}
 			});
+			JRootPane rootPane=this.getRootPane();
+			rootPane.setDefaultButton(btnEntra);
 		}
 		return btnEntra;
 	}
@@ -98,7 +101,7 @@ public class LoginDialog extends JDialog {
 	private JPasswordField getTxtPassword() {
 		if (txtPassword == null) {
 			txtPassword = new JPasswordField();
-			txtPassword.setBounds(new Rectangle(151, 65, 93, 20));
+			txtPassword.setBounds(new Rectangle(146, 65, 100, 20));
 		}
 		return txtPassword;
 	}
@@ -111,7 +114,7 @@ public class LoginDialog extends JDialog {
 	private JTextField getTxtUsername() {
 		if (txtUsername == null) {
 			txtUsername = new JTextField();
-			txtUsername.setBounds(new Rectangle(146, 28, 98, 20));
+			txtUsername.setBounds(new Rectangle(146, 28, 100, 20));
 		}
 		return txtUsername;
 	}

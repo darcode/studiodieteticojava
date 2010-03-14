@@ -215,24 +215,7 @@ public class MedicoTableView extends ViewPart {
         							textIndirizzoMed.getText(), textCittMed.getText(), textCAPMed.getText(), textProvMed.getText(),
             						textSpecMed.getText(), textTel1Med.getText(), textTel2Med.getText(), textMailMed.getText());	
         				}
-        				classVis.getTableVisualizzazione().removeAll(); //rimuove le righe
-        				//rimuove le colonne
-        				int k = 0;
-        				while (k<classVis.getTableVisualizzazione().getColumnCount()) {
-        					classVis.getTableVisualizzazione().getColumn(k).dispose();
-        				}
-        				medici = MedicoDAO.getMediciObject();
-        				classVis.riempiTabella(medici, "MedicoTableView");
-        				classVis.nascondiColonne(new int[] {0,1,4,5,8,9,13});
-        				classVis.aggiornaCombo();
-        				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 2);
-        				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 3);
-        				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 6);
-        				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 7);
-        				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 10);
-        				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 11);
-        				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 12);
-
+        				aggiornaTableView();
         				sShellInserisciMedico.close();
         			}
         		});
@@ -265,6 +248,26 @@ public class MedicoTableView extends ViewPart {
 		}
 		comboAnno.setText(comboAnno.getItem(0));
 	}
+	
+	private void aggiornaTableView(){
+		classVis.getTableVisualizzazione().removeAll(); //rimuove le righe
+		//rimuove le colonne
+		int k = 0;
+		while (k<classVis.getTableVisualizzazione().getColumnCount()) {
+			classVis.getTableVisualizzazione().getColumn(k).dispose();
+		}
+		medici = MedicoDAO.getMediciObject();
+		classVis.riempiTabella(medici, "MedicoTableView");
+		classVis.nascondiColonne(new int[] {0,1,4,5,8,9,13});
+		//classVis.aggiornaCombo();
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 2);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 3);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 6);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 7);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 10);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 11);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 12);
+	}
 
 	public void createShellDettagliMedico(final TableItem rigaTableClick){
 		createSShellInserisciMedico();
@@ -293,24 +296,7 @@ public class MedicoTableView extends ViewPart {
 							textIndirizzoMed.getText(), textCittMed.getText(), textCAPMed.getText(), textProvMed.getText(),
     						textSpecMed.getText(), textTel1Med.getText(), textTel2Med.getText(), textMailMed.getText());	
 				}
-				classVis.getTableVisualizzazione().removeAll(); //rimuove le righe
-				//rimuove le colonne
-				int k = 0;
-				while (k<classVis.getTableVisualizzazione().getColumnCount()) {
-					classVis.getTableVisualizzazione().getColumn(k).dispose();
-				}
-				medici = MedicoDAO.getMediciObject();
-				classVis.riempiTabella(medici, "MedicoTableView");
-				classVis.nascondiColonne(new int[] {0,1,4,5,8,9,13});
-				classVis.aggiornaCombo();
-				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 2);
-				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 3);
-				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 6);
-				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 7);
-				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 10);
-				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 11);
-				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 12);
-				
+				aggiornaTableView();
 				sShellInserisciMedico.close();
 			}
 		});
