@@ -646,24 +646,7 @@ public class VisitaTableView extends ViewPart {
         				visita.registraVisita(dataInizioVisita, dataFineVisita, textAreaMotivazioni.getText(), textAreaNote.getText(), medico, prenotazione);
         				labelFatturaAssociata.setVisible(true);
         				System.out.println("visita registrata");
-        				
-        				classVis.getTableVisualizzazione().removeAll(); //rimuove le righe
-        				//rimuove le colonne
-        				int k = 0;
-        				while (k<classVis.getTableVisualizzazione().getColumnCount()) {
-        					classVis.getTableVisualizzazione().getColumn(k).dispose();
-        				}
-        				visite = VisitaDAO.getVisite();
-        				classVis.riempiTabella(visite, "VisitaTableView");
-        				classVis.nascondiColonne(new int[] {0,1,2,3,6,7,8});
-        				aggiungiColonne(classVis, visite);    				
-        				classVis.aggiornaCombo();
-        				classVis.ordinamentoData(classVis.getTableVisualizzazione(), 4);
-        				classVis.ordinamentoData(classVis.getTableVisualizzazione(), 5);
-        				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 9);
-        				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 10);
-        				classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 11);
-
+        				aggiornaTableView();
         				sShellRegistraVisita.close();
         			}
         		});
@@ -835,6 +818,25 @@ public class VisitaTableView extends ViewPart {
 		
 		
 		sShellDettagliVisita.open();
+	}
+	
+	private void aggiornaTableView(){
+		classVis.getTableVisualizzazione().removeAll(); //rimuove le righe
+		//rimuove le colonne
+		int k = 0;
+		while (k<classVis.getTableVisualizzazione().getColumnCount()) {
+			classVis.getTableVisualizzazione().getColumn(k).dispose();
+		}
+		visite = VisitaDAO.getVisite();
+		classVis.riempiTabella(visite, "VisitaTableView");
+		classVis.nascondiColonne(new int[] {0,1,2,3,6,7,8});
+		aggiungiColonne(classVis, visite);    				
+		//classVis.aggiornaCombo();
+		classVis.ordinamentoData(classVis.getTableVisualizzazione(), 4);
+		classVis.ordinamentoData(classVis.getTableVisualizzazione(), 5);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 9);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 10);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 11);
 	}
 
 	
