@@ -178,8 +178,6 @@ public class TableForm extends ListComposite {
 				}
 				
 				//TODO riempie la tabella aggiornata in base alla classe chiamante
-				Paziente pazSelHome = PazienteTableView.getPazienteSelezionato();
-				AnamnesiDAO ad = new AnamnesiDAO();
 				if (classeChiamante.equalsIgnoreCase("VisitaTableView")) {
 					oggettiTabella = VisitaDAO.getVisiteObject();
 					riempiTabella(oggettiTabella, classeChiamante);
@@ -213,22 +211,32 @@ public class TableForm extends ListComposite {
 					riempiTabella(oggettiTabella, classeChiamante);
 				}
 				else if (classeChiamante.equalsIgnoreCase("InterventiTableView")) {
+					Paziente pazSelHome = PazienteTableView.getPazienteSelezionato();
+					AnamnesiDAO ad = new AnamnesiDAO();
 					oggettiTabella = ad.getInterventiListByPaziente(pazSelHome);
 					riempiTabella(oggettiTabella, classeChiamante);
 				}
 				else if (classeChiamante.equalsIgnoreCase("AllergieTableView")) {
+					Paziente pazSelHome = PazienteTableView.getPazienteSelezionato();
+					AnamnesiDAO ad = new AnamnesiDAO();
 					oggettiTabella = ad.getAllergieListByPaziente(pazSelHome);
 					riempiTabella(oggettiTabella, classeChiamante);
 				}
 				else if (classeChiamante.equalsIgnoreCase("SportTableView")) {
+					Paziente pazSelHome = PazienteTableView.getPazienteSelezionato();
+					AnamnesiDAO ad = new AnamnesiDAO();
 					oggettiTabella = ad.getSportListByPaziente(pazSelHome);
 					riempiTabella(oggettiTabella, classeChiamante);
 				}
 				else if (classeChiamante.equalsIgnoreCase("FarmaciTableView")) {
+					Paziente pazSelHome = PazienteTableView.getPazienteSelezionato();
+					AnamnesiDAO ad = new AnamnesiDAO();
 					oggettiTabella = ad.getFarmaciListByPaziente(pazSelHome);
 					riempiTabella(oggettiTabella, classeChiamante);
 				}
 				else if (classeChiamante.equalsIgnoreCase("MalattiaTableView")) {
+					Paziente pazSelHome = PazienteTableView.getPazienteSelezionato();
+					AnamnesiDAO ad = new AnamnesiDAO();
 					oggettiTabella = ad.getMalattieListByPaziente(pazSelHome);
 					riempiTabella(oggettiTabella, classeChiamante);
 				}
