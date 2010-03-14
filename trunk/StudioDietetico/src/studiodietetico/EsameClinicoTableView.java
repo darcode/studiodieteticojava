@@ -131,8 +131,8 @@ public class EsameClinicoTableView extends ViewPart {
 		esami = EsameClinicoDAO.getEsameClinicoObject();
 		classVis.riempiTabella(esami, "EsameClinicoTableView");
 		classVis.nascondiColonne(new int[] {0});
-		aggiungiColonne(classVis, esami);
-		classVis.aggiornaCombo();
+		//aggiungiColonne(classVis, esami);
+		//classVis.aggiornaCombo();
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 1);
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 2);
 	}

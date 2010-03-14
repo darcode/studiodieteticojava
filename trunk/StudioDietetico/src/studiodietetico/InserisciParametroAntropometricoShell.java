@@ -76,8 +76,8 @@ public class InserisciParametroAntropometricoShell {
 				ParametroAntropometricoDAO p = new ParametroAntropometricoDAO();
 				//se idparametro = 0 allora inserisce, altrimenti fa update
 				p.registraParametro(idparametro,txtnome.getText(), txtDescrizione.getText());
-				txtnome.setText("");
-				txtDescrizione.setText("");
+				ParametroAntropometricoTableView.aggiornaTableView();
+				sShell.close();
 			}
 		});
 		if (idparametro != 0) {

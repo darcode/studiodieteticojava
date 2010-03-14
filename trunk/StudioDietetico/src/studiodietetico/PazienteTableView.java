@@ -447,34 +447,7 @@ public class PazienteTableView extends ViewPart {
 
 						}
 
-						classVis.getTableVisualizzazione().removeAll(); // rimuove
-																		// le
-																		// righe
-						// rimuove le colonne
-						int k = 0;
-						while (k < classVis.getTableVisualizzazione()
-								.getColumnCount()) {
-							classVis.getTableVisualizzazione().getColumn(k)
-									.dispose();
-						}
-						pazienti = PazienteDAO.getPazientiObject();
-						classVis.riempiTabella(pazienti, "PazienteTableView");
-						classVis.nascondiColonne(new int[] { 0, 1, 8, 9, 10,
-								11, 12, 13, 14, 15 });
-						classVis.aggiornaCombo();
-						classVis.ordinamentoData(classVis
-								.getTableVisualizzazione(), 4);
-						classVis.ordinamentoStringhe(classVis
-								.getTableVisualizzazione(), 2);
-						classVis.ordinamentoStringhe(classVis
-								.getTableVisualizzazione(), 3);
-						classVis.ordinamentoStringhe(classVis
-								.getTableVisualizzazione(), 5);
-						classVis.ordinamentoStringhe(classVis
-								.getTableVisualizzazione(), 6);
-						classVis.ordinamentoStringhe(classVis
-								.getTableVisualizzazione(), 7);
-
+						aggiornaTableView();
 						sShellInserisciPaziente.close();
 					}
 				});
@@ -572,34 +545,7 @@ public class PazienteTableView extends ViewPart {
 
 						}
 
-						classVis.getTableVisualizzazione().removeAll(); // rimuove
-																		// le
-																		// righe
-						// rimuove le colonne
-						int k = 0;
-						while (k < classVis.getTableVisualizzazione()
-								.getColumnCount()) {
-							classVis.getTableVisualizzazione().getColumn(k)
-									.dispose();
-						}
-						pazienti = PazienteDAO.getPazientiObject();
-						classVis.riempiTabella(pazienti, "PazienteTableView");
-						classVis.nascondiColonne(new int[] { 0, 1, 8, 9, 10,
-								11, 12, 13, 14, 15 });
-						classVis.aggiornaCombo();
-						classVis.ordinamentoData(classVis
-								.getTableVisualizzazione(), 4);
-						classVis.ordinamentoStringhe(classVis
-								.getTableVisualizzazione(), 2);
-						classVis.ordinamentoStringhe(classVis
-								.getTableVisualizzazione(), 3);
-						classVis.ordinamentoStringhe(classVis
-								.getTableVisualizzazione(), 5);
-						classVis.ordinamentoStringhe(classVis
-								.getTableVisualizzazione(), 6);
-						classVis.ordinamentoStringhe(classVis
-								.getTableVisualizzazione(), 7);
-
+						aggiornaTableView();
 						sShellInserisciPaziente.close();
 					}
 
@@ -920,6 +866,36 @@ public class PazienteTableView extends ViewPart {
 
 	public static Paziente getPazienteSelezionato() {
 		return pazienteSel;
+	}
+	
+	private void aggiornaTableView(){
+		classVis.getTableVisualizzazione().removeAll(); // rimuove
+		// le
+		// righe
+		// rimuove le colonne
+		int k = 0;
+		while (k < classVis.getTableVisualizzazione()
+				.getColumnCount()) {
+			classVis.getTableVisualizzazione().getColumn(k)
+			.dispose();
+		}
+		pazienti = PazienteDAO.getPazientiObject();
+		classVis.riempiTabella(pazienti, "PazienteTableView");
+		classVis.nascondiColonne(new int[] { 0, 1, 8, 9, 10,
+				11, 12, 13, 14, 15 });
+		//classVis.aggiornaCombo();
+		classVis.ordinamentoData(classVis
+				.getTableVisualizzazione(), 4);
+		classVis.ordinamentoStringhe(classVis
+				.getTableVisualizzazione(), 2);
+		classVis.ordinamentoStringhe(classVis
+				.getTableVisualizzazione(), 3);
+		classVis.ordinamentoStringhe(classVis
+				.getTableVisualizzazione(), 5);
+		classVis.ordinamentoStringhe(classVis
+				.getTableVisualizzazione(), 6);
+		classVis.ordinamentoStringhe(classVis
+				.getTableVisualizzazione(), 7);
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10,857,512"
