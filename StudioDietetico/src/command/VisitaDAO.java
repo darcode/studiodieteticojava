@@ -208,7 +208,7 @@ public class VisitaDAO extends BaseDAO {
 
 	}
 	
-	public static ArrayList<Object> getVisite() {
+	public static ArrayList<Object> getVisiteObject() {
 		begin();
 		Query q = getSession().createQuery(
 				"FROM Visita v ORDER BY v.dataOraInizio");
