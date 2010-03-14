@@ -1,10 +1,14 @@
 package command;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import hibernate.Parametroantropometrico;
 
+import org.eclipse.swt.widgets.TableItem;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 
 public class ParametroAntropometricoDAO extends BaseDAO {
 
@@ -79,5 +83,18 @@ public class ParametroAntropometricoDAO extends BaseDAO {
 			commit();
 			close();
 			
+		}
+		
+		public static void cancellaParametroAntropometrico(TableItem rigaTable) {
+			begin();
+			Criteria criteria = getSession().createCriteria(hibernate.Parametroantropometrico.class);
+			int id = Integer.parseInt(rigaTable.getText(0));
+			criteria.add( Restrictions.eq("idParametroAntropometrico", id));
+			List<Parametroantropometrico> par = (List<Parametroantropometrico>)criteria.list();
+			commit();
+			begin();
+			getSession().delete(par.get(0));
+			commit();
+			close();
 		}
 }

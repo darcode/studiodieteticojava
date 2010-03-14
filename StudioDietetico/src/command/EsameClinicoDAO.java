@@ -4,9 +4,12 @@ import hibernate.Esameclinico;
 import hibernate.Parametroesame;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.eclipse.swt.widgets.TableItem;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 
 
 public class EsameClinicoDAO extends BaseDAO{
@@ -95,6 +98,19 @@ public class EsameClinicoDAO extends BaseDAO{
 		commit();
 		close();
 		
+	}
+	
+	public static void cancellaEsameClinico(TableItem rigaTable) {
+		begin();
+		Criteria criteria = getSession().createCriteria(hibernate.Esameclinico.class);
+		int id = Integer.parseInt(rigaTable.getText(0));
+		criteria.add( Restrictions.eq("idEsameClinico", id));
+		List<Esameclinico> es = (List<Esameclinico>)criteria.list();
+		commit();
+		begin();
+		getSession().delete(es.get(0));
+		commit();
+		close();
 	}
 	
 	
