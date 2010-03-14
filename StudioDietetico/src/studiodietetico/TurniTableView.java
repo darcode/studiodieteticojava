@@ -110,7 +110,7 @@ public class TurniTableView extends ViewPart {
 		classVis.riempiTabella(prestazioni, "TurniTableView");
 		classVis.nascondiColonne(new int[] {0,1,2});
 		aggiungiColonne(classVis, prestazioni);
-		classVis.aggiornaCombo();
+		//classVis.aggiornaCombo();
 		classVis.ordinamentoData(classVis.getTableVisualizzazione(), 3);
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 6);
 	}

@@ -118,7 +118,7 @@ public class PrenotazioneTableView extends ViewPart {
 		classVis.riempiTabella(prenotazioni, "PrenotazioneTableView");
 		classVis.nascondiColonne(new int[] { 0, 1, 2, 4 });
 		aggiungiColonne(classVis, prenotazioni);
-		classVis.aggiornaCombo();
+		//classVis.aggiornaCombo();
 		classVis.ordinamentoData(classVis.getTableVisualizzazione(), 3);
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 5);
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 6);
