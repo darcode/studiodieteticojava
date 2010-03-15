@@ -168,7 +168,7 @@ public class TableForm extends ListComposite {
 		
 		textRicerca.addModifyListener(new org.eclipse.swt.events.ModifyListener() {
 			public void modifyText(org.eclipse.swt.events.ModifyEvent e) {
-				
+				tableVisualizzazione.setVisible(false);
 				tableVisualizzazione.removeAll(); //rimuove le righe
 				
 				//rimuove le colonne
@@ -388,7 +388,7 @@ public class TableForm extends ListComposite {
 						i++;
 					}
 				}
-				//System.out.println("tabella modificata");
+				tableVisualizzazione.setVisible(true);
 			}
 		});
 	
