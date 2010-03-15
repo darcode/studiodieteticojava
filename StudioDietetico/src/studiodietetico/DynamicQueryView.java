@@ -227,7 +227,7 @@ public class DynamicQueryView extends ViewPart{
 		
 		
 		
-		
+		//TODO la shell deve restituire come output una stringa formattata per aggiungere il criterio
 		
 		
 		
