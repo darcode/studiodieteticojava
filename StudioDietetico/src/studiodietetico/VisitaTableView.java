@@ -133,6 +133,10 @@ public class VisitaTableView extends ViewPart {
 		top.setLayoutData(gdForm);
 		GridLayout glForm = new GridLayout(1, false);
 		top.setLayout(glForm);
+		GridData gridData1 = new GridData();
+		gridData1.horizontalAlignment = GridData.FILL;
+		gridData1.verticalAlignment = GridData.CENTER;
+		
 		visite = VisitaDAO.getVisiteObject();
 		VisitaDAO vd = new VisitaDAO();
 		classVis = new TableForm(top, SWT.BORDER, visite, "createSShellDettagliVisita","createSShellRegistraVisita",VisitaTableView.this, vd, "VisitaTableView");
@@ -155,7 +159,8 @@ public class VisitaTableView extends ViewPart {
 		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 11);
 		
 		Button buttonCreaAssociaFattura = new Button(classVis.top, SWT.NONE);
-		buttonCreaAssociaFattura.setBounds(260, 284, 150, 25);
+		buttonCreaAssociaFattura.setLayoutData(gridData1);
+		//buttonCreaAssociaFattura.setBounds(260, 284, 150, 25);
 		buttonCreaAssociaFattura.setText("Crea e associa una fattura");
 		buttonCreaAssociaFattura.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -167,8 +172,10 @@ public class VisitaTableView extends ViewPart {
 			}
 		});
 		buttonCreaAssociaFattura.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_FATTURA_VISITA));
+		
 		Button buttonAssociaFattura = new Button(classVis.top, SWT.NONE);
-		buttonAssociaFattura.setBounds(420, 284, 150, 25);
+		buttonAssociaFattura.setLayoutData(gridData1);
+		//buttonAssociaFattura.setBounds(420, 284, 150, 25);
 		buttonAssociaFattura.setText("Associa ad un conto");
 		buttonAssociaFattura.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_FATTURA_VISITA));
 		buttonAssociaFattura.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
