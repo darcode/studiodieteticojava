@@ -109,6 +109,19 @@ public class TableForm extends ListComposite {
 	 * 
 	 */
 	private void initialize(ArrayList<Object> listaElementi, String classe) {
+		GridData gridData2 = new GridData();
+		gridData2.horizontalAlignment = GridData.FILL;
+		gridData2.verticalAlignment = GridData.CENTER;
+		GridData gridData1 = new GridData();
+		gridData1.horizontalAlignment = GridData.FILL;
+		gridData1.verticalAlignment = GridData.CENTER;
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.heightHint = -1;
+		gridData.widthHint = -1;
+		gridData.grabExcessVerticalSpace = false;
+		gridData.grabExcessHorizontalSpace = false;
+		gridData.verticalAlignment = GridData.FILL;
 		classeChiamante = classe;
 		//final ArrayList<Object> listaElementiTable = listaElementi;
 		GridData gdForm = new GridData(SWT.BORDER);
@@ -154,6 +167,7 @@ public class TableForm extends ListComposite {
 		labelRicerca.setText("Ricerca sull'attributo:");
 		
 		cComboColonne = new CCombo(top, SWT.READ_ONLY);
+		cComboColonne.setLayoutData(gridData);
 		cComboColonne
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -417,6 +431,7 @@ public class TableForm extends ListComposite {
 		
 		buttonInsert = new Button(top, SWT.NONE);
 		buttonInsert.setText("Inserisci nuovo");
+		buttonInsert.setLayoutData(gridData1);
 		buttonInsert.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				Method metodo = null;
@@ -459,6 +474,7 @@ public class TableForm extends ListComposite {
 		
 		buttonElimina = new Button(top, SWT.NONE);
 		buttonElimina.setText("Elimina");
+		buttonElimina.setLayoutData(gridData2);
 		buttonElimina.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				if(tableVisualizzazione.getSelectionCount()>0) {
