@@ -124,6 +124,10 @@ public class PazienteTableView extends ViewPart {
 		top.setLayoutData(gdForm);
 		GridLayout glForm = new GridLayout(1, false);
 		top.setLayout(glForm);
+		GridData gridData1 = new GridData();
+		gridData1.horizontalAlignment = GridData.FILL;
+		gridData1.verticalAlignment = GridData.CENTER;
+		
 		pazienti = PazienteDAO.getPazientiObject();
 		PazienteDAO pd = new PazienteDAO();
 		classVis = new TableForm(top, SWT.BORDER, pazienti,
@@ -135,8 +139,9 @@ public class PazienteTableView extends ViewPart {
 		classVis.setBackground(Utils.getStandardWhiteColor());
 		buttonPrenVisita = new Button(classVis.top, SWT.NONE);
 //		GESTIONE SICUREZZA - RUOLO
+		buttonPrenVisita.setLayoutData(gridData1);
 		buttonPrenVisita.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_REGISTRA_VISITA));
-		buttonPrenVisita.setBounds(new Rectangle(250, 352, 105, 25));
+		//buttonPrenVisita.setBounds(new Rectangle(250, 352, 105, 25));
 		buttonPrenVisita.setText("Prenotazione visita");
 		buttonPrenVisita
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
@@ -160,7 +165,8 @@ public class PazienteTableView extends ViewPart {
 				});
 
 		buttonCreaPrescrizione = new Button(classVis.top, SWT.NONE);
-		buttonCreaPrescrizione.setBounds(new Rectangle(355, 352, 100, 25));
+		buttonCreaPrescrizione.setLayoutData(gridData1);
+		//buttonCreaPrescrizione.setBounds(new Rectangle(355, 352, 100, 25));
 		buttonCreaPrescrizione.setText("Prescrizione dieta");
 		buttonCreaPrescrizione.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_DIETA));
 		buttonCreaPrescrizione
@@ -186,7 +192,8 @@ public class PazienteTableView extends ViewPart {
 				});
 
 		buttonGestioneAnamnesi = new Button(classVis.top, SWT.NONE);
-		buttonGestioneAnamnesi.setBounds(new Rectangle(455, 352, 65, 25));
+		buttonGestioneAnamnesi.setLayoutData(gridData1);
+		//buttonGestioneAnamnesi.setBounds(new Rectangle(455, 352, 65, 25));
 		buttonGestioneAnamnesi.setText("Anamnesi");
 		buttonGestioneAnamnesi.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_ANAMNESI));
 		buttonGestioneAnamnesi
@@ -214,10 +221,10 @@ public class PazienteTableView extends ViewPart {
 				});
 
 		buttonRilevamentoParametri = new Button(classVis.top, SWT.NONE);
-		buttonRilevamentoParametri.setBounds(new Rectangle(520, 352, 140, 25));
+		buttonRilevamentoParametri.setLayoutData(gridData1);
+		//buttonRilevamentoParametri.setBounds(new Rectangle(520, 352, 140, 25));
 		buttonRilevamentoParametri.setText("Parametri antropometrici");
 		buttonRilevamentoParametri.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_ANAMNESI));
-		
 		buttonRilevamentoParametri
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(
@@ -242,7 +249,8 @@ public class PazienteTableView extends ViewPart {
 				});
 
 		buttonRilevamentoEsami = new Button(classVis.top, SWT.NONE);
-		buttonRilevamentoEsami.setBounds(new Rectangle(660, 352, 90, 25));
+		buttonRilevamentoEsami.setLayoutData(gridData1);
+		//buttonRilevamentoEsami.setBounds(new Rectangle(660, 352, 90, 25));
 		buttonRilevamentoEsami.setText("Esami clinici");
 		buttonRilevamentoEsami.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_ANAMNESI));
 		
