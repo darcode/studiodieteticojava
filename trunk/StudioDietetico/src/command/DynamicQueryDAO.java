@@ -1,6 +1,9 @@
 package command;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+
+import service.DynNode;
 
 public class DynamicQueryDAO extends BaseDAO{;
 	
@@ -15,6 +18,12 @@ public class DynamicQueryDAO extends BaseDAO{;
 		Session session = getSession();
 		begin();
 	}
+	
+	public void createCriteria(DynNode current){
+		Criteria criterion = getSession().createCriteria(current.getPathClass());
+	}
+	
+	
 	
 //	public List executeDynQuery () {
 //        List results = criteria.list();

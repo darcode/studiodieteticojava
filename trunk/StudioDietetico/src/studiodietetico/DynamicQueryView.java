@@ -199,6 +199,43 @@ public class DynamicQueryView extends ViewPart{
 	 *
 	 */
 	private void createSShell(final DynNode item) {
+		
+		
+//		
+//		if (item.getTreeNode().getText().startsWith("id")) {
+//			// do nothing
+//		} else if (item.getPathClass().isPrimitive()) {
+//			String prim = current.getType().toString();
+//			if (prim.equals("char")) {
+//										
+//			} else if (prim.equals("int")) {
+//				
+//			} else if (prim.equals("double")) {
+//				
+//			}										
+//		} else if (current.getType().equals(java.lang.Boolean.class)) {
+//			
+//		} else if (current.getType().equals(java.lang.Double.class)) {
+//			
+//		} else if (current.getType().isInstance(new String())) {
+//			
+//		} else if (current.getType().isInstance(new Date())) {
+//			
+//		} else if (current.getType().equals(java.lang.Integer.class)) {
+//			
+//		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		sShell = new Shell();
 		sShell.setSize(new Point(290, 167));
 		buttonOk = new Button(sShell, SWT.NONE);
@@ -364,4 +401,18 @@ public class DynamicQueryView extends ViewPart{
 			}
 		}
 	}
+
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
