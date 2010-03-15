@@ -10,7 +10,8 @@ public class DynNode {
 	public String idMap;
 	private TreeItem treeNode;
 	private String pathClass;
-	private ArrayList<Criteria> filters;
+	private ArrayList<String> filters;
+	private boolean isIstantiated = false;
 
 	public DynNode(TreeItem node) {
 		treeNode = node;
@@ -33,15 +34,24 @@ public class DynNode {
 		this.pathClass = pathClass;
 	}
 
-	public ArrayList<Criteria> getFilters() {
+	public ArrayList<String> getFilters() {
 		return filters;
 	}
 	
-	public void addFilter(Criteria filter){
+	public void addFilter(String filter){
 		filters.add(filter);
 	}
 
 	public String getIdMap() {
 		return idMap;
 	}
+
+	public boolean isIstantiated() {
+		return isIstantiated;
+	}
+
+	public void setIstantiated(boolean isIstantiated) {
+		this.isIstantiated = isIstantiated;
+	}
+	
 }
