@@ -45,11 +45,6 @@ public class DynamicQueryView extends ViewPart{
 	private Button button = null;
 	private Table table = null;
 	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="398,602"
-	private Button buttonOk = null;
-	private Label etichetta = null;
-	private Text text = null;
-	private Label nomeAttributo = null;
-	private Button buttonCancella = null;
 	DynamicQueryDAO dynDao;
 	private Shell sShell1 = null;  //  @jve:decl-index=0:visual-constraint="760,595"
 	private Label label2 = null;
@@ -89,7 +84,8 @@ public class DynamicQueryView extends ViewPart{
 						}        				
         				DynNode currentNode = dynAlbero.get(key);        				
         				
-                		createSShell(currentNode);
+                		DynamicQueryShell dynShell = new DynamicQueryShell();
+                		sShell = dynShell.createShell(currentNode);
                 		sShell.open();
 					}
 				}
@@ -198,36 +194,7 @@ public class DynamicQueryView extends ViewPart{
 	 * This method initializes sShell	
 	 *
 	 */
-	private void createSShell(final DynNode item) {
-		
-		
-//		
-//		if (item.getTreeNode().getText().startsWith("id")) {
-//			// do nothing
-//		} else if (item.getPathClass().isPrimitive()) {
-//			String prim = current.getType().toString();
-//			if (prim.equals("char")) {
-//										
-//			} else if (prim.equals("int")) {
-//				
-//			} else if (prim.equals("double")) {
-//				
-//			}										
-//		} else if (current.getType().equals(java.lang.Boolean.class)) {
-//			
-//		} else if (current.getType().equals(java.lang.Double.class)) {
-//			
-//		} else if (current.getType().isInstance(new String())) {
-//			
-//		} else if (current.getType().isInstance(new Date())) {
-//			
-//		} else if (current.getType().equals(java.lang.Integer.class)) {
-//			
-//		}
-		
-		
-		
-		//TODO la shell deve restituire come output una stringa formattata per aggiungere il criterio
+	private void createSShell() {
 		
 		
 		
@@ -236,38 +203,12 @@ public class DynamicQueryView extends ViewPart{
 		
 		
 		
-		sShell = new Shell();
-		sShell.setSize(new Point(290, 167));
-		buttonOk = new Button(sShell, SWT.NONE);
-		buttonOk.setText("Ok");
-		buttonOk.setBounds(new Rectangle(139, 109, 106, 27));
-		etichetta = new Label(sShell, SWT.NONE);
-		etichetta.setBounds(new Rectangle(87, 9, 117, 34));
-		etichetta.setText("Inserisci il valore");
-		nomeAttributo = new Label(sShell, SWT.NONE);
-		nomeAttributo.setBounds(new Rectangle(17, 59, 121, 22));
-		nomeAttributo.setText(item.getTreeNode().getText());
-		buttonCancella = new Button(sShell, SWT.NONE);
-		buttonCancella.setBounds(new Rectangle(43, 107, 90, 27));
-		buttonCancella.setText("Cancella");
-		buttonCancella.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						item.getTreeNode().setText(new String[] {item.getTreeNode().getText(), ""});						
-						sShell.close();
-					}
-				});
-		buttonOk.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),text.getText()});
-				sShell.close();
-			}
-		});
 		
 		
-		//if a cascata
 		
-		text = new Text(sShell, SWT.BORDER);
-		text.setBounds(new Rectangle(152, 56, 113, 25));
+		
+		
+		
 		
 		
 	}
