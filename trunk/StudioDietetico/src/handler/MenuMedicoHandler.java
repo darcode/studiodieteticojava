@@ -6,7 +6,7 @@ public class MenuMedicoHandler extends MenuStudioDieteticoHandler implements
 		IHandler {
 
 	private static final String VIEW = "StudioDietetico.RegistraMedicoView";
-	private static final String MY_FUNCTION = "MenuMedico";
+	private static final String MY_FUNCTION = "Menu Gestione Medici";
 
 	String getMyFunction() {
 		return MY_FUNCTION;

@@ -7,7 +7,7 @@ public class MenuRilevazioneParametroAntroHandler extends
 
 	//private static final String VIEW = "StudioDietetico.RilevazioneParametroAntroView";
 	private static final String VIEW = "StudioDietetico.PazienteTableView";
-	private static final String MY_FUNCTION = "MenuRilevazioneParametroAntro";
+	private static final String MY_FUNCTION = "Rilevazione Parametro Antropometrico";
 
 	String getMyFunction() {
 		return MY_FUNCTION;

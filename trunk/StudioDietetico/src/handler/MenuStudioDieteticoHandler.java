@@ -22,42 +22,12 @@ public abstract class MenuStudioDieteticoHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		if (Activator.IS_DEBUG)
-			try {
-				HandlerUtil.getActiveWorkbenchWindow(event).getActivePage()
-						.showView(getMyView());
-				return null;
-			} catch (PartInitException e1) {
-				e1.printStackTrace();
-			}
-		else {
-			if (Activator.getUser() != null) {
-				Utente user = Activator.getUser();
 				try {
-					if (UtenteDAO.canDo(user.getNomeUtente(), getMyFunction())) {
-						HandlerUtil.getActiveWorkbenchWindow(event)
-								.getActivePage().showView(getMyView());
-						if (getMyFunction() == "MenuAnamnesi") {
-							HandlerUtil.getActiveWorkbenchWindow(event)
-							.getActivePage();
-						}
-					} else {
-						Utils
-								.showMessageError("Operazione non consentita per il tuo profilo.");
-					}
-					return null;
+					HandlerUtil.getActiveWorkbenchWindow(event).getActivePage()
+							.showView(getMyView());
 				} catch (PartInitException e) {
-					throw new ExecutionException("Error while opening view", e);
-				} catch (Exception e) {
 					e.printStackTrace();
-					return null;
 				}
-			} else {
-				Utils.showMessageError("Effettuare la login.");
-
-				return null;
-			}
-		}
 		return event;
 	}
 
@@ -67,6 +37,19 @@ public abstract class MenuStudioDieteticoHandler extends AbstractHandler {
 
 	String getMyView() {
 		return null;
+	}
+	@Override
+	public boolean isEnabled() {
+			Utente user = Activator.getUser();
+				try {
+					if (UtenteDAO.canDo(user.getNomeUtente(), getMyFunction())) {
+						return true;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					return false;
+				}
+				return false;
 	}
 
 }

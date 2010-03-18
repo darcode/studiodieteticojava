@@ -5,7 +5,7 @@ import org.eclipse.core.commands.IHandler;
 public class MenuParametroAntropometricoRicercaHandler extends MenuStudioDieteticoHandler
 		implements IHandler {
 	private static final String VIEW = "StudioDietetico.ParametroAntropometricoTableView";
-	private static final String MY_FUNCTION = "MenuParametroAntropometricoRicerca";
+	private static final String MY_FUNCTION = "Gestione Parametri Antropometrici";
 
 	String getMyFunction() {
 		return MY_FUNCTION;
