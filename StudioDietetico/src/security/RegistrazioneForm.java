@@ -1,7 +1,10 @@
 package security;
 
+import hibernate.Funzione;
 import hibernate.Ruolo;
 import hibernate.Utente;
+
+import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -13,13 +16,16 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
-import command.FunzioneDAO;
 import command.RuoloDAO;
 import command.UtenteDAO;
 import common.Utils;
@@ -29,19 +35,19 @@ public class RegistrazioneForm extends ListComposite {
 
 	private static final Font font = Utils.getFont("Arial", 8, SWT.BOLD);
 	private static final Font fontTitle = Utils.getFont("Arial", 12, SWT.BOLD);
+	Color white = Utils.getStandardWhiteColor();
 	private Text password;
 	private Text utente;
 	private Combo profilo;
-	private Text nomeRuolo;
+	private Composite cmp;
+	private Table tblUtentiRuoli;
+	private Combo cboRuoli;
+	private Table tblRuoli;
+	private Table tblUtenti;
 	private Table tblFunzioni;
-	private Composite cmpNuovoRuolo;
-	private Table tblFunzioniUp;
-	private Combo ruoloCombo;
-	private Composite cmpModificaRoulo;
 
 	public RegistrazioneForm(Composite parent, int style) {
 		super(parent, style);
-
 		GridData gdForm = new GridData(SWT.NONE);
 		gdForm.grabExcessVerticalSpace = true;
 		gdForm.grabExcessHorizontalSpace = true;
@@ -51,15 +57,13 @@ public class RegistrazioneForm extends ListComposite {
 		this.setLayoutData(gdForm);
 		GridLayout glForm = new GridLayout(2, false);
 		this.setLayout(glForm);
-		Color white = Utils.getStandardWhiteColor();
+
 		this.setBackground(white);
-		Composite cmp = new Composite(this, SWT.BORDER);
+		cmp = new Composite(this, SWT.BORDER);
 		GridData gdCmp = new GridData(SWT.BORDER);
 		gdCmp.grabExcessHorizontalSpace = true;
-		gdCmp.grabExcessVerticalSpace = true;
 		gdCmp.horizontalAlignment = SWT.FILL;
-		gdCmp.verticalAlignment = SWT.FILL;
-		gdCmp.horizontalSpan = 2;
+		gdCmp.horizontalSpan=2;
 		gdCmp.minimumHeight = 250;
 		cmp.setLayoutData(gdCmp);
 		// cmp.setLayoutData(new GridData());
@@ -128,16 +132,14 @@ public class RegistrazioneForm extends ListComposite {
 
 			}
 		});
-		Label blbFIll1 = new Label(cmp, SWT.NONE);
-		Label blbFIll4 = new Label(cmp, SWT.NONE);
-		Button nuovoRuolo = new Button(cmp, SWT.NONE);
-		nuovoRuolo.setText("Nuovo Ruolo");
-		nuovoRuolo.setFont(font);
-		nuovoRuolo.addSelectionListener(new SelectionListener() {
+		Button utentiPerRuolo = new Button(this, SWT.NONE);
+		utentiPerRuolo.setText("Visualizza Utenti per Ruolo");
+		utentiPerRuolo.setFont(font);
+		utentiPerRuolo.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				cmpNuovoRuolo.setVisible(true);
+				creaUtentiRuoli();
 			}
 
 			@Override
@@ -145,15 +147,16 @@ public class RegistrazioneForm extends ListComposite {
 
 			}
 		});
-
-		Button modificaRuolo = new Button(cmp, SWT.NONE);
-		modificaRuolo.setText("Modifica Ruolo");
-		modificaRuolo.setFont(font);
-		modificaRuolo.addSelectionListener(new SelectionListener() {
+		
+		Button gestioneRuoli = new Button(this, SWT.NONE);
+		gestioneRuoli.setText("Gestione Ruoli");
+		gestioneRuoli.setFont(font);
+		gestioneRuoli.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				cmpModificaRoulo.setVisible(true);
+				openGestioneRuoli();
+
 			}
 
 			@Override
@@ -161,146 +164,7 @@ public class RegistrazioneForm extends ListComposite {
 
 			}
 		});
-		cmpNuovoRuolo = new Composite(this, SWT.BORDER);
-		GridData gdCmpNuovoRuolo = new GridData(SWT.BORDER);
-		gdCmpNuovoRuolo.grabExcessHorizontalSpace = true;
-		gdCmpNuovoRuolo.grabExcessVerticalSpace = true;
-		gdCmpNuovoRuolo.horizontalAlignment = SWT.FILL;
-		gdCmpNuovoRuolo.verticalAlignment = SWT.FILL;
-		cmpNuovoRuolo.setLayoutData(gdCmpNuovoRuolo);
-		// cmp.setLayoutData(new GridData());
-		cmpNuovoRuolo.setLayout(new GridLayout(2, false));
-		cmpNuovoRuolo.setBackground(white);
-
-		Label lblTitolo1 = new Label(cmpNuovoRuolo, SWT.FILL);
-		GridData gdLblTitolo1 = new GridData();
-		gdLblTitolo1.horizontalSpan = 2;
-		gdLblTitolo1.horizontalAlignment = SWT.CENTER;
-		lblTitolo1.setLayoutData(gdLblTitolo1);
-		lblTitolo1.setText("Crea Ruolo");
-		lblTitolo1.setFont(fontTitle);
-		lblTitolo1.setBackground(white);
-		GridData gdNomeRuolo = new GridData(SWT.BORDER);
-		gdNomeRuolo.grabExcessHorizontalSpace = true;
-		gdNomeRuolo.verticalAlignment = SWT.CENTER;
-		gdNomeRuolo.horizontalAlignment = SWT.CENTER;
-		gdNomeRuolo.grabExcessVerticalSpace = true;
-
-		Label lblNomeRuolo = new Label(cmpNuovoRuolo, SWT.NONE | SWT.BOLD);
-		lblNomeRuolo.setText("Nome Ruolo");
-		lblNomeRuolo.setBackground(white);
-		lblNomeRuolo.setLayoutData(gdLbl);
-		lblNomeRuolo.setFont(font);
-		nomeRuolo = new Text(cmpNuovoRuolo, SWT.BORDER);
-		GridData ggTxtNomeRUolo = new GridData(SWT.FILL);
-		ggTxtNomeRUolo.widthHint = 200;
-		ggTxtNomeRUolo.verticalAlignment = SWT.CENTER;
-		nomeRuolo.setLayoutData(ggTxtNomeRUolo);
-		nomeRuolo.setFont(font);
-		Label lblFunzioni = new Label(cmpNuovoRuolo, SWT.NONE | SWT.BOLD);
-		lblFunzioni.setText("Seleziona le funzioni");
-		lblFunzioni.setBackground(white);
-		lblFunzioni.setLayoutData(gdLbl);
-		lblFunzioni.setFont(font);
-		GridData gdTables = new GridData();
-		gdTables.grabExcessHorizontalSpace = true;
-		gdTables.horizontalAlignment = SWT.FILL;
-		gdTables.grabExcessVerticalSpace = true;
-		gdTables.verticalAlignment = SWT.FILL;
-		tblFunzioni = new Table(cmpNuovoRuolo, SWT.BORDER | SWT.FULL_SELECTION
-				| SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL);
-		tblFunzioni.setHeaderVisible(true);
-		tblFunzioni.setToolTipText("Funzioni - selezione multipla");
-		tblFunzioni.setLinesVisible(true);
-		riempiTabellaEntita(tblFunzioni, FunzioneDAO.getAllFunzioni(),"");
-		tblFunzioni.getColumn(0).setWidth(0);
-		tblFunzioni.setFont(font);
-		tblFunzioni.setLayoutData(gdTables);
-		Button inserisci = new Button(cmpNuovoRuolo, SWT.NONE);
-		inserisci.setText("Inserisci");
-		inserisci.setFont(font);
-		inserisci.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				insertRuolo();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-
-			}
-		});
-		GridData gdIns = new GridData();
-		gdIns.horizontalSpan =2;
-		gdIns.horizontalAlignment = SWT.CENTER;
-		inserisci.setLayoutData(gdIns);
-		cmpModificaRoulo = new Composite(this, SWT.BORDER);
-		GridData gdCmp1 = new GridData(SWT.BORDER);
-		gdCmp1.grabExcessHorizontalSpace = true;
-		gdCmp1.grabExcessVerticalSpace = true;
-		gdCmp1.horizontalAlignment = SWT.FILL;
-		gdCmp1.verticalAlignment = SWT.FILL;
-		cmpModificaRoulo.setLayoutData(gdCmp1);
-		// cmp.setLayoutData(new GridData());
-		cmpModificaRoulo.setLayout(new GridLayout(2, false));
-		cmpModificaRoulo.setBackground(white);
-
-		Label lblTitolo2 = new Label(cmpModificaRoulo, SWT.FILL);
-		GridData gdLblTitolo2 = new GridData();
-		gdLblTitolo2.horizontalSpan = 2;
-		gdLblTitolo2.horizontalAlignment = SWT.CENTER;
-		lblTitolo2.setLayoutData(gdLblTitolo2);
-		lblTitolo2.setText("Modifica Ruolo");
-		lblTitolo2.setFont(fontTitle);
-		lblTitolo2.setBackground(white);
-		Label lblRuolo = new Label(cmpModificaRoulo, SWT.NONE | SWT.BOLD);
-		lblRuolo.setText("Ruolo");
-		lblRuolo.setBackground(white);
-		lblRuolo.setLayoutData(gdLbl);
-		lblRuolo.setFont(font);
-		ruoloCombo = new Combo(cmpModificaRoulo, SWT.BORDER);
-		GridData gdRuolo = new GridData(SWT.FILL);
-		gdRuolo.verticalAlignment = SWT.CENTER;
-		ruoloCombo.setLayoutData(gdRuolo);
-		ruoloCombo.setFont(font);
-		for (Ruolo ruolo : RuoloDAO.getAllRoules())
-			ruoloCombo.add(ruolo.getDescrizione());
-		Label lblFunz = new Label(cmpModificaRoulo, SWT.NONE | SWT.BOLD);
-		lblFunz.setText("Seleziona le funzioni");
-		lblFunz.setBackground(white);
-		lblFunz.setLayoutData(gdLbl);
-		lblFunz.setFont(font);
-		tblFunzioniUp = new Table(cmpModificaRoulo, SWT.BORDER
-				| SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL);
-		tblFunzioniUp.setHeaderVisible(true);
-		tblFunzioniUp.setToolTipText("Funzioni - selezione multipla");
-		tblFunzioniUp.setLinesVisible(true);
-		tblFunzioniUp.setLayoutData(gdTables);
-		riempiTabellaEntita(tblFunzioniUp, FunzioneDAO.getAllFunzioni(),"");
-		tblFunzioniUp.getColumn(0).setWidth(0);
-		tblFunzioniUp.setFont(font);
-		Button modifica = new Button(cmpModificaRoulo, SWT.NONE);
-		modifica.setText("Modifica");
-		modifica.setFont(font);
-		GridData gdMod = new GridData();
-		gdMod.horizontalSpan =2;
-		gdMod.horizontalAlignment = SWT.CENTER;
-		modifica.setLayoutData(gdMod);
-		modifica.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				modificaRuolo();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-
-			}
-		});
-		cmpNuovoRuolo.setVisible(false);
-		cmpModificaRoulo.setVisible(false);
+		creaUtentiRuoliFunzioni();
 	}
 
 	private void abilita(String utente, String password, String descrRuolo) {
@@ -321,50 +185,211 @@ public class RegistrazioneForm extends ListComposite {
 		}
 	}
 
-	private void modificaRuolo() {
-		if (tblFunzioniUp.getSelectionIndices().length == 0) {
-			Utils.showMessageError("Selezionare almeno una funzione");
-			return;
-		}
-		Ruolo ruolo = RuoloDAO.get(ruoloCombo.getText());
-		System.out.println(ruolo.getIdRuolo());
-		if (ruolo == null) {
-			Utils.showMessageError("Ruolo non esistente");
-		} else {
-			if (RuoloDAO
-					.updateRuolo(ruolo, tblFunzioniUp.getSelectionIndices())) {
-				Utils.showMessageInfo("Operazione eseguita con successo");
-			} else {
-				Utils.showMessageError("Modifica non riuscita");
-			}
-		}
+	private void openGestioneRuoli() {
+		for(Control ctrl :this.getChildren())
+			ctrl.dispose();
+		RuoliForm form = new RuoliForm(this, SWT.NONE);
+		form.setLayout(new GridLayout(1, false));
+		GridData gdForm = new GridData();
+		gdForm.grabExcessHorizontalSpace = true;
+		gdForm.grabExcessVerticalSpace = true;
+		gdForm.horizontalAlignment = SWT.FILL;
+		gdForm.verticalAlignment = SWT.FILL;
+		form.setLayoutData(gdForm);
+		this.layout();
 	}
 
-	private void insertRuolo() {
-		if (tblFunzioni.getSelectionIndices().length == 0) {
-			Utils.showMessageError("Selezionare almeno una funzione");
-			return;
+	private void creaUtentiRuoli() {
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gridData.heightHint = 32;
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		Shell shell = new Shell(Display.getCurrent(), SWT.APPLICATION_MODAL
+				| SWT.SHELL_TRIM);
+		shell.setText("Associazioni utenti ruoli");
+		shell.setLayout(new GridLayout());
+		shell.setSize(400, 400);
+		Composite cmp = new Composite(shell, SWT.BORDER);
+		GridData gdCmp = new GridData(SWT.BORDER);
+		gdCmp.grabExcessHorizontalSpace = true;
+		gdCmp.grabExcessVerticalSpace = true;
+		gdCmp.horizontalAlignment = SWT.FILL;
+		gdCmp.verticalAlignment = SWT.FILL;
+		gdCmp.minimumHeight = 350;
+		cmp.setLayoutData(gdCmp);
+		// cmp.setLayoutData(new GridData());
+		cmp.setLayout(new GridLayout(2, true));
+		cmp.setBackground(white);
+		Label lblTitolo = new Label(cmp, SWT.FILL);
+		GridData gdLblTitolo = new GridData();
+		gdLblTitolo.horizontalSpan = 2;
+		gdLblTitolo.horizontalAlignment = SWT.CENTER;
+		lblTitolo.setLayoutData(gdLblTitolo);
+		lblTitolo.setText("Utente e Ruoli esistenti");
+		lblTitolo.setFont(fontTitle);
+		lblTitolo.setBackground(white);
+		GridData gdTables = new GridData();
+		gdTables.grabExcessHorizontalSpace = true;
+		gdTables.horizontalAlignment = SWT.FILL;
+		gdTables.grabExcessVerticalSpace = true;
+		gdTables.verticalAlignment = SWT.FILL;
+		tblRuoli = new Table(cmp, SWT.BORDER | SWT.FULL_SELECTION
+				| SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL);
+		TableColumn tableColumn = new TableColumn(tblRuoli, SWT.LEAD);
+		tableColumn.setText("id");
+		TableColumn tableColumn2 = new TableColumn(tblRuoli, SWT.LEAD);
+		tableColumn2.setText("Ruolo");
+		tableColumn2.setWidth(200);
+		for(Ruolo ruolo:RuoloDAO.getAllRoules()){
+			TableItem tableItem= new TableItem(tblRuoli, SWT.NONE);
+			tableItem.setText(new String[]{""+ruolo.getIdRuolo(),ruolo.getDescrizione() });
 		}
-		if (RuoloDAO.get(nomeRuolo.getText()) != null) {
-			MessageBox msg = new MessageBox(new Shell());
-			msg.setMessage("Ruolo già esistente");
-			msg.setText("Errore");
-			msg.open();
-		} else {
-			if (RuoloDAO.insRuolo(nomeRuolo.getText(), tblFunzioni
-					.getSelectionIndices())) {
-				MessageBox msg = new MessageBox(new Shell());
-				msg.setMessage("Operazione eseguita con successo");
-				profilo.add(nomeRuolo.getText());
-				ruoloCombo.add(nomeRuolo.getText());
-				msg.setText("Info");
-				msg.open();
-			} else {
-				MessageBox msg = new MessageBox(new Shell());
-				msg.setMessage("Inserimento non riuscito");
-				msg.setText("Errore");
-				msg.open();
+		tblRuoli.setHeaderVisible(true);
+		tblRuoli.setToolTipText("Utenti - Ruoli");
+		tblRuoli.setLinesVisible(true);
+		tblRuoli.getColumn(0).setWidth(0);
+		tblRuoli.setFont(font);
+		tblRuoli.setLayoutData(gdTables);
+
+		GridData gdLbl = new GridData(SWT.BORDER);
+		gdLbl.grabExcessHorizontalSpace = true;
+		gdLbl.verticalAlignment = SWT.CENTER;
+		gdLbl.horizontalAlignment = SWT.FILL;
+		gdLbl.grabExcessVerticalSpace = true;
+		
+		tblRuoli.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ricaricaUtentiRuolo(((TableItem)tblRuoli.getSelection()[0]).getText(0));
+				}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				
 			}
+		});
+
+
+		tblUtentiRuoli = new Table(cmp, SWT.BORDER | SWT.FULL_SELECTION
+				| SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL);
+		TableColumn tableColumn3 = new TableColumn(tblUtentiRuoli, SWT.LEAD);
+		tableColumn3.setText("id Utente");
+		TableColumn tableColumn4 = new TableColumn(tblUtentiRuoli, SWT.LEAD);
+		tableColumn4.setText("Nome Utente");
+		tableColumn4.setWidth(200);
+		tblUtentiRuoli.setHeaderVisible(true);
+		tblUtentiRuoli.setToolTipText("Utenti - Ruoli");
+		tblUtentiRuoli.setLinesVisible(true);
+		tblUtentiRuoli.getColumn(0).setWidth(0);
+		tblUtentiRuoli.setFont(font);
+		tblUtentiRuoli.setLayoutData(gdTables);
+		shell.pack();
+		shell.open();
+	}
+	private void creaUtentiRuoliFunzioni() {
+		Composite cmp = new Composite(this, SWT.BORDER);
+		GridData gdCmp = new GridData(SWT.BORDER);
+		gdCmp.grabExcessHorizontalSpace = true;
+		gdCmp.grabExcessVerticalSpace = true;
+		gdCmp.horizontalAlignment = SWT.FILL;
+		gdCmp.horizontalSpan = 2;
+		gdCmp.verticalAlignment = SWT.FILL;
+		gdCmp.minimumHeight = 350;
+		cmp.setLayoutData(gdCmp);
+		// cmp.setLayoutData(new GridData());
+		cmp.setLayout(new GridLayout(2, false));
+		cmp.setBackground(white);
+		Label lblTitolo = new Label(cmp, SWT.FILL);
+		GridData gdLblTitolo = new GridData();
+		gdLblTitolo.horizontalSpan = 2;
+		gdLblTitolo.horizontalAlignment = SWT.CENTER;
+		lblTitolo.setLayoutData(gdLblTitolo);
+		lblTitolo.setText("Utente e Ruoli esistenti");
+		lblTitolo.setFont(fontTitle);
+		lblTitolo.setBackground(white);
+		GridData gdTables = new GridData();
+		gdTables.grabExcessHorizontalSpace = true;
+		gdTables.horizontalAlignment = SWT.FILL;
+		gdTables.grabExcessVerticalSpace = true;
+		gdTables.verticalAlignment = SWT.FILL;
+		tblUtenti = new Table(cmp, SWT.BORDER | SWT.FULL_SELECTION
+				| SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL);
+		TableColumn tableColumn = new TableColumn(tblUtenti, SWT.LEAD);
+		tableColumn.setText("id");
+		TableColumn tableColumn2 = new TableColumn(tblUtenti, SWT.LEAD);
+		tableColumn2.setText("Utente");
+		tableColumn2.setWidth(200);
+		for(Utente utente:UtenteDAO.getAllUser()){
+			TableItem tableItem= new TableItem(tblUtenti, SWT.NONE);
+			tableItem.setText(new String[]{""+utente.getIdUtente(),utente.getNomeUtente() });
+		}
+		tblUtenti.setHeaderVisible(true);
+		tblUtenti.setToolTipText("Utenti");
+		tblUtenti.setLinesVisible(true);
+		tblUtenti.getColumn(0).setWidth(0);
+		tblUtenti.setFont(font);
+		tblUtenti.setLayoutData(gdTables);
+
+		GridData gdLbl = new GridData(SWT.BORDER);
+		gdLbl.grabExcessHorizontalSpace = true;
+		gdLbl.verticalAlignment = SWT.CENTER;
+		gdLbl.horizontalAlignment = SWT.FILL;
+		gdLbl.grabExcessVerticalSpace = true;
+		
+		tblUtenti.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ricaricaUtentiFunzioni(Integer.parseInt(((TableItem)tblUtenti.getSelection()[0]).getText(0)));
+				}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				
+			}
+		});
+
+
+		tblFunzioni = new Table(cmp, SWT.BORDER | SWT.FULL_SELECTION
+				| SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL);
+		TableColumn tableColumn3 = new TableColumn(tblFunzioni, SWT.LEAD);
+		tableColumn3.setText("id Funzione");
+		TableColumn tableColumn4 = new TableColumn(tblFunzioni, SWT.LEAD);
+		tableColumn4.setText("Funzione");
+		tableColumn4.setWidth(200);
+		tblFunzioni.setHeaderVisible(true);
+		tblFunzioni.setToolTipText("Utenti - Ruoli");
+		tblFunzioni.setLinesVisible(true);
+		tblFunzioni.getColumn(0).setWidth(0);
+		tblFunzioni.setFont(font);
+		tblFunzioni.setLayoutData(gdTables);
+	}
+	private void ricaricaUtentiRuolo(String idRuolo) {
+		try {
+			tblUtentiRuoli.removeAll();
+			for (Utente user : UtenteDAO.getUtenti(Integer.parseInt(idRuolo))) {
+				TableItem item = new TableItem(tblUtentiRuoli, SWT.CENTER);
+				item.setText(new String[] { "" + user.getIdUtente(),
+						user.getNomeUtente() });
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	private void ricaricaUtentiFunzioni(int idUtente) {
+		try {
+			tblFunzioni.removeAll();
+			Utente user = UtenteDAO.get(idUtente);
+			for (Funzione funct: (Set<Funzione>)user.getRuolo().getFunziones()) {
+				TableItem item = new TableItem(tblFunzioni, SWT.CENTER);
+				item.setText(new String[] { "" + funct.getIdFunzione(),
+						funct.getDescrizione() });
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

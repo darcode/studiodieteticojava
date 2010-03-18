@@ -19,14 +19,14 @@ public class RegistrazioneView extends ViewPart implements
 
 	public static final String ID_VIEW = registrazioneViewID;
 	private Color whiteColor = Utils.getStandardWhiteColor();
-	private RegistrazioneForm form;
+	private RegistrazioneForm regForm;
 
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.
 	 */
 	public void createPartControl(Composite parent) {
-		form = new RegistrazioneForm(parent, SWT.FILL);
+		regForm = new RegistrazioneForm(parent, SWT.FILL);
 	}
 
 	
@@ -37,7 +37,7 @@ public class RegistrazioneView extends ViewPart implements
 
 	@Override
 	public void dispose() {
-		form.dispose();
+		regForm.dispose();
 		super.dispose();
 	}
 
