@@ -6,7 +6,7 @@ public class MenuParametroAntropometricoHandler extends
 		MenuStudioDieteticoHandler implements IHandler {
 
 	private static final String VIEW = "StudioDietetico.ParametroAntropometricoView";
-	private static final String MY_FUNCTION = "MenuParametroAntropometrico";
+	private static final String MY_FUNCTION = "Gestione Parametri Antropometrici";
 
 	String getMyFunction() {
 		return MY_FUNCTION;

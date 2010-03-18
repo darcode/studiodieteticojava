@@ -6,7 +6,7 @@ public class MenuPazienteRicercaHandler extends
 		MenuStudioDieteticoHandler implements IHandler {
 
 	private static final String VIEW = "StudioDietetico.PazienteTableView";
-	private static final String MY_FUNCTION = "MenuPazienteRicerca";
+	private static final String MY_FUNCTION = "Ricerca Paziente";
 
 	String getMyFunction() {
 		return MY_FUNCTION;

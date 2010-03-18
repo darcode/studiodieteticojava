@@ -7,7 +7,7 @@ public class MenuRisultatoAnalisiHandler extends MenuStudioDieteticoHandler
 
 	//private static final String VIEW = "StudioDietetico.RisultatoAnalisiView";
 	private static final String VIEW = "StudioDietetico.PazienteTableView";
-	private static final String MY_FUNCTION = "MenuRisultatoAnalisi";
+	private static final String MY_FUNCTION = "Risultato Analisi";
 
 	String getMyFunction() {
 		return MY_FUNCTION;

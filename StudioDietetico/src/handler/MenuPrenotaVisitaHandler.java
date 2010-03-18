@@ -7,7 +7,7 @@ public class MenuPrenotaVisitaHandler extends MenuStudioDieteticoHandler
 
 	//private static final String VIEW = "StudioDietetico.PrenotaVisitaView";
 	private static final String VIEW = "StudioDietetico.PazienteTableView";
-	private static final String MY_FUNCTION = "MenuPrenotaVisita";
+	private static final String MY_FUNCTION = "Prenotazione Visita";
 
 	String getMyFunction() {
 		return MY_FUNCTION;

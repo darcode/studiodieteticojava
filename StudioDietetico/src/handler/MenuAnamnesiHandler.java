@@ -7,7 +7,7 @@ public class MenuAnamnesiHandler extends MenuStudioDieteticoHandler implements I
 
 	//static final String VIEW = "StudioDietetico.AnamnesiTableView";
 	static final String VIEW = "StudioDietetico.PazienteTableView";
-	static final String MY_FUNCTION = "MenuAnamnesi";
+	static final String MY_FUNCTION = "Menu Anamnesi";
 
 	String getMyFunction(){
 		return MY_FUNCTION;
@@ -15,4 +15,5 @@ public class MenuAnamnesiHandler extends MenuStudioDieteticoHandler implements I
 	String getMyView(){
 		return VIEW;
 	}
+	
 }

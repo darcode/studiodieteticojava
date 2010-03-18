@@ -8,7 +8,7 @@ public class MenuStatisticheHandler extends MenuStudioDieteticoHandler
 		implements IHandler {
 
 	private static final String VIEW = ICommonConstants.statisticheViewID;
-	private static final String MY_FUNCTION = "MenuStatisticheHandler";
+	private static final String MY_FUNCTION = "Menu Statistiche";
 
 	String getMyFunction() {
 		return MY_FUNCTION;
