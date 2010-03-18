@@ -6,9 +6,7 @@ import hibernate.Utente;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.Criteria;
 import org.hibernate.Query;
-import org.hibernate.criterion.Restrictions;
 
 import studiodietetico.Activator;
 
@@ -23,6 +21,22 @@ public class UtenteDAO extends BaseDAO {
 			Query q = getSession().createQuery(
 					"from Utente where nomeUtente = '" + username + "'");
 
+			user = (Utente) q.uniqueResult();
+			commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+
+		return user;
+	}
+
+	public static Utente get(int idUtente) throws Exception {
+		Utente user = null;
+		try {
+			begin();
+			Query q = getSession().createQuery(
+					"from Utente where idUtente = " + idUtente + "");
 			user = (Utente) q.uniqueResult();
 			commit();
 		} catch (Exception e) {
@@ -78,18 +92,19 @@ public class UtenteDAO extends BaseDAO {
 	 */
 	public static List<Utente> getUtenti(int profiloUtente) throws Exception {
 		List<Utente> utenti = null;
+		Utente user = null;
 		try {
 			begin();
-
-			Criteria crit = getSession().createCriteria(Utente.class);
-			crit.add(Restrictions.not(Restrictions.eq("ruolo", profiloUtente)));
-			utenti = crit.list();
+			Query q = getSession().createQuery(
+					"from Utente u  where u.ruolo = " + profiloUtente);
+			utenti = q.list();
+			commit();
 		} catch (Exception e) {
-			String mes = ("Errore durante il recupero della lista utenti...");
-			throw new Exception(mes);
+			e.printStackTrace();
 		}
 
 		return utenti;
+
 	}
 
 	public static void cancellaUtente(String nome_utente) throws Exception {
@@ -99,49 +114,68 @@ public class UtenteDAO extends BaseDAO {
 		getSession().delete(utente);
 
 	}
-	public static boolean hasRole(String nome_utente, String roleString) throws Exception{
+
+	public static boolean hasRole(String nome_utente, String roleString)
+			throws Exception {
 		begin();
 		Utente utente;
 		utente = get(nome_utente);
-		if(roleString.equals(utente.getRuolo().getDescrizione()))
+		if (roleString.equals(utente.getRuolo().getDescrizione()))
 			return true;
 		else
 			return false;
-		
+
 	}
-	public static boolean canDo(String nome_utente, String function) throws Exception{
+
+	public static boolean canDo(String nome_utente, String function)
+			throws Exception {
 		begin();
 		Utente utente;
 		utente = get(nome_utente);
-		if(utente!= null && utente.getRuolo()!= null && utente.getRuolo().getFunziones()!= null){
-			
-			Set functions  = utente.getRuolo().getFunziones();
-				for(Object item: functions){
-					if(function.equals(((Funzione)item).getDescrizione()))
-						return true;
-				}
-				return false;
-		}
-		else
+		if (utente != null && utente.getRuolo() != null
+				&& utente.getRuolo().getFunziones() != null) {
+
+			Set functions = utente.getRuolo().getFunziones();
+			for (Object item : functions) {
+				if (function.equals(((Funzione) item).getDescrizione()))
+					return true;
+			}
 			return false;
-		
+		} else
+			return false;
+
 	}
+
 	public static boolean hasFunction(int function) {
 		begin();
 		Utente utente = Activator.getUser();
-		if (utente == null) return false;
-
-		if(utente!= null && utente.getRuolo()!= null && utente.getRuolo().getFunziones()!= null){
-			
-			Set functions  = utente.getRuolo().getFunziones();
-				for(Object item: functions){
-					if(function == (((Funzione)item).getIdFunzione()))
-						return true;
-				}
-				return false;
-		}
-		else
+		if (utente == null)
 			return false;
-		
+
+		if (utente != null && utente.getRuolo() != null
+				&& utente.getRuolo().getFunziones() != null) {
+
+			Set functions = utente.getRuolo().getFunziones();
+			for (Object item : functions) {
+				if (function == (((Funzione) item).getIdFunzione()))
+					return true;
+			}
+			return false;
+		} else
+			return false;
+
+	}
+
+	public static List<Utente> getAllUser() {
+		List<Utente> utenti = null;
+		try {
+			begin();
+			Query q = getSession().createQuery("from Utente");
+			utenti = q.list();
+			commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return utenti;
 	}
 }
