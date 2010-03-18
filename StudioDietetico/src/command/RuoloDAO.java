@@ -2,6 +2,7 @@ package command;
 
 import hibernate.Ruolo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -49,7 +50,19 @@ public class RuoloDAO extends BaseDAO{
 		}
 		return ruoli;
 	}
-	
+	public static ArrayList<Object> getAllRoulesForTable() {
+		ArrayList<Object> ruoli = null;
+		try {
+			begin();
+			Query q = getSession().createQuery(
+					"from Ruolo");
+			 ruoli = (ArrayList<Object>)q.list();
+			commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ruoli;
+	}
 	public static boolean insRuolo(String descr, int[] idFunzioni) {
 		try {
 			begin();
