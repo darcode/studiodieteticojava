@@ -23,12 +23,12 @@ public class FunzioneDAO extends BaseDAO {
 		}
 		return funzioni;
 	}
-	public static Set getFunzioniAsSet(int[] id) throws Exception {
+	public static Set getFunzioniAsSet(ArrayList<String> descr) throws Exception {
 		Set funzioni = new HashSet();
 		try {
-			for(int item:id){
-				Query q = getSession().createQuery("from Funzione where idFunzione = " + (item+1));
-				funzioni.add(q.uniqueResult());
+			for(String item:descr){
+				Query q = getSession().createQuery("from Funzione where descrizione = '" +item+"'");
+				funzioni.add(q.list().get(0));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

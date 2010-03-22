@@ -43,8 +43,9 @@ public class RegistrazioneForm extends ListComposite {
 	private Table tblUtentiRuoli;
 	private Combo cboRuoli;
 	private Table tblRuoli;
-	private Table tblUtenti;
+	private Table tblRuoliEsistenti;
 	private Table tblFunzioni;
+	private RuoliForm form;
 
 	public RegistrazioneForm(Composite parent, int style) {
 		super(parent, style);
@@ -52,10 +53,9 @@ public class RegistrazioneForm extends ListComposite {
 		gdForm.grabExcessVerticalSpace = true;
 		gdForm.grabExcessHorizontalSpace = true;
 		gdForm.horizontalAlignment = SWT.FILL;
-		gdForm.grabExcessVerticalSpace = true;
 		gdForm.verticalAlignment = SWT.FILL;
 		this.setLayoutData(gdForm);
-		GridLayout glForm = new GridLayout(2, false);
+		GridLayout glForm = new GridLayout(1, false);
 		this.setLayout(glForm);
 
 		this.setBackground(white);
@@ -188,17 +188,10 @@ public class RegistrazioneForm extends ListComposite {
 	private void openGestioneRuoli() {
 		for(Control ctrl :this.getChildren())
 			ctrl.dispose();
-		RuoliForm form = new RuoliForm(this, SWT.NONE);
-		form.setLayout(new GridLayout(1, false));
-		GridData gdForm = new GridData();
-		gdForm.grabExcessHorizontalSpace = true;
-		gdForm.grabExcessVerticalSpace = true;
-		gdForm.horizontalAlignment = SWT.FILL;
-		gdForm.verticalAlignment = SWT.FILL;
-		form.setLayoutData(gdForm);
+		form = new RuoliForm(this, SWT.NONE);
 		this.layout();
 	}
-
+	
 	private void creaUtentiRuoli() {
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gridData.heightHint = 32;
@@ -305,7 +298,7 @@ public class RegistrazioneForm extends ListComposite {
 		gdLblTitolo.horizontalSpan = 2;
 		gdLblTitolo.horizontalAlignment = SWT.CENTER;
 		lblTitolo.setLayoutData(gdLblTitolo);
-		lblTitolo.setText("Utente e Ruoli esistenti");
+		lblTitolo.setText("Ruoli esistenti");
 		lblTitolo.setFont(fontTitle);
 		lblTitolo.setBackground(white);
 		GridData gdTables = new GridData();
@@ -313,23 +306,23 @@ public class RegistrazioneForm extends ListComposite {
 		gdTables.horizontalAlignment = SWT.FILL;
 		gdTables.grabExcessVerticalSpace = true;
 		gdTables.verticalAlignment = SWT.FILL;
-		tblUtenti = new Table(cmp, SWT.BORDER | SWT.FULL_SELECTION
+		tblRuoliEsistenti = new Table(cmp, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL);
-		TableColumn tableColumn = new TableColumn(tblUtenti, SWT.LEAD);
+		TableColumn tableColumn = new TableColumn(tblRuoliEsistenti, SWT.LEAD);
 		tableColumn.setText("id");
-		TableColumn tableColumn2 = new TableColumn(tblUtenti, SWT.LEAD);
+		TableColumn tableColumn2 = new TableColumn(tblRuoliEsistenti, SWT.LEAD);
 		tableColumn2.setText("Utente");
 		tableColumn2.setWidth(200);
-		for(Utente utente:UtenteDAO.getAllUser()){
-			TableItem tableItem= new TableItem(tblUtenti, SWT.NONE);
-			tableItem.setText(new String[]{""+utente.getIdUtente(),utente.getNomeUtente() });
+		for(Ruolo ruolo:RuoloDAO.getAllRoules()){
+			TableItem tableItem= new TableItem(tblRuoliEsistenti, SWT.NONE);
+			tableItem.setText(new String[]{""+ruolo.getIdRuolo(),ruolo.getDescrizione() });
 		}
-		tblUtenti.setHeaderVisible(true);
-		tblUtenti.setToolTipText("Utenti");
-		tblUtenti.setLinesVisible(true);
-		tblUtenti.getColumn(0).setWidth(0);
-		tblUtenti.setFont(font);
-		tblUtenti.setLayoutData(gdTables);
+		tblRuoliEsistenti.setHeaderVisible(true);
+		tblRuoliEsistenti.setToolTipText("Utenti");
+		tblRuoliEsistenti.setLinesVisible(true);
+		tblRuoliEsistenti.getColumn(0).setWidth(0);
+		tblRuoliEsistenti.setFont(font);
+		tblRuoliEsistenti.setLayoutData(gdTables);
 
 		GridData gdLbl = new GridData(SWT.BORDER);
 		gdLbl.grabExcessHorizontalSpace = true;
@@ -337,11 +330,11 @@ public class RegistrazioneForm extends ListComposite {
 		gdLbl.horizontalAlignment = SWT.FILL;
 		gdLbl.grabExcessVerticalSpace = true;
 		
-		tblUtenti.addSelectionListener(new SelectionListener() {
+		tblRuoliEsistenti.addSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ricaricaUtentiFunzioni(Integer.parseInt(((TableItem)tblUtenti.getSelection()[0]).getText(0)));
+				ricaricaRuoliFunzioni(Integer.parseInt(((TableItem)tblRuoliEsistenti.getSelection()[0]).getText(0)));
 				}
 			
 			@Override
@@ -378,11 +371,11 @@ public class RegistrazioneForm extends ListComposite {
 			e.printStackTrace();
 		}
 	}
-	private void ricaricaUtentiFunzioni(int idUtente) {
+	private void ricaricaRuoliFunzioni(int idRuolo) {
 		try {
 			tblFunzioni.removeAll();
-			Utente user = UtenteDAO.get(idUtente);
-			for (Funzione funct: (Set<Funzione>)user.getRuolo().getFunziones()) {
+			Ruolo ruolo = RuoloDAO.get(idRuolo);
+			for (Funzione funct: (Set<Funzione>)ruolo.getFunziones()) {
 				TableItem item = new TableItem(tblFunzioni, SWT.CENTER);
 				item.setText(new String[] { "" + funct.getIdFunzione(),
 						funct.getDescrizione() });
