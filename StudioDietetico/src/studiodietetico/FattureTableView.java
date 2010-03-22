@@ -23,7 +23,7 @@ import org.eclipse.swt.graphics.Point;
 public class FattureTableView extends ViewPart {
 	private Composite top = null;
 	private TableForm classVis;
-	private ArrayList<Object> fatture;
+	private ArrayList<Object> fatture;  //  @jve:decl-index=0:
 	public static final String VIEW_ID = "StudioDietetico.FattureTableView";
 	private Shell sShellDettagliFattura = null;  //  @jve:decl-index=0:visual-constraint="334,13"
 	private Label labelDescrizioneFat = null;
@@ -163,5 +163,23 @@ public class FattureTableView extends ViewPart {
 		sShellDettagliFattura.open();
 	}
 
-	
+	private void aggiornaTableView() {
+		classVis.getTableVisualizzazione().removeAll(); // rimuove le righe
+		// rimuove le colonne
+		int k = 0;
+		while (k < classVis.getTableVisualizzazione().getColumnCount()) {
+			classVis.getTableVisualizzazione().getColumn(k).dispose();
+		}
+		fatture = FatturaDAO.getFattureObject();
+		classVis.riempiTabella(fatture, "FattureTableView");
+		classVis.nascondiColonne(new int[] {0});
+		modificaColonna(classVis, fatture);
+		//classVis.aggiornaCombo();
+		classVis.ordinamentoInteri(classVis.getTableVisualizzazione(), 1);
+		classVis.ordinamentoInteri(classVis.getTableVisualizzazione(), 2);
+		classVis.ordinamentoInteri(classVis.getTableVisualizzazione(), 3);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 4);
+		classVis.ordinamentoStringhe(classVis.getTableVisualizzazione(), 5);
+		classVis.ordinamentoData(classVis.getTableVisualizzazione(), 6);
+	}
 }
