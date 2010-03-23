@@ -239,7 +239,7 @@ public class RuoliForm extends ListComposite {
 		colFunzione.setWidth(300);
 		TreeItem paziente = new TreeItem(treeFunzioniModifica, SWT.NONE);
 		paziente.setData(IFunzioniConstants.GESTIONE_PAZIENTI);
-		paziente.setText("Pazienti");
+		paziente.setText("Menu Pazienti");
 		TreeItem treeItem = new TreeItem(paziente, SWT.NONE);
 		treeItem.setData(IFunzioniConstants.GESTIONE_PAZIENTI);
 		treeItem.setText("CRUD Paziente");
@@ -258,7 +258,7 @@ public class RuoliForm extends ListComposite {
 
 		TreeItem visite = new TreeItem(treeFunzioniModifica, SWT.NONE);
 		visite.setData(IFunzioniConstants.GESTIONE_VISITA);
-		visite.setText("Visite");
+		visite.setText("Menu Visite");
 		TreeItem treeItemV1 = new TreeItem(visite, SWT.NONE);
 		treeItemV1.setData(IFunzioniConstants.REGISTRA_VISITA);
 		treeItemV1.setText("Registra / Elimina Visita");
@@ -271,42 +271,42 @@ public class RuoliForm extends ListComposite {
 
 		TreeItem diete = new TreeItem(treeFunzioniModifica, SWT.NONE);
 		diete.setData(IFunzioniConstants.GESTIONE_DIETA);
-		diete.setText("Diete");
+		diete.setText("Menu Diete");
 		TreeItem treeItemD1 = new TreeItem(diete, SWT.NONE);
 		treeItemD1.setData(IFunzioniConstants.GESTIONE_DIETA);
 		treeItemD1.setText("Crea / Elimina Dieta");
 
 		TreeItem esamiClinici = new TreeItem(treeFunzioniModifica, SWT.NONE);
 		esamiClinici.setData(IFunzioniConstants.MENU_ESAME_CLINICO);
-		esamiClinici.setText("Esami Clinici");
+		esamiClinici.setText("Menu Esami Clinici");
 		TreeItem treeItemE1 = new TreeItem(esamiClinici, SWT.NONE);
 		treeItemE1.setData(IFunzioniConstants.MENU_ESAME_CLINICO);
 		treeItemE1.setText("Crea / Elimina Esame Clinico");
 
 		TreeItem paramAntro = new TreeItem(treeFunzioniModifica, SWT.NONE);
 		paramAntro.setData(IFunzioniConstants.PARAMETRI_ANTROPOMETRICI);
-		paramAntro.setText("Parametri Antropometrici");
+		paramAntro.setText("Menu Parametri Antropometrici");
 		TreeItem treeItemP1 = new TreeItem(paramAntro, SWT.NONE);
 		treeItemP1.setData(IFunzioniConstants.PARAMETRI_ANTROPOMETRICI);
 		treeItemP1.setText("Crea / Elimina Parametro Antropometrico");
 
 		TreeItem turni = new TreeItem(treeFunzioniModifica, SWT.NONE);
 		turni.setData(IFunzioniConstants.GESTIONE_TURNI);
-		turni.setText("Turni");
+		turni.setText("Menu Turni");
 		TreeItem treeItemT1 = new TreeItem(turni, SWT.NONE);
 		treeItemT1.setData(IFunzioniConstants.GESTIONE_TURNI);
 		treeItemT1.setText("Crea Turno");
 
 		TreeItem medico = new TreeItem(treeFunzioniModifica, SWT.NONE);
 		medico.setData(IFunzioniConstants.MENU_GESTIONE_MEDICI);
-		medico.setText("Medici");
+		medico.setText("Menu Medici");
 		TreeItem treeItemM1 = new TreeItem(medico, SWT.NONE);
 		treeItemM1.setData(IFunzioniConstants.MENU_GESTIONE_MEDICI);
 		treeItemM1.setText("Crea/Modifica/Elimina Medico");
 
 		TreeItem interrog = new TreeItem(treeFunzioniModifica, SWT.NONE);
 		interrog.setData(IFunzioniConstants.MENU_STATISTICHE);
-		interrog.setText("Interrogazioni");
+		interrog.setText("Menu Interrogazioni");
 		TreeItem treeItemI1 = new TreeItem(interrog, SWT.NONE);
 		treeItemI1.setData(IFunzioniConstants.MENU_STATISTICHE);
 		treeItemI1.setText("Statistiche");
@@ -319,7 +319,7 @@ public class RuoliForm extends ListComposite {
 
 		TreeItem utente = new TreeItem(treeFunzioniModifica, SWT.NONE);
 		utente.setData(IFunzioniConstants.GESTIONE_UTENTI);
-		utente.setText("Utenti");
+		utente.setText("Menu Utenti");
 		TreeItem treeItemU1 = new TreeItem(utente, SWT.NONE);
 		treeItemU1.setData(IFunzioniConstants.GESTIONE_UTENTI);
 		treeItemU1.setText("Crea Utenti/Ruoli");
@@ -342,7 +342,7 @@ public class RuoliForm extends ListComposite {
 		TreeItem paziente = new TreeItem(treeFunzioniInserisci, SWT.NONE);
 		paziente.setGrayed(true);
 		paziente.setData(IFunzioniConstants.GESTIONE_PAZIENTI);
-		paziente.setText("Pazienti");
+		paziente.setText("Menu Pazienti");
 		TreeItem treeItem = new TreeItem(paziente, SWT.NONE);
 		treeItem.setData(IFunzioniConstants.GESTIONE_PAZIENTI);
 		treeItem.setText("CRUD Paziente");
@@ -361,7 +361,7 @@ public class RuoliForm extends ListComposite {
 
 		TreeItem visite = new TreeItem(treeFunzioniInserisci, SWT.NONE);
 		visite.setData(IFunzioniConstants.GESTIONE_VISITA);
-		visite.setText("Visite");
+		visite.setText("Menu Visite");
 		visite.setGrayed(true);
 		TreeItem treeItemV1 = new TreeItem(visite, SWT.NONE);
 		treeItemV1.setData(IFunzioniConstants.REGISTRA_VISITA);
@@ -375,7 +375,7 @@ public class RuoliForm extends ListComposite {
 
 		TreeItem diete = new TreeItem(treeFunzioniInserisci, SWT.NONE);
 		diete.setData(IFunzioniConstants.GESTIONE_DIETA);
-		diete.setText("Diete");
+		diete.setText("Menu Diete");
 		diete.setGrayed(true);
 		TreeItem treeItemD1 = new TreeItem(diete, SWT.NONE);
 		treeItemD1.setData(IFunzioniConstants.GESTIONE_DIETA);
@@ -383,7 +383,7 @@ public class RuoliForm extends ListComposite {
 
 		TreeItem esamiClinici = new TreeItem(treeFunzioniInserisci, SWT.NONE);
 		esamiClinici.setData(IFunzioniConstants.MENU_ESAME_CLINICO);
-		esamiClinici.setText("Esami Clinici");
+		esamiClinici.setText("Menu Esami Clinici");
 		esamiClinici.setGrayed(true);
 		TreeItem treeItemE1 = new TreeItem(esamiClinici, SWT.NONE);
 		treeItemE1.setData(IFunzioniConstants.MENU_ESAME_CLINICO);
@@ -392,7 +392,7 @@ public class RuoliForm extends ListComposite {
 		TreeItem paramAntro = new TreeItem(treeFunzioniInserisci, SWT.NONE);
 		paramAntro.setGrayed(true);
 		paramAntro.setData(IFunzioniConstants.PARAMETRI_ANTROPOMETRICI);
-		paramAntro.setText("Parametri Antropometrici");
+		paramAntro.setText("Menu Parametri Antropometrici");
 		TreeItem treeItemP1 = new TreeItem(paramAntro, SWT.NONE);
 		treeItemP1.setData(IFunzioniConstants.PARAMETRI_ANTROPOMETRICI);
 		treeItemP1.setText("Crea / Elimina Parametro Antropometrico");
@@ -400,7 +400,7 @@ public class RuoliForm extends ListComposite {
 		TreeItem turni = new TreeItem(treeFunzioniInserisci, SWT.NONE);
 		turni.setGrayed(true);
 		turni.setData(IFunzioniConstants.GESTIONE_TURNI);
-		turni.setText("Turni");
+		turni.setText("Menu Turni");
 		TreeItem treeItemT1 = new TreeItem(turni, SWT.NONE);
 		treeItemT1.setData(IFunzioniConstants.GESTIONE_TURNI);
 		treeItemT1.setText("Crea Turno");
@@ -408,7 +408,7 @@ public class RuoliForm extends ListComposite {
 		TreeItem medico = new TreeItem(treeFunzioniInserisci, SWT.NONE);
 		medico.setGrayed(true);
 		medico.setData(IFunzioniConstants.MENU_GESTIONE_MEDICI);
-		medico.setText("Medici");
+		medico.setText("Menu Medici");
 		TreeItem treeItemM1 = new TreeItem(medico, SWT.NONE);
 		treeItemM1.setData(IFunzioniConstants.MENU_GESTIONE_MEDICI);
 		treeItemM1.setText("Crea/Modifica/Elimina Medico");
@@ -416,7 +416,7 @@ public class RuoliForm extends ListComposite {
 		TreeItem interrog = new TreeItem(treeFunzioniInserisci, SWT.NONE);
 		interrog.setGrayed(true);
 		interrog.setData(IFunzioniConstants.MENU_STATISTICHE);
-		interrog.setText("Interrogazioni");
+		interrog.setText("Menu Interrogazioni");
 		TreeItem treeItemI1 = new TreeItem(interrog, SWT.NONE);
 		treeItemI1.setData(IFunzioniConstants.MENU_STATISTICHE);
 		treeItemI1.setText("Statistiche");
@@ -430,7 +430,7 @@ public class RuoliForm extends ListComposite {
 		TreeItem utente = new TreeItem(treeFunzioniInserisci, SWT.NONE);
 		utente.setGrayed(true);
 		utente.setData(IFunzioniConstants.GESTIONE_UTENTI);
-		utente.setText("Utenti");
+		utente.setText("Menu Utenti");
 		TreeItem treeItemU1 = new TreeItem(utente, SWT.NONE);
 		treeItemU1.setData(IFunzioniConstants.GESTIONE_UTENTI);
 		treeItemU1.setText("Crea Utenti/Ruoli");
