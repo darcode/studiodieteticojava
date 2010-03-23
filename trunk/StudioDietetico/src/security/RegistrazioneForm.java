@@ -38,7 +38,7 @@ import common.ui.ListComposite;
 public class RegistrazioneForm extends ListComposite {
 
 	private static final Font font = Utils.getFont("Arial", 8, SWT.BOLD);
-	private static final Font fontTbl = Utils.getFont("Arial", 7, SWT.BOLD);
+	private static final Font fontTbl = Utils.getFont("Arial", 8, SWT.BOLD);
 	private static final Font fontTitle = Utils.getFont("Arial", 12, SWT.BOLD);
 	Color white = Utils.getStandardWhiteColor();
 	private Text password;
@@ -68,7 +68,7 @@ public class RegistrazioneForm extends ListComposite {
 		GridData gdCmp = new GridData(SWT.BORDER);
 		gdCmp.grabExcessHorizontalSpace = true;
 		gdCmp.horizontalAlignment = SWT.FILL;
-		gdCmp.horizontalSpan=2;
+		gdCmp.horizontalSpan = 2;
 		gdCmp.minimumHeight = 250;
 		cmp.setLayoutData(gdCmp);
 		// cmp.setLayoutData(new GridData());
@@ -153,7 +153,7 @@ public class RegistrazioneForm extends ListComposite {
 
 			}
 		});
-		
+
 		Button gestioneRuoli = new Button(cmp, SWT.NONE);
 		gestioneRuoli.setText("Gestione Ruoli");
 		gestioneRuoli.setFont(font);
@@ -192,12 +192,12 @@ public class RegistrazioneForm extends ListComposite {
 	}
 
 	private void openGestioneRuoli() {
-		for(Control ctrl :this.getChildren())
+		for (Control ctrl : this.getChildren())
 			ctrl.dispose();
 		form = new RuoliForm(this, SWT.NONE);
 		this.layout();
 	}
-	
+
 	private void creaUtentiRuoli() {
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gridData.heightHint = 32;
@@ -239,9 +239,10 @@ public class RegistrazioneForm extends ListComposite {
 		TableColumn tableColumn2 = new TableColumn(tblRuoli, SWT.LEAD);
 		tableColumn2.setText("Ruolo");
 		tableColumn2.setWidth(200);
-		for(Ruolo ruolo:RuoloDAO.getAllRoules()){
-			TableItem tableItem= new TableItem(tblRuoli, SWT.NONE);
-			tableItem.setText(new String[]{""+ruolo.getIdRuolo(),ruolo.getDescrizione() });
+		for (Ruolo ruolo : RuoloDAO.getAllRoules()) {
+			TableItem tableItem = new TableItem(tblRuoli, SWT.NONE);
+			tableItem.setText(new String[] { "" + ruolo.getIdRuolo(),
+					ruolo.getDescrizione() });
 		}
 		tblRuoli.setHeaderVisible(true);
 		tblRuoli.setToolTipText("Utenti - Ruoli");
@@ -255,20 +256,20 @@ public class RegistrazioneForm extends ListComposite {
 		gdLbl.verticalAlignment = SWT.CENTER;
 		gdLbl.horizontalAlignment = SWT.FILL;
 		gdLbl.grabExcessVerticalSpace = true;
-		
+
 		tblRuoli.addSelectionListener(new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ricaricaUtentiRuolo(((TableItem)tblRuoli.getSelection()[0]).getText(0));
-				}
-			
+				ricaricaUtentiRuolo(((TableItem) tblRuoli.getSelection()[0])
+						.getText(0));
+			}
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				
+
 			}
 		});
-
 
 		tblUtentiRuoli = new Table(cmp, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL);
@@ -286,18 +287,17 @@ public class RegistrazioneForm extends ListComposite {
 		shell.pack();
 		shell.open();
 	}
-	
+
 	private void creaTabellaFunzioniInsert(Composite compositeParent) {
-		tblFunzioni = new Tree(compositeParent, SWT.CHECK
-				| SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		tblFunzioni = new Tree(compositeParent, SWT.BORDER | SWT.H_SCROLL
+				| SWT.V_SCROLL);
 		tblFunzioni.setLayout(new FillLayout());
 		GridData gdTree = new GridData();
 		gdTree.grabExcessVerticalSpace = true;
 		gdTree.verticalAlignment = SWT.FILL;
 		tblFunzioni.setLayoutData(gdTree);
 		tblFunzioni.setHeaderVisible(true);
-		TreeColumn colFunzione = new TreeColumn(tblFunzioni,
-				SWT.CENTER);
+		TreeColumn colFunzione = new TreeColumn(tblFunzioni, SWT.CENTER);
 		colFunzione.setText("Funzioni");
 		colFunzione.setWidth(300);
 		TreeItem paziente = new TreeItem(tblFunzioni, SWT.NONE);
@@ -390,6 +390,7 @@ public class RegistrazioneForm extends ListComposite {
 		tblFunzioni.setEnabled(false);
 
 	}
+
 	private void creaUtentiRuoliFunzioni() {
 		Composite cmp = new Composite(this, SWT.BORDER);
 		GridData gdCmp = new GridData(SWT.BORDER);
@@ -422,9 +423,10 @@ public class RegistrazioneForm extends ListComposite {
 		TableColumn tableColumn2 = new TableColumn(tblRuoliEsistenti, SWT.LEAD);
 		tableColumn2.setText("Ruoli");
 		tableColumn2.setWidth(200);
-		for(Ruolo ruolo:RuoloDAO.getAllRoules()){
-			TableItem tableItem= new TableItem(tblRuoliEsistenti, SWT.NONE);
-			tableItem.setText(new String[]{""+ruolo.getIdRuolo(),ruolo.getDescrizione() });
+		for (Ruolo ruolo : RuoloDAO.getAllRoules()) {
+			TableItem tableItem = new TableItem(tblRuoliEsistenti, SWT.NONE);
+			tableItem.setText(new String[] { "" + ruolo.getIdRuolo(),
+					ruolo.getDescrizione() });
 		}
 		tblRuoliEsistenti.setHeaderVisible(true);
 		tblRuoliEsistenti.setToolTipText("Utenti");
@@ -438,23 +440,25 @@ public class RegistrazioneForm extends ListComposite {
 		gdLbl.verticalAlignment = SWT.CENTER;
 		gdLbl.horizontalAlignment = SWT.FILL;
 		gdLbl.grabExcessVerticalSpace = true;
-		
+
 		tblRuoliEsistenti.addSelectionListener(new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ricaricaRuoliFunzioni(Integer.parseInt(((TableItem)tblRuoliEsistenti.getSelection()[0]).getText(0)));
-				}
-			
+				ricaricaRuoliFunzioni(Integer
+						.parseInt(((TableItem) tblRuoliEsistenti.getSelection()[0])
+								.getText(0)));
+			}
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				
+
 			}
 		});
 
-
 		creaTabellaFunzioniInsert(cmp);
 	}
+
 	private void ricaricaUtentiRuolo(String idRuolo) {
 		try {
 			tblUtentiRuoli.removeAll();
@@ -468,33 +472,35 @@ public class RegistrazioneForm extends ListComposite {
 			e.printStackTrace();
 		}
 	}
+
 	private void ricaricaRuoliFunzioni(int idRuolo) {
 		try {
-			tblFunzioni.redraw();
+
 			Ruolo ruolo = RuoloDAO.get(idRuolo);
 			for (TreeItem item : tblFunzioni.getItems()) {
 				item.setChecked(false);
-				
+				item.setExpanded(false);
 				for (TreeItem item1 : item.getItems()) {
 					item1.setChecked(false);
+					item1.setExpanded(false);
 				}
 			}
 			for (Object fn : ruolo.getFunziones()) {
 				for (TreeItem item : tblFunzioni.getItems()) {
 					if (item.getData().equals(((Funzione) fn).getDescrizione())) {
 						item.setChecked(true);
-						tblFunzioni.showItem(item);			
+						tblFunzioni.showItem(item);
 					}
 					for (TreeItem item1 : item.getItems()) {
-						if (item1.getData()
-								.equals(((Funzione) fn).getDescrizione())) {
+						if (item1.getData().equals(
+								((Funzione) fn).getDescrizione())) {
 							item1.setChecked(true);
 							tblFunzioni.showItem(item1);
 						}
 					}
 				}
 			}
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
