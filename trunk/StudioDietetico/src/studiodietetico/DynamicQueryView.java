@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.graphics.Point;
 
 public class DynamicQueryView extends ViewPart{
@@ -178,39 +177,13 @@ public class DynamicQueryView extends ViewPart{
 						nodiVisitati.clear();	
 									
 						espandiAlbero(nomeClasse, pathClasse, radice);
-						comboSelezioneEntita.setEnabled(false);
-						
-//						dynDao = new DynamicQueryDAO(pathClasse, nomeClasse);						
-//						dynDao.checkSelezionato(ramo, b)
-//						dynDao.executeDynQuery(filtroQuery);
+						comboSelezioneEntita.setEnabled(false);						
+						dynDao = new DynamicQueryDAO(pathClasse, nomeClasse);
 					}
 					public void widgetDefaultSelected(
 							org.eclipse.swt.events.SelectionEvent e) {
 					}
 				});
-	}
-
-	/**
-	 * This method initializes sShell	
-	 *
-	 */
-	private void createSShell() {
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}
 
 	/**
