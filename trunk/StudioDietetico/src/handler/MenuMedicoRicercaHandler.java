@@ -2,11 +2,13 @@ package handler;
 
 import org.eclipse.core.commands.IHandler;
 
+import security.IFunzioniConstants;
+
 public class MenuMedicoRicercaHandler extends
 		MenuStudioDieteticoHandler implements IHandler {
 
 	private static final String VIEW = "StudioDietetico.MedicoTableView";
-	private static final String MY_FUNCTION = "Ricerca Medico";
+	private static final String MY_FUNCTION = IFunzioniConstants.MENU_GESTIONE_MEDICI;
 
 	String getMyFunction() {
 		return MY_FUNCTION;

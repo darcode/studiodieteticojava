@@ -322,14 +322,8 @@ public class RuoliForm extends ListComposite {
 		utente.setText("Utenti");
 		TreeItem treeItemU1 = new TreeItem(utente, SWT.NONE);
 		treeItemU1.setData(IFunzioniConstants.GESTIONE_UTENTI);
-		treeItemU1.setText("Crea Utente");
+		treeItemU1.setText("Crea Utenti/Ruoli");
 
-		TreeItem ruoli = new TreeItem(treeFunzioniModifica, SWT.NONE);
-		ruoli.setData(IFunzioniConstants.GESTIONE_UTENTI);
-		ruoli.setText("Ruoli");
-		TreeItem treeItemR1 = new TreeItem(ruoli, SWT.NONE);
-		treeItemR1.setData(IFunzioniConstants.GESTIONE_UTENTI);
-		treeItemR1.setText("Crea/Modifica Ruolo");
 	}
 
 	private void creaTabellaFunzioniInsert(Composite compositeParent) {
@@ -439,15 +433,8 @@ public class RuoliForm extends ListComposite {
 		utente.setText("Utenti");
 		TreeItem treeItemU1 = new TreeItem(utente, SWT.NONE);
 		treeItemU1.setData(IFunzioniConstants.GESTIONE_UTENTI);
-		treeItemU1.setText("Crea Utente");
+		treeItemU1.setText("Crea Utenti/Ruoli");
 
-		TreeItem ruoli = new TreeItem(treeFunzioniInserisci, SWT.NONE);
-		ruoli.setGrayed(true);
-		ruoli.setData(IFunzioniConstants.GESTIONE_UTENTI);
-		ruoli.setText("Ruoli");
-		TreeItem treeItemR1 = new TreeItem(ruoli, SWT.NONE);
-		treeItemR1.setData(IFunzioniConstants.GESTIONE_UTENTI);
-		treeItemR1.setText("Crea/Modifica Ruolo");
 	}
 
 	private void modificaRuolo() {
