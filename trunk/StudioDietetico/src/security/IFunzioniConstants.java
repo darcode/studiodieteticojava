@@ -10,13 +10,15 @@ public interface IFunzioniConstants {
 	public static int FUNZIONE_PAZIENTE = 24;
 	public static int FUNZIONE_PRENOTAZIONE_VISITA = 3;
 	public static int FUNZIONE_DIETA = 26;
-	public static int FUNZIONE_ANAMNESI = 27;
-	public static int FUNZIONE_VISITA = 28;
+	public static int FUNZIONE_ANAMNESI = 7;
+	public static int FUNZIONE_VISITA = 4;
 	public static int FUNZIONE_REGISTRAZIONE = 29;
 	public static int FUNZIONE_FATTURA_VISITA = 30;
 	public static int FUNZIONE_VISITA_CONT = 31;
 	public static int FUNZIONE_MEDICO_INS = 32;
 	public static int FUNZIONE_MEDICO_UPDATE = 33;
+	public static int FUNZIONE_PARAM_ANTRO = 17;
+	public static int FUNZIONE_ESAME_CLINICO = 9;
 	// VISITA
 
 	public static final String REGISTRA_UTENTE = "Registra Utente";

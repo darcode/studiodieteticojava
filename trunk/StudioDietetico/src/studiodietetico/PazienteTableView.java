@@ -224,7 +224,7 @@ public class PazienteTableView extends ViewPart {
 		buttonRilevamentoParametri.setLayoutData(gridData1);
 		//buttonRilevamentoParametri.setBounds(new Rectangle(520, 352, 140, 25));
 		buttonRilevamentoParametri.setText("Parametri antropometrici");
-		buttonRilevamentoParametri.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_ANAMNESI));
+		buttonRilevamentoParametri.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_PARAM_ANTRO));
 		buttonRilevamentoParametri
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(
@@ -252,7 +252,7 @@ public class PazienteTableView extends ViewPart {
 		buttonRilevamentoEsami.setLayoutData(gridData1);
 		//buttonRilevamentoEsami.setBounds(new Rectangle(660, 352, 90, 25));
 		buttonRilevamentoEsami.setText("Esami clinici");
-		buttonRilevamentoEsami.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_ANAMNESI));
+		buttonRilevamentoEsami.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_ESAME_CLINICO));
 		
 		buttonRilevamentoEsami
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
