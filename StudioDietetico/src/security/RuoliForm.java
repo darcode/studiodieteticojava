@@ -235,7 +235,7 @@ public class RuoliForm extends ListComposite {
 		treeFunzioniModifica.setHeaderVisible(true);
 		TreeColumn colFunzione = new TreeColumn(treeFunzioniModifica,
 				SWT.CENTER);
-		colFunzione.setText("Funzione");
+		colFunzione.setText("Funzioni");
 		colFunzione.setWidth(300);
 		TreeItem paziente = new TreeItem(treeFunzioniModifica, SWT.NONE);
 		paziente.setData(IFunzioniConstants.GESTIONE_PAZIENTI);
@@ -343,7 +343,7 @@ public class RuoliForm extends ListComposite {
 		treeFunzioniInserisci.setHeaderVisible(true);
 		TreeColumn colFunzione = new TreeColumn(treeFunzioniInserisci,
 				SWT.CENTER);
-		colFunzione.setText("Funzione");
+		colFunzione.setText("Funzioni");
 		colFunzione.setWidth(300);
 		TreeItem paziente = new TreeItem(treeFunzioniInserisci, SWT.NONE);
 		paziente.setGrayed(true);
