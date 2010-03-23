@@ -311,7 +311,7 @@ public class RegistrazioneForm extends ListComposite {
 		TableColumn tableColumn = new TableColumn(tblRuoliEsistenti, SWT.LEAD);
 		tableColumn.setText("id");
 		TableColumn tableColumn2 = new TableColumn(tblRuoliEsistenti, SWT.LEAD);
-		tableColumn2.setText("Utente");
+		tableColumn2.setText("Ruoli");
 		tableColumn2.setWidth(200);
 		for(Ruolo ruolo:RuoloDAO.getAllRoules()){
 			TableItem tableItem= new TableItem(tblRuoliEsistenti, SWT.NONE);
@@ -349,7 +349,7 @@ public class RegistrazioneForm extends ListComposite {
 		TableColumn tableColumn3 = new TableColumn(tblFunzioni, SWT.LEAD);
 		tableColumn3.setText("id Funzione");
 		TableColumn tableColumn4 = new TableColumn(tblFunzioni, SWT.LEAD);
-		tableColumn4.setText("Funzione");
+		tableColumn4.setText("Funzioni");
 		tableColumn4.setWidth(200);
 		tblFunzioni.setHeaderVisible(true);
 		tblFunzioni.setToolTipText("Utenti - Ruoli");
