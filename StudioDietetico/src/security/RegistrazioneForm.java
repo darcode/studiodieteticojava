@@ -11,6 +11,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -25,6 +26,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
 
 import command.RuoloDAO;
 import command.UtenteDAO;
@@ -34,6 +38,7 @@ import common.ui.ListComposite;
 public class RegistrazioneForm extends ListComposite {
 
 	private static final Font font = Utils.getFont("Arial", 8, SWT.BOLD);
+	private static final Font fontTbl = Utils.getFont("Arial", 7, SWT.BOLD);
 	private static final Font fontTitle = Utils.getFont("Arial", 12, SWT.BOLD);
 	Color white = Utils.getStandardWhiteColor();
 	private Text password;
@@ -44,7 +49,7 @@ public class RegistrazioneForm extends ListComposite {
 	private Combo cboRuoli;
 	private Table tblRuoli;
 	private Table tblRuoliEsistenti;
-	private Table tblFunzioni;
+	private Tree tblFunzioni;
 	private RuoliForm form;
 
 	public RegistrazioneForm(Composite parent, int style) {
@@ -67,11 +72,11 @@ public class RegistrazioneForm extends ListComposite {
 		gdCmp.minimumHeight = 250;
 		cmp.setLayoutData(gdCmp);
 		// cmp.setLayoutData(new GridData());
-		cmp.setLayout(new GridLayout(2, false));
+		cmp.setLayout(new GridLayout(4, true));
 		cmp.setBackground(white);
 		Label lblTitolo = new Label(cmp, SWT.FILL);
 		GridData gdLblTitolo = new GridData();
-		gdLblTitolo.horizontalSpan = 2;
+		gdLblTitolo.horizontalSpan = 4;
 		gdLblTitolo.horizontalAlignment = SWT.CENTER;
 		lblTitolo.setLayoutData(gdLblTitolo);
 		lblTitolo.setText("Registra Utente");
@@ -116,6 +121,7 @@ public class RegistrazioneForm extends ListComposite {
 		profilo.setFont(font);
 
 		Label blbFIll3 = new Label(cmp, SWT.NONE);
+		Label blbFIll4 = new Label(cmp, SWT.NONE);
 		Button registra = new Button(cmp, SWT.NONE);
 		registra.setText("Registra");
 		registra.setFont(font);
@@ -132,7 +138,7 @@ public class RegistrazioneForm extends ListComposite {
 
 			}
 		});
-		Button utentiPerRuolo = new Button(this, SWT.NONE);
+		Button utentiPerRuolo = new Button(cmp, SWT.NONE);
 		utentiPerRuolo.setText("Visualizza Utenti per Ruolo");
 		utentiPerRuolo.setFont(font);
 		utentiPerRuolo.addSelectionListener(new SelectionListener() {
@@ -148,7 +154,7 @@ public class RegistrazioneForm extends ListComposite {
 			}
 		});
 		
-		Button gestioneRuoli = new Button(this, SWT.NONE);
+		Button gestioneRuoli = new Button(cmp, SWT.NONE);
 		gestioneRuoli.setText("Gestione Ruoli");
 		gestioneRuoli.setFont(font);
 		gestioneRuoli.addSelectionListener(new SelectionListener() {
@@ -280,18 +286,121 @@ public class RegistrazioneForm extends ListComposite {
 		shell.pack();
 		shell.open();
 	}
+	
+	private void creaTabellaFunzioniInsert(Composite compositeParent) {
+		tblFunzioni = new Tree(compositeParent, SWT.CHECK
+				| SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		tblFunzioni.setLayout(new FillLayout());
+		GridData gdTree = new GridData();
+		gdTree.grabExcessVerticalSpace = true;
+		gdTree.verticalAlignment = SWT.FILL;
+		tblFunzioni.setLayoutData(gdTree);
+		tblFunzioni.setHeaderVisible(true);
+		TreeColumn colFunzione = new TreeColumn(tblFunzioni,
+				SWT.CENTER);
+		colFunzione.setText("Funzioni");
+		colFunzione.setWidth(300);
+		TreeItem paziente = new TreeItem(tblFunzioni, SWT.NONE);
+		paziente.setData(IFunzioniConstants.GESTIONE_PAZIENTI);
+		paziente.setText("Pazienti");
+		TreeItem treeItem = new TreeItem(paziente, SWT.NONE);
+		treeItem.setData(IFunzioniConstants.GESTIONE_PAZIENTI);
+		treeItem.setText("CRUD Paziente");
+		TreeItem treeItem1 = new TreeItem(paziente, SWT.NONE);
+		treeItem1.setData(IFunzioniConstants.RILEVAZ_PARAM_ANTROP);
+		treeItem1.setText("Rilevazione Parametri Antropometrici");
+		TreeItem treeItem2 = new TreeItem(paziente, SWT.NONE);
+		treeItem2.setData(IFunzioniConstants.ANAMNESI);
+		treeItem2.setText("Anamnesi");
+		TreeItem treeItem3 = new TreeItem(paziente, SWT.NONE);
+		treeItem3.setData(IFunzioniConstants.PRENOTAZ_VISITA);
+		treeItem3.setText("Prenotazione Visita");
+		TreeItem treeItem4 = new TreeItem(paziente, SWT.NONE);
+		treeItem4.setData(IFunzioniConstants.ESAME_CLINICO);
+		treeItem4.setText("Esame Clinico");
+
+		TreeItem visite = new TreeItem(tblFunzioni, SWT.NONE);
+		visite.setData(IFunzioniConstants.GESTIONE_VISITA);
+		visite.setText("Visite");
+		TreeItem treeItemV1 = new TreeItem(visite, SWT.NONE);
+		treeItemV1.setData(IFunzioniConstants.REGISTRA_VISITA);
+		treeItemV1.setText("Registra / Elimina Visita");
+		TreeItem treeItemV2 = new TreeItem(visite, SWT.NONE);
+		treeItemV2.setData(IFunzioniConstants.FATTURA_VISITA);
+		treeItemV2.setText("Associa Fattura");
+		TreeItem treeItemV3 = new TreeItem(visite, SWT.NONE);
+		treeItemV3.setData(IFunzioniConstants.CONTO_VISITA);
+		treeItemV3.setText("Associa Conto");
+
+		TreeItem diete = new TreeItem(tblFunzioni, SWT.NONE);
+		diete.setData(IFunzioniConstants.GESTIONE_DIETA);
+		diete.setText("Diete");
+		TreeItem treeItemD1 = new TreeItem(diete, SWT.NONE);
+		treeItemD1.setData(IFunzioniConstants.GESTIONE_DIETA);
+		treeItemD1.setText("Crea / Elimina Dieta");
+
+		TreeItem esamiClinici = new TreeItem(tblFunzioni, SWT.NONE);
+		esamiClinici.setData(IFunzioniConstants.MENU_ESAME_CLINICO);
+		esamiClinici.setText("Esami Clinici");
+		TreeItem treeItemE1 = new TreeItem(esamiClinici, SWT.NONE);
+		treeItemE1.setData(IFunzioniConstants.MENU_ESAME_CLINICO);
+		treeItemE1.setText("Crea / Elimina Esame Clinico");
+
+		TreeItem paramAntro = new TreeItem(tblFunzioni, SWT.NONE);
+		paramAntro.setData(IFunzioniConstants.PARAMETRI_ANTROPOMETRICI);
+		paramAntro.setText("Parametri Antropometrici");
+		TreeItem treeItemP1 = new TreeItem(paramAntro, SWT.NONE);
+		treeItemP1.setData(IFunzioniConstants.PARAMETRI_ANTROPOMETRICI);
+		treeItemP1.setText("Crea / Elimina Parametro Antropometrico");
+
+		TreeItem turni = new TreeItem(tblFunzioni, SWT.NONE);
+		turni.setData(IFunzioniConstants.GESTIONE_TURNI);
+		turni.setText("Turni");
+		TreeItem treeItemT1 = new TreeItem(turni, SWT.NONE);
+		treeItemT1.setData(IFunzioniConstants.GESTIONE_TURNI);
+		treeItemT1.setText("Crea Turno");
+
+		TreeItem medico = new TreeItem(tblFunzioni, SWT.NONE);
+		medico.setData(IFunzioniConstants.MENU_GESTIONE_MEDICI);
+		medico.setText("Medici");
+		TreeItem treeItemM1 = new TreeItem(medico, SWT.NONE);
+		treeItemM1.setData(IFunzioniConstants.MENU_GESTIONE_MEDICI);
+		treeItemM1.setText("Crea/Modifica/Elimina Medico");
+
+		TreeItem interrog = new TreeItem(tblFunzioni, SWT.NONE);
+		interrog.setData(IFunzioniConstants.MENU_STATISTICHE);
+		interrog.setText("Interrogazioni");
+		TreeItem treeItemI1 = new TreeItem(interrog, SWT.NONE);
+		treeItemI1.setData(IFunzioniConstants.MENU_STATISTICHE);
+		treeItemI1.setText("Statistiche");
+		TreeItem treeItemI2 = new TreeItem(interrog, SWT.NONE);
+		treeItemI2.setData(IFunzioniConstants.MENU_QUERY_DINAMICHE);
+		treeItemI2.setText("Dinamiche");
+		TreeItem treeItemI3 = new TreeItem(interrog, SWT.NONE);
+		treeItemI3.setData(IFunzioniConstants.MENU_STATISTICHE);
+		treeItemI3.setText("Automatiche");
+
+		TreeItem utente = new TreeItem(tblFunzioni, SWT.NONE);
+		utente.setData(IFunzioniConstants.GESTIONE_UTENTI);
+		utente.setText("Utenti");
+		TreeItem treeItemU1 = new TreeItem(utente, SWT.NONE);
+		treeItemU1.setData(IFunzioniConstants.GESTIONE_UTENTI);
+		treeItemU1.setText("Crea Utenti/Ruoli");
+		tblFunzioni.setFont(fontTbl);
+		tblFunzioni.setEnabled(false);
+
+	}
 	private void creaUtentiRuoliFunzioni() {
 		Composite cmp = new Composite(this, SWT.BORDER);
 		GridData gdCmp = new GridData(SWT.BORDER);
 		gdCmp.grabExcessHorizontalSpace = true;
 		gdCmp.grabExcessVerticalSpace = true;
 		gdCmp.horizontalAlignment = SWT.FILL;
-		gdCmp.horizontalSpan = 2;
+		gdCmp.horizontalSpan = 1;
 		gdCmp.verticalAlignment = SWT.FILL;
-		gdCmp.minimumHeight = 350;
 		cmp.setLayoutData(gdCmp);
 		// cmp.setLayoutData(new GridData());
-		cmp.setLayout(new GridLayout(2, false));
+		cmp.setLayout(new GridLayout(2, true));
 		cmp.setBackground(white);
 		Label lblTitolo = new Label(cmp, SWT.FILL);
 		GridData gdLblTitolo = new GridData();
@@ -344,19 +453,7 @@ public class RegistrazioneForm extends ListComposite {
 		});
 
 
-		tblFunzioni = new Table(cmp, SWT.BORDER | SWT.FULL_SELECTION
-				| SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL);
-		TableColumn tableColumn3 = new TableColumn(tblFunzioni, SWT.LEAD);
-		tableColumn3.setText("id Funzione");
-		TableColumn tableColumn4 = new TableColumn(tblFunzioni, SWT.LEAD);
-		tableColumn4.setText("Funzioni");
-		tableColumn4.setWidth(200);
-		tblFunzioni.setHeaderVisible(true);
-		tblFunzioni.setToolTipText("Utenti - Ruoli");
-		tblFunzioni.setLinesVisible(true);
-		tblFunzioni.getColumn(0).setWidth(0);
-		tblFunzioni.setFont(font);
-		tblFunzioni.setLayoutData(gdTables);
+		creaTabellaFunzioniInsert(cmp);
 	}
 	private void ricaricaUtentiRuolo(String idRuolo) {
 		try {
@@ -373,13 +470,31 @@ public class RegistrazioneForm extends ListComposite {
 	}
 	private void ricaricaRuoliFunzioni(int idRuolo) {
 		try {
-			tblFunzioni.removeAll();
+			tblFunzioni.redraw();
 			Ruolo ruolo = RuoloDAO.get(idRuolo);
-			for (Funzione funct: (Set<Funzione>)ruolo.getFunziones()) {
-				TableItem item = new TableItem(tblFunzioni, SWT.CENTER);
-				item.setText(new String[] { "" + funct.getIdFunzione(),
-						funct.getDescrizione() });
+			for (TreeItem item : tblFunzioni.getItems()) {
+				item.setChecked(false);
+				
+				for (TreeItem item1 : item.getItems()) {
+					item1.setChecked(false);
+				}
 			}
+			for (Object fn : ruolo.getFunziones()) {
+				for (TreeItem item : tblFunzioni.getItems()) {
+					if (item.getData().equals(((Funzione) fn).getDescrizione())) {
+						item.setChecked(true);
+						tblFunzioni.showItem(item);			
+					}
+					for (TreeItem item1 : item.getItems()) {
+						if (item1.getData()
+								.equals(((Funzione) fn).getDescrizione())) {
+							item1.setChecked(true);
+							tblFunzioni.showItem(item1);
+						}
+					}
+				}
+			}
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
