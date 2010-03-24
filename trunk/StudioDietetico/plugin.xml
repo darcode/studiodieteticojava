@@ -133,6 +133,16 @@
             id="StudioDietetico.CommandParametroAntropometricoRicerca"
             name="CommandParametroAntropometricoRicerca">
       </command>
+      <command
+            categoryId="StudioDietetico.category1"
+            id="StudioDietetico.CommandFattureRicerca"
+            name="CommandFattureRicerca">
+      </command>
+      <command
+            categoryId="StudioDietetico.category1"
+            id="StudioDietetico.CommandPrenotazioneRicerca"
+            name="CommandPrenotazioneRicerca">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -220,6 +230,14 @@
             class="handler.MenuParametroAntropometricoRicercaHandler"
             commandId="StudioDietetico.CommandParametroAntropometricoRicerca">
       </handler>
+      <handler
+            class="handler.MenuFattureRicercaHandler"
+            commandId="StudioDietetico.CommandFattureRicerca">
+      </handler>
+      <handler
+            class="handler.MenuPrenotazioneRicercaHandler"
+            commandId="StudioDietetico.CommandPrenotazioneRicerca">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -257,6 +275,18 @@
                   commandId="StudioDietetico.CommandParametroAntropometricoRicerca"
                   icon="icons/stethoscope.ico"
                   label="Gestione Parametri Antropometrici"
+                  style="push">
+            </command>
+            <command
+                  commandId="StudioDietetico.CommandFattureRicerca"
+                  icon="icons/scontrino.png"
+                  label="Gestione Fatture"
+                  style="push">
+            </command>
+            <command
+                  commandId="StudioDietetico.CommandPrenotazioneRicerca"
+                  icon="icons/telefono.png"
+                  label="Gestione Prenotazioni"
                   style="push">
             </command>
          </menu>
