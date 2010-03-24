@@ -117,7 +117,9 @@ public class RuoliForm extends ListComposite {
 		gdTables.horizontalAlignment = SWT.FILL;
 		gdTables.grabExcessVerticalSpace = true;
 		gdTables.verticalAlignment = SWT.FILL;
-		creaTabellaFunzioniInsert(cmpNuovoRuolo);
+		treeFunzioniInserisci = new Tree(cmpNuovoRuolo, SWT.CHECK | SWT.BORDER
+				| SWT.H_SCROLL | SWT.V_SCROLL);
+		creaTabellaFunzioni(cmpNuovoRuolo,treeFunzioniInserisci);
 		Button inserisci = new Button(cmpNuovoRuolo, SWT.NONE);
 		inserisci.setText("Inserisci");
 		inserisci.setFont(font);
@@ -182,8 +184,9 @@ public class RuoliForm extends ListComposite {
 		lblFunz.setBackground(white);
 		lblFunz.setLayoutData(gdLbl);
 		lblFunz.setFont(font);
-
-		creaTabellaFunzioni(cmpModificaRoulo);
+		treeFunzioniModifica = new Tree(cmpModificaRoulo, SWT.CHECK | SWT.BORDER
+				| SWT.H_SCROLL | SWT.V_SCROLL);
+		creaTabellaFunzioni(cmpModificaRoulo,treeFunzioniModifica);
 		Button modifica = new Button(cmpModificaRoulo, SWT.NONE);
 		modifica.setText("Modifica");
 		modifica.setFont(font);
@@ -224,20 +227,19 @@ public class RuoliForm extends ListComposite {
 
 	}
 
-	private void creaTabellaFunzioni(Composite compositeParent) {
-		treeFunzioniModifica = new Tree(compositeParent, SWT.CHECK | SWT.BORDER
-				| SWT.H_SCROLL | SWT.V_SCROLL);
-		treeFunzioniModifica.setLayout(new FillLayout());
+	private void creaTabellaFunzioni(Composite compositeParent, Tree treeFunzioni) {
+		
+		treeFunzioni.setLayout(new FillLayout());
 		GridData gdTree = new GridData();
 		gdTree.grabExcessVerticalSpace = true;
 		gdTree.verticalAlignment = SWT.FILL;
-		treeFunzioniModifica.setLayoutData(gdTree);
-		treeFunzioniModifica.setHeaderVisible(true);
-		TreeColumn colFunzione = new TreeColumn(treeFunzioniModifica,
+		treeFunzioni.setLayoutData(gdTree);
+		treeFunzioni.setHeaderVisible(true);
+		TreeColumn colFunzione = new TreeColumn(treeFunzioni,
 				SWT.CENTER);
 		colFunzione.setText("Funzioni");
 		colFunzione.setWidth(300);
-		TreeItem paziente = new TreeItem(treeFunzioniModifica, SWT.NONE);
+		TreeItem paziente = new TreeItem(treeFunzioni, SWT.NONE);
 		paziente.setData(IFunzioniConstants.GESTIONE_PAZIENTI);
 		paziente.setText("Menu Pazienti");
 		TreeItem treeItem = new TreeItem(paziente, SWT.NONE);
@@ -256,7 +258,7 @@ public class RuoliForm extends ListComposite {
 		treeItem4.setData(IFunzioniConstants.ESAME_CLINICO);
 		treeItem4.setText("Esame Clinico");
 
-		TreeItem visite = new TreeItem(treeFunzioniModifica, SWT.NONE);
+		TreeItem visite = new TreeItem(treeFunzioni, SWT.NONE);
 		visite.setData(IFunzioniConstants.GESTIONE_VISITA);
 		visite.setText("Menu Visite");
 		TreeItem treeItemV1 = new TreeItem(visite, SWT.NONE);
@@ -269,173 +271,47 @@ public class RuoliForm extends ListComposite {
 		treeItemV3.setData(IFunzioniConstants.CONTO_VISITA);
 		treeItemV3.setText("Associa Conto");
 
-		TreeItem diete = new TreeItem(treeFunzioniModifica, SWT.NONE);
+		TreeItem diete = new TreeItem(treeFunzioni, SWT.NONE);
 		diete.setData(IFunzioniConstants.GESTIONE_DIETA);
-		diete.setText("Menu Diete");
-		TreeItem treeItemD1 = new TreeItem(diete, SWT.NONE);
-		treeItemD1.setData(IFunzioniConstants.GESTIONE_DIETA);
-		treeItemD1.setText("Crea / Elimina Dieta");
+		diete.setText("Gestione Diete");
 
-		TreeItem esamiClinici = new TreeItem(treeFunzioniModifica, SWT.NONE);
+		TreeItem esamiClinici = new TreeItem(treeFunzioni, SWT.NONE);
 		esamiClinici.setData(IFunzioniConstants.MENU_ESAME_CLINICO);
-		esamiClinici.setText("Menu Esami Clinici");
-		TreeItem treeItemE1 = new TreeItem(esamiClinici, SWT.NONE);
-		treeItemE1.setData(IFunzioniConstants.MENU_ESAME_CLINICO);
-		treeItemE1.setText("Crea / Elimina Esame Clinico");
+		esamiClinici.setText("Gestione Esami Clinici");
 
-		TreeItem paramAntro = new TreeItem(treeFunzioniModifica, SWT.NONE);
+		TreeItem paramAntro = new TreeItem(treeFunzioni, SWT.NONE);
 		paramAntro.setData(IFunzioniConstants.PARAMETRI_ANTROPOMETRICI);
-		paramAntro.setText("Menu Parametri Antropometrici");
-		TreeItem treeItemP1 = new TreeItem(paramAntro, SWT.NONE);
-		treeItemP1.setData(IFunzioniConstants.PARAMETRI_ANTROPOMETRICI);
-		treeItemP1.setText("Crea / Elimina Parametro Antropometrico");
+		paramAntro.setText("Gestione Parametri Antropometrici");
 
-		TreeItem turni = new TreeItem(treeFunzioniModifica, SWT.NONE);
+		TreeItem fatture = new TreeItem(treeFunzioni, SWT.NONE);
+		fatture.setData(IFunzioniConstants.MENU_FATTURE);
+		fatture.setText("Gestione Fatture");
+		
+		TreeItem prenotazioni = new TreeItem(treeFunzioni, SWT.NONE);
+		prenotazioni.setData(IFunzioniConstants.MENU_PRENOTAZIONI);
+		prenotazioni.setText("Gestione Prenotazioni");
+
+		TreeItem turni = new TreeItem(treeFunzioni, SWT.NONE);
 		turni.setData(IFunzioniConstants.GESTIONE_TURNI);
-		turni.setText("Menu Turni");
-		TreeItem treeItemT1 = new TreeItem(turni, SWT.NONE);
-		treeItemT1.setData(IFunzioniConstants.GESTIONE_TURNI);
-		treeItemT1.setText("Crea Turno");
+		turni.setText("Gestione Turni");
 
-		TreeItem medico = new TreeItem(treeFunzioniModifica, SWT.NONE);
+		TreeItem medico = new TreeItem(treeFunzioni, SWT.NONE);
 		medico.setData(IFunzioniConstants.MENU_GESTIONE_MEDICI);
-		medico.setText("Menu Medici");
-		TreeItem treeItemM1 = new TreeItem(medico, SWT.NONE);
-		treeItemM1.setData(IFunzioniConstants.MENU_GESTIONE_MEDICI);
-		treeItemM1.setText("Crea/Modifica/Elimina Medico");
+		medico.setText("Gestione Medici");
 
-		TreeItem interrog = new TreeItem(treeFunzioniModifica, SWT.NONE);
+		TreeItem interrog = new TreeItem(treeFunzioni, SWT.NONE);
 		interrog.setData(IFunzioniConstants.MENU_STATISTICHE);
-		interrog.setText("Menu Interrogazioni");
-		TreeItem treeItemI1 = new TreeItem(interrog, SWT.NONE);
-		treeItemI1.setData(IFunzioniConstants.MENU_STATISTICHE);
-		treeItemI1.setText("Statistiche");
+		interrog.setText("Menu Interrogazioni Statistiche e Automatiche");
 		TreeItem treeItemI2 = new TreeItem(interrog, SWT.NONE);
 		treeItemI2.setData(IFunzioniConstants.MENU_QUERY_DINAMICHE);
 		treeItemI2.setText("Dinamiche");
-		TreeItem treeItemI3 = new TreeItem(interrog, SWT.NONE);
-		treeItemI3.setData(IFunzioniConstants.MENU_STATISTICHE);
-		treeItemI3.setText("Automatiche");
 
-		TreeItem utente = new TreeItem(treeFunzioniModifica, SWT.NONE);
+		TreeItem utente = new TreeItem(treeFunzioni, SWT.NONE);
 		utente.setData(IFunzioniConstants.GESTIONE_UTENTI);
-		utente.setText("Menu Utenti");
-		TreeItem treeItemU1 = new TreeItem(utente, SWT.NONE);
-		treeItemU1.setData(IFunzioniConstants.GESTIONE_UTENTI);
-		treeItemU1.setText("Crea Utenti/Ruoli");
+		utente.setText("Gestione Utenti");
 
 	}
 
-	private void creaTabellaFunzioniInsert(Composite compositeParent) {
-		treeFunzioniInserisci = new Tree(compositeParent, SWT.CHECK
-				| SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		treeFunzioniInserisci.setLayout(new FillLayout());
-		GridData gdTree = new GridData();
-		gdTree.grabExcessVerticalSpace = true;
-		gdTree.verticalAlignment = SWT.FILL;
-		treeFunzioniInserisci.setLayoutData(gdTree);
-		treeFunzioniInserisci.setHeaderVisible(true);
-		TreeColumn colFunzione = new TreeColumn(treeFunzioniInserisci,
-				SWT.CENTER);
-		colFunzione.setText("Funzioni");
-		colFunzione.setWidth(300);
-		TreeItem paziente = new TreeItem(treeFunzioniInserisci, SWT.NONE);
-		paziente.setGrayed(true);
-		paziente.setData(IFunzioniConstants.GESTIONE_PAZIENTI);
-		paziente.setText("Menu Pazienti");
-		TreeItem treeItem = new TreeItem(paziente, SWT.NONE);
-		treeItem.setData(IFunzioniConstants.GESTIONE_PAZIENTI);
-		treeItem.setText("CRUD Paziente");
-		TreeItem treeItem1 = new TreeItem(paziente, SWT.NONE);
-		treeItem1.setData(IFunzioniConstants.RILEVAZ_PARAM_ANTROP);
-		treeItem1.setText("Rilevazione Parametri Antropometrici");
-		TreeItem treeItem2 = new TreeItem(paziente, SWT.NONE);
-		treeItem2.setData(IFunzioniConstants.ANAMNESI);
-		treeItem2.setText("Anamnesi");
-		TreeItem treeItem3 = new TreeItem(paziente, SWT.NONE);
-		treeItem3.setData(IFunzioniConstants.PRENOTAZ_VISITA);
-		treeItem3.setText("Prenotazione Visita");
-		TreeItem treeItem4 = new TreeItem(paziente, SWT.NONE);
-		treeItem4.setData(IFunzioniConstants.ESAME_CLINICO);
-		treeItem4.setText("Esame Clinico");
-
-		TreeItem visite = new TreeItem(treeFunzioniInserisci, SWT.NONE);
-		visite.setData(IFunzioniConstants.GESTIONE_VISITA);
-		visite.setText("Menu Visite");
-		visite.setGrayed(true);
-		TreeItem treeItemV1 = new TreeItem(visite, SWT.NONE);
-		treeItemV1.setData(IFunzioniConstants.REGISTRA_VISITA);
-		treeItemV1.setText("Registra / Elimina Visita");
-		TreeItem treeItemV2 = new TreeItem(visite, SWT.NONE);
-		treeItemV2.setData(IFunzioniConstants.FATTURA_VISITA);
-		treeItemV2.setText("Associa Fattura");
-		TreeItem treeItemV3 = new TreeItem(visite, SWT.NONE);
-		treeItemV3.setData(IFunzioniConstants.CONTO_VISITA);
-		treeItemV3.setText("Associa Conto");
-
-		TreeItem diete = new TreeItem(treeFunzioniInserisci, SWT.NONE);
-		diete.setData(IFunzioniConstants.GESTIONE_DIETA);
-		diete.setText("Menu Diete");
-		diete.setGrayed(true);
-		TreeItem treeItemD1 = new TreeItem(diete, SWT.NONE);
-		treeItemD1.setData(IFunzioniConstants.GESTIONE_DIETA);
-		treeItemD1.setText("Crea / Elimina Dieta");
-
-		TreeItem esamiClinici = new TreeItem(treeFunzioniInserisci, SWT.NONE);
-		esamiClinici.setData(IFunzioniConstants.MENU_ESAME_CLINICO);
-		esamiClinici.setText("Menu Esami Clinici");
-		esamiClinici.setGrayed(true);
-		TreeItem treeItemE1 = new TreeItem(esamiClinici, SWT.NONE);
-		treeItemE1.setData(IFunzioniConstants.MENU_ESAME_CLINICO);
-		treeItemE1.setText("Crea / Elimina Esame Clinico");
-
-		TreeItem paramAntro = new TreeItem(treeFunzioniInserisci, SWT.NONE);
-		paramAntro.setGrayed(true);
-		paramAntro.setData(IFunzioniConstants.PARAMETRI_ANTROPOMETRICI);
-		paramAntro.setText("Menu Parametri Antropometrici");
-		TreeItem treeItemP1 = new TreeItem(paramAntro, SWT.NONE);
-		treeItemP1.setData(IFunzioniConstants.PARAMETRI_ANTROPOMETRICI);
-		treeItemP1.setText("Crea / Elimina Parametro Antropometrico");
-
-		TreeItem turni = new TreeItem(treeFunzioniInserisci, SWT.NONE);
-		turni.setGrayed(true);
-		turni.setData(IFunzioniConstants.GESTIONE_TURNI);
-		turni.setText("Menu Turni");
-		TreeItem treeItemT1 = new TreeItem(turni, SWT.NONE);
-		treeItemT1.setData(IFunzioniConstants.GESTIONE_TURNI);
-		treeItemT1.setText("Crea Turno");
-
-		TreeItem medico = new TreeItem(treeFunzioniInserisci, SWT.NONE);
-		medico.setGrayed(true);
-		medico.setData(IFunzioniConstants.MENU_GESTIONE_MEDICI);
-		medico.setText("Menu Medici");
-		TreeItem treeItemM1 = new TreeItem(medico, SWT.NONE);
-		treeItemM1.setData(IFunzioniConstants.MENU_GESTIONE_MEDICI);
-		treeItemM1.setText("Crea/Modifica/Elimina Medico");
-
-		TreeItem interrog = new TreeItem(treeFunzioniInserisci, SWT.NONE);
-		interrog.setGrayed(true);
-		interrog.setData(IFunzioniConstants.MENU_STATISTICHE);
-		interrog.setText("Menu Interrogazioni");
-		TreeItem treeItemI1 = new TreeItem(interrog, SWT.NONE);
-		treeItemI1.setData(IFunzioniConstants.MENU_STATISTICHE);
-		treeItemI1.setText("Statistiche");
-		TreeItem treeItemI2 = new TreeItem(interrog, SWT.NONE);
-		treeItemI2.setData(IFunzioniConstants.MENU_QUERY_DINAMICHE);
-		treeItemI2.setText("Dinamiche");
-		TreeItem treeItemI3 = new TreeItem(interrog, SWT.NONE);
-		treeItemI3.setData(IFunzioniConstants.MENU_STATISTICHE);
-		treeItemI3.setText("Automatiche");
-
-		TreeItem utente = new TreeItem(treeFunzioniInserisci, SWT.NONE);
-		utente.setGrayed(true);
-		utente.setData(IFunzioniConstants.GESTIONE_UTENTI);
-		utente.setText("Menu Utenti");
-		TreeItem treeItemU1 = new TreeItem(utente, SWT.NONE);
-		treeItemU1.setData(IFunzioniConstants.GESTIONE_UTENTI);
-		treeItemU1.setText("Crea Utenti/Ruoli");
-
-	}
 
 	private void modificaRuolo() {
 		if (treeFunzioniModifica.getSelectionCount() == 0) {
@@ -469,7 +345,7 @@ public class RuoliForm extends ListComposite {
 			msg.open();
 		} else {
 			if (RuoloDAO.insRuolo(nomeRuolo.getText(), treeFunzioniInserisci
-					.getSelection())) {
+					.getItems())) {
 				MessageBox msg = new MessageBox(new Shell());
 				msg.setMessage("Operazione eseguita con successo");
 				ruoloCombo.add(nomeRuolo.getText());

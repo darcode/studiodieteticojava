@@ -140,7 +140,7 @@ public class PazienteTableView extends ViewPart {
 		buttonPrenVisita = new Button(classVis.top, SWT.NONE);
 //		GESTIONE SICUREZZA - RUOLO
 		buttonPrenVisita.setLayoutData(gridData1);
-		buttonPrenVisita.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_REGISTRA_VISITA));
+		buttonPrenVisita.setEnabled(UtenteDAO.hasFunction(IFunzioniConstants.FUNZIONE_PRENOTAZIONE_VISITA));
 		//buttonPrenVisita.setBounds(new Rectangle(250, 352, 105, 25));
 		buttonPrenVisita.setText("Prenotazione visita");
 		buttonPrenVisita

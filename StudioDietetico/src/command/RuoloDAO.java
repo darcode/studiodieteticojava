@@ -88,7 +88,6 @@ public class RuoloDAO extends BaseDAO {
 			ruoloNew.setFunziones(FunzioneDAO.getFunzioniAsSet(descrFunzioni));
 			getSession().save(ruoloNew);
 			commit();
-			getSession().flush();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -113,7 +112,6 @@ public class RuoloDAO extends BaseDAO {
 			ruolo.setFunziones(FunzioneDAO.getFunzioniAsSet(descrFunzioni));
 			getSession().saveOrUpdate(ruolo);
 			commit();
-			close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
