@@ -11,6 +11,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -46,7 +47,6 @@ public class RegistrazioneForm extends ListComposite {
 	private Combo profilo;
 	private Composite cmp;
 	private Table tblUtentiRuoli;
-	private Combo cboRuoli;
 	private Table tblRuoli;
 	private Table tblRuoliEsistenti;
 	private Tree tblFunzioni;
@@ -387,7 +387,6 @@ public class RegistrazioneForm extends ListComposite {
 		treeItemU1.setData(IFunzioniConstants.GESTIONE_UTENTI);
 		treeItemU1.setText("Crea Utenti/Ruoli");
 		tblFunzioni.setFont(fontTbl);
-		tblFunzioni.setEnabled(false);
 
 	}
 
@@ -480,21 +479,27 @@ public class RegistrazioneForm extends ListComposite {
 			for (TreeItem item : tblFunzioni.getItems()) {
 				item.setChecked(false);
 				item.setExpanded(false);
+				item.setForeground(Utils.getColor(255,0,0));
 				for (TreeItem item1 : item.getItems()) {
 					item1.setChecked(false);
 					item1.setExpanded(false);
+					item1.setForeground(Utils.getColor(255,0,0));
 				}
 			}
 			for (Object fn : ruolo.getFunziones()) {
 				for (TreeItem item : tblFunzioni.getItems()) {
 					if (item.getData().equals(((Funzione) fn).getDescrizione())) {
 						item.setChecked(true);
+						item.setFont(fontTbl);
+						item.setForeground(Utils.getColor(0,200,50));
 						tblFunzioni.showItem(item);
 					}
 					for (TreeItem item1 : item.getItems()) {
 						if (item1.getData().equals(
 								((Funzione) fn).getDescrizione())) {
 							item1.setChecked(true);
+							item1.setForeground(Utils.getColor(0,200,50));
+							item1.setFont(fontTbl);
 							tblFunzioni.showItem(item1);
 						}
 					}

@@ -19,9 +19,13 @@ USE studiodietetico;
 --
 -- Dumping data for table `funzione`
 --
+delete from utente;
+delete from ruolo_funzione;
+delete from funzione;
+delete from ruolo;
 
 /*!40000 ALTER TABLE `funzione` DISABLE KEYS */;
-INSERT INTO `funzione` (`idFunzione`,`Descrizione`) VALUES 
+INSERT INTO `funzione` (`idFunzione`,`Descrizione`) VALUES
  (1,'Registra Utente'),
  (2,'Statistiche'),
  (3,'Prenota Visita'),
@@ -52,7 +56,9 @@ INSERT INTO `funzione` (`idFunzione`,`Descrizione`) VALUES
  (32,'Inserimento Medico'),
  (33,'Modifica Medico'),
  (34,'Gestione Esame Clinico'),
- (35,'Gestione Parametri Antropometrici');
+ (35,'Gestione Parametri Antropometrici'),
+ (36,'Menu Fatture'),
+ (37,'Menu Prenotazioni');
 /*!40000 ALTER TABLE `funzione` ENABLE KEYS */;
 
 
