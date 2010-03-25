@@ -244,7 +244,7 @@ public class RuoliForm extends ListComposite {
 		paziente.setText("Menu Pazienti");
 		TreeItem treeItem = new TreeItem(paziente, SWT.NONE);
 		treeItem.setData(IFunzioniConstants.GESTIONE_PAZIENTI);
-		treeItem.setText("CRUD Paziente");
+		treeItem.setText("Anagrafica Paziente");
 		TreeItem treeItem1 = new TreeItem(paziente, SWT.NONE);
 		treeItem1.setData(IFunzioniConstants.RILEVAZ_PARAM_ANTROP);
 		treeItem1.setText("Rilevazione Parametri Antropometrici");
