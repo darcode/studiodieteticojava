@@ -149,7 +149,9 @@ INSERT INTO `ruolo_funzione` (`idRuolo`,`idFunzione`) VALUES
  (1,34),
  (3,34),
  (1,35),
- (3,35);
+ (3,35),
+ (1,36),
+ (1,37);
 /*!40000 ALTER TABLE `ruolo_funzione` ENABLE KEYS */;
 
 
