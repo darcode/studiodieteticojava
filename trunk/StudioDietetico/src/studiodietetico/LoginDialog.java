@@ -5,7 +5,6 @@ import hibernate.Utente;
 import java.awt.Frame;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import java.awt.GridBagLayout;
 import javax.swing.JButton;
 import java.awt.Rectangle;
 import javax.swing.JPasswordField;
