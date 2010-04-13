@@ -12,25 +12,33 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 
 import service.Costanti;
 import service.DynNode;
+import service.Utils;
 
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Label;
 
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.graphics.Point;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -38,6 +46,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Expression;
 
 import command.BaseDAO;
 
@@ -54,10 +63,23 @@ public class DynamicQueryView extends ViewPart{
 	private Button button = null;
 	private Table table = null;
 	private Shell sShell = null;
-	private Shell sShell1 = null;  //  @jve:decl-index=0:visual-constraint="760,595"
+	private Shell sShell1 = null;	
 	private Label label2 = null;
 	private Button ok = null;
-	private HashMap<String, DynNode> dynAlbero = new HashMap<String, DynNode>();
+	private HashMap<TreeItem, DynNode> dynAlbero = new HashMap<TreeItem, DynNode>();
+	
+	
+	//ShellInserimento
+	private Shell sShellInresimento = null;
+	private Button buttonOkInserimento = null;
+	private Label etichettaInserimento = null;
+	private Text textInserimento = null;
+	private Label nomeAttributoInserimento = null;
+	private Button buttonCancellaInserimento = null;
+	private Button buttonMatchingInserimento = null;
+	private CCombo cComboInserimento = null;
+	private Button buttonInserimento = null;
+	private CCombo cCombo1Inserimento = null;
 
 	public DynamicQueryView() {
 		// TODO Auto-generated constructor stub
@@ -77,24 +99,10 @@ public class DynamicQueryView extends ViewPart{
         		if (arr[0] != null) {
         			TreeItem item = arr[0];
         			if (!item.getText().substring(0, 1).equals(item.getText().substring(0, 1).toUpperCase())) {
-//        				si becca l'albero a ritroso
-//        				ArrayList<TreeItem> ramo = new ArrayList<TreeItem>();
-//        				TreeItem currTreeItem = arr[0];
-//        				while (currTreeItem!=null) {
-//        					ramo.add(currTreeItem);
-//        					currTreeItem = currTreeItem.getParentItem();
-//						}      
-        				String key = "";
-        				if (item.getParentItem()!=null) {
-							key = item.getParentItem().getText().concat("_").concat(item.getText()).toUpperCase();
-						} else {
-							key = "radiceAlbero".concat("_").concat(item.getText()).toUpperCase();
-						}        				
-        				DynNode currentNode = dynAlbero.get(key);        				
-        				
-                		DynamicQueryShell dynShell = new DynamicQueryShell(criteria);
-                		sShell = dynShell.createShell(currentNode);
-                		sShell.open();
+       				       				
+        				DynNode currentNode = dynAlbero.get(item);                	
+                		createShellInserimento(currentNode);
+                		sShellInresimento.open();
 					}
 				}
         	}
@@ -246,7 +254,7 @@ public class DynamicQueryView extends ViewPart{
 					sottoRadice.setText(currField.getName());
 					DynNode figlio = new DynNode(sottoRadice);
 					figlio.setPathClass(currField.getType().getCanonicalName());
-					dynAlbero.put(figlio.getIdMap(), figlio);
+					dynAlbero.put(figlio.getTreeNode(), figlio);
 					
 					if (prim.equals("char")) {
 												
@@ -260,31 +268,31 @@ public class DynamicQueryView extends ViewPart{
 					sottoRadice.setText(currField.getName());
 					DynNode figlio = new DynNode(sottoRadice);
 					figlio.setPathClass(currField.getType().getCanonicalName());
-					dynAlbero.put(figlio.getIdMap(), figlio);
+					dynAlbero.put(figlio.getTreeNode(), figlio);
 				} else if (currField.getType().equals(java.lang.Double.class)) {
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 					sottoRadice.setText(currField.getName());
 					DynNode figlio = new DynNode(sottoRadice);
 					figlio.setPathClass(currField.getType().getCanonicalName());
-					dynAlbero.put(figlio.getIdMap(), figlio);
+					dynAlbero.put(figlio.getTreeNode(), figlio);
 				} else if (currField.getType().isInstance(new String())) {
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 					sottoRadice.setText(currField.getName());
 					DynNode figlio = new DynNode(sottoRadice);
 					figlio.setPathClass(currField.getType().getCanonicalName());
-					dynAlbero.put(figlio.getIdMap(), figlio);
+					dynAlbero.put(figlio.getTreeNode(), figlio);
 				} else if (currField.getType().isInstance(new Date())) {
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 					sottoRadice.setText(currField.getName());
 					DynNode figlio = new DynNode(sottoRadice);
 					figlio.setPathClass(currField.getType().getCanonicalName());
-					dynAlbero.put(figlio.getIdMap(), figlio);
+					dynAlbero.put(figlio.getTreeNode(), figlio);
 				} else if (currField.getType().equals(java.lang.Integer.class)) {
 					TreeItem sottoRadice = new TreeItem(radice, SWT.NONE);
 					sottoRadice.setText(currField.getName());
 					DynNode figlio = new DynNode(sottoRadice);
 					figlio.setPathClass(currField.getType().getCanonicalName());
-					dynAlbero.put(figlio.getIdMap(), figlio);
+					dynAlbero.put(figlio.getTreeNode(), figlio);
 				}
 				// Ricorsione
 				else if (!currField.getType().isInstance(new HashSet<Object>())) {					
@@ -299,7 +307,7 @@ public class DynamicQueryView extends ViewPart{
 						
 						DynNode figlio = new DynNode(sottoRadice);
 						figlio.setPathClass(currentPath);
-						dynAlbero.put(figlio.getIdMap(), figlio);
+						dynAlbero.put(figlio.getTreeNode(), figlio);
 						
 						espandiAlbero(testo, currentPath, sottoRadice);
 					}					
@@ -315,7 +323,7 @@ public class DynamicQueryView extends ViewPart{
 						
 						DynNode figlio = new DynNode(sottoRadice);
 						figlio.setPathClass("hibernate." + testo);
-						dynAlbero.put(figlio.getIdMap(), figlio);
+						dynAlbero.put(figlio.getTreeNode(), figlio);
 						
 						espandiAlbero(testo, "hibernate." + testo, sottoRadice);
 					}					
@@ -323,6 +331,319 @@ public class DynamicQueryView extends ViewPart{
 				fieldClasse.remove(currField);
 			}
 		}
+	}
+	
+	
+	//ShellPopUp
+	
+	public void createShellInserimento(final DynNode item){		
+		
+		
+		
+		
+		if (item.getPathClass().contains("Integer")|item.getPathClass().contains("int")) {
+				
+			sShellInresimento = new Shell();
+			sShellInresimento.setSize(new Point(340, 233));
+			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonOkInserimento.setText("Ok");
+			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
+			etichettaInserimento = new Label(sShellInresimento, SWT.NONE);
+			etichettaInserimento.setBounds(new Rectangle(87, 9, 117, 34));
+			etichettaInserimento.setText("Inserisci il valore");
+			nomeAttributoInserimento = new Label(sShellInresimento, SWT.NONE);
+			nomeAttributoInserimento.setBounds(new Rectangle(26, 87, 121, 22));
+			nomeAttributoInserimento.setText(item.getTreeNode().getText());
+			buttonCancellaInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonCancellaInserimento.setBounds(new Rectangle(62, 165, 90, 27));
+			buttonCancellaInserimento.setText("Cancella");
+			textInserimento = new Text(sShellInresimento, SWT.BORDER);
+			textInserimento.setBounds(new Rectangle(215, 62, 113, 25));
+			buttonMatchingInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonMatchingInserimento.setBounds(new Rectangle(221, 105, 103, 27));
+			buttonMatchingInserimento.setText("Altro campo");
+			cCombo1Inserimento = new CCombo(sShellInresimento, SWT.NONE);
+			cCombo1Inserimento.setBounds(new Rectangle(154, 86, 55, 27));
+			cCombo1Inserimento.add("<");
+			cCombo1Inserimento.add("=<");
+			cCombo1Inserimento.add(">");
+			cCombo1Inserimento.add(">=");
+			cCombo1Inserimento.add("=");
+			buttonMatchingInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					//TODO dare la possibilità di selezionare un altro campo (dello stesso tipo)
+					//dall'albero della query
+					System.out.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");					
+				}
+			});
+			buttonCancellaInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(), ""});						
+					sShellInresimento.close();
+				}
+			});
+			buttonOkInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),textInserimento.getText()});
+					
+					
+					
+					sShellInresimento.close();					
+				}
+			});
+				
+		} else if (item.getPathClass().contains("Double")|item.getPathClass().contains("double")) {
+			
+			sShellInresimento = new Shell();
+			sShellInresimento.setSize(new Point(340, 233));
+			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonOkInserimento.setText("Ok");
+			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
+			etichettaInserimento = new Label(sShellInresimento, SWT.NONE);
+			etichettaInserimento.setBounds(new Rectangle(87, 9, 117, 34));
+			etichettaInserimento.setText("Inserisci il valore");
+			nomeAttributoInserimento = new Label(sShellInresimento, SWT.NONE);
+			nomeAttributoInserimento.setBounds(new Rectangle(26, 87, 121, 22));
+			nomeAttributoInserimento.setText(item.getTreeNode().getText());
+			buttonCancellaInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonCancellaInserimento.setBounds(new Rectangle(62, 165, 90, 27));
+			buttonCancellaInserimento.setText("Cancella");
+			textInserimento = new Text(sShellInresimento, SWT.BORDER);
+			textInserimento.setBounds(new Rectangle(215, 62, 113, 25));
+			buttonMatchingInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonMatchingInserimento.setBounds(new Rectangle(221, 105, 103, 27));
+			buttonMatchingInserimento.setText("Altro campo");
+			cCombo1Inserimento = new CCombo(sShellInresimento, SWT.NONE);
+			cCombo1Inserimento.setBounds(new Rectangle(154, 86, 55, 27));
+			cCombo1Inserimento.add("<");
+			cCombo1Inserimento.add("=<");
+			cCombo1Inserimento.add(">");
+			cCombo1Inserimento.add(">=");
+			cCombo1Inserimento.add("=");
+			buttonMatchingInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					//TODO dare la possibilità di selezionare un altro campo (dello stesso tipo)
+					//dall'albero della query
+					System.out.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");					
+				}
+			});
+			buttonCancellaInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(), ""});						
+					sShellInresimento.close();
+				}
+			});
+			buttonOkInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),textInserimento.getText()});
+					sShellInresimento.close();					
+				}
+			});
+			
+		} else if (item.getPathClass().contains("Date")) {
+			
+			GridData gridData6 = new GridData();
+			gridData6.horizontalAlignment = GridData.CENTER;
+			gridData6.verticalAlignment = GridData.CENTER;
+			GridData gridData5 = new GridData();
+			gridData5.horizontalAlignment = GridData.CENTER;
+			gridData5.verticalAlignment = GridData.CENTER;
+			GridData gridData4 = new GridData();
+			GridData gridData1 = new GridData();
+			gridData1.horizontalSpan = 2;
+			GridData gridData = new GridData();
+			gridData.horizontalAlignment = GridData.CENTER;
+			gridData.horizontalSpan = 2;
+			gridData.verticalAlignment = GridData.CENTER;
+			GridLayout gridLayout = new GridLayout();
+			gridLayout.numColumns = 2;
+			gridLayout.makeColumnsEqualWidth = false;
+			sShellInresimento = new Shell();
+			sShellInresimento.setText("Seleziona data e ora");
+			sShellInresimento.setLayout(gridLayout);
+			sShellInresimento.setSize(new Point(320, 332));
+			final DateTime calendar = new DateTime (sShellInresimento, SWT.CALENDAR | SWT.BORDER);
+			calendar.setLayoutData(gridData1);
+			calendar.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					System.out.println("widgetSelected()"); 
+				}
+				public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
+				}
+			});
+			final DateTime time = new DateTime (sShellInresimento, SWT.TIME | SWT.SHORT);
+			time.setLayoutData(gridData);
+			button = new Button(sShellInresimento, SWT.NONE);
+			button.setText("Confronta con un altro campo");
+			button.setLayoutData(gridData4);
+			Label filler17 = new Label(sShellInresimento, SWT.NONE);
+			buttonCancellaInserimento = new Button(sShellInresimento, SWT.NONE);			
+			buttonCancellaInserimento.setBounds(new Rectangle(62, 108, 90, 27));
+			buttonCancellaInserimento.setLayoutData(gridData6);
+			buttonCancellaInserimento.setText("Cancella");
+			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonOkInserimento.setText("Ok");
+			buttonOkInserimento.setLayoutData(gridData5);
+			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
+			buttonOkInserimento.addSelectionListener (new SelectionAdapter () {
+				public void widgetSelected (SelectionEvent e) {
+					System.out.println ("Calendar date selected (MM/DD/YYYY) = " + (calendar.getMonth () + 1) + "/" + calendar.getDay () + "/" + calendar.getYear ());
+					System.out.println ("Time selected (HH:MM) = " + time.getHours () + ":" + (time.getMinutes () < 10 ? "0" : "") + time.getMinutes ());
+					String dateString = calendar.getYear ()+"-"+(calendar.getMonth () + 1)+"-"+calendar.getDay ()+" "+time.getHours () +":"+(time.getMinutes () < 10 ? "0" : "") + time.getMinutes ()+":00";
+					String formato = "yyyy-MM-dd HH:mm:ss";
+					Date selectedData = Utils.convertStringToDate(dateString, formato); 
+					
+					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),selectedData.toString()});				
+					//TODO inserire il criteria adeguato				
+					
+					sShellInresimento.close ();
+				}
+			});
+			buttonCancellaInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(), ""});						
+					sShellInresimento.close();
+				}
+			});
+			
+		} else if (item.getPathClass().contains("Boolean")|item.getPathClass().contains("boolean")) {
+			
+			sShellInresimento = new Shell();
+			sShellInresimento.setSize(new Point(350, 194));
+			etichettaInserimento = new Label(sShellInresimento, SWT.NONE);
+			etichettaInserimento.setBounds(new Rectangle(119, 10, 117, 34));
+			etichettaInserimento.setText("Seleziona il valore");
+			nomeAttributoInserimento = new Label(sShellInresimento, SWT.NONE);
+			nomeAttributoInserimento.setBounds(new Rectangle(36, 61, 121, 22));
+			nomeAttributoInserimento.setText(item.getTreeNode().getText());
+			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonOkInserimento.setText("Ok");
+			buttonOkInserimento.setBounds(new Rectangle(179, 108, 106, 27));
+			buttonCancellaInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonCancellaInserimento.setBounds(new Rectangle(62, 108, 90, 27));
+			buttonCancellaInserimento.setText("Cancella");
+			cComboInserimento = new CCombo(sShellInresimento, SWT.NONE);
+			cComboInserimento.setBounds(new Rectangle(218, 57, 85, 27));
+			cComboInserimento.add("Vero");
+			cComboInserimento.add("Falso");
+			cComboInserimento.setEditable(false);
+			cComboInserimento.select(0);		
+			buttonCancellaInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+						public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+							item.getTreeNode().setText(new String[] {item.getTreeNode().getText(), ""});						
+							sShellInresimento.close();
+						}
+					});
+			buttonOkInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					String selezione = cComboInserimento.getText();
+					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),selezione});
+					
+					if (selezione.equals("Vero")) {
+						//TODO costruire il Criteria adeguato
+						System.out.println(selezione);
+					} else {
+						//TODO costruire il Criteria adeguato
+						System.out.println(selezione);
+					}
+					sShellInresimento.close();
+				}
+			});
+			
+		} else if (item.getPathClass().contains("Char")|item.getPathClass().contains("char")) {
+			
+			sShellInresimento = new Shell();
+			sShellInresimento.setSize(new Point(340, 233));
+			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonOkInserimento.setText("Ok");
+			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
+			etichettaInserimento = new Label(sShellInresimento, SWT.NONE);
+			etichettaInserimento.setBounds(new Rectangle(87, 9, 117, 34));
+			etichettaInserimento.setText("Inserisci il valore");
+			nomeAttributoInserimento = new Label(sShellInresimento, SWT.NONE);
+			nomeAttributoInserimento.setBounds(new Rectangle(36, 61, 121, 22));
+			nomeAttributoInserimento.setText(item.getTreeNode().getText());
+			buttonCancellaInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonCancellaInserimento.setBounds(new Rectangle(62, 165, 90, 27));
+			buttonCancellaInserimento.setText("Cancella");
+			textInserimento = new Text(sShellInresimento, SWT.BORDER);
+			textInserimento.setBounds(new Rectangle(180, 62, 113, 25));
+			buttonMatchingInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonMatchingInserimento.setBounds(new Rectangle(227, 108, 40, 27));
+			buttonMatchingInserimento.setText("Qui");
+			buttonMatchingInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					//TODO dare la possibilità di selezionare un altro campo (dello stesso tipo)
+					//dall'albero della query
+					System.out.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");					
+				}
+			});
+			buttonCancellaInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(), ""});						
+					sShellInresimento.close();
+				}
+			});
+			buttonOkInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),textInserimento.getText()});
+					sShellInresimento.close();					
+				}
+			});
+			
+		} else if (item.getPathClass().contains("String")) {
+						
+			sShellInresimento = new Shell();
+			sShellInresimento.setSize(new Point(340, 233));
+			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonOkInserimento.setText("Ok");
+			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
+			etichettaInserimento = new Label(sShellInresimento, SWT.NONE);
+			etichettaInserimento.setBounds(new Rectangle(87, 9, 117, 34));
+			etichettaInserimento.setText("Inserisci il valore");
+			nomeAttributoInserimento = new Label(sShellInresimento, SWT.NONE);
+			nomeAttributoInserimento.setBounds(new Rectangle(36, 61, 121, 22));
+			nomeAttributoInserimento.setText(item.getTreeNode().getText());
+			buttonCancellaInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonCancellaInserimento.setBounds(new Rectangle(62, 165, 90, 27));
+			buttonCancellaInserimento.setText("Cancella");
+			textInserimento = new Text(sShellInresimento, SWT.BORDER);
+			textInserimento.setBounds(new Rectangle(180, 62, 113, 25));
+			buttonMatchingInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonMatchingInserimento.setBounds(new Rectangle(227, 108, 40, 27));
+			buttonMatchingInserimento.setText("Qui");
+			buttonMatchingInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					//TODO dare la possibilità di selezionare un altro campo (dello stesso tipo)
+					//dall'albero della query
+					System.out.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");					
+				}
+			});
+			buttonCancellaInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(), ""});						
+					sShellInresimento.close();
+				}
+			});
+			buttonOkInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),textInserimento.getText()});
+					
+					//1-prende la classe dove hai definito gli attributi
+					//2-aggiunge l'espressione					
+					DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
+					
+					criteria.add(Expression.eq(pathPadre.getPathClass()+"."+item.getTreeNode().getText(), textInserimento.getText()));
+					
+					sShellInresimento.close();					
+				}
+			});
+		
+			
+		} else {
+			System.out.println(item.getPathClass()+" ---> "+item.getTreeNode().getText());
+		}
+		
 	}
 	
 	
