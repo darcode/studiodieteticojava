@@ -19,8 +19,11 @@ import service.DynNode;
 import service.Utils;
 
 import org.eclipse.swt.custom.CCombo;
+import org.hibernate.Criteria;
 
 public class DynamicQueryShell {
+	
+	private Criteria criteria;
 	
 	private Shell sShell;  //  @jve:decl-index=0:visual-constraint="10,13"
 	private Button buttonOk = null;
@@ -33,8 +36,8 @@ public class DynamicQueryShell {
 	private Button button = null;
 	private CCombo cCombo1 = null;
 	
-	public DynamicQueryShell(){	
-		
+	public DynamicQueryShell(Criteria crit){	
+		criteria = crit;
 	}	
 	
 	public Shell createShell(final DynNode item){		
