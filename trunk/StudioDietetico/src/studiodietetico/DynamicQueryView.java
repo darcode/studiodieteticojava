@@ -236,6 +236,9 @@ public class DynamicQueryView extends ViewPart{
 		}
 		if (!nodiVisitati.contains(pathClasse)) {
 			nodiVisitati.add(pathClasse);
+			/*Anna ..per evitare null pointer!!!*/
+			DynNode rad = new DynNode(radice);
+			dynAlbero.put(rad.getTreeNode(), rad);
 			// Recupero la lista dei Campi della Classe
 			Field campi[] = classSelected.getDeclaredFields();
 			ArrayList<Field> fieldClasse = new ArrayList<Field>();
@@ -627,11 +630,17 @@ public class DynamicQueryView extends ViewPart{
 			});
 			buttonOkInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					System.out.println(item);
+					System.out.println(item.getTreeNode());
+					System.out.println(item.getTreeNode().getText());
+					System.out.println(textInserimento.getText());
 					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),textInserimento.getText()});
-					
+					System.out.println("parent"+item.getTreeNode().getParentItem());
 					//1-prende la classe dove hai definito gli attributi
-					//2-aggiunge l'espressione					
+					//2-aggiunge l'espressione	
+					System.out.println(dynAlbero.keySet());
 					DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
+					System.out.println(pathPadre);
 					
 					criteria.add(Expression.eq(pathPadre.getPathClass()+"."+item.getTreeNode().getText(), textInserimento.getText()));
 					
