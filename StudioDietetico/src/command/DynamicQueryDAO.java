@@ -1,7 +1,11 @@
 package command;
 
+import hibernate.Medico;
+import hibernate.Visita;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -12,6 +16,20 @@ import service.DynNode;
 public class DynamicQueryDAO extends BaseDAO{
 	private Criteria criteria;
 	private Object filtroQuery;
+	
+	public static void main(String[] args) {
+		Medico m = new Medico();
+		
+		
+		Session session = getSession();
+		begin();
+		Criteria c  = session.createCriteria(m.getClass()); 
+		List result = c.list();		
+		Medico primo = (Medico) result.get(0);
+		primo.getVisitas();
+		System.out.println("ciao");
+
+	}
 	
 	public DynamicQueryDAO(String pathClasse, String nomeClasse){
 		Class c = null;
