@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -52,8 +53,7 @@ import command.BaseDAO;
 
 public class DynamicQueryView extends ViewPart{
 
-	private Criteria criteria;
-	private Object filtroQuery;
+	
 
 	private Composite top = null;
 	private Tree tree = null;
@@ -80,6 +80,11 @@ public class DynamicQueryView extends ViewPart{
 	private CCombo cComboInserimento = null;
 	private Button buttonInserimento = null;
 	private CCombo cCombo1Inserimento = null;
+	
+	//DynamicQueryDAO
+	private Criteria criteria;
+	private Object filtroQuery;
+	private List result;
 
 	public DynamicQueryView() {
 		// TODO Auto-generated constructor stub
@@ -146,6 +151,14 @@ public class DynamicQueryView extends ViewPart{
         button = new Button(top, SWT.NONE);
         button.setBounds(new Rectangle(445, 5, 44, 27));
         button.setText("Vai");
+        button.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+        	public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+        		//TODO esegue la query
+        		executeQuery();
+        		
+        		System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
+        	}
+        });
         table = new Table(top, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
@@ -238,6 +251,8 @@ public class DynamicQueryView extends ViewPart{
 			nodiVisitati.add(pathClasse);
 			/*Anna ..per evitare null pointer!!!*/
 			DynNode rad = new DynNode(radice);
+			/*Corrado ..hai dimenticato il path :D*/
+			rad.setPathClass(pathClasse);
 			dynAlbero.put(rad.getTreeNode(), rad);
 			// Recupero la lista dei Campi della Classe
 			Field campi[] = classSelected.getDeclaredFields();
@@ -630,20 +645,20 @@ public class DynamicQueryView extends ViewPart{
 			});
 			buttonOkInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-					System.out.println(item);
-					System.out.println(item.getTreeNode());
-					System.out.println(item.getTreeNode().getText());
-					System.out.println(textInserimento.getText());
 					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),textInserimento.getText()});
-					System.out.println("parent"+item.getTreeNode().getParentItem());
-					//1-prende la classe dove hai definito gli attributi
-					//2-aggiunge l'espressione	
-					System.out.println(dynAlbero.keySet());
+					
 					DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
-					System.out.println(pathPadre);
-					
-					criteria.add(Expression.eq(pathPadre.getPathClass()+"."+item.getTreeNode().getText(), textInserimento.getText()));
-					
+					String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".")+1, pathPadre.getPathClass().length());
+					if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
+						criteria.add(Expression.eq(item.getTreeNode().getText(), textInserimento.getText()));
+					} else {		
+						//TODO --> beccare il nome corretto dell'attributo
+						// verificare se si può --> medico.prestaziones.turno.nome
+//						criteria.add(Expression.eq(path+"."+item.getTreeNode().getText(), textInserimento.getText()));
+						criteria.add(Expression.eq("prestaziones.turno.nome", textInserimento.getText()));
+					}
+											
+
 					sShellInresimento.close();					
 				}
 			});
@@ -683,6 +698,11 @@ public class DynamicQueryView extends ViewPart{
 		criteria = session.createCriteria(filtroQuery.getClass()); 	
 		
 	
+	}
+	
+	private void executeQuery(){
+		result = criteria.list();
+		System.out.println(result.size());
 	}
 	
 	
