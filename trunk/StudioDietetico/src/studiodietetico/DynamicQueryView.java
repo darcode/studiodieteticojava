@@ -1,5 +1,8 @@
 package studiodietetico;
 
+import hibernate.Medico;
+import hibernate.Prestazione;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,49 +10,47 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-
-import service.Costanti;
-import service.DynNode;
-import service.Utils;
-
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Label;
-
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.part.ViewPart;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Restrictions;
 
-import command.BaseDAO;
+import service.Costanti;
+import service.DynNode;
+import service.Utils;
 
 public class DynamicQueryView extends ViewPart{
 
@@ -82,7 +83,7 @@ public class DynamicQueryView extends ViewPart{
 	private CCombo cCombo1Inserimento = null;
 	
 	//DynamicQueryDAO
-	private Criteria criteria;
+	private DetachedCriteria criteria;
 	private Object filtroQuery;
 	private List result;
 
@@ -655,7 +656,10 @@ public class DynamicQueryView extends ViewPart{
 						//TODO --> beccare il nome corretto dell'attributo
 						// verificare se si può --> medico.prestaziones.turno.nome
 //						criteria.add(Expression.eq(path+"."+item.getTreeNode().getText(), textInserimento.getText()));
-						criteria.add(Expression.eq("prestaziones.turno.nome", textInserimento.getText()));
+						criteria = DetachedCriteria.forClass (Medico.class).createCriteria("prestaziones").createCriteria("turno");
+						criteria.add (Restrictions.eq ("nome", textInserimento.getText()));
+						
+//						criteria.createAlias("prestaziones", "p").createCriteria(Prestazione.).createAlias("turno", "t").add(Expression.eq("t.nome", textInserimento.getText()));
 					}
 											
 
@@ -695,13 +699,11 @@ public class DynamicQueryView extends ViewPart{
 		Session session = getSession();
 		begin();
 		
-		criteria = session.createCriteria(filtroQuery.getClass()); 	
-		
-	
+		criteria = DetachedCriteria.forClass(filtroQuery.getClass()); 	
 	}
 	
 	private void executeQuery(){
-		result = criteria.list();
+		result = criteria.getExecutableCriteria(getSession()).list();
 		System.out.println(result.size());
 	}
 	
