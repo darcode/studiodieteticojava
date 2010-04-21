@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -71,6 +72,7 @@ public class DynamicQueryView extends ViewPart{
 	
 	
 	//ShellInserimento
+	private DynNode item = null;
 	private Shell sShellInresimento = null;
 	private Button buttonOkInserimento = null;
 	private Label etichettaInserimento = null;
@@ -355,8 +357,8 @@ public class DynamicQueryView extends ViewPart{
 	
 	//ShellPopUp
 	
-	public void createShellInserimento(final DynNode item){		
-		
+	public void createShellInserimento(DynNode currentItem){		
+		item = currentItem;
 		
 		
 		
@@ -652,12 +654,23 @@ public class DynamicQueryView extends ViewPart{
 					String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".")+1, pathPadre.getPathClass().length());
 					if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
 						criteria.add(Expression.eq(item.getTreeNode().getText(), textInserimento.getText()));
-					} else {		
-						//TODO --> beccare il nome corretto dell'attributo
-						// verificare se si può --> medico.prestaziones.turno.nome
-//						criteria.add(Expression.eq(path+"."+item.getTreeNode().getText(), textInserimento.getText()));
-						criteria = DetachedCriteria.forClass (Medico.class).createCriteria("prestaziones").createCriteria("turno");
-						criteria.add (Restrictions.eq ("nome", textInserimento.getText()));
+					} else {
+						
+						//si costruisce a ritroso il percorso
+						ArrayList<String> ramo = new ArrayList<String>();
+						DynNode current = item;
+						while (!current.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {							
+							current = dynAlbero.get(current.getTreeNode().getParentItem());
+							ramo.add(current.getTreeNode().getText());														
+						}
+						ramo = Utils.inversione(ramo);
+						for (int i = 0 ; i < ramo.size(); i++) {
+							criteria.createCriteria(ramo.get(ramo.size()-1));
+						}
+
+						
+						criteria.add(Restrictions.eq(item.getTreeNode().getText(), textInserimento.getText()));
+//						criteria.add (Restrictions.eq ("nome", textInserimento.getText()));
 						
 //						criteria.createAlias("prestaziones", "p").createCriteria(Prestazione.).createAlias("turno", "t").add(Expression.eq("t.nome", textInserimento.getText()));
 					}

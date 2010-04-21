@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.ResourceBundle;
@@ -162,4 +163,14 @@ public class Utils {
 	public static Color getStandardWhiteColor() {
 		return Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
 	}
+	
+	public static ArrayList inversione(ArrayList<String> array){
+	    ArrayList inverted = new ArrayList();
+	    while(array.size()>0){
+	    	inverted.add(array.get(array.size()-1));
+	    	array.remove(array.size()-1);
+	    }
+	    return inverted;
+	}
+	
 }
