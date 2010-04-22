@@ -1,14 +1,10 @@
 package studiodietetico;
 
-import hibernate.Medico;
-import hibernate.Prestazione;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -648,34 +644,34 @@ public class DynamicQueryView extends ViewPart{
 			});
 			buttonOkInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),textInserimento.getText()});
-					
+					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),textInserimento.getText()});					
 					DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
 					String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".")+1, pathPadre.getPathClass().length());
 					if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
 						criteria.add(Expression.eq(item.getTreeNode().getText(), textInserimento.getText()));
-					} else {
-						
+					} else {						
 						//si costruisce a ritroso il percorso
 						ArrayList<String> ramo = new ArrayList<String>();
-						DynNode current = item;
-						while (!current.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {							
-							current = dynAlbero.get(current.getTreeNode().getParentItem());
-							ramo.add(current.getTreeNode().getText());														
-						}
-						ramo = Utils.inversione(ramo);
-						for (int i = 0 ; i < ramo.size(); i++) {
-							criteria.createCriteria(ramo.get(ramo.size()-1));
-						}
-
-						
+//						DynNode current = item;
+//						DynNode currentParent = null;
+//						while (!current.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {							
+//							currentParent = dynAlbero.get(current.getTreeNode().getParentItem());
+//							//becca la classe padre
+//							//trova l'attributo piu simile al figlio
+//							//se l'attributo è un hashSet allora aggiunge la s
+//							
+//							
+//							ramo.add(current.getPathClass().toLowerCase());														
+//						}
+//						ramo = Utils.inversione(ramo);
+						criteria = DetachedCriteria.forClass(filtroQuery.getClass());
+						ramo.add("prestaziones");
+						ramo.add("turno");
+						for (int i = 0 ; i < ramo.size(); i++) { //ricordarsi di reimpostare i=1 per non beccare la radice di nuovo
+							criteria.createCriteria(ramo.get(i));
+						}						
 						criteria.add(Restrictions.eq(item.getTreeNode().getText(), textInserimento.getText()));
-//						criteria.add (Restrictions.eq ("nome", textInserimento.getText()));
-						
-//						criteria.createAlias("prestaziones", "p").createCriteria(Prestazione.).createAlias("turno", "t").add(Expression.eq("t.nome", textInserimento.getText()));
 					}
-											
-
 					sShellInresimento.close();					
 				}
 			});
