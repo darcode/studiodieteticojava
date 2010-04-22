@@ -81,7 +81,7 @@ public class DynamicQueryView extends ViewPart{
 	private CCombo cCombo1Inserimento = null;
 	
 	//DynamicQueryDAO
-	private DetachedCriteria criteria;
+	public Criteria criteria;
 	private Object filtroQuery;
 	private List result;
 
@@ -312,6 +312,7 @@ public class DynamicQueryView extends ViewPart{
 					dynAlbero.put(figlio.getTreeNode(), figlio);
 				}
 				// Ricorsione
+				//classe di hibernate (uno a molti)
 				else if (!currField.getType().isInstance(new HashSet<Object>())) {					
 					// nodo del grafo di esplorazione					
 					String testo = service.Utils.upperCase(currField.getName());					
@@ -327,9 +328,9 @@ public class DynamicQueryView extends ViewPart{
 						dynAlbero.put(figlio.getTreeNode(), figlio);
 						
 						espandiAlbero(testo, currentPath, sottoRadice);
-					}					
-				} else if (!nodiVisitati.contains(currField.getDeclaringClass().toString())) {
-					// hashSet					
+					}
+				// hashSet (molti a molti)				
+				} else if (!nodiVisitati.contains(currField.getDeclaringClass().toString())) {										
 					String testo = service.Utils.rimuoviS(currField.getName());
 					testo = service.Utils.upperCase(testo);
 					if (!nodiVisitati.contains("hibernate." + testo)) {
@@ -652,23 +653,43 @@ public class DynamicQueryView extends ViewPart{
 					} else {						
 						//si costruisce a ritroso il percorso
 						ArrayList<String> ramo = new ArrayList<String>();
-//						DynNode current = item;
-//						DynNode currentParent = null;
-//						while (!current.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {							
-//							currentParent = dynAlbero.get(current.getTreeNode().getParentItem());
-//							//becca la classe padre
-//							//trova l'attributo piu simile al figlio
-//							//se l'attributo è un hashSet allora aggiunge la s
-//							
-//							
-//							ramo.add(current.getPathClass().toLowerCase());														
-//						}
-//						ramo = Utils.inversione(ramo);
-						criteria = DetachedCriteria.forClass(filtroQuery.getClass());
-						ramo.add("prestaziones");
-						ramo.add("turno");
-						for (int i = 0 ; i < ramo.size(); i++) { //ricordarsi di reimpostare i=1 per non beccare la radice di nuovo
-							criteria.createCriteria(ramo.get(i));
+						DynNode current = dynAlbero.get(item.getTreeNode().getParentItem());; //turno
+						DynNode currentPadre = dynAlbero.get(current.getTreeNode().getParentItem()); //prestaziones
+						while (!current.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
+							String currentNode = "";
+							
+							Class currentClass = null;
+							try {
+								currentClass = Class.forName(currentPadre.getPathClass());
+							} catch (ClassNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							Field currentFields[] = currentClass.getDeclaredFields();
+							ArrayList<Field> fieldClasse = new ArrayList<Field>();
+							for (int i = 0; i < currentFields.length; i++) {
+								fieldClasse.add(currentFields[i]);
+							}
+							while (fieldClasse.size() > 0) {
+								Field currField = fieldClasse.get(0);
+								//si becca se è un hashset
+								String matching = currField.getName().toLowerCase();
+								if (matching.contains(current.getTreeNode().getText().toLowerCase())) {
+									if (currField.getType().isInstance(new HashSet<Object>())) {
+										currentNode = current.getTreeNode().getText().toLowerCase().concat("s");
+									} else {
+										currentNode = current.getTreeNode().getText().toLowerCase();
+									}
+									ramo.add(currentNode);									
+								}
+								fieldClasse.remove(currField);
+							}						
+							current = dynAlbero.get(current.getTreeNode().getParentItem()); 
+							currentPadre = dynAlbero.get(currentPadre.getTreeNode().getParentItem());
+						}
+						ramo = Utils.inversione(ramo);
+						for (int i = 0 ; i < ramo.size(); i++) {
+							criteria = criteria.createCriteria(ramo.get(i));
 						}						
 						criteria.add(Restrictions.eq(item.getTreeNode().getText(), textInserimento.getText()));
 					}
@@ -708,11 +729,12 @@ public class DynamicQueryView extends ViewPart{
 		Session session = getSession();
 		begin();
 		
-		criteria = DetachedCriteria.forClass(filtroQuery.getClass()); 	
+		criteria = session.createCriteria(filtroQuery.getClass()); 	
 	}
 	
 	private void executeQuery(){
-		result = criteria.getExecutableCriteria(getSession()).list();
+//		result = criteria.getExecutableCriteria(getSession()).list(); //forse non serve
+		result = criteria.list();
 		System.out.println(result.size());
 	}
 	
