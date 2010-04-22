@@ -14,6 +14,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -30,6 +31,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -44,6 +46,8 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
+
+import common.ui.ListComposite;
 
 import service.Costanti;
 import service.DynNode;
@@ -154,8 +158,8 @@ public class DynamicQueryView extends ViewPart{
         	public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
         		//TODO esegue la query
         		executeQuery();
-        		
-        		System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
+        		if(result!=null && !result.isEmpty())
+        			feelTableResult();
         	}
         });
         table = new Table(top, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -176,6 +180,14 @@ public class DynamicQueryView extends ViewPart{
         TreeColumn colValore = new TreeColumn(tree, SWT.CENTER);
         colValore.setText("Valore");
         colValore.setWidth(200);
+	}
+
+	protected void feelTableResult() {
+		
+		for(TableColumn item: table.getColumns())item.dispose();
+		for(TableItem item:table.getItems())item.dispose();
+		Object row = result.get(0);
+		ListComposite.riempiTabellaEntita(table, (ArrayList<Object>)result, row.getClass().getName());
 	}
 
 	@Override
@@ -357,8 +369,6 @@ public class DynamicQueryView extends ViewPart{
 	public void createShellInserimento(DynNode currentItem){		
 		item = currentItem;
 		
-		
-		
 		if (item.getPathClass().contains("Integer")|item.getPathClass().contains("int")) {
 				
 			sShellInresimento = new Shell();
@@ -366,6 +376,15 @@ public class DynamicQueryView extends ViewPart{
 			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
 			buttonOkInserimento.setText("Ok");
 			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
+			Image imageFromFile = common.Utils.getImageFromFile("icons/filter.jpg");
+			imageFromFile.getImageData().scaledTo(50, 50);
+			sShellInresimento.setImage(imageFromFile);
+			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonOkInserimento.setText("Ok");
+			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
+			Composite cmp = new Composite(sShellInresimento,SWT.NONE);
+			cmp.setBounds(new Rectangle(10, 10, 50, 50));
+			cmp.setBackgroundImage(imageFromFile);
 			etichettaInserimento = new Label(sShellInresimento, SWT.NONE);
 			etichettaInserimento.setBounds(new Rectangle(87, 9, 117, 34));
 			etichettaInserimento.setText("Inserisci il valore");
@@ -414,6 +433,12 @@ public class DynamicQueryView extends ViewPart{
 			
 			sShellInresimento = new Shell();
 			sShellInresimento.setSize(new Point(340, 233));
+			Image imageFromFile = common.Utils.getImageFromFile("icons/filter.jpg");
+			imageFromFile.getImageData().scaledTo(50, 50);
+			Composite cmp = new Composite(sShellInresimento,SWT.NONE);
+			cmp.setBounds(new Rectangle(10, 10, 50, 50));
+			cmp.setBackgroundImage(imageFromFile);
+			sShellInresimento.setImage(imageFromFile);
 			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
 			buttonOkInserimento.setText("Ok");
 			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
@@ -480,6 +505,12 @@ public class DynamicQueryView extends ViewPart{
 			sShellInresimento.setText("Seleziona data e ora");
 			sShellInresimento.setLayout(gridLayout);
 			sShellInresimento.setSize(new Point(320, 332));
+			Image imageFromFile = common.Utils.getImageFromFile("icons/filter.jpg");
+			imageFromFile.getImageData().scaledTo(50, 50);
+			Composite cmp = new Composite(sShellInresimento,SWT.NONE);
+			cmp.setBounds(new Rectangle(10, 10, 50, 50));
+			cmp.setBackgroundImage(imageFromFile);
+			sShellInresimento.setImage(imageFromFile);
 			final DateTime calendar = new DateTime (sShellInresimento, SWT.CALENDAR | SWT.BORDER);
 			calendar.setLayoutData(gridData1);
 			calendar.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
@@ -528,6 +559,12 @@ public class DynamicQueryView extends ViewPart{
 			
 			sShellInresimento = new Shell();
 			sShellInresimento.setSize(new Point(350, 194));
+			Image imageFromFile = common.Utils.getImageFromFile("icons/filter.jpg");
+			imageFromFile.getImageData().scaledTo(50, 50);
+			Composite cmp = new Composite(sShellInresimento,SWT.NONE);
+			cmp.setBounds(new Rectangle(10, 10, 50, 50));
+			cmp.setBackgroundImage(imageFromFile);
+			sShellInresimento.setImage(imageFromFile);
 			etichettaInserimento = new Label(sShellInresimento, SWT.NONE);
 			etichettaInserimento.setBounds(new Rectangle(119, 10, 117, 34));
 			etichettaInserimento.setText("Seleziona il valore");
@@ -571,10 +608,14 @@ public class DynamicQueryView extends ViewPart{
 		} else if (item.getPathClass().contains("Char")|item.getPathClass().contains("char")) {
 			
 			sShellInresimento = new Shell();
-			sShellInresimento.setSize(new Point(340, 233));
-			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
-			buttonOkInserimento.setText("Ok");
-			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
+			sShellInresimento.setSize(new Point(500, 300));
+			Image imageFromFile = common.Utils.getImageFromFile("icons/filter.jpg");
+			imageFromFile.getImageData().scaledTo(50, 50);
+			Composite cmp = new Composite(sShellInresimento,SWT.NONE);
+			cmp.setBounds(new Rectangle(10, 10, 50, 50));
+			cmp.setBackgroundImage(imageFromFile);
+			sShellInresimento.setImage(imageFromFile);
+			
 			etichettaInserimento = new Label(sShellInresimento, SWT.NONE);
 			etichettaInserimento.setBounds(new Rectangle(87, 9, 117, 34));
 			etichettaInserimento.setText("Inserisci il valore");
@@ -613,6 +654,12 @@ public class DynamicQueryView extends ViewPart{
 						
 			sShellInresimento = new Shell();
 			sShellInresimento.setSize(new Point(340, 233));
+			Image imageFromFile = common.Utils.getImageFromFile("icons/filter.jpg");
+			imageFromFile.getImageData().scaledTo(50, 50);
+			Composite cmp = new Composite(sShellInresimento,SWT.NONE);
+			cmp.setBounds(new Rectangle(10, 10, 50, 50));
+			cmp.setBackgroundImage(imageFromFile);
+			sShellInresimento.setImage(imageFromFile);
 			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
 			buttonOkInserimento.setText("Ok");
 			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
@@ -735,7 +782,6 @@ public class DynamicQueryView extends ViewPart{
 	private void executeQuery(){
 //		result = criteria.getExecutableCriteria(getSession()).list(); //forse non serve
 		result = criteria.list();
-		System.out.println(result.size());
 	}
 	
 	
