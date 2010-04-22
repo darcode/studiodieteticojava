@@ -47,7 +47,7 @@ public class ListComposite extends Composite {
 		super(parent, style);
 	}
 
-	protected void riempiTabellaEntita(Table table, ArrayList<Object> lista, String classeChiamante) {
+	public static void riempiTabellaEntita(Table table, ArrayList<Object> lista, String classeChiamante) {
 		ArrayList<String> colonne = new ArrayList<String>();
 
 		if (lista.isEmpty()) {
