@@ -37,17 +37,20 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.part.ViewPart;
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.HibernateException;
-import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.collection.PersistentSet;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.loader.criteria.CriteriaQueryTranslator;
+import org.hibernate.engine.SessionFactoryImplementor;
+import org.hibernate.impl.CriteriaImpl;
+import org.hibernate.impl.SessionImpl;
+import org.hibernate.loader.OuterJoinLoader;
+import org.hibernate.loader.criteria.CriteriaLoader;
+import org.hibernate.persister.entity.OuterJoinLoadable;
 
 import service.Costanti;
 import service.DynNode;
@@ -213,7 +216,7 @@ public class DynamicQueryView extends ViewPart {
 
 	protected void feelTableResult(TreeItem node, Object item, boolean isRoot,
 			int depth) {
-		if (depth < 15) {
+		if (depth < 10) {
 			try {
 				if (item != null && (item instanceof Set) && !isRoot) {
 					for (Object itemFiglio : ((Set) item)) {
