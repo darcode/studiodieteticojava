@@ -17,13 +17,13 @@
         <property name="calorie" type="java.lang.Integer">
             <column name="Calorie" />
         </property>
-        <set name="costituziones" inverse="true" lazy="true" table="costituzione" fetch="select">
+        <set name="costituziones" inverse="true" lazy="false" table="costituzione" fetch="select">
             <key>
                 <column name="idAlimento" not-null="true" />
             </key>
             <one-to-many class="hibernate.Costituzione" />
         </set>
-        <set name="ricettas" inverse="true" lazy="true" table="ricetta" fetch="select">
+        <set name="ricettas" inverse="true" lazy="false" table="ricetta" fetch="select">
             <key>
                 <column name="FK2_Alimento" />
             </key>

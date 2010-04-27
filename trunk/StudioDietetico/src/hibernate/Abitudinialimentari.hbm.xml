@@ -29,13 +29,13 @@
         <property name="note" type="string">
             <column name="Note" length="65535" />
         </property>
-        <set name="modalitapastofuoris" inverse="true" lazy="true" table="modalitapastofuori" fetch="select">
+        <set name="modalitapastofuoris" inverse="true" lazy="false" table="modalitapastofuori" fetch="select">
             <key>
                 <column name="FK_Abitudini" not-null="true" />
             </key>
             <one-to-many class="hibernate.Modalitapastofuori" />
         </set>
-        <set name="assunzionebevandes" inverse="true" lazy="true" table="assunzionebevande" fetch="select">
+        <set name="assunzionebevandes" inverse="true" lazy="false" table="assunzionebevande" fetch="select">
             <key>
                 <column name="idAbitudineAlimentare" not-null="true" />
             </key>

@@ -17,7 +17,7 @@
         <property name="procedimento" type="string">
             <column name="Procedimento" length="65535" not-null="true" />
         </property>
-        <set name="composiziones" inverse="true" lazy="true" table="composizione" fetch="select">
+        <set name="composiziones" inverse="true" lazy="false" table="composizione" fetch="select">
             <key>
                 <column name="idRicetta" not-null="true" />
             </key>

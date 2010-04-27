@@ -14,7 +14,7 @@
         <property name="costoVisita" type="double">
             <column name="CostoVisita" precision="22" scale="0" not-null="true" />
         </property>
-        <set name="prenotaziones" inverse="true" lazy="true" table="prenotazione" fetch="select">
+        <set name="prenotaziones" inverse="true" lazy="false" table="prenotazione" fetch="select">
             <key>
                 <column name="idTipologiaVisita" not-null="true" />
             </key>

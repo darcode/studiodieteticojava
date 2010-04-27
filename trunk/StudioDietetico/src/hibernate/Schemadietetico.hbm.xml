@@ -14,13 +14,13 @@
         <property name="note" type="string">
             <column name="Note" length="65535" />
         </property>
-        <set name="costituziones" inverse="true" lazy="true" table="costituzione" fetch="select">
+        <set name="costituziones" inverse="true" lazy="false" table="costituzione" fetch="select">
             <key>
                 <column name="idSchemaDietetico" not-null="true" />
             </key>
             <one-to-many class="hibernate.Costituzione" />
         </set>
-        <set name="personalizzazionegiornatas" inverse="true" lazy="true" table="personalizzazionegiornata" fetch="select">
+        <set name="personalizzazionegiornatas" inverse="true" lazy="false" table="personalizzazionegiornata" fetch="select">
             <key>
                 <column name="idSchemaDietetico" not-null="true" />
             </key>

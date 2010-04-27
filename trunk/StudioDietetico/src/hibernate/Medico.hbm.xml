@@ -47,13 +47,13 @@
         <property name="email" type="string">
             <column name="Email" length="45" />
         </property>
-        <set name="prestaziones" inverse="true" lazy="true" table="prestazione" fetch="select">
+        <set name="prestaziones" inverse="true" lazy="false" table="prestazione" fetch="select">
             <key>
                 <column name="idMedico" not-null="true" />
             </key>
             <one-to-many class="hibernate.Prestazione" />
         </set>
-        <set name="visitas" inverse="true" lazy="true" table="visita" fetch="select">
+        <set name="visitas" inverse="true" lazy="false" table="visita" fetch="select">
             <key>
                 <column name="FK2_Medico" not-null="true" />
             </key>

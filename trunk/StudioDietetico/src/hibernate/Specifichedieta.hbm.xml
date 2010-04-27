@@ -20,7 +20,7 @@
         <property name="contenutoAssente" type="string">
             <column name="ContenutoAssente" length="65535" />
         </property>
-        <set name="dietas" inverse="true" lazy="true" table="dieta" fetch="select">
+        <set name="dietas" inverse="true" lazy="false" table="dieta" fetch="select">
             <key>
                 <column name="FK_SpecificheDieta" not-null="true" />
             </key>

@@ -14,7 +14,7 @@
         <property name="descrizione" type="string">
             <column name="Descrizione" length="45" />
         </property>
-        <set name="assunzionebevandes" inverse="true" lazy="true" table="assunzionebevande" fetch="select">
+        <set name="assunzionebevandes" inverse="true" lazy="false" table="assunzionebevande" fetch="select">
             <key>
                 <column name="idTipologiaBevanda" not-null="true" />
             </key>

@@ -11,7 +11,7 @@
         <property name="descrizione" type="string">
             <column name="Descrizione" length="45" not-null="true" />
         </property>
-        <set name="ruolos" inverse="true" lazy="true" table="ruolo_funzione" fetch="select">
+        <set name="ruolos" inverse="true" lazy="false" table="ruolo_funzione" fetch="select">
             <key>
                 <column name="idFunzione" not-null="true" />
             </key>

@@ -23,13 +23,13 @@
         <property name="dietaStandard" type="java.lang.Boolean">
             <column name="dietaStandard" />
         </property>
-        <set name="personalizzazionegiornatas" inverse="true" lazy="true" table="personalizzazionegiornata" fetch="select">
+        <set name="personalizzazionegiornatas" inverse="true" lazy="false" table="personalizzazionegiornata" fetch="select">
             <key>
                 <column name="idDieta" not-null="true" />
             </key>
             <one-to-many class="hibernate.Personalizzazionegiornata" />
         </set>
-        <set name="prescriziones" inverse="true" lazy="true" table="prescrizione" fetch="select">
+        <set name="prescriziones" inverse="true" lazy="false" table="prescrizione" fetch="select">
             <key>
                 <column name="FK_Dieta" not-null="true" />
             </key>

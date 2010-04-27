@@ -17,7 +17,7 @@
         <property name="localizzazione" type="string">
             <column name="Localizzazione" length="45" not-null="true" />
         </property>
-        <set name="interventos" inverse="true" lazy="true" table="intervento" fetch="select">
+        <set name="interventos" inverse="true" lazy="false" table="intervento" fetch="select">
             <key>
                 <column name="idTipologiaIntervento" not-null="true" />
             </key>
