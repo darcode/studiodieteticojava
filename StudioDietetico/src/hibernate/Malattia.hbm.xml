@@ -17,7 +17,7 @@
         <property name="malattiaEreditaria" type="java.lang.Boolean">
             <column name="MalattiaEreditaria" />
         </property>
-        <set name="pazientes" inverse="true" lazy="true" table="condizione" fetch="select">
+        <set name="pazientes" inverse="true" lazy="false" table="condizione" fetch="select">
             <key>
                 <column name="idMalattia" not-null="true" />
             </key>

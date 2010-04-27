@@ -26,7 +26,7 @@
         <property name="data" type="timestamp">
             <column name="Data" length="19" not-null="true" />
         </property>
-        <set name="visitas" inverse="true" lazy="true" table="visita" fetch="select">
+        <set name="visitas" inverse="true" lazy="false" table="visita" fetch="select">
             <key>
                 <column name="FK_Fattura" />
             </key>

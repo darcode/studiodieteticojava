@@ -14,7 +14,7 @@
         <property name="descrizione" type="string">
             <column name="Descrizione" length="45" />
         </property>
-        <set name="parametroesames" inverse="true" lazy="true" table="parametroesame" fetch="select">
+        <set name="parametroesames" inverse="true" lazy="false" table="parametroesame" fetch="select">
             <key>
                 <column name="FK_EsameClinico" not-null="true" />
             </key>

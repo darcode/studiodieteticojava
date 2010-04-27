@@ -20,7 +20,7 @@
         <property name="note" type="string">
             <column name="Note" length="65535" />
         </property>
-        <set name="visitas" inverse="true" lazy="true" table="visita" fetch="select">
+        <set name="visitas" inverse="true" lazy="false" table="visita" fetch="select">
             <key>
                 <column name="FK_Prenotazione" not-null="true" />
             </key>

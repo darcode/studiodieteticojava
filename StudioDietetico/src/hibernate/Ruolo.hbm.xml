@@ -11,13 +11,13 @@
         <property name="descrizione" type="string">
             <column name="descrizione" length="45" not-null="true" />
         </property>
-        <set name="utentes" inverse="true" lazy="true" table="utente" fetch="select">
+        <set name="utentes" inverse="true" lazy="false" table="utente" fetch="select">
             <key>
                 <column name="idRuolo" not-null="true" />
             </key>
             <one-to-many class="hibernate.Utente" />
         </set>
-        <set name="funziones" inverse="false" lazy="true" table="ruolo_funzione" fetch="select">
+        <set name="funziones" inverse="false" lazy="false" table="ruolo_funzione" fetch="select">
             <key>
                 <column name="idRuolo" not-null="true" />
             </key>

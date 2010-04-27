@@ -40,23 +40,18 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.engine.SessionFactoryImplementor;
-import org.hibernate.impl.CriteriaImpl;
-import org.hibernate.impl.SessionImpl;
-import org.hibernate.loader.OuterJoinLoader;
-import org.hibernate.loader.criteria.CriteriaLoader;
-import org.hibernate.persister.entity.OuterJoinLoadable;
+import org.hibernate.proxy.HibernateProxy;
 
 import service.Costanti;
 import service.DynNode;
 import service.Utils;
 
 import common.GenericBean;
+import common.HibernateUtils;
 
 public class DynamicQueryView extends ViewPart {
 	private static final Font font = common.Utils.getFont("Arial", 9, SWT.BOLD);
@@ -192,7 +187,7 @@ public class DynamicQueryView extends ViewPart {
 							root.setText("Risultato");
 							for (Object row : result) {
 								TreeItem figlio = new TreeItem(root, SWT.NONE);
-								figlio.setText(row.getClass().getSimpleName());
+								figlio.setText(row.getClass().getSimpleName().toUpperCase());
 								figlio.setFont(font);
 								feelTableResult(figlio, row, true, 0);
 							}
@@ -216,49 +211,79 @@ public class DynamicQueryView extends ViewPart {
 
 	protected void feelTableResult(TreeItem node, Object item, boolean isRoot,
 			int depth) {
-		if (depth < 10) {
+		if (depth < 20 && !fermaEspansione(node)) {
 			try {
 				if (item != null && (item instanceof Set) && !isRoot) {
 					for (Object itemFiglio : ((Set) item)) {
 						depth++;
-						TreeItem figlio = new TreeItem(node, SWT.NONE);
-						figlio.setText(itemFiglio.getClass().getSimpleName());
-						figlio.setFont(font);
-						feelTableResult(figlio, itemFiglio, false, depth);
-					}
-				} else {
-					ArrayList<String> campi = GenericBean
-							.getAllFieldsNames(item);
-					for (String campo : campi) {
-						if (!campo.getClass().isPrimitive()
-								&& !(GenericBean
-										.getPropertyPackage(campo, item) == null)
-								&& (GenericBean.getPropertyClass(campo, item)
-										.equals(Set.class.getSimpleName()) || GenericBean
-										.getPropertyPackage(campo, item)
-										.getName().equals("hibernate"))) {
-							depth++;
-							TreeItem treeItem = new TreeItem(node, SWT.NONE);
-							feelTableResult(treeItem, GenericBean.getProperty(
-									campo, item), false, depth);
-						} else if (campo.contains("Id") || campo.contains("id")) {
-						} else {
-							TreeItem treeItem = new TreeItem(node, SWT.NONE);
-							String label = "" + campo;
-							while (label.length() < 25)
-								label = " " + label;
-							treeItem.setText(label.toUpperCase()
-									+ ":             "
-									+ (GenericBean.getProperty(campo, item)));
+						if (itemFiglio != null) {
+							TreeItem figlio = new TreeItem(node, SWT.NONE);
+							figlio.setText(itemFiglio.getClass()
+									.getSimpleName().toUpperCase());
+							figlio.setFont(font);
+							feelTableResult(figlio, itemFiglio, false, depth);
 						}
 					}
+				} else {
+					if (item != null) {
+						for (Class clazz : item.getClass().getInterfaces()) {
+							if (clazz.equals(HibernateProxy.class)) {
+								item = HibernateUtils.getProxiedObject(item);
+								break;
+							}
+						}
+						ArrayList<String> campi = GenericBean
+								.getAllFieldsNames(item);
+						for (String campo : campi) {
+							if (campo.contains("Id") || campo.contains("id")) {
+							} else if (!campo.getClass().isPrimitive()
+									&& !(GenericBean.getPropertyPackage(campo,
+											item) == null)
+									&& (GenericBean.getPropertyClass(campo,
+											item).equals(
+											Set.class.getSimpleName()) || GenericBean
+											.getPropertyPackage(campo, item)
+											.getName().equals("hibernate"))) {
+								depth++;
+								TreeItem figlio = new TreeItem(node, SWT.NONE);
+								figlio.setText(campo.toUpperCase());
+								figlio.setFont(font);
+								feelTableResult(figlio, GenericBean.getProperty(
+										campo, item), false, depth);
+							} else {
+								TreeItem treeItem = new TreeItem(node, SWT.NONE);
+								String label = "" + campo;
+								while (label.length() < 25)
+									label = " " + label;
+								treeItem
+										.setText(label.toUpperCase()
+												+ ":             "
+												+ (GenericBean.getProperty(
+														campo, item)));
+							}
+						}
 
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
+	}
+
+	private boolean fermaEspansione(TreeItem node) {
+		System.out.println("node:" + node.getText());
+		TreeItem padre = node.getParentItem();
+		while (padre != null && padre != node) {
+			System.out.println("padre" + padre.getText());
+			if (padre.getText().equals(node.getText())){
+				node.dispose();
+				return true;
+			}
+			padre = padre.getParentItem();
+		}
+		return false;
 	}
 
 	@Override
@@ -965,7 +990,6 @@ public class DynamicQueryView extends ViewPart {
 		try {
 			c = Class.forName(pathClasse);
 		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 

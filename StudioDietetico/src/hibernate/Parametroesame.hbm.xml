@@ -35,7 +35,7 @@
         <property name="maxBambino" type="string">
             <column name="MaxBambino" length="45" />
         </property>
-        <set name="refertos" inverse="true" lazy="true" table="referto" fetch="select">
+        <set name="refertos" inverse="true" lazy="false" table="referto" fetch="select">
             <key>
                 <column name="idParametroEsame" not-null="true" />
             </key>
