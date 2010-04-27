@@ -37,6 +37,15 @@ public class GenericBean {
 		return campiStringa;
 	}
 
+	public static ArrayList<String> getAllFieldsNames(Object aClass) {
+		Field[] campi = aClass.getClass().getDeclaredFields();
+		ArrayList<String> campiStringa = new ArrayList<String>();
+		for (Field campo : campi) {
+			campiStringa.add(campo.getName());
+		}
+		return campiStringa;
+	}
+
 	public static int getFieldsNumber(Object aClass) {
 		Field[] campi = aClass.getClass().getDeclaredFields();
 		return campi.length;
@@ -90,6 +99,19 @@ public class GenericBean {
 		try {
 			Field declaredField = target.getClass().getDeclaredField(name);
 			ritorno = declaredField.getType().getSimpleName();
+		} catch (Exception ecc) {
+			ecc.printStackTrace();
+		}
+		return ritorno;
+	}
+	/*
+	 * Per leggere il tipo del field
+	 */
+	public static Package getPropertyPackage(String name, Object target) {
+		Package ritorno = null;
+		try {
+			Field declaredField = target.getClass().getDeclaredField(name);
+			ritorno = declaredField.getType().getPackage();
 		} catch (Exception ecc) {
 			ecc.printStackTrace();
 		}
