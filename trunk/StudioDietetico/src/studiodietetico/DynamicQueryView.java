@@ -62,7 +62,6 @@ public class DynamicQueryView extends ViewPart {
 	private HashSet<String> nodiVisitati = new HashSet<String>();
 	private Button button = null;
 	private Tree visualizzaRisultati = null;
-	private Shell sShell = null;
 	private Shell sShell1 = null;
 	private Label label2 = null;
 	private Button ok = null;
@@ -70,7 +69,7 @@ public class DynamicQueryView extends ViewPart {
 	private HashMap<String, String> selectedEntities = new HashMap();
 	// ShellInserimento
 	private DynNode item = null;
-	private Shell sShellInresimento = null;
+	private Shell sShellInserimento = null;
 	private Button buttonOkInserimento = null;
 	private Label etichettaInserimento = null;
 	private Text textInserimento = null;
@@ -78,7 +77,6 @@ public class DynamicQueryView extends ViewPart {
 	private Button buttonCancellaInserimento = null;
 	private Button buttonMatchingInserimento = null;
 	private CCombo cComboInserimento = null;
-	private Button buttonInserimento = null;
 	private CCombo cCombo1Inserimento = null;
 
 	// DynamicQueryDAO
@@ -109,7 +107,7 @@ public class DynamicQueryView extends ViewPart {
 
 						DynNode currentNode = dynAlbero.get(item);
 						createShellInserimento(currentNode);
-						sShellInresimento.open();
+						sShellInserimento.open();
 					}
 				}
 			}
@@ -273,10 +271,8 @@ public class DynamicQueryView extends ViewPart {
 	}
 
 	private boolean fermaEspansione(TreeItem node) {
-		System.out.println("node:" + node.getText());
 		TreeItem padre = node.getParentItem();
 		while (padre != null && padre != node) {
-			System.out.println("padre" + padre.getText());
 			if (padre.getText().equals(node.getText())){
 				node.dispose();
 				return true;
@@ -480,37 +476,37 @@ public class DynamicQueryView extends ViewPart {
 		if (item.getPathClass().contains("Integer")
 				| item.getPathClass().contains("int")) {
 
-			sShellInresimento = new Shell();
-			sShellInresimento.setSize(new Point(340, 233));
-			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
+			sShellInserimento = new Shell();
+			sShellInserimento.setSize(new Point(340, 233));
+			buttonOkInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonOkInserimento.setText("Ok");
 			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
 			Image imageFromFile = common.Utils
 					.getImageFromFile("icons/filter.jpg");
 			imageFromFile.getImageData().scaledTo(50, 50);
-			sShellInresimento.setImage(imageFromFile);
-			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
+			sShellInserimento.setImage(imageFromFile);
+			buttonOkInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonOkInserimento.setText("Ok");
 			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
-			Composite cmp = new Composite(sShellInresimento, SWT.NONE);
+			Composite cmp = new Composite(sShellInserimento, SWT.NONE);
 			cmp.setBounds(new Rectangle(10, 10, 50, 50));
 			cmp.setBackgroundImage(imageFromFile);
-			etichettaInserimento = new Label(sShellInresimento, SWT.NONE);
+			etichettaInserimento = new Label(sShellInserimento, SWT.NONE);
 			etichettaInserimento.setBounds(new Rectangle(87, 9, 117, 34));
 			etichettaInserimento.setText("Inserisci il valore");
-			nomeAttributoInserimento = new Label(sShellInresimento, SWT.NONE);
+			nomeAttributoInserimento = new Label(sShellInserimento, SWT.NONE);
 			nomeAttributoInserimento.setBounds(new Rectangle(26, 87, 121, 22));
 			nomeAttributoInserimento.setText(item.getTreeNode().getText());
-			buttonCancellaInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonCancellaInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonCancellaInserimento.setBounds(new Rectangle(62, 165, 90, 27));
 			buttonCancellaInserimento.setText("Cancella");
-			textInserimento = new Text(sShellInresimento, SWT.BORDER);
+			textInserimento = new Text(sShellInserimento, SWT.BORDER);
 			textInserimento.setBounds(new Rectangle(215, 62, 113, 25));
-			buttonMatchingInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonMatchingInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonMatchingInserimento
 					.setBounds(new Rectangle(221, 105, 103, 27));
 			buttonMatchingInserimento.setText("Altro campo");
-			cCombo1Inserimento = new CCombo(sShellInresimento, SWT.NONE);
+			cCombo1Inserimento = new CCombo(sShellInserimento, SWT.NONE);
 			cCombo1Inserimento.setBounds(new Rectangle(154, 86, 55, 27));
 			cCombo1Inserimento.add("<");
 			cCombo1Inserimento.add("=<");
@@ -535,7 +531,7 @@ public class DynamicQueryView extends ViewPart {
 							item.getTreeNode().setText(
 									new String[] {
 											item.getTreeNode().getText(), "" });
-							sShellInresimento.close();
+							sShellInserimento.close();
 						}
 					});
 			buttonOkInserimento
@@ -547,41 +543,41 @@ public class DynamicQueryView extends ViewPart {
 											item.getTreeNode().getText(),
 											textInserimento.getText() });
 
-							sShellInresimento.close();
+							sShellInserimento.close();
 						}
 					});
 
 		} else if (item.getPathClass().contains("Double")
 				| item.getPathClass().contains("double")) {
 
-			sShellInresimento = new Shell();
-			sShellInresimento.setSize(new Point(340, 233));
+			sShellInserimento = new Shell();
+			sShellInserimento.setSize(new Point(340, 233));
 			Image imageFromFile = common.Utils
 					.getImageFromFile("icons/filter.jpg");
 			imageFromFile.getImageData().scaledTo(50, 50);
-			Composite cmp = new Composite(sShellInresimento, SWT.NONE);
+			Composite cmp = new Composite(sShellInserimento, SWT.NONE);
 			cmp.setBounds(new Rectangle(10, 10, 50, 50));
 			cmp.setBackgroundImage(imageFromFile);
-			sShellInresimento.setImage(imageFromFile);
-			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
+			sShellInserimento.setImage(imageFromFile);
+			buttonOkInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonOkInserimento.setText("Ok");
 			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
-			etichettaInserimento = new Label(sShellInresimento, SWT.NONE);
+			etichettaInserimento = new Label(sShellInserimento, SWT.NONE);
 			etichettaInserimento.setBounds(new Rectangle(87, 9, 117, 34));
 			etichettaInserimento.setText("Inserisci il valore");
-			nomeAttributoInserimento = new Label(sShellInresimento, SWT.NONE);
+			nomeAttributoInserimento = new Label(sShellInserimento, SWT.NONE);
 			nomeAttributoInserimento.setBounds(new Rectangle(26, 87, 121, 22));
 			nomeAttributoInserimento.setText(item.getTreeNode().getText());
-			buttonCancellaInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonCancellaInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonCancellaInserimento.setBounds(new Rectangle(62, 165, 90, 27));
 			buttonCancellaInserimento.setText("Cancella");
-			textInserimento = new Text(sShellInresimento, SWT.BORDER);
+			textInserimento = new Text(sShellInserimento, SWT.BORDER);
 			textInserimento.setBounds(new Rectangle(215, 62, 113, 25));
-			buttonMatchingInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonMatchingInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonMatchingInserimento
 					.setBounds(new Rectangle(221, 105, 103, 27));
 			buttonMatchingInserimento.setText("Altro campo");
-			cCombo1Inserimento = new CCombo(sShellInresimento, SWT.NONE);
+			cCombo1Inserimento = new CCombo(sShellInserimento, SWT.NONE);
 			cCombo1Inserimento.setBounds(new Rectangle(154, 86, 55, 27));
 			cCombo1Inserimento.add("<");
 			cCombo1Inserimento.add("=<");
@@ -606,7 +602,7 @@ public class DynamicQueryView extends ViewPart {
 							item.getTreeNode().setText(
 									new String[] {
 											item.getTreeNode().getText(), "" });
-							sShellInresimento.close();
+							sShellInserimento.close();
 						}
 					});
 			buttonOkInserimento
@@ -617,7 +613,7 @@ public class DynamicQueryView extends ViewPart {
 									new String[] {
 											item.getTreeNode().getText(),
 											textInserimento.getText() });
-							sShellInresimento.close();
+							sShellInserimento.close();
 						}
 					});
 
@@ -639,18 +635,18 @@ public class DynamicQueryView extends ViewPart {
 			GridLayout gridLayout = new GridLayout();
 			gridLayout.numColumns = 2;
 			gridLayout.makeColumnsEqualWidth = false;
-			sShellInresimento = new Shell();
-			sShellInresimento.setText("Seleziona data e ora");
-			sShellInresimento.setLayout(gridLayout);
-			sShellInresimento.setSize(new Point(320, 332));
+			sShellInserimento = new Shell();
+			sShellInserimento.setText("Seleziona data e ora");
+			sShellInserimento.setLayout(gridLayout);
+			sShellInserimento.setSize(new Point(320, 332));
 			Image imageFromFile = common.Utils
 					.getImageFromFile("icons/filter.jpg");
 			imageFromFile.getImageData().scaledTo(50, 50);
-			Composite cmp = new Composite(sShellInresimento, SWT.NONE);
+			Composite cmp = new Composite(sShellInserimento, SWT.NONE);
 			cmp.setBounds(new Rectangle(10, 10, 50, 50));
 			cmp.setBackgroundImage(imageFromFile);
-			sShellInresimento.setImage(imageFromFile);
-			final DateTime calendar = new DateTime(sShellInresimento,
+			sShellInserimento.setImage(imageFromFile);
+			final DateTime calendar = new DateTime(sShellInserimento,
 					SWT.CALENDAR | SWT.BORDER);
 			calendar.setLayoutData(gridData1);
 			calendar
@@ -664,18 +660,18 @@ public class DynamicQueryView extends ViewPart {
 								org.eclipse.swt.events.SelectionEvent e) {
 						}
 					});
-			final DateTime time = new DateTime(sShellInresimento, SWT.TIME
+			final DateTime time = new DateTime(sShellInserimento, SWT.TIME
 					| SWT.SHORT);
 			time.setLayoutData(gridData);
-			button = new Button(sShellInresimento, SWT.NONE);
+			button = new Button(sShellInserimento, SWT.NONE);
 			button.setText("Confronta con un altro campo");
 			button.setLayoutData(gridData4);
-			Label filler17 = new Label(sShellInresimento, SWT.NONE);
-			buttonCancellaInserimento = new Button(sShellInresimento, SWT.NONE);
+			Label filler17 = new Label(sShellInserimento, SWT.NONE);
+			buttonCancellaInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonCancellaInserimento.setBounds(new Rectangle(62, 108, 90, 27));
 			buttonCancellaInserimento.setLayoutData(gridData6);
 			buttonCancellaInserimento.setText("Cancella");
-			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonOkInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonOkInserimento.setText("Ok");
 			buttonOkInserimento.setLayoutData(gridData5);
 			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
@@ -702,7 +698,7 @@ public class DynamicQueryView extends ViewPart {
 									selectedData.toString() });
 					// TODO inserire il criteria adeguato
 
-					sShellInresimento.close();
+					sShellInserimento.close();
 				}
 			});
 			buttonCancellaInserimento
@@ -712,35 +708,35 @@ public class DynamicQueryView extends ViewPart {
 							item.getTreeNode().setText(
 									new String[] {
 											item.getTreeNode().getText(), "" });
-							sShellInresimento.close();
+							sShellInserimento.close();
 						}
 					});
 
 		} else if (item.getPathClass().contains("Boolean")
 				| item.getPathClass().contains("boolean")) {
 
-			sShellInresimento = new Shell();
-			sShellInresimento.setSize(new Point(350, 194));
+			sShellInserimento = new Shell();
+			sShellInserimento.setSize(new Point(350, 194));
 			Image imageFromFile = common.Utils
 					.getImageFromFile("icons/filter.jpg");
 			imageFromFile.getImageData().scaledTo(50, 50);
-			Composite cmp = new Composite(sShellInresimento, SWT.NONE);
+			Composite cmp = new Composite(sShellInserimento, SWT.NONE);
 			cmp.setBounds(new Rectangle(10, 10, 50, 50));
 			cmp.setBackgroundImage(imageFromFile);
-			sShellInresimento.setImage(imageFromFile);
-			etichettaInserimento = new Label(sShellInresimento, SWT.NONE);
+			sShellInserimento.setImage(imageFromFile);
+			etichettaInserimento = new Label(sShellInserimento, SWT.NONE);
 			etichettaInserimento.setBounds(new Rectangle(119, 10, 117, 34));
 			etichettaInserimento.setText("Seleziona il valore");
-			nomeAttributoInserimento = new Label(sShellInresimento, SWT.NONE);
+			nomeAttributoInserimento = new Label(sShellInserimento, SWT.NONE);
 			nomeAttributoInserimento.setBounds(new Rectangle(36, 61, 121, 22));
 			nomeAttributoInserimento.setText(item.getTreeNode().getText());
-			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonOkInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonOkInserimento.setText("Ok");
 			buttonOkInserimento.setBounds(new Rectangle(179, 108, 106, 27));
-			buttonCancellaInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonCancellaInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonCancellaInserimento.setBounds(new Rectangle(62, 108, 90, 27));
 			buttonCancellaInserimento.setText("Cancella");
-			cComboInserimento = new CCombo(sShellInresimento, SWT.NONE);
+			cComboInserimento = new CCombo(sShellInserimento, SWT.NONE);
 			cComboInserimento.setBounds(new Rectangle(218, 57, 85, 27));
 			cComboInserimento.add("Vero");
 			cComboInserimento.add("Falso");
@@ -753,7 +749,7 @@ public class DynamicQueryView extends ViewPart {
 							item.getTreeNode().setText(
 									new String[] {
 											item.getTreeNode().getText(), "" });
-							sShellInresimento.close();
+							sShellInserimento.close();
 						}
 					});
 			buttonOkInserimento
@@ -773,35 +769,35 @@ public class DynamicQueryView extends ViewPart {
 								// TODO costruire il Criteria adeguato
 								System.out.println(selezione);
 							}
-							sShellInresimento.close();
+							sShellInserimento.close();
 						}
 					});
 
 		} else if (item.getPathClass().contains("Char")
 				| item.getPathClass().contains("char")) {
 
-			sShellInresimento = new Shell();
-			sShellInresimento.setSize(new Point(500, 300));
+			sShellInserimento = new Shell();
+			sShellInserimento.setSize(new Point(500, 300));
 			Image imageFromFile = common.Utils
 					.getImageFromFile("icons/filter.jpg");
 			imageFromFile.getImageData().scaledTo(50, 50);
-			Composite cmp = new Composite(sShellInresimento, SWT.NONE);
+			Composite cmp = new Composite(sShellInserimento, SWT.NONE);
 			cmp.setBounds(new Rectangle(10, 10, 50, 50));
 			cmp.setBackgroundImage(imageFromFile);
-			sShellInresimento.setImage(imageFromFile);
+			sShellInserimento.setImage(imageFromFile);
 
-			etichettaInserimento = new Label(sShellInresimento, SWT.NONE);
+			etichettaInserimento = new Label(sShellInserimento, SWT.NONE);
 			etichettaInserimento.setBounds(new Rectangle(87, 9, 117, 34));
 			etichettaInserimento.setText("Inserisci il valore");
-			nomeAttributoInserimento = new Label(sShellInresimento, SWT.NONE);
+			nomeAttributoInserimento = new Label(sShellInserimento, SWT.NONE);
 			nomeAttributoInserimento.setBounds(new Rectangle(36, 61, 121, 22));
 			nomeAttributoInserimento.setText(item.getTreeNode().getText());
-			buttonCancellaInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonCancellaInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonCancellaInserimento.setBounds(new Rectangle(62, 165, 90, 27));
 			buttonCancellaInserimento.setText("Cancella");
-			textInserimento = new Text(sShellInresimento, SWT.BORDER);
+			textInserimento = new Text(sShellInserimento, SWT.BORDER);
 			textInserimento.setBounds(new Rectangle(180, 62, 113, 25));
-			buttonMatchingInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonMatchingInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonMatchingInserimento
 					.setBounds(new Rectangle(227, 108, 40, 27));
 			buttonMatchingInserimento.setText("Qui");
@@ -823,7 +819,7 @@ public class DynamicQueryView extends ViewPart {
 							item.getTreeNode().setText(
 									new String[] {
 											item.getTreeNode().getText(), "" });
-							sShellInresimento.close();
+							sShellInserimento.close();
 						}
 					});
 			buttonOkInserimento
@@ -834,36 +830,36 @@ public class DynamicQueryView extends ViewPart {
 									new String[] {
 											item.getTreeNode().getText(),
 											textInserimento.getText() });
-							sShellInresimento.close();
+							sShellInserimento.close();
 						}
 					});
 
 		} else if (item.getPathClass().contains("String")) {
 
-			sShellInresimento = new Shell();
-			sShellInresimento.setSize(new Point(340, 233));
+			sShellInserimento = new Shell();
+			sShellInserimento.setSize(new Point(340, 233));
 			Image imageFromFile = common.Utils
 					.getImageFromFile("icons/filter.jpg");
 			imageFromFile.getImageData().scaledTo(50, 50);
-			Composite cmp = new Composite(sShellInresimento, SWT.NONE);
+			Composite cmp = new Composite(sShellInserimento, SWT.NONE);
 			cmp.setBounds(new Rectangle(10, 10, 50, 50));
 			cmp.setBackgroundImage(imageFromFile);
-			sShellInresimento.setImage(imageFromFile);
-			buttonOkInserimento = new Button(sShellInresimento, SWT.NONE);
+			sShellInserimento.setImage(imageFromFile);
+			buttonOkInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonOkInserimento.setText("Ok");
 			buttonOkInserimento.setBounds(new Rectangle(172, 165, 106, 27));
-			etichettaInserimento = new Label(sShellInresimento, SWT.NONE);
+			etichettaInserimento = new Label(sShellInserimento, SWT.NONE);
 			etichettaInserimento.setBounds(new Rectangle(87, 9, 117, 34));
 			etichettaInserimento.setText("Inserisci il valore");
-			nomeAttributoInserimento = new Label(sShellInresimento, SWT.NONE);
+			nomeAttributoInserimento = new Label(sShellInserimento, SWT.NONE);
 			nomeAttributoInserimento.setBounds(new Rectangle(36, 61, 121, 22));
 			nomeAttributoInserimento.setText(item.getTreeNode().getText());
-			buttonCancellaInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonCancellaInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonCancellaInserimento.setBounds(new Rectangle(62, 165, 90, 27));
 			buttonCancellaInserimento.setText("Cancella");
-			textInserimento = new Text(sShellInresimento, SWT.BORDER);
+			textInserimento = new Text(sShellInserimento, SWT.BORDER);
 			textInserimento.setBounds(new Rectangle(180, 62, 113, 25));
-			buttonMatchingInserimento = new Button(sShellInresimento, SWT.NONE);
+			buttonMatchingInserimento = new Button(sShellInserimento, SWT.NONE);
 			buttonMatchingInserimento
 					.setBounds(new Rectangle(227, 108, 40, 27));
 			buttonMatchingInserimento.setText("Qui");
@@ -885,7 +881,7 @@ public class DynamicQueryView extends ViewPart {
 							item.getTreeNode().setText(
 									new String[] {
 											item.getTreeNode().getText(), "" });
-							sShellInresimento.close();
+							sShellInserimento.close();
 						}
 					});
 			buttonOkInserimento
@@ -972,7 +968,7 @@ public class DynamicQueryView extends ViewPart {
 								criteria.add(Restrictions.eq(item.getTreeNode()
 										.getText(), textInserimento.getText()));
 							}
-							sShellInresimento.close();
+							sShellInserimento.close();
 						}
 					});
 
