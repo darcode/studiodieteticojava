@@ -162,7 +162,7 @@ public class DynamicQueryView extends ViewPart {
 		labelSelezioneEntita.setText("Selezionare il contesto da cui partire:");
 		button = new Button(top, SWT.NONE);
 		button.setBounds(new Rectangle(445, 5, 44, 27));
-		button.setText("Vai");
+		button.setText("Esegui");
 		button
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(
@@ -185,7 +185,8 @@ public class DynamicQueryView extends ViewPart {
 							root.setText("Risultato");
 							for (Object row : result) {
 								TreeItem figlio = new TreeItem(root, SWT.NONE);
-								figlio.setText(row.getClass().getSimpleName().toUpperCase());
+								figlio.setText(row.getClass().getSimpleName()
+										.toUpperCase());
 								figlio.setFont(font);
 								feelTableResult(figlio, row, true, 0);
 							}
@@ -194,8 +195,29 @@ public class DynamicQueryView extends ViewPart {
 						System.out.println(selectedEntities.keySet());
 					}
 				});
+		Button filtra = new Button(top, SWT.NONE);
+		filtra.setText("Filtra");
+		filtra.setBounds(new Rectangle(500, 5, 44, 27));
+		filtra
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(
+							org.eclipse.swt.events.SelectionEvent e) {
+
+						TreeItem root = visualizzaRisultati.getTopItem();
+							disposeChild(root);
+					}
+
+					private void disposeChild(TreeItem root) {
+						for (TreeItem figlio : root.getItems()) {
+							if (figlio.getChecked())
+								figlio.dispose();
+							else
+								disposeChild(figlio);
+						}
+					}
+				});
 		visualizzaRisultati = new Tree(top, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL);
+				| SWT.V_SCROLL | SWT.CHECK);
 		visualizzaRisultati.setHeaderVisible(true);
 		visualizzaRisultati.setLinesVisible(true);
 		visualizzaRisultati.setBounds(new Rectangle(487, 53, 582, 416));
@@ -246,8 +268,8 @@ public class DynamicQueryView extends ViewPart {
 								TreeItem figlio = new TreeItem(node, SWT.NONE);
 								figlio.setText(campo.toUpperCase());
 								figlio.setFont(font);
-								feelTableResult(figlio, GenericBean.getProperty(
-										campo, item), false, depth);
+								feelTableResult(figlio, GenericBean
+										.getProperty(campo, item), false, depth);
 							} else {
 								TreeItem treeItem = new TreeItem(node, SWT.NONE);
 								String label = "" + campo;
@@ -273,7 +295,7 @@ public class DynamicQueryView extends ViewPart {
 	private boolean fermaEspansione(TreeItem node) {
 		TreeItem padre = node.getParentItem();
 		while (padre != null && padre != node) {
-			if (padre.getText().equals(node.getText())){
+			if (padre.getText().equals(node.getText())) {
 				node.dispose();
 				return true;
 			}
