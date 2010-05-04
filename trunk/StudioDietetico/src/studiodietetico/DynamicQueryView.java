@@ -857,7 +857,6 @@ public class DynamicQueryView extends ViewPart {
 					});
 
 		} else if (item.getPathClass().contains("String")) {
-
 			sShellInserimento = new Shell();
 			sShellInserimento.setSize(new Point(340, 233));
 			Image imageFromFile = common.Utils
@@ -885,102 +884,69 @@ public class DynamicQueryView extends ViewPart {
 			buttonMatchingInserimento
 					.setBounds(new Rectangle(227, 108, 40, 27));
 			buttonMatchingInserimento.setText("Qui");
-			buttonMatchingInserimento
-					.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-						public void widgetSelected(
-								org.eclipse.swt.events.SelectionEvent e) {
-							// TODO dare la possibilità di selezionare un altro
-							// campo (dello stesso tipo)
-							// dall'albero della query
-							System.out
-									.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");
-						}
-					});
-			buttonCancellaInserimento
-					.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-						public void widgetSelected(
-								org.eclipse.swt.events.SelectionEvent e) {
-							item.getTreeNode().setText(
-									new String[] {
-											item.getTreeNode().getText(), "" });
-							sShellInserimento.close();
-						}
-					});
-			buttonOkInserimento
-					.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-						public void widgetSelected(
-								org.eclipse.swt.events.SelectionEvent e) {
-							item.getTreeNode().setText(
-									new String[] {
-											item.getTreeNode().getText(),
-											textInserimento.getText() });
-							DynNode pathPadre = dynAlbero.get(item
-									.getTreeNode().getParentItem());
-							String path = pathPadre.getPathClass().substring(
-									pathPadre.getPathClass().indexOf(".") + 1,
-									pathPadre.getPathClass().length());
-							if (pathPadre.getPathClass().equalsIgnoreCase(
-									filtroQuery.getClass().getCanonicalName())) {
-								criteria.add(Expression.eq(item.getTreeNode()
-										.getText(), textInserimento.getText()));
-							} else {
-								// si costruisce a ritroso il percorso
-								ArrayList<String> ramo = new ArrayList<String>();
-								DynNode current = dynAlbero.get(item
-										.getTreeNode().getParentItem());
-								; // turno
-								DynNode currentPadre = dynAlbero.get(current
-										.getTreeNode().getParentItem()); // prestaziones
-								while (!current.getPathClass()
-										.equalsIgnoreCase(
-												filtroQuery.getClass()
-														.getCanonicalName())) {
-									String currentNode = "";
-
-									Class currentClass = null;
-									try {
-										currentClass = Class
-												.forName(currentPadre
-														.getPathClass());
-									} catch (ClassNotFoundException e1) {
-										// TODO Auto-generated catch block
-										e1.printStackTrace();
-									}
-									Field currentFields[] = currentClass
-											.getDeclaredFields();
-									ArrayList<Field> fieldClasse = new ArrayList<Field>();
-									for (int i = 0; i < currentFields.length; i++) {
-										fieldClasse.add(currentFields[i]);
-									}
-									while (fieldClasse.size() > 0) {
-										Field currField = fieldClasse.get(0);
-										// si becca se è un hashset
-										String matching = currField.getName()
-												.toLowerCase();
-										if (matching.contains(current
-												.getTreeNode().getText()
-												.toLowerCase())) {
-											if (currField.getType().isInstance(
-													new HashSet<Object>())) {
-												currentNode = current
-														.getTreeNode()
-														.getText()
-														.toLowerCase().concat(
-																"s");
-											} else {
-												currentNode = current
-														.getTreeNode()
-														.getText()
-														.toLowerCase();
-											}
-											ramo.add(currentNode);
+//<<<<<<< .mine
+			buttonMatchingInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					top.forceFocus();
+					
+					
+					
+					
+					
+					
+					
+					System.out.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");					
+				}
+			});
+			buttonCancellaInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(), ""});						
+					sShellInresimento.close();
+				}
+			});
+			buttonOkInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),textInserimento.getText()});					
+					DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
+					String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".")+1, pathPadre.getPathClass().length());
+					if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
+						criteria.add(Expression.eq(item.getTreeNode().getText(), textInserimento.getText()));
+					} else {						
+						//si costruisce a ritroso il percorso
+						ArrayList<String> ramo = new ArrayList<String>();
+						DynNode current = dynAlbero.get(item.getTreeNode().getParentItem());; //turno
+						DynNode currentPadre = dynAlbero.get(current.getTreeNode().getParentItem()); //prestaziones
+						while (!current.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
+							String currentNode = "";
+							
+							Class currentClass = null;
+							try {
+								currentClass = Class.forName(currentPadre.getPathClass());
+							} catch (ClassNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							Field currentFields[] = currentClass.getDeclaredFields();
+							ArrayList<Field> fieldClasse = new ArrayList<Field>();
+							for (int i = 0; i < currentFields.length; i++) {
+								fieldClasse.add(currentFields[i]);
+							}
+							while (fieldClasse.size() > 0) {
+								Field currField = fieldClasse.get(0);
+								//si becca se è un hashset
+								String matching = currField.getName().toLowerCase();
+								if (matching.contains(current.getTreeNode().getText().toLowerCase())) {
+									if (currField.getType().isInstance(new HashSet<Object>())) {
+										currentNode = current.getTreeNode().getText().toLowerCase().concat("s");
+										} else {
+											currentNode = current.getTreeNode().getText().toLowerCase();
+											}	
+										ramo.add(currentNode);
 										}
-										fieldClasse.remove(currField);
-									}
-									current = dynAlbero.get(current
-											.getTreeNode().getParentItem());
-									currentPadre = dynAlbero.get(currentPadre
-											.getTreeNode().getParentItem());
+									fieldClasse.remove(currField);
+								}
+								current = dynAlbero.get(current.getTreeNode().getParentItem());
+								currentPadre = dynAlbero.get(currentPadre.getTreeNode().getParentItem());
 								}
 								ramo = Utils.inversione(ramo);
 								for (int i = 0; i < ramo.size(); i++) {
@@ -1026,10 +992,8 @@ public class DynamicQueryView extends ViewPart {
 
 		criteria = session.createCriteria(filtroQuery.getClass());
 	}
-
-	private void executeQuery() {
-		// result = criteria.getExecutableCriteria(getSession()).list(); //forse
-		// non serve2
+	
+	private void executeQuery(){
 		result = criteria.list();
 	}
 
