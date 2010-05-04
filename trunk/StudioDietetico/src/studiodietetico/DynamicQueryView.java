@@ -901,7 +901,7 @@ public class DynamicQueryView extends ViewPart {
 			buttonCancellaInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(), ""});						
-					sShellInresimento.close();
+					sShellInserimento.close();
 				}
 			});
 			buttonOkInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
