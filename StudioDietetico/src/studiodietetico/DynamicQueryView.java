@@ -582,210 +582,70 @@ public class DynamicQueryView extends ViewPart {
 		} else if (item.getPathClass().contains("Double")
 				| item.getPathClass().contains("double")) {
 
-//			Image imageFromFile = common.Utils
-//					.getImageFromFile("icons/filter.jpg");
-//			imageFromFile.getImageData().scaledTo(50, 50);
-//			Composite cmp = new Composite(sShellInserimento, SWT.NONE);
-//			cmp.setBounds(new Rectangle(10, 10, 50, 50));
-//			cmp.setBackgroundImage(imageFromFile);
-//			sShellInserimento.setImage(imageFromFile);
-			
-			cCombo1Inserimento = new CCombo(compFiltro, SWT.NONE);
-			cCombo1Inserimento.add("<");
-			cCombo1Inserimento.add("=<");
-			cCombo1Inserimento.add(">");
-			cCombo1Inserimento.add(">=");
-			cCombo1Inserimento.add("=");
-			buttonMatchingInserimento
-					.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-						public void widgetSelected(
-								org.eclipse.swt.events.SelectionEvent e) {
-							// TODO dare la possibilità di selezionare un altro
-							// campo (dello stesso tipo)
-							// dall'albero della query
-							System.out
-									.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");
-						}
-					});
-			buttonOkInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-					
-
-					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),textInserimento.getText()});					
-					DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
-					String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".")+1, pathPadre.getPathClass().length());
-					if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-						criteria.add(Expression.eq(item.getTreeNode().getText(), textInserimento.getText()));
-					} else {						
-						//si costruisce a ritroso il percorso
-						ArrayList<String> ramo = new ArrayList<String>();
-						DynNode current = dynAlbero.get(item.getTreeNode().getParentItem());; //turno
-						DynNode currentPadre = dynAlbero.get(current.getTreeNode().getParentItem()); //prestaziones
-						while (!current.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-							String currentNode = "";
-							
-							Class currentClass = null;
-							try {
-								currentClass = Class.forName(currentPadre.getPathClass());
-							} catch (ClassNotFoundException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-							Field currentFields[] = currentClass.getDeclaredFields();
-							ArrayList<Field> fieldClasse = new ArrayList<Field>();
-							for (int i = 0; i < currentFields.length; i++) {
-								fieldClasse.add(currentFields[i]);
-							}
-							while (fieldClasse.size() > 0) {
-								Field currField = fieldClasse.get(0);
-								//si becca se è un hashset
-								String matching = currField.getName().toLowerCase();
-								if (matching.contains(current.getTreeNode().getText().toLowerCase())) {
-									if (currField.getType().isInstance(new HashSet<Object>())) {
-										currentNode = current.getTreeNode().getText().toLowerCase().concat("s");
-										} else {
-											currentNode = current.getTreeNode().getText().toLowerCase();
-											}	
-										ramo.add(currentNode);
-										}
-									fieldClasse.remove(currField);
-								}
-								current = dynAlbero.get(current.getTreeNode().getParentItem());
-								currentPadre = dynAlbero.get(currentPadre.getTreeNode().getParentItem());
-								}
-								ramo = Utils.inversione(ramo);
-								for (int i = 0; i < ramo.size(); i++) {
-									criteria = criteria.createCriteria(ramo
-											.get(i));
-								}
-								criteria.add(Restrictions.eq(item.getTreeNode().getText(), textInserimento.getText()));
-							}
-//							sShellInserimento.close();	
-					compFiltro.dispose();
-					
-					}
-				});
+gestisciFiltroDecimale();
 
 		} else if (item.getPathClass().contains("Date")) {
 
-			GridData gridData6 = new GridData();
-			gridData6.horizontalAlignment = GridData.CENTER;
-			gridData6.verticalAlignment = GridData.CENTER;
-			GridData gridData5 = new GridData();
-			gridData5.horizontalAlignment = GridData.CENTER;
-			gridData5.verticalAlignment = GridData.CENTER;
-			GridData gridData4 = new GridData();
-			GridData gridData1 = new GridData();
-			gridData1.horizontalSpan = 2;
-			GridData gridData = new GridData();
-			gridData.horizontalAlignment = GridData.CENTER;
-			gridData.horizontalSpan = 2;
-			gridData.verticalAlignment = GridData.CENTER;
-			GridLayout gridLayout = new GridLayout();
-			gridLayout.numColumns = 2;
-			gridLayout.makeColumnsEqualWidth = false;
-//			compFiltro = new Composite(parent,SWT.NONE);
-//			compFiltro.setLayout(new GridLayout());
-//			compFiltro.setLayoutData(new GridData(SWT.FILL));
-			final DateTime calendar = new DateTime(compFiltro,
-					SWT.CALENDAR | SWT.BORDER);
-			calendar.setLayoutData(gridData1);
-			calendar
-					.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-						public void widgetSelected(
-								org.eclipse.swt.events.SelectionEvent e) {
-							System.out.println("widgetSelected()");
-						}
-
-						public void widgetDefaultSelected(
-								org.eclipse.swt.events.SelectionEvent e) {
-						}
-					});
-			final DateTime time = new DateTime(compFiltro, SWT.TIME
-					| SWT.SHORT);
-			time.setLayoutData(gridData);
-			button = new Button(compFiltro, SWT.NONE);
-			button.setText("Confronta con un altro campo");
-			button.setLayoutData(gridData4);
-			Label filler17 = new Label(compFiltro, SWT.NONE);
-			buttonOkInserimento.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent e) {
-					System.out.println("Calendar date selected (MM/DD/YYYY) = "
-							+ (calendar.getMonth() + 1) + "/"
-							+ calendar.getDay() + "/" + calendar.getYear());
-					System.out.println("Time selected (HH:MM) = "
-							+ time.getHours() + ":"
-							+ (time.getMinutes() < 10 ? "0" : "")
-							+ time.getMinutes());
-					String dateString = calendar.getYear() + "-"
-							+ (calendar.getMonth() + 1) + "-"
-							+ calendar.getDay() + " " + time.getHours() + ":"
-							+ (time.getMinutes() < 10 ? "0" : "")
-							+ time.getMinutes() + ":00";
-					String formato = "yyyy-MM-dd HH:mm:ss";
-					Date selectedData = Utils.convertStringToDate(dateString,
-							formato);
-
-					item.getTreeNode().setText(
-							new String[] { item.getTreeNode().getText(),
-									selectedData.toString() });
-					// TODO inserire il criteria adeguato
-
-//					sShellInserimento.close();
-					compFiltro.dispose();
-				}
-			});
+			gestisciFiltroData();
 		} else if (item.getPathClass().contains("Boolean")
 				| item.getPathClass().contains("boolean")) {
 
-//			compFiltro = new Composite(parent,SWT.NONE);
-//			compFiltro.setLayout(new GridLayout());
-//			compFiltro.setLayoutData(new GridData(SWT.FILL));
-			cComboInserimento = new CCombo(compFiltro, SWT.NONE);
-			cComboInserimento.add("Vero");
-			cComboInserimento.add("Falso");
-			cComboInserimento.setEditable(false);
-			cComboInserimento.select(0);
-			buttonOkInserimento
-					.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-						public void widgetSelected(
-								org.eclipse.swt.events.SelectionEvent e) {
-							String selezione = cComboInserimento.getText();
-							item.getTreeNode().setText(
-									new String[] {
-											item.getTreeNode().getText(),
-											selezione });
-
-							if (selezione.equals("Vero")) {
-								// TODO costruire il Criteria adeguato
-								System.out.println(selezione);
-							} else {
-								// TODO costruire il Criteria adeguato
-								System.out.println(selezione);
-							}
-							compFiltro.dispose();
-						}
-					});
+gestisciFiltroPerBoolean();
 
 		} else if (item.getPathClass().contains("Char")
 				| item.getPathClass().contains("char")) {
 
-			buttonMatchingInserimento
-					.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-						public void widgetSelected(
-								org.eclipse.swt.events.SelectionEvent e) {
-							// TODO dare la possibilità di selezionare un altro
-							// campo (dello stesso tipo)
-							// dall'albero della query
-							System.out
-									.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");
-						}
-					});
-			buttonOkInserimento
-					.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			gestisciFiltroPerChar();
+
+		} else if (item.getPathClass().contains("String")) {
+			gestisciFiltroPerStringa();
+
+		} else {
+			System.out.println(item.getPathClass() + " ---> "
+					+ item.getTreeNode().getText());
+		}
+		buttonCancellaInserimento = new Button(compFiltro, SWT.NONE);
+		buttonCancellaInserimento.setText("Cancella");
+		buttonCancellaInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				item.getTreeNode().setText(new String[] {item.getTreeNode().getText(), ""});						
+				compFiltro.dispose();
+			}
+		});
+		compFiltro.layout();
+		cmpFiltri.layout();
+	}
+
+	private void gestisciFiltroDecimale() {
+		//			Image imageFromFile = common.Utils
+		//					.getImageFromFile("icons/filter.jpg");
+		//			imageFromFile.getImageData().scaledTo(50, 50);
+		//			Composite cmp = new Composite(sShellInserimento, SWT.NONE);
+		//			cmp.setBounds(new Rectangle(10, 10, 50, 50));
+		//			cmp.setBackgroundImage(imageFromFile);
+		//			sShellInserimento.setImage(imageFromFile);
+					
+					cCombo1Inserimento = new CCombo(compFiltro, SWT.NONE);
+					cCombo1Inserimento.add("<");
+					cCombo1Inserimento.add("=<");
+					cCombo1Inserimento.add(">");
+					cCombo1Inserimento.add(">=");
+					cCombo1Inserimento.add("=");
+					buttonMatchingInserimento
+							.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+								public void widgetSelected(
+										org.eclipse.swt.events.SelectionEvent e) {
+									// TODO dare la possibilità di selezionare un altro
+									// campo (dello stesso tipo)
+									// dall'albero della query
+									System.out
+											.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");
+								}
+							});
+					buttonOkInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 						public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 							
-
+		
 							item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),textInserimento.getText()});					
 							DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
 							String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".")+1, pathPadre.getPathClass().length());
@@ -835,95 +695,255 @@ public class DynamicQueryView extends ViewPart {
 										}
 										criteria.add(Restrictions.eq(item.getTreeNode().getText(), textInserimento.getText()));
 									}
-									compFiltro.dispose();		
-							
-							}
-					});
-
-		} else if (item.getPathClass().contains("String")) {
-			buttonMatchingInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-					top.forceFocus();
-					
-					
-					
-					
-					
-					
-					
-					System.out.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");					
-				}
-			});
-			buttonOkInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-					item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),textInserimento.getText()});					
-					DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
-					String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".")+1, pathPadre.getPathClass().length());
-					if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-						criteria.add(Expression.eq(item.getTreeNode().getText(), textInserimento.getText()));
-					} else {						
-						//si costruisce a ritroso il percorso
-						ArrayList<String> ramo = new ArrayList<String>();
-						DynNode current = dynAlbero.get(item.getTreeNode().getParentItem());; //turno
-						DynNode currentPadre = dynAlbero.get(current.getTreeNode().getParentItem()); //prestaziones
-						while (!current.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-							String currentNode = "";
-							
-							Class currentClass = null;
-							try {
-								currentClass = Class.forName(currentPadre.getPathClass());
-							} catch (ClassNotFoundException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-							Field currentFields[] = currentClass.getDeclaredFields();
-							ArrayList<Field> fieldClasse = new ArrayList<Field>();
-							for (int i = 0; i < currentFields.length; i++) {
-								fieldClasse.add(currentFields[i]);
-							}
-							while (fieldClasse.size() > 0) {
-								Field currField = fieldClasse.get(0);
-								//si becca se è un hashset
-								String matching = currField.getName().toLowerCase();
-								if (matching.contains(current.getTreeNode().getText().toLowerCase())) {
-									if (currField.getType().isInstance(new HashSet<Object>())) {
-										currentNode = current.getTreeNode().getText().toLowerCase().concat("s");
-										} else {
-											currentNode = current.getTreeNode().getText().toLowerCase();
-											}	
-										ramo.add(currentNode);
-										}
-									fieldClasse.remove(currField);
-								}
-								current = dynAlbero.get(current.getTreeNode().getParentItem());
-								currentPadre = dynAlbero.get(currentPadre.getTreeNode().getParentItem());
-								}
-								ramo = Utils.inversione(ramo);
-								for (int i = 0; i < ramo.size(); i++) {
-									criteria = criteria.createCriteria(ramo
-											.get(i));
-								}
-								criteria.add(Restrictions.eq(item.getTreeNode()
-										.getText(), textInserimento.getText()));
-							}
+		//							sShellInserimento.close();	
 							compFiltro.dispose();
-						}
-					});
+							
+							}
+						});
+	}
 
-		} else {
-			System.out.println(item.getPathClass() + " ---> "
-					+ item.getTreeNode().getText());
-		}
-		buttonCancellaInserimento = new Button(compFiltro, SWT.NONE);
-		buttonCancellaInserimento.setText("Cancella");
-		buttonCancellaInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				item.getTreeNode().setText(new String[] {item.getTreeNode().getText(), ""});						
+	private void gestisciFiltroData() {
+		GridData gridData6 = new GridData();
+		gridData6.horizontalAlignment = GridData.CENTER;
+		gridData6.verticalAlignment = GridData.CENTER;
+		GridData gridData5 = new GridData();
+		gridData5.horizontalAlignment = GridData.CENTER;
+		gridData5.verticalAlignment = GridData.CENTER;
+		GridData gridData4 = new GridData();
+		GridData gridData1 = new GridData();
+		gridData1.horizontalSpan = 2;
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = GridData.CENTER;
+		gridData.horizontalSpan = 2;
+		gridData.verticalAlignment = GridData.CENTER;
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 2;
+		gridLayout.makeColumnsEqualWidth = false;
+//			compFiltro = new Composite(parent,SWT.NONE);
+//			compFiltro.setLayout(new GridLayout());
+//			compFiltro.setLayoutData(new GridData(SWT.FILL));
+		final DateTime calendar = new DateTime(compFiltro,
+				SWT.CALENDAR | SWT.BORDER);
+		calendar.setLayoutData(gridData1);
+		calendar
+				.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+					public void widgetSelected(
+							org.eclipse.swt.events.SelectionEvent e) {
+						System.out.println("widgetSelected()");
+					}
+
+					public void widgetDefaultSelected(
+							org.eclipse.swt.events.SelectionEvent e) {
+					}
+				});
+		final DateTime time = new DateTime(compFiltro, SWT.TIME
+				| SWT.SHORT);
+		time.setLayoutData(gridData);
+		button = new Button(compFiltro, SWT.NONE);
+		button.setText("Confronta con un altro campo");
+		button.setLayoutData(gridData4);
+		Label filler17 = new Label(compFiltro, SWT.NONE);
+		buttonOkInserimento.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Calendar date selected (MM/DD/YYYY) = "
+						+ (calendar.getMonth() + 1) + "/"
+						+ calendar.getDay() + "/" + calendar.getYear());
+				System.out.println("Time selected (HH:MM) = "
+						+ time.getHours() + ":"
+						+ (time.getMinutes() < 10 ? "0" : "")
+						+ time.getMinutes());
+				String dateString = calendar.getYear() + "-"
+						+ (calendar.getMonth() + 1) + "-"
+						+ calendar.getDay() + " " + time.getHours() + ":"
+						+ (time.getMinutes() < 10 ? "0" : "")
+						+ time.getMinutes() + ":00";
+				String formato = "yyyy-MM-dd HH:mm:ss";
+				Date selectedData = Utils.convertStringToDate(dateString,
+						formato);
+
+				item.getTreeNode().setText(
+						new String[] { item.getTreeNode().getText(),
+								selectedData.toString() });
+				// TODO inserire il criteria adeguato
+
+//					sShellInserimento.close();
 				compFiltro.dispose();
 			}
 		});
-		compFiltro.layout();
-		cmpFiltri.layout();
+	}
+
+	private void gestisciFiltroPerBoolean() {
+		//			compFiltro = new Composite(parent,SWT.NONE);
+		//			compFiltro.setLayout(new GridLayout());
+		//			compFiltro.setLayoutData(new GridData(SWT.FILL));
+					cComboInserimento = new CCombo(compFiltro, SWT.NONE);
+					cComboInserimento.add("Vero");
+					cComboInserimento.add("Falso");
+					cComboInserimento.setEditable(false);
+					cComboInserimento.select(0);
+					buttonOkInserimento
+							.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+								public void widgetSelected(
+										org.eclipse.swt.events.SelectionEvent e) {
+									String selezione = cComboInserimento.getText();
+									item.getTreeNode().setText(
+											new String[] {
+													item.getTreeNode().getText(),
+													selezione });
+		
+									if (selezione.equals("Vero")) {
+										// TODO costruire il Criteria adeguato
+										System.out.println(selezione);
+									} else {
+										// TODO costruire il Criteria adeguato
+										System.out.println(selezione);
+									}
+									compFiltro.dispose();
+								}
+							});
+	}
+
+	private void gestisciFiltroPerChar() {
+		buttonMatchingInserimento
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(
+							org.eclipse.swt.events.SelectionEvent e) {
+						// TODO dare la possibilità di selezionare un altro
+						// campo (dello stesso tipo)
+						// dall'albero della query
+						System.out
+								.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");
+					}
+				});
+		buttonOkInserimento
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						
+
+						item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),textInserimento.getText()});					
+						DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
+						String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".")+1, pathPadre.getPathClass().length());
+						if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
+							criteria.add(Expression.eq(item.getTreeNode().getText(), textInserimento.getText()));
+						} else {						
+							//si costruisce a ritroso il percorso
+							ArrayList<String> ramo = new ArrayList<String>();
+							DynNode current = dynAlbero.get(item.getTreeNode().getParentItem());; //turno
+							DynNode currentPadre = dynAlbero.get(current.getTreeNode().getParentItem()); //prestaziones
+							while (!current.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
+								String currentNode = "";
+								
+								Class currentClass = null;
+								try {
+									currentClass = Class.forName(currentPadre.getPathClass());
+								} catch (ClassNotFoundException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								Field currentFields[] = currentClass.getDeclaredFields();
+								ArrayList<Field> fieldClasse = new ArrayList<Field>();
+								for (int i = 0; i < currentFields.length; i++) {
+									fieldClasse.add(currentFields[i]);
+								}
+								while (fieldClasse.size() > 0) {
+									Field currField = fieldClasse.get(0);
+									//si becca se è un hashset
+									String matching = currField.getName().toLowerCase();
+									if (matching.contains(current.getTreeNode().getText().toLowerCase())) {
+										if (currField.getType().isInstance(new HashSet<Object>())) {
+											currentNode = current.getTreeNode().getText().toLowerCase().concat("s");
+											} else {
+												currentNode = current.getTreeNode().getText().toLowerCase();
+												}	
+											ramo.add(currentNode);
+											}
+										fieldClasse.remove(currField);
+									}
+									current = dynAlbero.get(current.getTreeNode().getParentItem());
+									currentPadre = dynAlbero.get(currentPadre.getTreeNode().getParentItem());
+									}
+									ramo = Utils.inversione(ramo);
+									for (int i = 0; i < ramo.size(); i++) {
+										criteria = criteria.createCriteria(ramo
+												.get(i));
+									}
+									criteria.add(Restrictions.eq(item.getTreeNode().getText(), textInserimento.getText()));
+								}
+								compFiltro.dispose();		
+						
+						}
+				});
+	}
+
+	private void gestisciFiltroPerStringa() {
+		buttonMatchingInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				top.forceFocus();
+				
+				
+				
+				
+				
+				
+				
+				System.out.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");					
+			}
+		});
+		buttonOkInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				item.getTreeNode().setText(new String[] {item.getTreeNode().getText(),textInserimento.getText()});					
+				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
+				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".")+1, pathPadre.getPathClass().length());
+				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
+					criteria.add(Expression.eq(item.getTreeNode().getText(), textInserimento.getText()));
+				} else {						
+					//si costruisce a ritroso il percorso
+					ArrayList<String> ramo = new ArrayList<String>();
+					DynNode current = dynAlbero.get(item.getTreeNode().getParentItem());; //turno
+					DynNode currentPadre = dynAlbero.get(current.getTreeNode().getParentItem()); //prestaziones
+					while (!current.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
+						String currentNode = "";
+						
+						Class currentClass = null;
+						try {
+							currentClass = Class.forName(currentPadre.getPathClass());
+						} catch (ClassNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						Field currentFields[] = currentClass.getDeclaredFields();
+						ArrayList<Field> fieldClasse = new ArrayList<Field>();
+						for (int i = 0; i < currentFields.length; i++) {
+							fieldClasse.add(currentFields[i]);
+						}
+						while (fieldClasse.size() > 0) {
+							Field currField = fieldClasse.get(0);
+							//si becca se è un hashset
+							String matching = currField.getName().toLowerCase();
+							if (matching.contains(current.getTreeNode().getText().toLowerCase())) {
+								if (currField.getType().isInstance(new HashSet<Object>())) {
+									currentNode = current.getTreeNode().getText().toLowerCase().concat("s");
+									} else {
+										currentNode = current.getTreeNode().getText().toLowerCase();
+										}	
+									ramo.add(currentNode);
+									}
+								fieldClasse.remove(currField);
+							}
+							current = dynAlbero.get(current.getTreeNode().getParentItem());
+							currentPadre = dynAlbero.get(currentPadre.getTreeNode().getParentItem());
+							}
+							ramo = Utils.inversione(ramo);
+							for (int i = 0; i < ramo.size(); i++) {
+								criteria = criteria.createCriteria(ramo
+										.get(i));
+							}
+							criteria.add(Restrictions.eq(item.getTreeNode()
+									.getText(), textInserimento.getText()));
+						}
+						compFiltro.dispose();
+					}
+				});
 	}
 
 	private SelectionAdapter elaboraFiltro() {
