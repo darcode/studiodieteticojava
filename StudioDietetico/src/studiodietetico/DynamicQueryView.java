@@ -57,6 +57,11 @@ import common.GenericBean;
 import common.HibernateUtils;
 
 public class DynamicQueryView extends ViewPart {
+	private static final String					BOOL					= "BOOL";
+	private static final String					INTEGER					= "INTEGER";
+	private static final String					STRING					= "STRING";
+	private static final String					DATE					= "DATE";
+	private static final String					DECIMAL					= "DECIMAL";
 	private static final Font					font					= common.Utils.getFont("Arial", 9, SWT.BOLD);
 	private static final ThreadLocal<Session>	session					= new ThreadLocal<Session>();
 	private static final SessionFactory			sessionFactory			= new Configuration().configure().buildSessionFactory();
@@ -113,7 +118,7 @@ public class DynamicQueryView extends ViewPart {
 		button.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				executeQuery();
-				System.out.println(dynAlbero.keySet());
+				// System.out.println(dynAlbero.keySet());
 				if (result != null && !result.isEmpty()) {
 					Table table = new Table(top, SWT.SINGLE | SWT.FULL_SELECTION);
 					table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -133,7 +138,7 @@ public class DynamicQueryView extends ViewPart {
 					}
 
 				}
-				System.out.println(selectedEntities.keySet());
+				// System.out.println(selectedEntities.keySet());
 			}
 		});
 		Button filtra = new Button(top, SWT.NONE);
@@ -243,6 +248,7 @@ public class DynamicQueryView extends ViewPart {
 		gdFiltri.grabExcessHorizontalSpace = true;
 		gdFiltri.grabExcessVerticalSpace = true;
 		gdFiltri.horizontalSpan = 4;
+		gdFiltri.minimumHeight = 400;
 		cmpFiltri.setLayoutData(gdFiltri);
 		GridLayout glFiltri = new GridLayout();
 		glFiltri.numColumns = 4;
@@ -509,6 +515,7 @@ public class DynamicQueryView extends ViewPart {
 		gdFiltri.grabExcessVerticalSpace = true;
 		gdFiltri.horizontalAlignment = SWT.FILL;
 		gdFiltri.verticalAlignment = SWT.FILL;
+		gdFiltri.minimumHeight = 600;
 		compFiltro.setLayoutData(gdFiltri);
 		Label titolo = new Label(compFiltro, SWT.NONE);
 		GridData gdTitolo = new GridData();
@@ -544,24 +551,25 @@ public class DynamicQueryView extends ViewPart {
 		SelectionAdapter listener = null;
 		if (item.getPathClass().contains("Integer") | item.getPathClass().contains("int")) {
 			etichettaInserimento.setText("Inserisci un INTERO");
+//			listener = gestisci
 		} else if (item.getPathClass().contains("Double") | item.getPathClass().contains("double")) {
 			etichettaInserimento.setText("Inserisci un DECIMALE");
-			listener = gestisciFiltroDecimale(textInserimento, comboOperazione, cboTipoAssociazione,elencoAltriCampi, item);
+			listener = gestisciFiltroDecimale(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi, item);
 		} else if (item.getPathClass().contains("Date")) {
 			etichettaInserimento.setText("Inserisci una DATA");
-			gestisciFiltroData(item);
+			gestisciFiltroData(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi, item);
 		} else if (item.getPathClass().contains("Boolean") | item.getPathClass().contains("boolean")) {
 			etichettaInserimento.setText("Inserisci VERO/FALSO");
 			textInserimento.setVisible(false);
 			Label fill = new Label(compFiltro, SWT.NONE);
-			listener = gestisciFiltroPerBoolean(item);
+			listener = gestisciFiltroPerBoolean(comboOperazione, cboTipoAssociazione, elencoAltriCampi, item);
 		} else if (item.getPathClass().contains("Char") | item.getPathClass().contains("char")) {
 			etichettaInserimento.setText("Inserisci un CARATTERE");
 			textInserimento.setTextLimit(1);
-			listener = gestisciFiltroPerChar(textInserimento, comboOperazione, cboTipoAssociazione,elencoAltriCampi, item);
+			listener = gestisciFiltroPerChar(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi, item);
 		} else if (item.getPathClass().contains("String")) {
 			etichettaInserimento.setText("Inserisci una STRINGA");
-			listener = gestisciFiltroPerStringa(textInserimento, comboOperazione, cboTipoAssociazione,elencoAltriCampi, item);
+			listener = gestisciFiltroPerStringa(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi, item);
 		} else {
 			System.out.println(item.getPathClass() + " ---> " + item.getTreeNode().getText());
 		}
@@ -584,30 +592,24 @@ public class DynamicQueryView extends ViewPart {
 				((Control) e.getSource()).getParent().getParent().dispose();
 			}
 		});
-//		buttonMatchingInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-//			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-//				textInserimento.setText("");
-//				textInserimento.setEnabled(false);
-//			}
-//		});
 		if (listener == null) {
 			// nel caso sia una stringa
-			buttonOkInserimento.addSelectionListener(elaboraFiltro(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi,item));
+			buttonOkInserimento.addSelectionListener(elaboraFiltro(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi, item));
 		} else
 			buttonOkInserimento.addSelectionListener(listener);
 		compFiltro.layout();
 		cmpFiltri.layout();
 	}
 
-	private SelectionAdapter gestisciFiltroDecimale(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione
-			, final CCombo elencoAltriCampi,DynNode currNode) {
+	private SelectionAdapter gestisciFiltroDecimale(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,
+			final CCombo elencoAltriCampi, DynNode currNode) {
 		final DynNode item = currNode;
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent eS) {
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
 				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione,elencoAltriCampi, item);
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, DECIMAL);
 					// criteria.add(Expression.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				} else {
@@ -652,17 +654,17 @@ public class DynamicQueryView extends ViewPart {
 					for (int i = 0; i < ramo.size(); i++) {
 						criteria = criteria.createCriteria(ramo.get(i));
 					}
-					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione,elencoAltriCampi, item);
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, DECIMAL);
 					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				}
-				compFiltro.dispose();
-
+				((Control) eS.getSource()).setEnabled(false);
 			}
 		};
 	}
 
-	private SelectionAdapter gestisciFiltroData(DynNode currNode) {
+	private SelectionAdapter gestisciFiltroData(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,
+			final CCombo elencoAltriCampi, DynNode currNode) {
 		final DynNode item = currNode;
 		GridData gridData6 = new GridData();
 		gridData6.horizontalAlignment = GridData.CENTER;
@@ -707,14 +709,15 @@ public class DynamicQueryView extends ViewPart {
 						+ (time.getMinutes() < 10 ? "0" : "") + time.getMinutes() + ":00";
 				String formato = "yyyy-MM-dd HH:mm:ss";
 				Date selectedData = Utils.convertStringToDate(dateString, formato);
-
 				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), selectedData.toString() });
+				aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, DATE);
 				// TODO inserire il criteria adeguato
 			}
 		};
 	}
 
-	private SelectionAdapter gestisciFiltroPerBoolean(DynNode currNode) {
+	private SelectionAdapter gestisciFiltroPerBoolean(final CCombo tipoOperazione, final CCombo tipoAssociazione, final CCombo elencoAltriCampi,
+			DynNode currNode) {
 		final DynNode item = currNode;
 		final CCombo cComboInserimento = new CCombo(compFiltro, SWT.NONE);
 		cComboInserimento.add("Vero");
@@ -725,6 +728,58 @@ public class DynamicQueryView extends ViewPart {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				String selezione = cComboInserimento.getText();
 				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), selezione });
+				// aggiungiRestrizione(boolSelection, tipoOperazione,
+				// tipoAssociazione,elencoAltriCampi, item,BOOL);
+				SimpleExpression restr = null;
+				Object valore = "";
+
+				valore = (cComboInserimento.getSelectionIndex() == 0) ? Boolean.TRUE : Boolean.FALSE;
+				String altroCampo = elencoAltriCampi.getText();
+				if ("".equals(valore))
+					valore = altroCampo;
+				switch (tipoOperazione.getSelectionIndex()) {
+				case 0:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
+					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+					break;
+				case 1:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " <> " + valore });
+					restr = (SimpleExpression) Restrictions.not(Restrictions.eq(item.getTreeNode().getText(), valore));
+					break;
+				case 2:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " < " + valore });
+					restr = Restrictions.lt(item.getTreeNode().getText(), valore);
+					break;
+				case 3:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " <= " + valore });
+					restr = Restrictions.lt(item.getTreeNode().getText(), valore);
+					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+					break;
+				case 4:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " > " + valore });
+					restr = Restrictions.gt(item.getTreeNode().getText(), valore);
+					break;
+				case 5:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " >= " + valore });
+					restr = Restrictions.gt(item.getTreeNode().getText(), valore);
+					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+					break;
+				default:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
+					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+					break;
+				}
+				switch (tipoAssociazione.getSelectionIndex()) {
+				case 0:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (AND) " });
+					criteria.add(restr);
+					break;
+				case 1:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (NOT) " });
+					criteria.add(Restrictions.not(restr));
+				default:
+					break;
+				}
 
 				if (selezione.equals("Vero")) {
 					System.out.println(selezione);
@@ -735,8 +790,8 @@ public class DynamicQueryView extends ViewPart {
 		};
 	}
 
-	private SelectionAdapter gestisciFiltroPerChar(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione, final CCombo elencoAltriCampi,
-			DynNode currNode) {
+	private SelectionAdapter gestisciFiltroPerChar(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,
+			final CCombo elencoAltriCampi, DynNode currNode) {
 		final DynNode item = currNode;
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -744,7 +799,7 @@ public class DynamicQueryView extends ViewPart {
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
 				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione,elencoAltriCampi, item);
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, STRING);
 					// criteria.add(Expression.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				} else {
@@ -788,24 +843,24 @@ public class DynamicQueryView extends ViewPart {
 					for (int i = 0; i < ramo.size(); i++) {
 						criteria = criteria.createCriteria(ramo.get(i));
 					}
-					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione,elencoAltriCampi, item);
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, STRING);
 					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				}
-
+				((Control) e.getSource()).setEnabled(false);
 			}
 		};
 	}
 
 	private SelectionAdapter gestisciFiltroPerStringa(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,
-			final CCombo elencoAltriCampi,DynNode currNode) {
+			final CCombo elencoAltriCampi, DynNode currNode) {
 		final DynNode item = currNode;
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
 				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi,item);
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, STRING);
 					// criteria.add(Expression.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				} else {
@@ -849,22 +904,24 @@ public class DynamicQueryView extends ViewPart {
 					for (int i = 0; i < ramo.size(); i++) {
 						criteria = criteria.createCriteria(ramo.get(i));
 					}
-					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi,item);
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, STRING);
 					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				}
+				((Control) e.getSource()).setEnabled(false);
 			}
 		};
 	}
 
-	private SelectionAdapter elaboraFiltro(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,final CCombo elencoAltriCampi, DynNode currNode) {
+	private SelectionAdapter elaboraFiltro(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,
+			final CCombo elencoAltriCampi, DynNode currNode) {
 		final DynNode item = currNode;
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
 				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi,item);
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, STRING);
 				} else {
 					// si costruisce a ritroso il percorso
 					ArrayList<String> ramo = new ArrayList<String>();
@@ -906,10 +963,11 @@ public class DynamicQueryView extends ViewPart {
 					for (int i = 0; i < ramo.size(); i++) {
 						criteria = criteria.createCriteria(ramo.get(i));
 					}
-					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione,elencoAltriCampi, item);
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, STRING);
 					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				}
+				((Control) e.getSource()).setEnabled(false);
 			}
 
 		};
@@ -1000,18 +1058,25 @@ public class DynamicQueryView extends ViewPart {
 		DynamicQueryView.session.set(null);
 	}
 
-	private void aggiungiRestrizione(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione, final CCombo cboAltroCampo,
-			final DynNode item) {
+	private void aggiungiRestrizione(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,
+			final CCombo cboAltroCampo, final DynNode item, String tipo) {
 		SimpleExpression restr = null;
-
-		String valore = textInserimento.getText();
+		String criterio = textInserimento.getText();
+		;
+		Object valore = "";
+		if (INTEGER.equals(tipo))
+			valore = new Integer(criterio);
+		else if (DATE.equals(tipo))
+			valore = new Date(criterio);
+		else if (BOOL.equals(tipo))
+			valore = new Boolean(criterio);
 		String altroCampo = cboAltroCampo.getText();
-		if("".equals(valore))
+		if ("".equals(valore))
 			valore = altroCampo;
 		switch (tipoOperazione.getSelectionIndex()) {
 		case 0:
-				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
-				restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
+			restr = Restrictions.eq(item.getTreeNode().getText(), valore);
 			break;
 		case 1:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " <> " + valore });
