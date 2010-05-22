@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -44,6 +45,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
 import org.hibernate.jdbc.BorrowedConnectionProxy;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -379,7 +381,7 @@ public class DynamicQueryView extends ViewPart {
 		try {
 			classSelected = Class.forName(pathClasse);
 		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		if (!nodiVisitati.contains(pathClasse)) {
@@ -514,54 +516,55 @@ public class DynamicQueryView extends ViewPart {
 		titolo.setLayoutData(gdTitolo);
 		titolo.setText("Filtro su " + item.getTreeNode().getText());
 		titolo.setFont(font);
+		Label lbl = new Label(compFiltro, SWT.NONE);
+		lbl.setText("Aggiungi in: ");
+		CCombo cboTipoAssociazione = new CCombo(compFiltro, SWT.NONE);
+		cboTipoAssociazione.add("AND", 0);
+		// cboTipoAssociazione.add("OR", 1);
+		cboTipoAssociazione.add("NOT", 1);
+		cboTipoAssociazione.select(0);
+		Label etichettaOperazione = new Label(compFiltro, SWT.NONE);
+		etichettaOperazione.setText("Operazione:");
+		CCombo comboOperazione = new CCombo(compFiltro, SWT.NONE);
+		comboOperazione.add(" = (Uguale)", 0);
+		comboOperazione.add("<> (Diverso)", 1);
+		comboOperazione.add(" < (Minore)", 2);
+		comboOperazione.add("=< (Minore o Uguale)", 3);
+		comboOperazione.add(" > (Maggiore)", 4);
+		comboOperazione.add(">= (Maggiore o Uguale)", 5);
+		comboOperazione.select(0);
+		Label lblMatchingInserimento = new Label(compFiltro, SWT.NONE);
+		lblMatchingInserimento.setText("Confronta con:");
+		final CCombo elencoAltriCampi = new CCombo(compFiltro, SWT.NONE);
+		riempiComboPerTipo(item.getPathClass(), elencoAltriCampi);
+		GridLayout glButton = new GridLayout();
+		glButton.numColumns = 2;
 		Label etichettaInserimento = new Label(compFiltro, SWT.NONE);
-		Text textInserimento = new Text(compFiltro, SWT.BORDER);
+		final Text textInserimento = new Text(compFiltro, SWT.BORDER);
 		SelectionAdapter listener = null;
 		if (item.getPathClass().contains("Integer") | item.getPathClass().contains("int")) {
 			etichettaInserimento.setText("Inserisci un INTERO");
 		} else if (item.getPathClass().contains("Double") | item.getPathClass().contains("double")) {
 			etichettaInserimento.setText("Inserisci un DECIMALE");
-			listener = gestisciFiltroDecimale(textInserimento, item);
+			listener = gestisciFiltroDecimale(textInserimento, comboOperazione, cboTipoAssociazione,elencoAltriCampi, item);
 		} else if (item.getPathClass().contains("Date")) {
 			etichettaInserimento.setText("Inserisci una DATA");
 			gestisciFiltroData(item);
 		} else if (item.getPathClass().contains("Boolean") | item.getPathClass().contains("boolean")) {
 			etichettaInserimento.setText("Inserisci VERO/FALSO");
 			textInserimento.setVisible(false);
-			Label fill = new Label(compFiltro,SWT.NONE);
+			Label fill = new Label(compFiltro, SWT.NONE);
 			listener = gestisciFiltroPerBoolean(item);
 		} else if (item.getPathClass().contains("Char") | item.getPathClass().contains("char")) {
 			etichettaInserimento.setText("Inserisci un CARATTERE");
 			textInserimento.setTextLimit(1);
-			listener = gestisciFiltroPerChar( textInserimento, item);
+			listener = gestisciFiltroPerChar(textInserimento, comboOperazione, cboTipoAssociazione,elencoAltriCampi, item);
 		} else if (item.getPathClass().contains("String")) {
 			etichettaInserimento.setText("Inserisci una STRINGA");
-			listener = gestisciFiltroPerStringa(textInserimento, item);
+			listener = gestisciFiltroPerStringa(textInserimento, comboOperazione, cboTipoAssociazione,elencoAltriCampi, item);
 		} else {
 			System.out.println(item.getPathClass() + " ---> " + item.getTreeNode().getText());
 		}
-		Label etichettaOperazione = new Label(compFiltro, SWT.NONE);
-		etichettaOperazione.setText("Operazione:");
-		CCombo comboOperazione = new CCombo(compFiltro, SWT.NONE);
-		comboOperazione.add(" = (Uguale)",0);
-		comboOperazione.add("<> (Diverso)",1);
-		comboOperazione.add(" < (Minore)",2);
-		comboOperazione.add("=< (Minore o Uguale)",3);
-		comboOperazione.add(" > (Maggiore)",4);
-		comboOperazione.add(">= (Maggiore o Uguale)",5);
-		comboOperazione.select(0);
-		Button buttonMatchingInserimento = new Button(compFiltro, SWT.NONE);
-		buttonMatchingInserimento.setText("Confronta con:");
-		final Combo elencoAltriCampi = new Combo(compFiltro, SWT.NONE);
-		GridLayout glButton = new GridLayout();
-		glButton.numColumns = 2;
-		Label lbl = new Label(compFiltro,SWT.NONE);
-		lbl.setText("Aggiungi in: ");
-		Combo cboTipoOperatore = new Combo(compFiltro,SWT.NONE);
-		cboTipoOperatore.add("AND",0);
-		cboTipoOperatore.add("OR",1);
-		cboTipoOperatore.add("NOT",2);
-		cboTipoOperatore.select(0);
 		Composite cmpButton = new Composite(compFiltro, SWT.NONE);
 		cmpButton.setLayout(glButton);
 		GridData gdButton = new GridData();
@@ -575,49 +578,38 @@ public class DynamicQueryView extends ViewPart {
 		buttonOkInserimento.setText("Ok");
 		Button buttonCancellaInserimento = new Button(cmpButton, SWT.NONE);
 		buttonCancellaInserimento.setText("Cancella");
-		
 		buttonCancellaInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), "" });
 				((Control) e.getSource()).getParent().getParent().dispose();
 			}
 		});
-		buttonMatchingInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				elencoAltriCampi.getSelectionIndex();
-			}
-		});
-		if(listener == null){
-			buttonOkInserimento.addSelectionListener(elaboraFiltro(textInserimento, item));
-		}else
+//		buttonMatchingInserimento.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+//			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+//				textInserimento.setText("");
+//				textInserimento.setEnabled(false);
+//			}
+//		});
+		if (listener == null) {
+			// nel caso sia una stringa
+			buttonOkInserimento.addSelectionListener(elaboraFiltro(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi,item));
+		} else
 			buttonOkInserimento.addSelectionListener(listener);
-		
 		compFiltro.layout();
 		cmpFiltri.layout();
 	}
 
-	private SelectionAdapter gestisciFiltroDecimale(final Text textInserimento, DynNode currNode) {
+	private SelectionAdapter gestisciFiltroDecimale(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione
+			, final CCombo elencoAltriCampi,DynNode currNode) {
 		final DynNode item = currNode;
-		CCombo cCombo1Inserimento = new CCombo(compFiltro, SWT.NONE);
-		cCombo1Inserimento.add("<");
-		cCombo1Inserimento.add("=<");
-		cCombo1Inserimento.add(">");
-		cCombo1Inserimento.add(">=");
-		cCombo1Inserimento.add("=");
-		// buttonMatchingInserimento.addSelectionListener(new
-		// org.eclipse.swt.events.SelectionAdapter() {
-		// public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-		// System.out.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");
-		// }
-		// });
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent eS) {
-
-				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), textInserimento.getText() });
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
 				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-					criteria.add(Expression.eq(item.getTreeNode().getText(), textInserimento.getText()));
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione,elencoAltriCampi, item);
+					// criteria.add(Expression.eq(item.getTreeNode().getText(),
+					// textInserimento.getText()));
 				} else {
 					// si costruisce a ritroso il percorso
 					ArrayList<String> ramo = new ArrayList<String>();
@@ -631,7 +623,7 @@ public class DynamicQueryView extends ViewPart {
 						try {
 							currentClass = Class.forName(currentPadre.getPathClass());
 						} catch (ClassNotFoundException e1) {
-							// TODO Auto-generated catch block
+
 							e1.printStackTrace();
 						}
 						Field currentFields[] = currentClass.getDeclaredFields();
@@ -660,9 +652,10 @@ public class DynamicQueryView extends ViewPart {
 					for (int i = 0; i < ramo.size(); i++) {
 						criteria = criteria.createCriteria(ramo.get(i));
 					}
-					criteria.add(Restrictions.eq(item.getTreeNode().getText(), textInserimento.getText()));
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione,elencoAltriCampi, item);
+					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
+					// textInserimento.getText()));
 				}
-				// sShellInserimento.close();
 				compFiltro.dispose();
 
 			}
@@ -694,7 +687,6 @@ public class DynamicQueryView extends ViewPart {
 		calendar.setLayoutData(gridData1);
 		calendar.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				System.out.println("widgetSelected()");
 			}
 
 			public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -724,9 +716,6 @@ public class DynamicQueryView extends ViewPart {
 
 	private SelectionAdapter gestisciFiltroPerBoolean(DynNode currNode) {
 		final DynNode item = currNode;
-		// compFiltro = new Composite(parent,SWT.NONE);
-		// compFiltro.setLayout(new GridLayout());
-		// compFiltro.setLayoutData(new GridData(SWT.FILL));
 		final CCombo cComboInserimento = new CCombo(compFiltro, SWT.NONE);
 		cComboInserimento.add("Vero");
 		cComboInserimento.add("Falso");
@@ -738,32 +727,26 @@ public class DynamicQueryView extends ViewPart {
 				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), selezione });
 
 				if (selezione.equals("Vero")) {
-					// TODO costruire il Criteria adeguato
 					System.out.println(selezione);
 				} else {
-					// TODO costruire il Criteria adeguato
 					System.out.println(selezione);
 				}
 			}
 		};
 	}
 
-	private SelectionAdapter gestisciFiltroPerChar(final Text textInserimento, DynNode currNode) {
+	private SelectionAdapter gestisciFiltroPerChar(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione, final CCombo elencoAltriCampi,
+			DynNode currNode) {
 		final DynNode item = currNode;
-		// buttonMatchingInserimento.addSelectionListener(new
-		// org.eclipse.swt.events.SelectionAdapter() {
-		// public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-		// System.out.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");
-		// }
-		// });
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 
-				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), textInserimento.getText() });
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
 				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-					criteria.add(Expression.eq(item.getTreeNode().getText(), textInserimento.getText()));
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione,elencoAltriCampi, item);
+					// criteria.add(Expression.eq(item.getTreeNode().getText(),
+					// textInserimento.getText()));
 				} else {
 					// si costruisce a ritroso il percorso
 					ArrayList<String> ramo = new ArrayList<String>();
@@ -777,7 +760,6 @@ public class DynamicQueryView extends ViewPart {
 						try {
 							currentClass = Class.forName(currentPadre.getPathClass());
 						} catch (ClassNotFoundException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 						Field currentFields[] = currentClass.getDeclaredFields();
@@ -806,30 +788,26 @@ public class DynamicQueryView extends ViewPart {
 					for (int i = 0; i < ramo.size(); i++) {
 						criteria = criteria.createCriteria(ramo.get(i));
 					}
-					criteria.add(Restrictions.eq(item.getTreeNode().getText(), textInserimento.getText()));
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione,elencoAltriCampi, item);
+					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
+					// textInserimento.getText()));
 				}
 
 			}
 		};
 	}
 
-	private SelectionAdapter gestisciFiltroPerStringa(final Text textInserimento, DynNode currNode) {
+	private SelectionAdapter gestisciFiltroPerStringa(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,
+			final CCombo elencoAltriCampi,DynNode currNode) {
 		final DynNode item = currNode;
-		// buttonMatchingInserimento.addSelectionListener(new
-		// org.eclipse.swt.events.SelectionAdapter() {
-		// public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-		// top.forceFocus();
-		//
-		// System.out.println("dare la possibilità di selezionare un altro campo (dello stesso tipo) dall'albero della query");
-		// }
-		// });
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), textInserimento.getText() });
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
 				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-					criteria.add(Expression.eq(item.getTreeNode().getText(), textInserimento.getText()));
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi,item);
+					// criteria.add(Expression.eq(item.getTreeNode().getText(),
+					// textInserimento.getText()));
 				} else {
 					// si costruisce a ritroso il percorso
 					ArrayList<String> ramo = new ArrayList<String>();
@@ -843,7 +821,6 @@ public class DynamicQueryView extends ViewPart {
 						try {
 							currentClass = Class.forName(currentPadre.getPathClass());
 						} catch (ClassNotFoundException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 						Field currentFields[] = currentClass.getDeclaredFields();
@@ -872,21 +849,22 @@ public class DynamicQueryView extends ViewPart {
 					for (int i = 0; i < ramo.size(); i++) {
 						criteria = criteria.createCriteria(ramo.get(i));
 					}
-					criteria.add(Restrictions.eq(item.getTreeNode().getText(), textInserimento.getText()));
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi,item);
+					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
+					// textInserimento.getText()));
 				}
 			}
 		};
 	}
 
-	private SelectionAdapter elaboraFiltro(final Text textInserimento, DynNode currNode) {
+	private SelectionAdapter elaboraFiltro(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,final CCombo elencoAltriCampi, DynNode currNode) {
 		final DynNode item = currNode;
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), textInserimento.getText() });
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
 				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-					criteria.add(Expression.eq(item.getTreeNode().getText(), textInserimento.getText()));
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi,item);
 				} else {
 					// si costruisce a ritroso il percorso
 					ArrayList<String> ramo = new ArrayList<String>();
@@ -900,7 +878,6 @@ public class DynamicQueryView extends ViewPart {
 						try {
 							currentClass = Class.forName(currentPadre.getPathClass());
 						} catch (ClassNotFoundException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 						Field currentFields[] = currentClass.getDeclaredFields();
@@ -929,9 +906,12 @@ public class DynamicQueryView extends ViewPart {
 					for (int i = 0; i < ramo.size(); i++) {
 						criteria = criteria.createCriteria(ramo.get(i));
 					}
-					criteria.add(Restrictions.eq(item.getTreeNode().getText(), textInserimento.getText()));
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione,elencoAltriCampi, item);
+					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
+					// textInserimento.getText()));
 				}
 			}
+
 		};
 	}
 
@@ -948,10 +928,8 @@ public class DynamicQueryView extends ViewPart {
 		try {
 			filtroQuery = c.newInstance();
 		} catch (InstantiationException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IllegalAccessException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -1022,4 +1000,64 @@ public class DynamicQueryView extends ViewPart {
 		DynamicQueryView.session.set(null);
 	}
 
+	private void aggiungiRestrizione(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione, final CCombo cboAltroCampo,
+			final DynNode item) {
+		SimpleExpression restr = null;
+
+		String valore = textInserimento.getText();
+		String altroCampo = cboAltroCampo.getText();
+		if("".equals(valore))
+			valore = altroCampo;
+		switch (tipoOperazione.getSelectionIndex()) {
+		case 0:
+				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
+				restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+			break;
+		case 1:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " <> " + valore });
+			restr = (SimpleExpression) Restrictions.not(Restrictions.eq(item.getTreeNode().getText(), valore));
+			break;
+		case 2:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " < " + valore });
+			restr = Restrictions.lt(item.getTreeNode().getText(), valore);
+			break;
+		case 3:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " <= " + valore });
+			restr = Restrictions.lt(item.getTreeNode().getText(), valore);
+			restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+			break;
+		case 4:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " > " + valore });
+			restr = Restrictions.gt(item.getTreeNode().getText(), valore);
+			break;
+		case 5:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " >= " + valore });
+			restr = Restrictions.gt(item.getTreeNode().getText(), valore);
+			restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+			break;
+		default:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
+			restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+			break;
+		}
+		switch (tipoAssociazione.getSelectionIndex()) {
+		case 0:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (AND) " });
+			criteria.add(restr);
+			break;
+		case 1:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (NOT) " });
+			criteria.add(Restrictions.not(restr));
+		default:
+			break;
+		}
+	}
+
+	private void riempiComboPerTipo(String tipo, CCombo cboAltroCampo) {
+		for (Entry<TreeItem, DynNode> item : dynAlbero.entrySet()) {
+			if (((DynNode) item.getValue()).getPathClass().equals(tipo)) {
+				cboAltroCampo.add(item.getKey().getText(0));
+			}
+		}
+	}
 }
