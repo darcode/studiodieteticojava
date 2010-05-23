@@ -45,6 +45,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.PropertyExpression;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.hibernate.jdbc.BorrowedConnectionProxy;
@@ -782,58 +783,7 @@ public class DynamicQueryView extends ViewPart {
 				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), selectedData.toString() });
 				textInserimento.setText(dateString);
 				SimpleExpression restr = null;
-				Object valore = "";
-				valore = selectedData;
-				String altroCampo = elencoAltriCampi.getText();
-				if ("".equals(valore))
-					valore = altroCampo;
-				switch (tipoOperazione.getSelectionIndex()) {
-				case 0:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
-					restr = (SimpleExpression) Restrictions.sqlRestriction("to_date("+item.getTreeNode().getText()+",'dd/mm/rrrr') = "+dateString);
-					break;
-				case 1:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " <> " + valore });
-					restr = (SimpleExpression) Restrictions.not(Restrictions.eq(item.getTreeNode().getText(), valore));
-					break;
-				case 2:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " < " + valore });
-					restr = Restrictions.lt(item.getTreeNode().getText(), valore);
-					break;
-				case 3:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " <= " + valore });
-					restr = Restrictions.lt(item.getTreeNode().getText(), valore);
-					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
-					break;
-				case 4:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " > " + valore });
-					restr = Restrictions.gt(item.getTreeNode().getText(), valore);
-					break;
-				case 5:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " >= " + valore });
-					restr = Restrictions.gt(item.getTreeNode().getText(), valore);
-					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
-					break;
-				default:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
-					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
-					break;
-				}
-				switch (tipoAssociazione.getSelectionIndex()) {
-				case 0:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (AND) " });
-					criteria.add(restr);
-					break;
-				case 1:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (OR) " });
-					criteria.add(Restrictions.disjunction().add(restr));
-				case 2:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (NOT) " });
-					criteria.add(Restrictions.not(restr));
-				default:
-					break;
-				}
-
+				aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, DATE);
 			}
 		};
 	}
@@ -846,51 +796,19 @@ public class DynamicQueryView extends ViewPart {
 		cComboInserimento.add("Falso");
 		cComboInserimento.setEditable(false);
 		cComboInserimento.select(0);
+		tipoOperazione.setEnabled(false);
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				String selezione = cComboInserimento.getText();
 				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), selezione });
-				// aggiungiRestrizione(boolSelection, tipoOperazione,
-				// tipoAssociazione,elencoAltriCampi, item,BOOL);
 				SimpleExpression restr = null;
 				Object valore = "";
-
 				valore = (cComboInserimento.getSelectionIndex() == 0) ? Boolean.TRUE : Boolean.FALSE;
 				String altroCampo = elencoAltriCampi.getText();
 				if ("".equals(valore))
 					valore = altroCampo;
-				switch (tipoOperazione.getSelectionIndex()) {
-				case 0:
 					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
 					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
-					break;
-				case 1:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " <> " + valore });
-					restr = (SimpleExpression) Restrictions.not(Restrictions.eq(item.getTreeNode().getText(), valore));
-					break;
-				case 2:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " < " + valore });
-					restr = Restrictions.lt(item.getTreeNode().getText(), valore);
-					break;
-				case 3:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " <= " + valore });
-					restr = Restrictions.lt(item.getTreeNode().getText(), valore);
-					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
-					break;
-				case 4:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " > " + valore });
-					restr = Restrictions.gt(item.getTreeNode().getText(), valore);
-					break;
-				case 5:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " >= " + valore });
-					restr = Restrictions.gt(item.getTreeNode().getText(), valore);
-					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
-					break;
-				default:
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
-					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
-					break;
-				}
 				switch (tipoAssociazione.getSelectionIndex()) {
 				case 0:
 					// AND
@@ -1189,8 +1107,8 @@ public class DynamicQueryView extends ViewPart {
 	private void aggiungiRestrizione(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,
 			final CCombo cboAltroCampo, final DynNode item, String tipo) {
 		SimpleExpression restr = null;
+		PropertyExpression propRestr = null;
 		String criterio = textInserimento.getText();
-		;
 		Object valore = "";
 		if (INTEGER.equals(tipo))
 			valore = new Integer(criterio);
@@ -1199,34 +1117,56 @@ public class DynamicQueryView extends ViewPart {
 		else if (BOOL.equals(tipo))
 			valore = new Boolean(criterio);
 		String altroCampo = cboAltroCampo.getText();
-		if ("".equals(valore))
+		boolean property = false;
+		if ("".equals(valore)) {
 			valore = altroCampo;
+			property = true;
+		}
+		System.out.println(item.getTreeNode().getText());
+		System.out.println(altroCampo);
 		switch (tipoOperazione.getSelectionIndex()) {
 		case 0:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
-			restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+			if (property)
+				propRestr = Restrictions.eqProperty(item.getTreeNode().getText(), altroCampo);
+			else
+				restr = Restrictions.eq(item.getTreeNode().getText(), valore);
 			break;
 		case 1:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " <> " + valore });
-			restr = (SimpleExpression) Restrictions.not(Restrictions.eq(item.getTreeNode().getText(), valore));
+
+			if (property)
+				propRestr = Restrictions.neProperty(item.getTreeNode().getText(), altroCampo);
+			else
+				restr = (SimpleExpression) Restrictions.ne(item.getTreeNode().getText(), valore);
 			break;
 		case 2:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " < " + valore });
-			restr = Restrictions.lt(item.getTreeNode().getText(), valore);
+			if (property)
+				propRestr = Restrictions.ltProperty(item.getTreeNode().getText(), altroCampo);
+			else
+				restr = Restrictions.lt(item.getTreeNode().getText(), valore);
 			break;
 		case 3:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " <= " + valore });
-			restr = Restrictions.lt(item.getTreeNode().getText(), valore);
-			restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+			if (property)
+				propRestr = Restrictions.leProperty(item.getTreeNode().getText(), altroCampo);
+			else
+				restr = Restrictions.le(item.getTreeNode().getText(), valore);
 			break;
 		case 4:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " > " + valore });
-			restr = Restrictions.gt(item.getTreeNode().getText(), valore);
+			if (property)
+				propRestr = Restrictions.gtProperty(item.getTreeNode().getText(), altroCampo);
+			else
+				restr = Restrictions.gt(item.getTreeNode().getText(), valore);
 			break;
 		case 5:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " >= " + valore });
-			restr = Restrictions.gt(item.getTreeNode().getText(), valore);
-			restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+			if (property)
+				propRestr = Restrictions.geProperty(item.getTreeNode().getText(), altroCampo);
+			else
+				restr = Restrictions.ge(item.getTreeNode().getText(), valore);
 			break;
 		default:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
@@ -1236,14 +1176,24 @@ public class DynamicQueryView extends ViewPart {
 		switch (tipoAssociazione.getSelectionIndex()) {
 		case 0:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (AND) " });
-			criteria.add(restr);
+			if (restr != null)
+				criteria.add(restr);
+			else
+				criteria.add(propRestr);
 			break;
 		case 1:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (OR) " });
-			criteria.add(Restrictions.disjunction().add(restr));
+			if (restr != null)
+				criteria.add(Restrictions.disjunction().add(restr));
+			else
+				criteria.add(Restrictions.disjunction().add(propRestr));
+
 		case 2:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (NOT) " });
-			criteria.add(Restrictions.not(restr));
+			if (restr != null)
+				criteria.add(Restrictions.not(restr));
+			else
+				criteria.add(Restrictions.not(propRestr));
 		default:
 			break;
 		}
@@ -1252,7 +1202,12 @@ public class DynamicQueryView extends ViewPart {
 	private void riempiComboPerTipo(String tipo, CCombo cboAltroCampo) {
 		for (Entry<TreeItem, DynNode> item : dynAlbero.entrySet()) {
 			if (((DynNode) item.getValue()).getPathClass().equals(tipo)) {
-				cboAltroCampo.add(item.getKey().getText(0));
+				System.out.println(((DynNode) item.getValue()).getIdMap());
+				System.out.println(((DynNode) item.getValue()).getPathClass());
+				System.out.println(((DynNode) item.getValue()).getTreeNode().getText());
+//				System.out.println(((DynNode) item.getValue()).getIdMap());
+				cboAltroCampo.add(((DynNode) item.getValue()).getTreeNode().getText());
+				
 			}
 		}
 	}
