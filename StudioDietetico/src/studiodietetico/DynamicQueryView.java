@@ -43,11 +43,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.hibernate.jdbc.BorrowedConnectionProxy;
 import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.sql.DisjunctionFragment;
 
 import service.Costanti;
 import service.DynNode;
@@ -248,7 +250,7 @@ public class DynamicQueryView extends ViewPart {
 		gdFiltri.grabExcessHorizontalSpace = true;
 		gdFiltri.grabExcessVerticalSpace = true;
 		gdFiltri.horizontalSpan = 4;
-		gdFiltri.minimumHeight = 400;
+		gdFiltri.minimumHeight = 300;
 		cmpFiltri.setLayoutData(gdFiltri);
 		GridLayout glFiltri = new GridLayout();
 		glFiltri.numColumns = 4;
@@ -515,7 +517,7 @@ public class DynamicQueryView extends ViewPart {
 		gdFiltri.grabExcessVerticalSpace = true;
 		gdFiltri.horizontalAlignment = SWT.FILL;
 		gdFiltri.verticalAlignment = SWT.FILL;
-		gdFiltri.minimumHeight = 600;
+		gdFiltri.minimumHeight = 300;
 		compFiltro.setLayoutData(gdFiltri);
 		Label titolo = new Label(compFiltro, SWT.NONE);
 		GridData gdTitolo = new GridData();
@@ -527,8 +529,8 @@ public class DynamicQueryView extends ViewPart {
 		lbl.setText("Aggiungi in: ");
 		CCombo cboTipoAssociazione = new CCombo(compFiltro, SWT.NONE);
 		cboTipoAssociazione.add("AND", 0);
-		// cboTipoAssociazione.add("OR", 1);
-		cboTipoAssociazione.add("NOT", 1);
+		cboTipoAssociazione.add("OR", 1);
+		cboTipoAssociazione.add("NOT", 2);
 		cboTipoAssociazione.select(0);
 		Label etichettaOperazione = new Label(compFiltro, SWT.NONE);
 		etichettaOperazione.setText("Operazione:");
@@ -551,13 +553,13 @@ public class DynamicQueryView extends ViewPart {
 		SelectionAdapter listener = null;
 		if (item.getPathClass().contains("Integer") | item.getPathClass().contains("int")) {
 			etichettaInserimento.setText("Inserisci un INTERO");
-//			listener = gestisci
+			listener = gestisciFiltroIntero(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi, item);
 		} else if (item.getPathClass().contains("Double") | item.getPathClass().contains("double")) {
 			etichettaInserimento.setText("Inserisci un DECIMALE");
 			listener = gestisciFiltroDecimale(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi, item);
 		} else if (item.getPathClass().contains("Date")) {
 			etichettaInserimento.setText("Inserisci una DATA");
-			gestisciFiltroData(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi, item);
+			listener = gestisciFiltroData(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi, item);
 		} else if (item.getPathClass().contains("Boolean") | item.getPathClass().contains("boolean")) {
 			etichettaInserimento.setText("Inserisci VERO/FALSO");
 			textInserimento.setVisible(false);
@@ -663,6 +665,68 @@ public class DynamicQueryView extends ViewPart {
 		};
 	}
 
+	private SelectionAdapter gestisciFiltroIntero(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,
+			final CCombo elencoAltriCampi, DynNode currNode) {
+		final DynNode item = currNode;
+		return new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent eS) {
+				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
+				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
+				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, INTEGER);
+					// criteria.add(Expression.eq(item.getTreeNode().getText(),
+					// textInserimento.getText()));
+				} else {
+					// si costruisce a ritroso il percorso
+					ArrayList<String> ramo = new ArrayList<String>();
+					DynNode current = dynAlbero.get(item.getTreeNode().getParentItem());
+					; // turno
+					DynNode currentPadre = dynAlbero.get(current.getTreeNode().getParentItem()); // prestaziones
+					while (!current.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
+						String currentNode = "";
+
+						Class currentClass = null;
+						try {
+							currentClass = Class.forName(currentPadre.getPathClass());
+						} catch (ClassNotFoundException e1) {
+
+							e1.printStackTrace();
+						}
+						Field currentFields[] = currentClass.getDeclaredFields();
+						ArrayList<Field> fieldClasse = new ArrayList<Field>();
+						for (int i = 0; i < currentFields.length; i++) {
+							fieldClasse.add(currentFields[i]);
+						}
+						while (fieldClasse.size() > 0) {
+							Field currField = fieldClasse.get(0);
+							// si becca se è un hashset
+							String matching = currField.getName().toLowerCase();
+							if (matching.contains(current.getTreeNode().getText().toLowerCase())) {
+								if (currField.getType().isInstance(new HashSet<Object>())) {
+									currentNode = current.getTreeNode().getText().toLowerCase().concat("s");
+								} else {
+									currentNode = current.getTreeNode().getText().toLowerCase();
+								}
+								ramo.add(currentNode);
+							}
+							fieldClasse.remove(currField);
+						}
+						current = dynAlbero.get(current.getTreeNode().getParentItem());
+						currentPadre = dynAlbero.get(currentPadre.getTreeNode().getParentItem());
+					}
+					ramo = Utils.inversione(ramo);
+					for (int i = 0; i < ramo.size(); i++) {
+						criteria = criteria.createCriteria(ramo.get(i));
+					}
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, DECIMAL);
+					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
+					// textInserimento.getText()));
+				}
+				((Control) eS.getSource()).setEnabled(false);
+			}
+		};
+	}
+
 	private SelectionAdapter gestisciFiltroData(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,
 			final CCombo elencoAltriCampi, DynNode currNode) {
 		final DynNode item = currNode;
@@ -685,8 +749,10 @@ public class DynamicQueryView extends ViewPart {
 		// compFiltro = new Composite(parent,SWT.NONE);
 		// compFiltro.setLayout(new GridLayout());
 		// compFiltro.setLayoutData(new GridData(SWT.FILL));
+		textInserimento.setEnabled(false);
 		final DateTime calendar = new DateTime(compFiltro, SWT.CALENDAR | SWT.BORDER);
 		calendar.setLayoutData(gridData1);
+
 		calendar.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 			}
@@ -696,22 +762,78 @@ public class DynamicQueryView extends ViewPart {
 		});
 		final DateTime time = new DateTime(compFiltro, SWT.TIME | SWT.SHORT);
 		time.setLayoutData(gridData);
-		button = new Button(compFiltro, SWT.NONE);
-		button.setText("Confronta con un altro campo");
-		button.setLayoutData(gridData4);
-		Label filler17 = new Label(compFiltro, SWT.NONE);
+		final Button ora = new Button(compFiltro, SWT.NONE | SWT.CHECK);
+		Label filler = new Label(compFiltro, SWT.NONE);
 		return new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println("Calendar date selected (MM/DD/YYYY) = " + (calendar.getMonth() + 1) + "/" + calendar.getDay() + "/"
 						+ calendar.getYear());
 				System.out.println("Time selected (HH:MM) = " + time.getHours() + ":" + (time.getMinutes() < 10 ? "0" : "") + time.getMinutes());
-				String dateString = calendar.getYear() + "-" + (calendar.getMonth() + 1) + "-" + calendar.getDay() + " " + time.getHours() + ":"
-						+ (time.getMinutes() < 10 ? "0" : "") + time.getMinutes() + ":00";
-				String formato = "yyyy-MM-dd HH:mm:ss";
+				String dateString = calendar.getYear() + "-" + (calendar.getMonth() + 1) + "-" + calendar.getDay();
+				String formato = "dd/MM/YYYY";
+				// if (ora.getSelectionIndex() == 0) {
+				// dateString += " " + time.getHours() + ":" +
+				// (time.getMinutes() < 10 ? "0" : "") + time.getMinutes() +
+				// ":00";
+				// formato += " HH:mm:ss";
+				// }
+
 				Date selectedData = Utils.convertStringToDate(dateString, formato);
 				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), selectedData.toString() });
-				aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, DATE);
-				// TODO inserire il criteria adeguato
+				textInserimento.setText(dateString);
+				SimpleExpression restr = null;
+				Object valore = "";
+				valore = selectedData;
+				String altroCampo = elencoAltriCampi.getText();
+				if ("".equals(valore))
+					valore = altroCampo;
+				switch (tipoOperazione.getSelectionIndex()) {
+				case 0:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
+					restr = (SimpleExpression) Restrictions.sqlRestriction("to_date("+item.getTreeNode().getText()+",'dd/mm/rrrr') = "+dateString);
+					break;
+				case 1:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " <> " + valore });
+					restr = (SimpleExpression) Restrictions.not(Restrictions.eq(item.getTreeNode().getText(), valore));
+					break;
+				case 2:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " < " + valore });
+					restr = Restrictions.lt(item.getTreeNode().getText(), valore);
+					break;
+				case 3:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " <= " + valore });
+					restr = Restrictions.lt(item.getTreeNode().getText(), valore);
+					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+					break;
+				case 4:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " > " + valore });
+					restr = Restrictions.gt(item.getTreeNode().getText(), valore);
+					break;
+				case 5:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " >= " + valore });
+					restr = Restrictions.gt(item.getTreeNode().getText(), valore);
+					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+					break;
+				default:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
+					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+					break;
+				}
+				switch (tipoAssociazione.getSelectionIndex()) {
+				case 0:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (AND) " });
+					criteria.add(restr);
+					break;
+				case 1:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (OR) " });
+					criteria.add(Restrictions.disjunction().add(restr));
+				case 2:
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (NOT) " });
+					criteria.add(Restrictions.not(restr));
+				default:
+					break;
+				}
+
 			}
 		};
 	}
@@ -771,10 +893,16 @@ public class DynamicQueryView extends ViewPart {
 				}
 				switch (tipoAssociazione.getSelectionIndex()) {
 				case 0:
+					// AND
 					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (AND) " });
 					criteria.add(restr);
 					break;
 				case 1:
+					// OR
+					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (OR) " });
+					criteria.add(Restrictions.disjunction().add(restr));
+				case 2:
+					// NOT
 					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (NOT) " });
 					criteria.add(Restrictions.not(restr));
 				default:
@@ -1111,6 +1239,9 @@ public class DynamicQueryView extends ViewPart {
 			criteria.add(restr);
 			break;
 		case 1:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (OR) " });
+			criteria.add(Restrictions.disjunction().add(restr));
+		case 2:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (NOT) " });
 			criteria.add(Restrictions.not(restr));
 		default:
