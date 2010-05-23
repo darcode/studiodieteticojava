@@ -1187,7 +1187,6 @@ public class DynamicQueryView extends ViewPart {
 				criteria.add(Restrictions.disjunction().add(restr));
 			else
 				criteria.add(Restrictions.disjunction().add(propRestr));
-
 		case 2:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (NOT) " });
 			if (restr != null)
