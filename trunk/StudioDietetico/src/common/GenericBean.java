@@ -57,8 +57,7 @@ public class GenericBean {
 	public static void setProperty(String name, Object target, Object value) {
 		Method metodo = null;
 		try {
-			metodo = target.getClass().getMethod("set" + name,
-					new Class[] { value.getClass() });
+			metodo = target.getClass().getMethod("set" + name, new Class[] { value.getClass() });
 		} catch (NoSuchMethodException e) {
 		}
 		if (metodo != null)
@@ -78,9 +77,13 @@ public class GenericBean {
 			name = name.substring(0, 1).toUpperCase() + name.substring(1);
 		}
 		try {
-			metodo = target.getClass().getMethod("get" + name, null);
+				metodo = target.getClass().getMethod("get" + name, null);
 		} catch (NoSuchMethodException exc) {
-			exc.printStackTrace();
+			try {
+					metodo = target.getClass().getMethod("is" + name, null);
+			} catch (NoSuchMethodException exc1) {
+				exc1.printStackTrace();
+			}
 		}
 		if (metodo != null)
 			try {
@@ -104,6 +107,7 @@ public class GenericBean {
 		}
 		return ritorno;
 	}
+
 	/*
 	 * Per leggere il tipo del field
 	 */
