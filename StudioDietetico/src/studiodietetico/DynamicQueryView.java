@@ -16,7 +16,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -43,14 +42,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.PropertyExpression;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
-import org.hibernate.jdbc.BorrowedConnectionProxy;
 import org.hibernate.proxy.HibernateProxy;
-import org.hibernate.sql.DisjunctionFragment;
 
 import service.Costanti;
 import service.DynNode;
@@ -71,6 +68,7 @@ public class DynamicQueryView extends ViewPart {
 	private Composite							compFiltro;
 	private Composite							top						= null;
 	private Tree								tree					= null;
+	private TreeItem							radice					= null;
 	private Combo								comboSelezioneEntita	= null;
 	private Label								labelSelezioneEntita	= null;
 	private HashSet<String>						nodiVisitati			= new HashSet<String>();
@@ -346,7 +344,7 @@ public class DynamicQueryView extends ViewPart {
 				// inserisco il nodo radice (nome della classe/entità
 				// selezionata)
 				tree.removeAll();
-				TreeItem radice = new TreeItem(tree, SWT.NONE);
+				radice = new TreeItem(tree, SWT.NONE);
 				radice.setText(new String[] { nomeClasse });
 				nodiVisitati.clear();
 
@@ -498,6 +496,45 @@ public class DynamicQueryView extends ViewPart {
 		}
 	}
 
+	private void creaProiezione(){
+		ProjectionList proList = Projections.projectionList();
+	    //Navigazione nell'albero
+	    
+	    //prende la radice	    
+	    ArrayList<TreeItem> nodiDaVisitare = new ArrayList<TreeItem>();
+	    nodiDaVisitare.add(radice);
+	    
+	    //naviga in tutto l'albero in cerca di nodi checkati
+	    while(nodiDaVisitare.size()>0){
+	    	//prende il nodo corrente
+	    	TreeItem currentNode = nodiDaVisitare.get(0);
+	    	//controlla se è un nodo selezionato
+	    	if (currentNode.getChecked()) {
+	    		//prende il dynNode corrispondente
+	    		DynNode current = dynAlbero.get(currentNode);
+	    		String currentPath = current.getPathClass();  		
+	    			    		
+	    		//TODO dedidere come gestire la proiezione
+	    		//aggiunge alla proiezione l'attributo
+	    		proList.add(Projections.property("name"));
+			}
+	    	//aggiunge tutti i figli del nodo corrente
+	    	TreeItem[] figli = currentNode.getItems();
+	    	for(int i = 0; i<figli.length; i++){
+	    		nodiDaVisitare.add(figli[i]);
+	    	}
+	    	//rimuove il corrente dalla lista
+	    	nodiDaVisitare.remove(currentNode);	    	
+	    }
+	    
+	    
+	    
+	    
+	    
+	    //aggiunge la proiezione al criteria
+	    criteria.setProjection(proList);
+	}
+	
 	// ShellPopUp
 
 	public void createCompositeInserimento(final DynNode item) {
@@ -1018,7 +1055,7 @@ public class DynamicQueryView extends ViewPart {
 
 		};
 	}
-
+	
 	// DynamicQueryDAO
 
 	private void initDao(String pathClasse, String nomeClasse) {
