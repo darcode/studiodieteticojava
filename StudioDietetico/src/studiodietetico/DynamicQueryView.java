@@ -42,6 +42,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.PropertyExpression;
 import org.hibernate.criterion.Projections;
@@ -67,7 +68,7 @@ public class DynamicQueryView extends ViewPart {
 	private static final SessionFactory			sessionFactory			= new Configuration().configure().buildSessionFactory();
 	private Composite							compFiltro;
 	private Composite							top						= null;
-	private Tree								tree					= null;
+	private Tree								treeEntity				= null;
 	private TreeItem							radice					= null;
 	private Combo								comboSelezioneEntita	= null;
 	private Label								labelSelezioneEntita	= null;
@@ -131,6 +132,7 @@ public class DynamicQueryView extends ViewPart {
 					}
 					TreeItem root = new TreeItem(visualizzaRisultati, SWT.NONE);
 					root.setText("Risultato");
+					System.out.println(selectedEntities.keySet());
 					for (Object row : result) {
 						TreeItem figlio = new TreeItem(root, SWT.NONE);
 						figlio.setText(row.getClass().getSimpleName().toUpperCase());
@@ -139,6 +141,7 @@ public class DynamicQueryView extends ViewPart {
 					}
 
 				}
+				treeEntity.setEnabled(false);
 				// System.out.println(selectedEntities.keySet());
 			}
 		});
@@ -161,20 +164,20 @@ public class DynamicQueryView extends ViewPart {
 				}
 			}
 		});
-		tree = new Tree(top, SWT.CHECK | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		treeEntity = new Tree(top, SWT.CHECK | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridData gdTree = new GridData();
 		gdTree.horizontalAlignment = SWT.FILL;
 		gdTree.verticalAlignment = SWT.FILL;
 		gdTree.grabExcessHorizontalSpace = true;
 		gdTree.grabExcessVerticalSpace = true;
 		gdTree.horizontalSpan = 2;
-		tree.setLayoutData(gdTree);
-		tree.setLayout(new GridLayout());
-		tree.setHeaderVisible(true);
-		tree.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
+		treeEntity.setLayoutData(gdTree);
+		treeEntity.setLayout(new GridLayout());
+		treeEntity.setHeaderVisible(true);
+		treeEntity.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
 			public void mouseDoubleClick(org.eclipse.swt.events.MouseEvent e) {
 				// check se è¨ selezionato e se è foglia
-				TreeItem[] arr = tree.getSelection();
+				TreeItem[] arr = treeEntity.getSelection();
 				if (arr[0] != null) {
 					TreeItem item = arr[0];
 					if (!item.getText().substring(0, 1).equals(item.getText().substring(0, 1).toUpperCase())) {
@@ -185,41 +188,29 @@ public class DynamicQueryView extends ViewPart {
 				}
 			}
 		});
-		tree.addListener(SWT.Selection, new Listener() {
+		treeEntity.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				if (event.detail == SWT.CHECK) {
-
-					TreeItem[] arr = tree.getSelection();
-					boolean b = false;
-					if (arr[0] != null) {
-						TreeItem item = arr[0];
-						if (item.getText().substring(0, 1).equals(item.getText().substring(0, 1).toUpperCase())) {
-							TreeItem[] figli = item.getItems();
-							for (int i = 0; i < figli.length; i++) {
-								if (!figli[i].getText().substring(0, 1).equals(figli[i].getText().substring(0, 1).toUpperCase())) {
-									b = true;
-									if (item.getChecked()) {
-										figli[i].setChecked(true);
-										String nome = figli[i].getText();
-										TreeItem nodoPadre = figli[i].getParentItem();
-										while (nodoPadre != null) {
-											nome += "." + nodoPadre.getText();
-											nodoPadre = nodoPadre.getParentItem();
-										}
-										selectedEntities.put(nome, nome);
-									} else {
-										figli[i].setChecked(false);
-									}
-								}
-							}
-						} else {
-							b = true;
-						}
+					TreeItem item = (TreeItem) event.item;
+					if(item.getChecked()){
+						selectedEntities.put(item.getText().toLowerCase(), item.getText());
+					} else {
+						selectedEntities.remove(item.getText().toLowerCase());
 					}
-					if (!b) {
-						createSShell1();
-						sShell1.open();
-						arr[0].setChecked(false);
+					// if (item.getText().substring(0,
+					// 1).equals(item.getText().substring(0,
+					// 1).toUpperCase())) {
+					for (TreeItem figlio : item.getItems()) {
+						if (!figlio.getText().substring(0, 1).equals(figlio.getText().substring(0, 1).toUpperCase())) {
+							String nome = figlio.getText();
+							if (item.getChecked()) {
+								figlio.setChecked(true);
+								selectedEntities.put(nome.toLowerCase(), nome);
+							} else {
+								figlio.setChecked(false);
+								selectedEntities.remove(nome.toLowerCase());
+							}
+						}
 					}
 				}
 			}
@@ -236,10 +227,10 @@ public class DynamicQueryView extends ViewPart {
 		visualizzaRisultati.setLinesVisible(true);
 		visualizzaRisultati.setLayoutData(gdTree1);
 		visualizzaRisultati.setLayout(new GridLayout());
-		TreeColumn colFiltro = new TreeColumn(tree, SWT.CENTER);
+		TreeColumn colFiltro = new TreeColumn(treeEntity, SWT.CENTER);
 		colFiltro.setText("Filtro");
 		colFiltro.setWidth(200);
-		TreeColumn colValore = new TreeColumn(tree, SWT.CENTER);
+		TreeColumn colValore = new TreeColumn(treeEntity, SWT.CENTER);
 		colValore.setText("Valore");
 		colValore.setWidth(200);
 		cmpFiltri = new Composite(top, SWT.BORDER);
@@ -286,16 +277,20 @@ public class DynamicQueryView extends ViewPart {
 									&& (GenericBean.getPropertyClass(campo, item).equals(Set.class.getSimpleName()) || GenericBean
 											.getPropertyPackage(campo, item).getName().equals("hibernate"))) {
 								depth++;
-								TreeItem figlio = new TreeItem(node, SWT.NONE);
-								figlio.setText(campo.toUpperCase());
-								figlio.setFont(font);
-								feelTableResult(figlio, GenericBean.getProperty(campo, item), false, depth);
+								if (selectedEntities.containsKey(campo)) {
+									TreeItem figlio = new TreeItem(node, SWT.NONE);
+									figlio.setText(campo.toUpperCase());
+									figlio.setFont(font);
+									feelTableResult(figlio, GenericBean.getProperty(campo, item), false, depth);
+								}
 							} else {
-								TreeItem treeItem = new TreeItem(node, SWT.NONE);
-								String label = "" + campo;
-								while (label.length() < 25)
-									label = " " + label;
-								treeItem.setText(label.toUpperCase() + ":             " + (GenericBean.getProperty(campo, item)));
+								if (selectedEntities.containsKey(campo)) {
+									TreeItem treeItem = new TreeItem(node, SWT.NONE);
+									String label = "" + campo;
+									while (label.length() < 25)
+										label = " " + label;
+									treeItem.setText(label.toUpperCase() + ":             " + (GenericBean.getProperty(campo, item)));
+								}
 							}
 						}
 
@@ -343,8 +338,8 @@ public class DynamicQueryView extends ViewPart {
 				String pathClasse = Costanti.entita[index][1];
 				// inserisco il nodo radice (nome della classe/entità
 				// selezionata)
-				tree.removeAll();
-				radice = new TreeItem(tree, SWT.NONE);
+				treeEntity.removeAll();
+				radice = new TreeItem(treeEntity, SWT.NONE);
 				radice.setText(new String[] { nomeClasse });
 				nodiVisitati.clear();
 
@@ -496,45 +491,43 @@ public class DynamicQueryView extends ViewPart {
 		}
 	}
 
-	private void creaProiezione(){
-		ProjectionList proList = Projections.projectionList();
-	    //Navigazione nell'albero
-	    
-	    //prende la radice	    
-	    ArrayList<TreeItem> nodiDaVisitare = new ArrayList<TreeItem>();
-	    nodiDaVisitare.add(radice);
-	    
-	    //naviga in tutto l'albero in cerca di nodi checkati
-	    while(nodiDaVisitare.size()>0){
-	    	//prende il nodo corrente
-	    	TreeItem currentNode = nodiDaVisitare.get(0);
-	    	//controlla se è un nodo selezionato
-	    	if (currentNode.getChecked()) {
-	    		//prende il dynNode corrispondente
-	    		DynNode current = dynAlbero.get(currentNode);
-	    		String currentPath = current.getPathClass();  		
-	    			    		
-	    		//TODO dedidere come gestire la proiezione
-	    		//aggiunge alla proiezione l'attributo
-	    		proList.add(Projections.property("name"));
-			}
-	    	//aggiunge tutti i figli del nodo corrente
-	    	TreeItem[] figli = currentNode.getItems();
-	    	for(int i = 0; i<figli.length; i++){
-	    		nodiDaVisitare.add(figli[i]);
-	    	}
-	    	//rimuove il corrente dalla lista
-	    	nodiDaVisitare.remove(currentNode);	    	
-	    }
-	    
-	    
-	    
-	    
-	    
-	    //aggiunge la proiezione al criteria
-	    criteria.setProjection(proList);
-	}
-	
+	// private void creaProiezione(){
+	// ProjectionList proList = Projections.projectionList();
+	// //Navigazione nell'albero
+	//	    
+	// //prende la radice
+	// ArrayList<TreeItem> nodiDaVisitare = new ArrayList<TreeItem>();
+	// nodiDaVisitare.add(radice);
+	//	    
+	// //naviga in tutto l'albero in cerca di nodi checkati
+	// while(nodiDaVisitare.size()>0){
+	// //prende il nodo corrente
+	// TreeItem currentNode = nodiDaVisitare.get(0);
+	// //controlla se è un nodo selezionato
+	// if (currentNode.getChecked()) {
+	// //prende il dynNode corrispondente
+	// DynNode current = dynAlbero.get(currentNode);
+	// String currentPath = current.getTreeNode().getText();
+	//
+	// if(currentPath.substring(0,1).equals(currentPath.substring(0,1).toLowerCase())){
+	// proList.add(Projections.property(currentPath),currentPath);
+	// System.out.println(currentPath);
+	// }else{
+	//	    			
+	// }
+	//	    		
+	// }
+	// //aggiunge tutti i figli del nodo corrente
+	// TreeItem[] figli = currentNode.getItems();
+	// for(int i = 0; i<figli.length; i++){
+	// nodiDaVisitare.add(figli[i]);
+	// }
+	// //rimuove il corrente dalla lista
+	// nodiDaVisitare.remove(currentNode);
+	// }
+	// // criteria.add(crit);
+	// }
+
 	// ShellPopUp
 
 	public void createCompositeInserimento(final DynNode item) {
@@ -844,8 +837,8 @@ public class DynamicQueryView extends ViewPart {
 				String altroCampo = elencoAltriCampi.getText();
 				if ("".equals(valore))
 					valore = altroCampo;
-					item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
-					restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
+				restr = Restrictions.eq(item.getTreeNode().getText(), valore);
 				switch (tipoAssociazione.getSelectionIndex()) {
 				case 0:
 					// AND
@@ -1055,7 +1048,7 @@ public class DynamicQueryView extends ViewPart {
 
 		};
 	}
-	
+
 	// DynamicQueryDAO
 
 	private void initDao(String pathClasse, String nomeClasse) {
@@ -1081,7 +1074,13 @@ public class DynamicQueryView extends ViewPart {
 	}
 
 	private void executeQuery() {
-		result = criteria.list();
+		// aggiungo le proiezioni
+		// creaProiezione();
+		try {
+			result = criteria.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	// BaseDAO
@@ -1241,9 +1240,9 @@ public class DynamicQueryView extends ViewPart {
 				System.out.println(((DynNode) item.getValue()).getIdMap());
 				System.out.println(((DynNode) item.getValue()).getPathClass());
 				System.out.println(((DynNode) item.getValue()).getTreeNode().getText());
-//				System.out.println(((DynNode) item.getValue()).getIdMap());
+				// System.out.println(((DynNode) item.getValue()).getIdMap());
 				cboAltroCampo.add(((DynNode) item.getValue()).getTreeNode().getText());
-				
+
 			}
 		}
 	}
