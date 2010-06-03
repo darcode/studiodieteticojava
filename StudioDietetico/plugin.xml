@@ -401,7 +401,7 @@
             name="Registra Visita">
       </view>
 	  <view
-            allowMultiple="true"
+            allowMultiple="ftrue"
             class="statistics.StatisticheView"
             id="StatisticheViewID"
             name="Statistiche"
