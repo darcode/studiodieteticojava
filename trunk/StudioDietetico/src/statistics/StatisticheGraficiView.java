@@ -20,6 +20,7 @@ public class StatisticheGraficiView extends ViewPart implements
 	public static final String ID_VIEW = graficiViewID;
 	private Color whiteColor = Utils.getStandardWhiteColor();
 	private GraficiMainForm form;
+//	private QueryStatisticheForm form;
 
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize
@@ -27,6 +28,7 @@ public class StatisticheGraficiView extends ViewPart implements
 	 */
 	public void createPartControl(Composite parent) {
 		form = new GraficiMainForm(parent, SWT.FILL);
+//		form = new QueryStatisticheForm(parent, SWT.FILL);
 	}
 
 	
