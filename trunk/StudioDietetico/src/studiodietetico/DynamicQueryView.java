@@ -140,30 +140,48 @@ public class DynamicQueryView extends ViewPart {
 						feelTableResult(figlio, row, true, 0);
 					}
 
+				} else {
+					//popup "non ci sono risultati"					
+					final Shell noResults = new Shell();
+					noResults.setSize(new Point(200, 150));
+					Button okNoResults = new Button(noResults, SWT.NONE);
+					okNoResults.setText("chiudi");
+					okNoResults.setBounds(new Rectangle(172, 165, 106, 27));
+					Label etichettaNoResults = new Label(noResults, SWT.NONE);
+					etichettaNoResults.setBounds(new Rectangle(87, 9, 117, 34));
+					etichettaNoResults.setText("L'interrogazione non ha restituito risultati");
+					okNoResults.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+						public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {						
+							noResults.close();
+						}
+					});
+	
+				
+					
 				}
 				treeEntity.setEnabled(false);
 				// System.out.println(selectedEntities.keySet());
 			}
 		});
-		Button filtra = new Button(top, SWT.NONE);
-		filtra.setText("Filtra");
-		filtra.setBounds(new Rectangle(500, 5, 44, 27));
-		filtra.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-
-				TreeItem root = visualizzaRisultati.getTopItem();
-				disposeChild(root);
-			}
-
-			private void disposeChild(TreeItem root) {
-				for (TreeItem figlio : root.getItems()) {
-					if (figlio.getChecked())
-						figlio.dispose();
-					else
-						disposeChild(figlio);
-				}
-			}
-		});
+//		Button filtra = new Button(top, SWT.NONE);
+//		filtra.setText("Filtra");
+//		filtra.setBounds(new Rectangle(500, 5, 44, 27));
+//		filtra.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+//			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+//
+//				TreeItem root = visualizzaRisultati.getTopItem();
+//				disposeChild(root);
+//			}
+//
+//			private void disposeChild(TreeItem root) {
+//				for (TreeItem figlio : root.getItems()) {
+//					if (figlio.getChecked())
+//						figlio.dispose();
+//					else
+//						disposeChild(figlio);
+//				}
+//			}
+//		});
 		treeEntity = new Tree(top, SWT.CHECK | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridData gdTree = new GridData();
 		gdTree.horizontalAlignment = SWT.FILL;
@@ -192,26 +210,7 @@ public class DynamicQueryView extends ViewPart {
 			public void handleEvent(Event event) {
 				if (event.detail == SWT.CHECK) {
 					TreeItem item = (TreeItem) event.item;
-					if(item.getChecked()){
-						selectedEntities.put(item.getText().toLowerCase(), item.getText());
-					} else {
-						selectedEntities.remove(item.getText().toLowerCase());
-					}
-					// if (item.getText().substring(0,
-					// 1).equals(item.getText().substring(0,
-					// 1).toUpperCase())) {
-					for (TreeItem figlio : item.getItems()) {
-						if (!figlio.getText().substring(0, 1).equals(figlio.getText().substring(0, 1).toUpperCase())) {
-							String nome = figlio.getText();
-							if (item.getChecked()) {
-								figlio.setChecked(true);
-								selectedEntities.put(nome.toLowerCase(), nome);
-							} else {
-								figlio.setChecked(false);
-								selectedEntities.remove(nome.toLowerCase());
-							}
-						}
-					}
+					performChecking(item);
 				}
 			}
 		});
@@ -346,6 +345,8 @@ public class DynamicQueryView extends ViewPart {
 				espandiAlbero(nomeClasse, pathClasse, radice);
 				comboSelezioneEntita.setEnabled(false);
 				initDao(pathClasse, nomeClasse);
+				radice.setChecked(true);
+				performChecking(radice);
 			}
 
 			public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -491,42 +492,25 @@ public class DynamicQueryView extends ViewPart {
 		}
 	}
 
-	// private void creaProiezione(){
-	// ProjectionList proList = Projections.projectionList();
-	// //Navigazione nell'albero
-	//	    
-	// //prende la radice
-	// ArrayList<TreeItem> nodiDaVisitare = new ArrayList<TreeItem>();
-	// nodiDaVisitare.add(radice);
-	//	    
-	// //naviga in tutto l'albero in cerca di nodi checkati
-	// while(nodiDaVisitare.size()>0){
-	// //prende il nodo corrente
-	// TreeItem currentNode = nodiDaVisitare.get(0);
-	// //controlla se è un nodo selezionato
-	// if (currentNode.getChecked()) {
-	// //prende il dynNode corrispondente
-	// DynNode current = dynAlbero.get(currentNode);
-	// String currentPath = current.getTreeNode().getText();
-	//
-	// if(currentPath.substring(0,1).equals(currentPath.substring(0,1).toLowerCase())){
-	// proList.add(Projections.property(currentPath),currentPath);
-	// System.out.println(currentPath);
-	// }else{
-	//	    			
-	// }
-	//	    		
-	// }
-	// //aggiunge tutti i figli del nodo corrente
-	// TreeItem[] figli = currentNode.getItems();
-	// for(int i = 0; i<figli.length; i++){
-	// nodiDaVisitare.add(figli[i]);
-	// }
-	// //rimuove il corrente dalla lista
-	// nodiDaVisitare.remove(currentNode);
-	// }
-	// // criteria.add(crit);
-	// }
+	public void performChecking(TreeItem item){
+		if(item.getChecked()){
+			selectedEntities.put(item.getText().toLowerCase(), item.getText());
+		} else {
+			selectedEntities.remove(item.getText().toLowerCase());
+		}
+		for (TreeItem figlio : item.getItems()) {
+			if (!figlio.getText().substring(0, 1).equals(figlio.getText().substring(0, 1).toUpperCase())) {
+				String nome = figlio.getText();
+				if (item.getChecked()) {
+					figlio.setChecked(true);
+					selectedEntities.put(nome.toLowerCase(), nome);
+				} else {
+					figlio.setChecked(false);
+					selectedEntities.remove(nome.toLowerCase());
+				}
+			}
+		}
+	}
 
 	// ShellPopUp
 
@@ -601,7 +585,7 @@ public class DynamicQueryView extends ViewPart {
 			textInserimento.setTextLimit(1);
 			listener = gestisciFiltroPerChar(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi, item);
 		} else if (item.getPathClass().contains("String")) {
-			etichettaInserimento.setText("Inserisci una STRINGA");
+			etichettaInserimento.setText("Inserisci un valore");
 			listener = gestisciFiltroPerStringa(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi, item);
 		} else {
 			System.out.println(item.getPathClass() + " ---> " + item.getTreeNode().getText());

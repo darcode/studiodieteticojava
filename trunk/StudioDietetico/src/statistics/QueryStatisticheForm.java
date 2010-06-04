@@ -101,7 +101,6 @@ public class QueryStatisticheForm extends Composite {
 		button = new Button(top, SWT.NONE);
 		button.setText("Esegui");
 		button.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				executeQuery();
 				// System.out.println(dynAlbero.keySet());
@@ -161,40 +160,9 @@ public class QueryStatisticheForm extends Composite {
 			public void handleEvent(Event event) {
 				if (event.detail == SWT.CHECK) {
 					TreeItem item = (TreeItem) event.item;
-					if (item.getChecked()) {
-						selectedEntities.put(item.getText().toLowerCase(), item.getText());
-					} else {
-						selectedEntities.remove(item.getText().toLowerCase());
-					}
-					if (item.getText().substring(0, 1).equals(item.getText().substring(0, 1).toUpperCase())) {
-						for (TreeItem figlio : item.getItems()) {
-							if (!figlio.getText().substring(0, 1).equals(figlio.getText().substring(0, 1).toUpperCase())) {
-								String nome = figlio.getText();
-								if (item.getChecked()) {
-									figlio.setChecked(true);
-									if (projList == null) {
-										projList = Projections.projectionList();
-									}
-									DynNode currentNode = dynAlbero.get(figlio);
-									// ricostruisci(currentNode);
-									if (!(item == treeEntity.getTopItem())) {
-										System.out.println(currentNode.getTreeNode().getParentItem().getText() + "."
-												+ currentNode.getTreeNode().getText());
-										projList.add(Projections.property(currentNode.getTreeNode().getParentItem().getText().toLowerCase() + "."
-												+ currentNode.getTreeNode().getText()));
-									} else {
-										System.out.println(currentNode.getTreeNode().getText());
-										projList.add(Projections.property(currentNode.getTreeNode().getText()));
-									}
-									TableColumn col = new TableColumn(tableRisultati, SWT.NONE);
-									col.setWidth(100);
-									col.setText(nome);
-									// selectedEntities.put(nome.toLowerCase(),
-									// nome);
-								}
-							}
-						}
-					}
+					performChecking(item);
+					//TODO
+					
 				}
 			}
 		});
@@ -257,6 +225,8 @@ public class QueryStatisticheForm extends Composite {
 				espandiAlbero(nomeClasse, pathClasse, radice);
 				comboSelezioneEntita.setEnabled(false);
 				initDao(pathClasse, nomeClasse);
+				radice.setChecked(true);
+				performChecking(radice);
 			}
 
 			public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -402,6 +372,56 @@ public class QueryStatisticheForm extends Composite {
 		}
 	}
 
+	public void performChecking(TreeItem item){
+		if (item.getChecked()) {
+			selectedEntities.put(item.getText().toLowerCase(), item.getText());
+		} else {
+			selectedEntities.remove(item.getText().toLowerCase());
+		}
+		//TODO
+//		if (item.getText().substring(0, 1).equals(item.getText().substring(0, 1).toUpperCase())) {
+			for (TreeItem figlio : item.getItems()) {
+				if (!figlio.getText().substring(0, 1).equals(figlio.getText().substring(0, 1).toUpperCase())) {
+					String nome = figlio.getText();
+					if (item.getChecked()) {
+						figlio.setChecked(true);
+						if (projList == null) {
+							projList = Projections.projectionList();
+						}
+						DynNode currentNode = dynAlbero.get(figlio);
+						// ricostruisci(currentNode);
+						if (!(item == treeEntity.getTopItem())) {
+							System.out.println(currentNode.getTreeNode().getParentItem().getText() + "."
+									+ currentNode.getTreeNode().getText());
+							projList.add(Projections.property(currentNode.getTreeNode().getParentItem().getText().toLowerCase() + "."
+									+ currentNode.getTreeNode().getText()));
+						} else {
+							System.out.println(currentNode.getTreeNode().getText());
+							projList.add(Projections.property(currentNode.getTreeNode().getText()));
+						}
+						TableColumn col = new TableColumn(tableRisultati, SWT.NONE);
+						col.setWidth(100);
+						col.setText(nome);
+						// selectedEntities.put(nome.toLowerCase(),
+						// nome);
+					}
+				}
+			}
+//		}
+//		for (TreeItem figlio : item.getItems()) {
+//			if (!figlio.getText().substring(0, 1).equals(figlio.getText().substring(0, 1).toUpperCase())) {
+//				String nome = figlio.getText();
+//				if (item.getChecked()) {
+//					figlio.setChecked(true);
+//					selectedEntities.put(nome.toLowerCase(), nome);
+//				} else {
+//					figlio.setChecked(false);
+//					selectedEntities.remove(nome.toLowerCase());
+//				}
+//			}
+//		}
+	}
+	
 	public void createCompositeInserimento(final DynNode item) {
 		// item = currentItem;
 		GridLayout glFiltro = new GridLayout();
