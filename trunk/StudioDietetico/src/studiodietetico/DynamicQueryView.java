@@ -11,8 +11,11 @@ import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -138,7 +141,7 @@ public class DynamicQueryView extends ViewPart {
 					}
 
 				} else {
-					//popup "non ci sono risultati"					
+					// popup "non ci sono risultati"
 					final Shell noResults = new Shell();
 					noResults.setSize(new Point(200, 150));
 					Button okNoResults = new Button(noResults, SWT.NONE);
@@ -148,37 +151,36 @@ public class DynamicQueryView extends ViewPart {
 					etichettaNoResults.setBounds(new Rectangle(87, 9, 117, 34));
 					etichettaNoResults.setText("L'interrogazione non ha restituito risultati");
 					okNoResults.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-						public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {						
+						public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 							noResults.close();
 						}
 					});
-	
-				
-					
+
 				}
 				treeEntity.setEnabled(false);
 				// System.out.println(selectedEntities.keySet());
 			}
 		});
-//		Button filtra = new Button(top, SWT.NONE);
-//		filtra.setText("Filtra");
-//		filtra.setBounds(new Rectangle(500, 5, 44, 27));
-//		filtra.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-//			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-//
-//				TreeItem root = visualizzaRisultati.getTopItem();
-//				disposeChild(root);
-//			}
-//
-//			private void disposeChild(TreeItem root) {
-//				for (TreeItem figlio : root.getItems()) {
-//					if (figlio.getChecked())
-//						figlio.dispose();
-//					else
-//						disposeChild(figlio);
-//				}
-//			}
-//		});
+		// Button filtra = new Button(top, SWT.NONE);
+		// filtra.setText("Filtra");
+		// filtra.setBounds(new Rectangle(500, 5, 44, 27));
+		// filtra.addSelectionListener(new
+		// org.eclipse.swt.events.SelectionAdapter() {
+		// public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+		//
+		// TreeItem root = visualizzaRisultati.getTopItem();
+		// disposeChild(root);
+		// }
+		//
+		// private void disposeChild(TreeItem root) {
+		// for (TreeItem figlio : root.getItems()) {
+		// if (figlio.getChecked())
+		// figlio.dispose();
+		// else
+		// disposeChild(figlio);
+		// }
+		// }
+		// });
 		treeEntity = new Tree(top, SWT.CHECK | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridData gdTree = new GridData();
 		gdTree.horizontalAlignment = SWT.FILL;
@@ -489,8 +491,8 @@ public class DynamicQueryView extends ViewPart {
 		}
 	}
 
-	public void performChecking(TreeItem item){
-		if(item.getChecked()){
+	public void performChecking(TreeItem item) {
+		if (item.getChecked()) {
 			selectedEntities.put(item.getText().toLowerCase(), item.getText());
 		} else {
 			selectedEntities.remove(item.getText().toLowerCase());
@@ -562,6 +564,26 @@ public class DynamicQueryView extends ViewPart {
 		glButton.numColumns = 2;
 		Label etichettaInserimento = new Label(compFiltro, SWT.NONE);
 		final Text textInserimento = new Text(compFiltro, SWT.BORDER);
+		textInserimento.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				if (((Text) e.getSource()).getText().equals(""))
+					elencoAltriCampi.setEnabled(true);
+				else
+					elencoAltriCampi.setEnabled(false);
+			}
+		});
+		elencoAltriCampi.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				if (((CCombo) e.getSource()).getText().equals(""))
+					textInserimento.setEnabled(true);
+				else
+					textInserimento.setEnabled(false);
+			}
+		});
 		SelectionAdapter listener = null;
 		if (item.getPathClass().contains("Integer") | item.getPathClass().contains("int")) {
 			etichettaInserimento.setText("Inserisci un INTERO");
@@ -671,6 +693,10 @@ public class DynamicQueryView extends ViewPart {
 					// textInserimento.getText()));
 				}
 				((Control) eS.getSource()).setEnabled(false);
+				textInserimento.setEnabled(false);
+				tipoOperazione.setEnabled(false);
+				tipoAssociazione.setEnabled(false);
+				elencoAltriCampi.setEnabled(false);
 			}
 		};
 	}
@@ -733,6 +759,10 @@ public class DynamicQueryView extends ViewPart {
 					// textInserimento.getText()));
 				}
 				((Control) eS.getSource()).setEnabled(false);
+				textInserimento.setEnabled(false);
+				tipoOperazione.setEnabled(false);
+				tipoAssociazione.setEnabled(false);
+				elencoAltriCampi.setEnabled(false);
 			}
 		};
 	}
@@ -793,6 +823,11 @@ public class DynamicQueryView extends ViewPart {
 				textInserimento.setText(dateString);
 				SimpleExpression restr = null;
 				aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, DATE);
+				((Control) e.getSource()).setEnabled(false);
+				textInserimento.setEnabled(false);
+				tipoOperazione.setEnabled(false);
+				tipoAssociazione.setEnabled(false);
+				elencoAltriCampi.setEnabled(false);
 			}
 		};
 	}
@@ -841,6 +876,10 @@ public class DynamicQueryView extends ViewPart {
 				} else {
 					System.out.println(selezione);
 				}
+				((Control) e.getSource()).setEnabled(false);
+				tipoOperazione.setEnabled(false);
+				tipoAssociazione.setEnabled(false);
+				elencoAltriCampi.setEnabled(false);
 			}
 		};
 	}
@@ -903,6 +942,10 @@ public class DynamicQueryView extends ViewPart {
 					// textInserimento.getText()));
 				}
 				((Control) e.getSource()).setEnabled(false);
+				textInserimento.setEnabled(false);
+				tipoOperazione.setEnabled(false);
+				tipoAssociazione.setEnabled(false);
+				elencoAltriCampi.setEnabled(false);
 			}
 		};
 	}
@@ -910,12 +953,33 @@ public class DynamicQueryView extends ViewPart {
 	private SelectionAdapter gestisciFiltroPerStringa(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,
 			final CCombo elencoAltriCampi, DynNode currNode) {
 		final DynNode item = currNode;
+		tipoOperazione.removeAll();
+		tipoOperazione.add("UGUALE", 0);
+		tipoOperazione.add("DIVERSO", 1);
+		tipoOperazione.add("INIZIA CON", 2);
+		tipoOperazione.add("FINISCE CON", 3);
+		tipoOperazione.add("CONTIENE", 4);
+		tipoOperazione.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			
+				if (tipoOperazione.getSelectionIndex() == 2 || tipoOperazione.getSelectionIndex() == 3 || tipoOperazione.getSelectionIndex() == 4)
+					elencoAltriCampi.setEnabled(false);
+				else
+					elencoAltriCampi.setEnabled(true);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
 				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, STRING);
+					aggiungiRestrizioneStringa(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item);
 					// criteria.add(Expression.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				} else {
@@ -959,11 +1023,15 @@ public class DynamicQueryView extends ViewPart {
 					for (int i = 0; i < ramo.size(); i++) {
 						criteria = criteria.createCriteria(ramo.get(i));
 					}
-					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, STRING);
+					aggiungiRestrizioneStringa(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item);
 					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				}
 				((Control) e.getSource()).setEnabled(false);
+				textInserimento.setEnabled(false);
+				tipoOperazione.setEnabled(false);
+				tipoAssociazione.setEnabled(false);
+				elencoAltriCampi.setEnabled(false);
 			}
 		};
 	}
@@ -1023,6 +1091,10 @@ public class DynamicQueryView extends ViewPart {
 					// textInserimento.getText()));
 				}
 				((Control) e.getSource()).setEnabled(false);
+				textInserimento.setEnabled(false);
+				tipoOperazione.setEnabled(false);
+				tipoAssociazione.setEnabled(false);
+				elencoAltriCampi.setEnabled(false);
 			}
 
 		};
@@ -1182,6 +1254,81 @@ public class DynamicQueryView extends ViewPart {
 				propRestr = Restrictions.geProperty(item.getTreeNode().getText(), altroCampo);
 			else
 				restr = Restrictions.ge(item.getTreeNode().getText(), valore);
+			break;
+		default:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
+			restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+			break;
+		}
+		switch (tipoAssociazione.getSelectionIndex()) {
+		case 0:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (AND) " });
+			if (restr != null)
+				criteria.add(restr);
+			else
+				criteria.add(propRestr);
+			break;
+		case 1:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (OR) " });
+			if (restr != null)
+				criteria.add(Restrictions.disjunction().add(restr));
+			else
+				criteria.add(Restrictions.disjunction().add(propRestr));
+		case 2:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (NOT) " });
+			if (restr != null)
+				criteria.add(Restrictions.not(restr));
+			else
+				criteria.add(Restrictions.not(propRestr));
+		default:
+			break;
+		}
+	}
+
+	private void aggiungiRestrizioneStringa(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,
+			final CCombo cboAltroCampo, final DynNode item) {
+		SimpleExpression restr = null;
+		PropertyExpression propRestr = null;
+		String criterio = textInserimento.getText();
+		Object valore = "";
+		String altroCampo = cboAltroCampo.getText();
+		boolean property = true;
+		if ("".equals(valore)) {
+			valore = textInserimento.getText();
+			property = false;
+		}
+		// tipoOperazione.add("UGUALE",0);
+		// tipoOperazione.add("DIVERSO",0);
+		// tipoOperazione.add("INIZIA CON",0);
+		// tipoOperazione.add("FINISCE CON",0);
+		// tipoOperazione.add("CONTIENE",0);
+		switch (tipoOperazione.getSelectionIndex()) {
+		case 0:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
+			if (property)
+				propRestr = Restrictions.eqProperty(item.getTreeNode().getText(), altroCampo);
+			else
+				restr = Restrictions.eq(item.getTreeNode().getText(), valore);
+			break;
+		case 1:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " <> " + valore });
+			restr = (SimpleExpression) Restrictions.ne(item.getTreeNode().getText(), valore);
+			break;
+		case 2:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " INIZIA CON " + valore });
+			restr = Restrictions.like(item.getTreeNode().getText(), valore + "%");
+			break;
+		case 3:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " FINISCE CON " + valore });
+			restr = Restrictions.like(item.getTreeNode().getText(), "%" + valore);
+			break;
+		case 4:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " CONTIENE " + valore });
+			restr = Restrictions.like(item.getTreeNode().getText(), "%" + valore + "%");
+			break;
+		case 5:
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " >= " + valore });
+			restr = Restrictions.ge(item.getTreeNode().getText(), valore);
 			break;
 		default:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " = " + valore });
