@@ -42,10 +42,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Projection;
-import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.PropertyExpression;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.hibernate.proxy.HibernateProxy;
@@ -79,7 +76,7 @@ public class DynamicQueryView extends ViewPart {
 	private Label								label2					= null;
 	private Button								ok						= null;
 	private HashMap<TreeItem, DynNode>			dynAlbero				= new HashMap<TreeItem, DynNode>();
-	private HashMap<String, String>				selectedEntities		= new HashMap();
+	private HashMap<String, String>				selectedEntities		= new HashMap<String, String>();
 	// ShellInserimento
 	// private DynNode item = null;
 	// private Button buttonOkInserimento = null;
@@ -627,8 +624,6 @@ public class DynamicQueryView extends ViewPart {
 				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
 					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, DECIMAL);
-					// criteria.add(Expression.eq(item.getTreeNode().getText(),
-					// textInserimento.getText()));
 				} else {
 					// si costruisce a ritroso il percorso
 					ArrayList<String> ramo = new ArrayList<String>();
@@ -1137,10 +1132,10 @@ public class DynamicQueryView extends ViewPart {
 		else if (BOOL.equals(tipo))
 			valore = new Boolean(criterio);
 		String altroCampo = cboAltroCampo.getText();
-		boolean property = false;
+		boolean property = true;
 		if ("".equals(valore)) {
-			valore = altroCampo;
-			property = true;
+			valore = textInserimento.getText();
+			property = false;
 		}
 		System.out.println(item.getTreeNode().getText());
 		System.out.println(altroCampo);
