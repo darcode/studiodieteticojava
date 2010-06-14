@@ -395,13 +395,14 @@
             name="Risultato Analisi">
       </view>
       <view
-			allowMultiple="true"
+            allowMultiple="true"
             class="studiodietetico.RegistraVisitaView"
             id="StudioDietetico.RegistraVisitaView"
-            name="Registra Visita">
+            name="Registra Visita"
+            restorable="false">
       </view>
 	  <view
-            allowMultiple="ftrue"
+            allowMultiple="true"
             class="statistics.StatisticheView"
             id="StatisticheViewID"
             name="Statistiche"
@@ -432,6 +433,7 @@
             restorable="true">
       </view>
       <view
+            allowMultiple="true"
             class="studiodietetico.DynamicQueryView"
             id="StudioDietetico.DynamicQueryView"
             name="DynamicQuery"
