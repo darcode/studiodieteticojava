@@ -79,16 +79,7 @@ public class DynamicQueryView extends ViewPart {
 	private Label								label2					= null;
 	private Button								ok						= null;
 	private HashMap<TreeItem, DynNode>			dynAlbero				= new HashMap<TreeItem, DynNode>();
-	private HashMap<String, String>				selectedEntities		= new HashMap<String, String>();
-	// ShellInserimento
-	// private DynNode item = null;
-	// private Button buttonOkInserimento = null;
-	// private Label etichettaInserimento = null;
-	// private Text textInserimento = null;
-	// private Button buttonCancellaInserimento = null;
-	// private Button buttonMatchingInserimento = null;
-	// private CCombo cComboInserimento = null;
-	// private CCombo cCombo1Inserimento = null;
+	private HashMap<String, TreeItem>			selectedEntities		= new HashMap<String, TreeItem>();
 	private Composite							cmpFiltri				= null;
 
 	// DynamicQueryDAO
@@ -132,7 +123,6 @@ public class DynamicQueryView extends ViewPart {
 					}
 					TreeItem root = new TreeItem(visualizzaRisultati, SWT.NONE);
 					root.setText("Risultato");
-					System.out.println(selectedEntities.keySet());
 					for (Object row : result) {
 						TreeItem figlio = new TreeItem(root, SWT.NONE);
 						figlio.setText(row.getClass().getSimpleName().toUpperCase());
@@ -158,29 +148,8 @@ public class DynamicQueryView extends ViewPart {
 
 				}
 				treeEntity.setEnabled(false);
-				// System.out.println(selectedEntities.keySet());
 			}
 		});
-		// Button filtra = new Button(top, SWT.NONE);
-		// filtra.setText("Filtra");
-		// filtra.setBounds(new Rectangle(500, 5, 44, 27));
-		// filtra.addSelectionListener(new
-		// org.eclipse.swt.events.SelectionAdapter() {
-		// public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-		//
-		// TreeItem root = visualizzaRisultati.getTopItem();
-		// disposeChild(root);
-		// }
-		//
-		// private void disposeChild(TreeItem root) {
-		// for (TreeItem figlio : root.getItems()) {
-		// if (figlio.getChecked())
-		// figlio.dispose();
-		// else
-		// disposeChild(figlio);
-		// }
-		// }
-		// });
 		treeEntity = new Tree(top, SWT.CHECK | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridData gdTree = new GridData();
 		gdTree.horizontalAlignment = SWT.FILL;
@@ -220,7 +189,7 @@ public class DynamicQueryView extends ViewPart {
 		gdTree1.grabExcessHorizontalSpace = true;
 		gdTree1.grabExcessVerticalSpace = true;
 		gdTree1.horizontalSpan = 2;
-		visualizzaRisultati = new Tree(top, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CHECK);
+		visualizzaRisultati = new Tree(top, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		visualizzaRisultati.setHeaderVisible(true);
 		visualizzaRisultati.setLinesVisible(true);
 		visualizzaRisultati.setLayoutData(gdTree1);
@@ -493,7 +462,7 @@ public class DynamicQueryView extends ViewPart {
 
 	public void performChecking(TreeItem item) {
 		if (item.getChecked()) {
-			selectedEntities.put(item.getText().toLowerCase(), item.getText());
+			selectedEntities.put(item.getText().toLowerCase(), item);
 		} else {
 			selectedEntities.remove(item.getText().toLowerCase());
 		}
@@ -502,7 +471,7 @@ public class DynamicQueryView extends ViewPart {
 				String nome = figlio.getText();
 				if (item.getChecked()) {
 					figlio.setChecked(true);
-					selectedEntities.put(nome.toLowerCase(), nome);
+					selectedEntities.put(nome.toLowerCase(), figlio);
 				} else {
 					figlio.setChecked(false);
 					selectedEntities.remove(nome.toLowerCase());
@@ -514,18 +483,10 @@ public class DynamicQueryView extends ViewPart {
 	// ShellPopUp
 
 	public void createCompositeInserimento(final DynNode item) {
-		// item = currentItem;
 		GridLayout glFiltro = new GridLayout();
 		glFiltro.numColumns = 2;
 		compFiltro = new Composite(cmpFiltri, SWT.BORDER);
 		compFiltro.setLayout(glFiltro);
-		// Image imageFromFile =
-		// common.Utils.getImageFromFile("icons/filter.jpg");
-		// imageFromFile.getImageData().scaledTo(30, 30);
-		// Composite cmp = new Composite(compFiltro, SWT.NONE);
-		// cmp.setBounds(new Rectangle(10, 10, 30, 30));
-		// cmp.setBackgroundImage(imageFromFile);
-		// sShellInserimento.setImage(imageFromFile);
 		GridData gdFiltri = new GridData();
 		gdFiltri.grabExcessHorizontalSpace = true;
 		gdFiltri.grabExcessVerticalSpace = true;
@@ -707,7 +668,7 @@ public class DynamicQueryView extends ViewPart {
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent eS) {
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
-				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
+//				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
 					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, INTEGER);
 					// criteria.add(Expression.eq(item.getTreeNode().getText(),
@@ -821,7 +782,7 @@ public class DynamicQueryView extends ViewPart {
 				Date selectedData = Utils.convertStringToDate(dateString, formato);
 				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), selectedData.toString() });
 				textInserimento.setText(dateString);
-				SimpleExpression restr = null;
+//				SimpleExpression restr = null;
 				aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, DATE);
 				((Control) e.getSource()).setEnabled(false);
 				textInserimento.setEnabled(false);
@@ -891,7 +852,7 @@ public class DynamicQueryView extends ViewPart {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
-				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
+//				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
 					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, STRING);
 					// criteria.add(Expression.eq(item.getTreeNode().getText(),
@@ -1042,7 +1003,7 @@ public class DynamicQueryView extends ViewPart {
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
-				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
+//				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
 					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, STRING);
 				} else {
@@ -1289,7 +1250,7 @@ public class DynamicQueryView extends ViewPart {
 			final CCombo cboAltroCampo, final DynNode item) {
 		SimpleExpression restr = null;
 		PropertyExpression propRestr = null;
-		String criterio = textInserimento.getText();
+//		String criterio = textInserimento.getText();
 		Object valore = "";
 		String altroCampo = cboAltroCampo.getText();
 		boolean property = true;
@@ -1367,7 +1328,14 @@ public class DynamicQueryView extends ViewPart {
 				System.out.println(((DynNode) item.getValue()).getPathClass());
 				System.out.println(((DynNode) item.getValue()).getTreeNode().getText());
 				// System.out.println(((DynNode) item.getValue()).getIdMap());
-				cboAltroCampo.add(((DynNode) item.getValue()).getTreeNode().getText());
+				String padreCurrent = "";
+				padreCurrent = ((DynNode) item.getValue()).getTreeNode().getParentItem().getText();
+				if (padreCurrent.equals("")) {
+					cboAltroCampo.add(((DynNode) item.getValue()).getTreeNode().getText());
+				} else {
+					cboAltroCampo.add(padreCurrent +"."+ ((DynNode) item.getValue()).getTreeNode().getText());
+				}
+				
 
 			}
 		}
