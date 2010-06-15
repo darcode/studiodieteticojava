@@ -76,7 +76,7 @@ public class DynamicQueryView extends ViewPart {
 	private Button								button					= null;
 	private Tree								visualizzaRisultati		= null;
 	private HashMap<TreeItem, DynNode>			dynAlbero				= new HashMap<TreeItem, DynNode>();
-	private HashMap<String, TreeItem>			selectedEntities		= new HashMap<String, TreeItem>();
+	private HashMap<String, String>			selectedEntities		= new HashMap<String, String>();
 	private Composite							cmpFiltri				= null;
 
 	// DynamicQueryDAO
@@ -124,7 +124,7 @@ public class DynamicQueryView extends ViewPart {
 						TreeItem figlio = new TreeItem(root, SWT.NONE);
 						figlio.setText(row.getClass().getSimpleName().toUpperCase());
 						figlio.setFont(font);
-						feelTableResult(figlio, row, true, 0);
+						feelTableResult(figlio, row, true, 0,"HIBERNATE."+row.getClass().getSimpleName().toUpperCase());
 					}
 
 				} else {
@@ -204,7 +204,7 @@ public class DynamicQueryView extends ViewPart {
 		gdFiltri.grabExcessHorizontalSpace = true;
 		gdFiltri.grabExcessVerticalSpace = true;
 		gdFiltri.horizontalSpan = 4;
-		gdFiltri.minimumHeight = 300;
+		gdFiltri.minimumHeight = 250;
 		cmpFiltri.setLayoutData(gdFiltri);
 		GridLayout glFiltri = new GridLayout();
 		glFiltri.numColumns = 4;
@@ -212,8 +212,7 @@ public class DynamicQueryView extends ViewPart {
 
 	}
 
-	@SuppressWarnings("unchecked")
-	protected void feelTableResult(TreeItem node, Object item, boolean isRoot, int depth) {
+	protected void feelTableResult(TreeItem node, Object item, boolean isRoot, int depth,String path) {
 		if (depth < 20 && !fermaEspansione(node)) {
 			try {
 				if (item != null && (item instanceof Set) && !isRoot) {
@@ -223,7 +222,7 @@ public class DynamicQueryView extends ViewPart {
 							TreeItem figlio = new TreeItem(node, SWT.NONE);
 							figlio.setText(itemFiglio.getClass().getSimpleName().toUpperCase());
 							figlio.setFont(font);
-							feelTableResult(figlio, itemFiglio, false, depth);
+							feelTableResult(figlio, itemFiglio, false, depth,"HIBERNATE"+"."+itemFiglio.getClass().getSimpleName().toUpperCase());
 						}
 					}
 				} else {
@@ -242,14 +241,18 @@ public class DynamicQueryView extends ViewPart {
 									&& (GenericBean.getPropertyClass(campo, item).equals(Set.class.getSimpleName()) || GenericBean
 											.getPropertyPackage(campo, item).getName().equals("hibernate"))) {
 								depth++;
-								if (selectedEntities.containsKey(campo)) {
+								String key  = (path+"."+campo).toUpperCase();
+								if(!(key.lastIndexOf("S")== key.length()-1))
+									key+="S";
+								System.out.println(key);
+								if (selectedEntities.containsKey(key)) {
 									TreeItem figlio = new TreeItem(node, SWT.NONE);
 									figlio.setText(campo.toUpperCase());
 									figlio.setFont(font);
-									feelTableResult(figlio, GenericBean.getProperty(campo, item), false, depth);
+									feelTableResult(figlio, GenericBean.getProperty(campo, item), false, depth,path+"."+campo.toUpperCase());
 								}
 							} else {
-								if (selectedEntities.containsKey(campo)) {
+								if (selectedEntities.containsKey((path+"."+campo).toUpperCase())) {
 									TreeItem treeItem = new TreeItem(node, SWT.NONE);
 									String label = "" + campo;
 									while (label.length() < 25)
@@ -434,19 +437,18 @@ public class DynamicQueryView extends ViewPart {
 
 	public void performChecking(TreeItem item) {
 		if (item.getChecked()) {
-			selectedEntities.put(item.getText().toLowerCase(), item);
+			selectedEntities.put(getAttributePath(item), getAttributePath(item));
 		} else {
-			selectedEntities.remove(item.getText().toLowerCase());
+			selectedEntities.remove(getAttributePath(item));
 		}
 		for (TreeItem figlio : item.getItems()) {
 			if (!figlio.getText().substring(0, 1).equals(figlio.getText().substring(0, 1).toUpperCase())) {
-				String nome = figlio.getText();
 				if (item.getChecked()) {
 					figlio.setChecked(true);
-					selectedEntities.put(nome.toLowerCase(), figlio);
+					selectedEntities.put(getAttributePath(figlio),getAttributePath(figlio));
 				} else {
 					figlio.setChecked(false);
-					selectedEntities.remove(nome.toLowerCase());
+					selectedEntities.remove(getAttributePath(figlio));
 				}
 			}
 		}
@@ -464,7 +466,7 @@ public class DynamicQueryView extends ViewPart {
 		gdFiltri.grabExcessVerticalSpace = true;
 		gdFiltri.horizontalAlignment = SWT.FILL;
 		gdFiltri.verticalAlignment = SWT.FILL;
-		gdFiltri.minimumHeight = 300;
+		gdFiltri.minimumHeight = 250;
 		compFiltro.setLayoutData(gdFiltri);
 		Label titolo = new Label(compFiltro, SWT.NONE);
 		GridData gdTitolo = new GridData();
@@ -1043,11 +1045,13 @@ public class DynamicQueryView extends ViewPart {
 		//questo medoto va bene SOLO se il treeitem in questione è una voglia: di seguito il controllo
 		if (nodo.getItems().length==0) {
 			DynNode current = dynAlbero.get(nodo);
-			path = "hibernate." + current.getPathClass() + nodo.getText();
+			path = ("hibernate." + current.getIdMap()).replace("_",".").replace("RADICEALBERO.", "").replace(" ", "").toUpperCase();
 		} else {
-			System.out.println("il nodo selezionato non è una figlia!!!!");
+			DynNode current = dynAlbero.get(nodo);
+			path = ("hibernate." + current.getIdMap()+"s").replace("_",".").replace("RADICEALBERO.", "").replace(" ", "").toUpperCase();
+			
 		}
-		return path;
+		return path.trim();
 	}
 	
 	// DynamicQueryDAO
