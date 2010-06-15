@@ -39,7 +39,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 
@@ -69,7 +68,7 @@ public class QueryStatisticheForm extends Composite {
 	private Label								label2					= null;
 	private Button								ok						= null;
 	private HashMap<TreeItem, DynNode>			dynAlbero				= new HashMap<TreeItem, DynNode>();
-	private HashMap<String, String>				selectedEntities		= new HashMap();
+	private HashMap<String, String>				selectedEntities		= new HashMap<String, String>();
 	private Composite							cmpFiltri				= null;
 	private Table								tableRisultati;
 	// DynamicQueryDAO
@@ -160,9 +159,7 @@ public class QueryStatisticheForm extends Composite {
 			public void handleEvent(Event event) {
 				if (event.detail == SWT.CHECK) {
 					TreeItem item = (TreeItem) event.item;
-					performChecking(item);
-					//TODO
-					
+					performChecking(item);					
 				}
 			}
 		});
@@ -234,27 +231,7 @@ public class QueryStatisticheForm extends Composite {
 		});
 	}
 
-	/**
-	 * This method initializes sShell1
-	 */
-	private void createSShell1() {
-		sShell1 = new Shell();
-		sShell1.setLayout(null);
-		sShell1.setText("Attenzione");
-		sShell1.setSize(new Point(233, 143));
-		label2 = new Label(sShell1, SWT.NONE | SWT.WRAP);
-		label2.setBounds(new Rectangle(50, 30, 143, 32));
-		label2.setText("Non ci sono elementi per il contesto selezionato");
-		ok = new Button(sShell1, SWT.NONE);
-		ok.setBounds(new Rectangle(98, 84, 36, 27));
-		ok.setText("Ok");
-		ok.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				sShell1.close();
-			}
-		});
-	}
-
+	@SuppressWarnings("unchecked")
 	public void espandiAlbero(String nomeClasse, String pathClasse, TreeItem radice
 	/*
 	 * , HashSet < String > nodiVisitati , Tree inizioAlbero , HashMap dynAlbero
@@ -378,8 +355,6 @@ public class QueryStatisticheForm extends Composite {
 		} else {
 			selectedEntities.remove(item.getText().toLowerCase());
 		}
-		//TODO
-//		if (item.getText().substring(0, 1).equals(item.getText().substring(0, 1).toUpperCase())) {
 			for (TreeItem figlio : item.getItems()) {
 				if (!figlio.getText().substring(0, 1).equals(figlio.getText().substring(0, 1).toUpperCase())) {
 					String nome = figlio.getText();
@@ -402,39 +377,16 @@ public class QueryStatisticheForm extends Composite {
 						TableColumn col = new TableColumn(tableRisultati, SWT.NONE);
 						col.setWidth(100);
 						col.setText(nome);
-						// selectedEntities.put(nome.toLowerCase(),
-						// nome);
 					}
 				}
 			}
-//		}
-//		for (TreeItem figlio : item.getItems()) {
-//			if (!figlio.getText().substring(0, 1).equals(figlio.getText().substring(0, 1).toUpperCase())) {
-//				String nome = figlio.getText();
-//				if (item.getChecked()) {
-//					figlio.setChecked(true);
-//					selectedEntities.put(nome.toLowerCase(), nome);
-//				} else {
-//					figlio.setChecked(false);
-//					selectedEntities.remove(nome.toLowerCase());
-//				}
-//			}
-//		}
 	}
 	
 	public void createCompositeInserimento(final DynNode item) {
-		// item = currentItem;
 		GridLayout glFiltro = new GridLayout();
 		glFiltro.numColumns = 2;
 		compFiltro = new Composite(cmpFiltri, SWT.BORDER);
 		compFiltro.setLayout(glFiltro);
-		// Image imageFromFile =
-		// common.Utils.getImageFromFile("icons/filter.jpg");
-		// imageFromFile.getImageData().scaledTo(30, 30);
-		// Composite cmp = new Composite(compFiltro, SWT.NONE);
-		// cmp.setBounds(new Rectangle(10, 10, 30, 30));
-		// cmp.setBackgroundImage(imageFromFile);
-		// sShellInserimento.setImage(imageFromFile);
 		GridData gdFiltri = new GridData();
 		gdFiltri.grabExcessHorizontalSpace = true;
 		gdFiltri.grabExcessVerticalSpace = true;
