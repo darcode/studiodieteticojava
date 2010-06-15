@@ -75,9 +75,6 @@ public class DynamicQueryView extends ViewPart {
 	private HashSet<String>						nodiVisitati			= new HashSet<String>();
 	private Button								button					= null;
 	private Tree								visualizzaRisultati		= null;
-	private Shell								sShell1					= null;
-	private Label								label2					= null;
-	private Button								ok						= null;
 	private HashMap<TreeItem, DynNode>			dynAlbero				= new HashMap<TreeItem, DynNode>();
 	private HashMap<String, TreeItem>			selectedEntities		= new HashMap<String, TreeItem>();
 	private Composite							cmpFiltri				= null;
@@ -85,7 +82,7 @@ public class DynamicQueryView extends ViewPart {
 	// DynamicQueryDAO
 	public Criteria								criteria;
 	private Object								filtroQuery;
-	private List								result;
+	private List<Object>						result;
 
 	public DynamicQueryView() {
 	}
@@ -215,6 +212,7 @@ public class DynamicQueryView extends ViewPart {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void feelTableResult(TreeItem node, Object item, boolean isRoot, int depth) {
 		if (depth < 20 && !fermaEspansione(node)) {
 			try {
@@ -286,9 +284,6 @@ public class DynamicQueryView extends ViewPart {
 	public void setFocus() {
 	}
 
-	/**
-	 * This method initializes comboSelezioneEntita
-	 */
 	private void createComboSelezioneEntita() {
 		comboSelezioneEntita = new Combo(top, SWT.NONE);
 		comboSelezioneEntita.setLayout(new GridLayout());
@@ -322,31 +317,8 @@ public class DynamicQueryView extends ViewPart {
 		});
 	}
 
-	/**
-	 * This method initializes sShell1
-	 */
-	private void createSShell1() {
-		sShell1 = new Shell();
-		sShell1.setLayout(null);
-		sShell1.setText("Attenzione");
-		sShell1.setSize(new Point(233, 143));
-		label2 = new Label(sShell1, SWT.NONE | SWT.WRAP);
-		label2.setBounds(new Rectangle(50, 30, 143, 32));
-		label2.setText("Non ci sono elementi per il contesto selezionato");
-		ok = new Button(sShell1, SWT.NONE);
-		ok.setBounds(new Rectangle(98, 84, 36, 27));
-		ok.setText("Ok");
-		ok.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				sShell1.close();
-			}
-		});
-	}
-
-	public void espandiAlbero(String nomeClasse, String pathClasse, TreeItem radice
-	/*
-	 * , HashSet < String > nodiVisitati , Tree inizioAlbero , HashMap dynAlbero
-	 */) {
+	@SuppressWarnings("unchecked")
+	public void espandiAlbero(String nomeClasse, String pathClasse, TreeItem radice) {
 		// istanzia classe dinamicamente
 		Class classSelected = null;
 		try {
@@ -558,7 +530,7 @@ public class DynamicQueryView extends ViewPart {
 		} else if (item.getPathClass().contains("Boolean") | item.getPathClass().contains("boolean")) {
 			etichettaInserimento.setText("Inserisci VERO/FALSO");
 			textInserimento.setVisible(false);
-			Label fill = new Label(compFiltro, SWT.NONE);
+//			Label fill = new Label(compFiltro, SWT.NONE);
 			listener = gestisciFiltroPerBoolean(comboOperazione, cboTipoAssociazione, elencoAltriCampi, item);
 		} else if (item.getPathClass().contains("Char") | item.getPathClass().contains("char")) {
 			etichettaInserimento.setText("Inserisci un CARATTERE");
@@ -602,9 +574,10 @@ public class DynamicQueryView extends ViewPart {
 			final CCombo elencoAltriCampi, DynNode currNode) {
 		final DynNode item = currNode;
 		return new org.eclipse.swt.events.SelectionAdapter() {
+			@SuppressWarnings("unchecked")
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent eS) {
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
-				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
+//				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
 					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, DECIMAL);
 				} else {
@@ -666,6 +639,7 @@ public class DynamicQueryView extends ViewPart {
 			final CCombo elencoAltriCampi, DynNode currNode) {
 		final DynNode item = currNode;
 		return new org.eclipse.swt.events.SelectionAdapter() {
+			@SuppressWarnings("unchecked")
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent eS) {
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
 //				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
@@ -737,7 +711,7 @@ public class DynamicQueryView extends ViewPart {
 		GridData gridData5 = new GridData();
 		gridData5.horizontalAlignment = GridData.CENTER;
 		gridData5.verticalAlignment = GridData.CENTER;
-		GridData gridData4 = new GridData();
+//		GridData gridData4 = new GridData();
 		GridData gridData1 = new GridData();
 		gridData1.horizontalSpan = 2;
 		GridData gridData = new GridData();
@@ -763,8 +737,8 @@ public class DynamicQueryView extends ViewPart {
 		});
 		final DateTime time = new DateTime(compFiltro, SWT.TIME | SWT.SHORT);
 		time.setLayoutData(gridData);
-		final Button ora = new Button(compFiltro, SWT.NONE | SWT.CHECK);
-		Label filler = new Label(compFiltro, SWT.NONE);
+//		final Button ora = new Button(compFiltro, SWT.NONE | SWT.CHECK);
+//		Label filler = new Label(compFiltro, SWT.NONE);
 		return new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println("Calendar date selected (MM/DD/YYYY) = " + (calendar.getMonth() + 1) + "/" + calendar.getDay() + "/"
@@ -849,6 +823,7 @@ public class DynamicQueryView extends ViewPart {
 			final CCombo elencoAltriCampi, DynNode currNode) {
 		final DynNode item = currNode;
 		return new org.eclipse.swt.events.SelectionAdapter() {
+			@SuppressWarnings("unchecked")
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
@@ -936,9 +911,10 @@ public class DynamicQueryView extends ViewPart {
 			}
 		});
 		return new org.eclipse.swt.events.SelectionAdapter() {
+			@SuppressWarnings("unchecked")
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
-				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
+//				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
 				if (pathPadre.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
 					aggiungiRestrizioneStringa(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item);
 					// criteria.add(Expression.eq(item.getTreeNode().getText(),
@@ -1001,6 +977,7 @@ public class DynamicQueryView extends ViewPart {
 			final CCombo elencoAltriCampi, DynNode currNode) {
 		final DynNode item = currNode;
 		return new org.eclipse.swt.events.SelectionAdapter() {
+			@SuppressWarnings("unchecked")
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				DynNode pathPadre = dynAlbero.get(item.getTreeNode().getParentItem());
 //				String path = pathPadre.getPathClass().substring(pathPadre.getPathClass().indexOf(".") + 1, pathPadre.getPathClass().length());
@@ -1061,8 +1038,21 @@ public class DynamicQueryView extends ViewPart {
 		};
 	}
 
+	private String getAttributePath(TreeItem nodo){
+		String path = "";
+		//questo medoto va bene SOLO se il treeitem in questione è una voglia: di seguito il controllo
+		if (nodo.getItems().length==0) {
+			DynNode current = dynAlbero.get(nodo);
+			path = "hibernate." + current.getPathClass() + nodo.getText();
+		} else {
+			System.out.println("il nodo selezionato non è una figlia!!!!");
+		}
+		return path;
+	}
+	
 	// DynamicQueryDAO
 
+	@SuppressWarnings("unchecked")
 	private void initDao(String pathClasse, String nomeClasse) {
 		Class c = null;
 		try {
@@ -1085,6 +1075,7 @@ public class DynamicQueryView extends ViewPart {
 		criteria = session.createCriteria(filtroQuery.getClass());
 	}
 
+	@SuppressWarnings("unchecked")
 	private void executeQuery() {
 		// aggiungo le proiezioni
 		// creaProiezione();
@@ -1105,6 +1096,7 @@ public class DynamicQueryView extends ViewPart {
 				session = sessionFactory.openSession();
 			} catch (HibernateException ex) {
 
+				@SuppressWarnings("unused")
 				String msg = "Method = getSession; Calling sessionFactory.openSession(); Thrown: ";
 
 			}
@@ -1118,6 +1110,7 @@ public class DynamicQueryView extends ViewPart {
 		try {
 			getSession().beginTransaction();
 		} catch (HibernateException ex) {
+			@SuppressWarnings("unused")
 			String msg = "Method = begin(); Calling getSession().beginTransaction(); Thrown: ";
 		}
 	}
@@ -1128,6 +1121,7 @@ public class DynamicQueryView extends ViewPart {
 			tx = getSession().getTransaction();
 			tx.commit();
 		} catch (HibernateException ex) {
+			@SuppressWarnings("unused")
 			String msg = "Method = commit(); Calling getSession().getTransaction().commit(); Thrown: ";
 		}
 	}
@@ -1152,6 +1146,7 @@ public class DynamicQueryView extends ViewPart {
 		DynamicQueryView.session.set(null);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void aggiungiRestrizione(final Text textInserimento, final CCombo tipoOperazione, final CCombo tipoAssociazione,
 			final CCombo cboAltroCampo, final DynNode item, String tipo) {
 		SimpleExpression restr = null;
