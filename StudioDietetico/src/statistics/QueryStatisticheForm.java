@@ -130,9 +130,7 @@ public class QueryStatisticheForm extends Composite {
 			}
 
 		});
-		treeEntity = new Tree(top,
-		 SWT.CHECK |
-				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		treeEntity = new Tree(top, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridData gdTree = new GridData();
 		gdTree.horizontalAlignment = SWT.FILL;
 		gdTree.verticalAlignment = SWT.FILL;
@@ -159,7 +157,7 @@ public class QueryStatisticheForm extends Composite {
 			public void handleEvent(Event event) {
 				if (event.detail == SWT.CHECK) {
 					TreeItem item = (TreeItem) event.item;
-					performChecking(item);					
+					performChecking(item);
 				}
 			}
 		});
@@ -349,39 +347,38 @@ public class QueryStatisticheForm extends Composite {
 		}
 	}
 
-	public void performChecking(TreeItem item){
+	public void performChecking(TreeItem item) {
 		if (item.getChecked()) {
 			selectedEntities.put(item.getText().toLowerCase(), item.getText());
 		} else {
 			selectedEntities.remove(item.getText().toLowerCase());
 		}
-			for (TreeItem figlio : item.getItems()) {
-				if (!figlio.getText().substring(0, 1).equals(figlio.getText().substring(0, 1).toUpperCase())) {
-					String nome = figlio.getText();
-					if (item.getChecked()) {
-						figlio.setChecked(true);
-						if (projList == null) {
-							projList = Projections.projectionList();
-						}
-						DynNode currentNode = dynAlbero.get(figlio);
-						// ricostruisci(currentNode);
-						if (!(item == treeEntity.getTopItem())) {
-							System.out.println(currentNode.getTreeNode().getParentItem().getText() + "."
-									+ currentNode.getTreeNode().getText());
-							projList.add(Projections.property(currentNode.getTreeNode().getParentItem().getText().toLowerCase() + "."
-									+ currentNode.getTreeNode().getText()));
-						} else {
-							System.out.println(currentNode.getTreeNode().getText());
-							projList.add(Projections.property(currentNode.getTreeNode().getText()));
-						}
+		for (TreeItem figlio : item.getItems()) {
+			if (!figlio.getText().substring(0, 1).equals(figlio.getText().substring(0, 1).toUpperCase())) {
+				String nome = figlio.getText();
+				if (item.getChecked()) {
+					figlio.setChecked(true);
+					if (projList == null) {
+						projList = Projections.projectionList();
+					}
+					// DynNode currentNode = dynAlbero.get(figlio);
+					// ricostruisci(currentNode);
+					// if (!(item == treeEntity.getTopItem())) {
+					System.out.println(getAttributePath(item));
+					if (figlio.getItems().length == 0) {
+						projList.add(Projections.property(getAttributePath(figlio)));
+						// } else {
+						// projList.add(Projections.property(currentNode.getTreeNode().getText()));
+						// }
 						TableColumn col = new TableColumn(tableRisultati, SWT.NONE);
 						col.setWidth(100);
 						col.setText(nome);
 					}
 				}
 			}
+		}
 	}
-	
+
 	public void createCompositeInserimento(final DynNode item) {
 		GridLayout glFiltro = new GridLayout();
 		glFiltro.numColumns = 2;
@@ -392,7 +389,7 @@ public class QueryStatisticheForm extends Composite {
 		gdFiltri.grabExcessVerticalSpace = true;
 		gdFiltri.horizontalAlignment = SWT.FILL;
 		gdFiltri.verticalAlignment = SWT.FILL;
-		gdFiltri.minimumHeight = 300;
+		gdFiltri.minimumHeight = 200;
 		compFiltro.setLayoutData(gdFiltri);
 		Label titolo = new Label(compFiltro, SWT.NONE);
 		GridData gdTitolo = new GridData();
@@ -408,31 +405,46 @@ public class QueryStatisticheForm extends Composite {
 		cboTipoAssociazione.select(0);
 		Label etichettaOperazione = new Label(compFiltro, SWT.NONE);
 		etichettaOperazione.setText("Aggregazione:");
-		CCombo comboOperazione = new CCombo(compFiltro, SWT.NONE);
-		comboOperazione.add("MEDIA", 0);
-		comboOperazione.add("MASSIMO", 1);
-		comboOperazione.add("MINIMO", 2);
-		comboOperazione.add("SOMMA", 3);
-		comboOperazione.add("COUNT", 4);
-		comboOperazione.add("COUNT-DISTINCT", 5);
+		Combo comboOperazione = new Combo(compFiltro, SWT.NONE);
 		comboOperazione.select(0);
 		GridLayout glButton = new GridLayout();
 		glButton.numColumns = 2;
 		SelectionAdapter listener = null;
 		if (item.getPathClass().contains("Integer") | item.getPathClass().contains("int")) {
+			comboOperazione.add("MEDIA", 0);
+			comboOperazione.add("MASSIMO", 1);
+			comboOperazione.add("MINIMO", 2);
+			comboOperazione.add("SOMMA", 3);
+			comboOperazione.add("COUNT", 4);
+			comboOperazione.add("COUNT-DISTINCT", 5);
 			listener = gestisciFiltroIntero(comboOperazione, cboTipoAssociazione, item);
 		} else if (item.getPathClass().contains("Double") | item.getPathClass().contains("double")) {
+			comboOperazione.add("MEDIA", 0);
+			comboOperazione.add("MASSIMO", 1);
+			comboOperazione.add("MINIMO", 2);
+			comboOperazione.add("SOMMA", 3);
+			comboOperazione.add("COUNT", 4);
+			comboOperazione.add("COUNT-DISTINCT", 5);
 			listener = gestisciFiltroIntero(comboOperazione, cboTipoAssociazione, item);
 		} else if (item.getPathClass().contains("Date")) {
-			// listener = gestisciFiltroData(comboOperazione,
-			// cboTipoAssociazione, item);
+			comboOperazione.add("DATA MEDIA", 0);
+			comboOperazione.add("DATA MASSIMO", 1);
+			comboOperazione.add("DATA MINIMA", 2);
 		} else if (item.getPathClass().contains("Boolean") | item.getPathClass().contains("boolean")) {
-			// listener = gestisciFiltroPerBoolean(comboOperazione,
-			// cboTipoAssociazione, item);
 		} else if (item.getPathClass().contains("Char") | item.getPathClass().contains("char")) {
-			// listener = gestisciFiltroPerChar(comboOperazione,
-			// cboTipoAssociazione, item);
+			comboOperazione.add("", 0);
+			comboOperazione.add("MASSIMO", 1);
+			comboOperazione.add("MINIMO", 2);
+			comboOperazione.add("MINIMO", 3);
+			comboOperazione.add("COUNT", 4);
+			comboOperazione.add("COUNT-DISTINCT", 5);
 		} else if (item.getPathClass().contains("String")) {
+			comboOperazione.add("", 0);
+			comboOperazione.add("MASSIMO", 1);
+			comboOperazione.add("MINIMO", 2);
+			comboOperazione.add("", 3);
+			comboOperazione.add("COUNT", 4);
+			comboOperazione.add("COUNT-DISTINCT", 5);
 			listener = gestisciFiltroPerStringa(comboOperazione, cboTipoAssociazione, item);
 		} else {
 			System.out.println(item.getPathClass() + " ---> " + item.getTreeNode().getText());
@@ -465,7 +477,7 @@ public class QueryStatisticheForm extends Composite {
 		cmpFiltri.layout();
 	}
 
-	private SelectionAdapter gestisciFiltroIntero(final CCombo tipoOperazione, final CCombo tipoAssociazione, DynNode currNode) {
+	private SelectionAdapter gestisciFiltroIntero(final Combo tipoOperazione, final CCombo tipoAssociazione, DynNode currNode) {
 		final DynNode item = currNode;
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent eS) {
@@ -516,8 +528,10 @@ public class QueryStatisticheForm extends Composite {
 					ramo = Utils.inversione(ramo);
 					for (int i = 0; i < ramo.size(); i++) {
 						criteria = criteria.createCriteria(ramo.get(i));
+						System.out.println("Anna");
+						aggiungiRestrizione(tipoOperazione, tipoAssociazione, item, DECIMAL);
 					}
-					aggiungiRestrizione(tipoOperazione, tipoAssociazione, item, DECIMAL);
+
 					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				}
@@ -526,7 +540,7 @@ public class QueryStatisticheForm extends Composite {
 		};
 	}
 
-	private SelectionAdapter gestisciFiltroPerStringa(final CCombo tipoOperazione, final CCombo tipoAssociazione, DynNode currNode) {
+	private SelectionAdapter gestisciFiltroPerStringa(final Combo tipoOperazione, final CCombo tipoAssociazione, DynNode currNode) {
 		final DynNode item = currNode;
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -576,8 +590,10 @@ public class QueryStatisticheForm extends Composite {
 					ramo = Utils.inversione(ramo);
 					for (int i = 0; i < ramo.size(); i++) {
 						criteria = criteria.createCriteria(ramo.get(i));
+						System.out.println("Anna");
+						aggiungiRestrizione(tipoOperazione, tipoAssociazione, item, STRING);
 					}
-					aggiungiRestrizione(tipoOperazione, tipoAssociazione, item, STRING);
+
 					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				}
@@ -586,7 +602,7 @@ public class QueryStatisticheForm extends Composite {
 		};
 	}
 
-	private SelectionAdapter elaboraFiltro(final CCombo tipoOperazione, final CCombo tipoAssociazione, DynNode currNode) {
+	private SelectionAdapter elaboraFiltro(final Combo tipoOperazione, final CCombo tipoAssociazione, DynNode currNode) {
 		final DynNode item = currNode;
 		return new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -634,8 +650,10 @@ public class QueryStatisticheForm extends Composite {
 					ramo = Utils.inversione(ramo);
 					for (int i = 0; i < ramo.size(); i++) {
 						criteria = criteria.createCriteria(ramo.get(i));
+						System.out.println("Anna");
+						aggiungiRestrizione(tipoOperazione, tipoAssociazione, item, STRING);
 					}
-					aggiungiRestrizione(tipoOperazione, tipoAssociazione, item, STRING);
+
 					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				}
@@ -737,8 +755,13 @@ public class QueryStatisticheForm extends Composite {
 		QueryStatisticheForm.session.set(null);
 	}
 
-	private void aggiungiRestrizione(final CCombo tipoOperazione, final CCombo tipoAssociazione, final DynNode item, String tipo) {
-		switch (tipoOperazione.getSelectionIndex()) {
+	private void aggiungiRestrizione(final Combo tipoOperazione, final CCombo tipoAssociazione, final DynNode item, String tipo) {
+		switch (tipoAssociazione.getSelectionIndex()) {
+		case 0:
+			// group by
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), "" });
+			break;
+
 		case 1:
 			// group by
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " GROUP BY " });
@@ -749,35 +772,41 @@ public class QueryStatisticheForm extends Composite {
 		}
 		TableColumn col = new TableColumn(tableRisultati, SWT.NONE);
 		col.setWidth(100);
-		switch (tipoAssociazione.getSelectionIndex()) {
+		switch (tipoOperazione.getSelectionIndex()) {
+		// comboOperazione.add("MEDIA", 0);
+		// comboOperazione.add("MASSIMO", 1);
+		// comboOperazione.add("MINIMO", 2);
+		// comboOperazione.add("SOMMA", 3);
+		// comboOperazione.add("COUNT", 4);
+		// comboOperazione.add("COUNT-DISTINCT", 5);
 		case 0:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (MEDIA) " });
-			projList.add(Projections.avg(item.getTreeNode().getText(0)));
+			projList.add(Projections.avg(getAttributePath(item.getTreeNode())));
 			col.setText("MEDIA " + item.getTreeNode().getText(0));
 			break;
 		case 1:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (MAX) " });
-			projList.add(Projections.max(item.getTreeNode().getText(0)));
+			projList.add(Projections.max(getAttributePath(item.getTreeNode())));
 			col.setText("MAX " + item.getTreeNode().getText(0));
 			break;
 		case 2:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (MIN) " });
-			projList.add(Projections.min(item.getTreeNode().getText(0)));
+			projList.add(Projections.min(getAttributePath(item.getTreeNode())));
 			col.setText("MIN " + item.getTreeNode().getText(0));
 			break;
 		case 3:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (SOMMA) " });
-			projList.add(Projections.sum(item.getTreeNode().getText(0)));
+			projList.add(Projections.sum(getAttributePath(item.getTreeNode())));
 			col.setText("SUM " + item.getTreeNode().getText(0));
 			break;
 		case 4:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (COUNT) " });
-			projList.add(Projections.count(item.getTreeNode().getText(0)));
+			projList.add(Projections.count(getAttributePath(item.getTreeNode())));
 			col.setText("COUNT " + item.getTreeNode().getText(0));
 			break;
 		case 5:
 			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(0), item.getTreeNode().getText(1) + " (COUNT-DISTINCT) " });
-			projList.add(Projections.countDistinct(item.getTreeNode().getText(0)));
+			projList.add(Projections.countDistinct(getAttributePath(item.getTreeNode())));
 			col.setText("COUNT-DISTINCT " + item.getTreeNode().getText(0));
 			break;
 		default:
@@ -836,5 +865,23 @@ public class QueryStatisticheForm extends Composite {
 		for (int i = 0; i < ramo.size(); i++) {
 			criteria = criteria.createCriteria(ramo.get(i));
 		}
+	}
+
+	private String getAttributePath(TreeItem nodo) {
+		String path = "";
+		if (nodo.getItems().length == 0) {
+			DynNode current = dynAlbero.get(nodo);
+			path = (current.getIdMap()).replace("_", ".").replace("RADICEALBERO.", "").replace(" ", "").toLowerCase();
+		} else {
+			DynNode current = dynAlbero.get(nodo);
+			path = (current.getIdMap() + "s").replace("_", ".").replace("RADICEALBERO.", "").replace(" ", "").toLowerCase();
+
+		}
+		System.out.println(path);
+		System.out.println(filtroQuery.getClass().getSimpleName());
+		path = path.replace(("hibernate." + filtroQuery.getClass().getCanonicalName() + ".").toLowerCase(), "");
+		path = path.replace((filtroQuery.getClass().getSimpleName().toLowerCase()+ "."), "");
+		System.out.println(path);
+		return path.trim();
 	}
 }
