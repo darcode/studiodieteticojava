@@ -192,7 +192,7 @@ public class DynamicQueryView extends ViewPart {
 		visualizzaRisultati.setLayoutData(gdTree1);
 		visualizzaRisultati.setLayout(new GridLayout());
 		TreeColumn colFiltro = new TreeColumn(treeEntity, SWT.CENTER);
-		colFiltro.setText("Filtro");
+		colFiltro.setText("Campo");
 		colFiltro.setWidth(200);
 		TreeColumn colValore = new TreeColumn(treeEntity, SWT.CENTER);
 		colValore.setText("Valore");
