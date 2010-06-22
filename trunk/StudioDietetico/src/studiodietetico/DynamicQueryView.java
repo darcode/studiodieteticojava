@@ -130,19 +130,19 @@ public class DynamicQueryView extends ViewPart {
 				} else {
 					// popup "non ci sono risultati"
 					final Shell noResults = new Shell();
-					noResults.setSize(new Point(200, 150));
+					noResults.setSize(new Point(300, 150));
 					Button okNoResults = new Button(noResults, SWT.NONE);
 					okNoResults.setText("chiudi");
-					okNoResults.setBounds(new Rectangle(172, 165, 106, 27));
+					okNoResults.setBounds(new Rectangle(100, 40, 100, 30));
 					Label etichettaNoResults = new Label(noResults, SWT.NONE);
-					etichettaNoResults.setBounds(new Rectangle(87, 9, 117, 34));
+					etichettaNoResults.setBounds(new Rectangle(20, 20, 300, 50));
 					etichettaNoResults.setText("L'interrogazione non ha restituito risultati");
 					okNoResults.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 						public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 							noResults.close();
 						}
 					});
-
+					noResults.open();
 				}
 				treeEntity.setEnabled(false);
 			}
@@ -230,11 +230,14 @@ public class DynamicQueryView extends ViewPart {
 						for (Class clazz : item.getClass().getInterfaces()) {
 							if (clazz.equals(HibernateProxy.class)) {
 								item = HibernateUtils.getProxiedObject(item);
+								path = "HIBERNATE."+item.getClass().getSimpleName().toUpperCase();
+								node.setText(item.getClass().getSimpleName());
 								break;
 							}
 						}
 						ArrayList<String> campi = GenericBean.getAllFieldsNames(item);
 						for (String campo : campi) {
+							System.out.println(campo);
 							if (campo.contains("Id") || campo.contains("id")) {
 							} else if (!campo.getClass().isPrimitive()
 									&& !(GenericBean.getPropertyPackage(campo, item) == null)
@@ -691,7 +694,7 @@ public class DynamicQueryView extends ViewPart {
 					for (int i = 0; i < ramo.size(); i++) {
 						criteria = criteria.createCriteria(ramo.get(i));
 					}
-					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, DECIMAL);
+					aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, INTEGER);
 					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				}
@@ -1165,8 +1168,7 @@ public class DynamicQueryView extends ViewPart {
 			valore = new Boolean(criterio);
 		String altroCampo = cboAltroCampo.getText();
 		boolean property = true;
-		if ("".equals(valore)) {
-			valore = textInserimento.getText();
+		if (!"".equals(valore)) {
 			property = false;
 		}
 		System.out.println(item.getTreeNode().getText());
