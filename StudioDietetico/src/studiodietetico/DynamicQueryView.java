@@ -530,7 +530,7 @@ public class DynamicQueryView extends ViewPart {
 			etichettaInserimento.setText("Inserisci un DECIMALE");
 			listener = gestisciFiltroDecimale(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi, item);
 		} else if (item.getPathClass().contains("Date")) {
-			etichettaInserimento.setText("Inserisci una DATA");
+			etichettaInserimento.setText("Inserisci una DATA (dd/MM/YYYY)");
 			listener = gestisciFiltroData(textInserimento, comboOperazione, cboTipoAssociazione, elencoAltriCampi, item);
 		} else if (item.getPathClass().contains("Boolean") | item.getPathClass().contains("boolean")) {
 			etichettaInserimento.setText("Inserisci VERO/FALSO");
@@ -729,39 +729,8 @@ public class DynamicQueryView extends ViewPart {
 		// compFiltro = new Composite(parent,SWT.NONE);
 		// compFiltro.setLayout(new GridLayout());
 		// compFiltro.setLayoutData(new GridData(SWT.FILL));
-		textInserimento.setEnabled(false);
-		final DateTime calendar = new DateTime(compFiltro, SWT.CALENDAR | SWT.BORDER);
-		calendar.setLayoutData(gridData1);
-
-		calendar.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-			}
-
-			public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
-			}
-		});
-		final DateTime time = new DateTime(compFiltro, SWT.TIME | SWT.SHORT);
-		time.setLayoutData(gridData);
-//		final Button ora = new Button(compFiltro, SWT.NONE | SWT.CHECK);
-//		Label filler = new Label(compFiltro, SWT.NONE);
 		return new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println("Calendar date selected (MM/DD/YYYY) = " + (calendar.getMonth() + 1) + "/" + calendar.getDay() + "/"
-						+ calendar.getYear());
-				System.out.println("Time selected (HH:MM) = " + time.getHours() + ":" + (time.getMinutes() < 10 ? "0" : "") + time.getMinutes());
-				String dateString = calendar.getYear() + "-" + (calendar.getMonth() + 1) + "-" + calendar.getDay();
-				String formato = "dd/MM/YYYY";
-				// if (ora.getSelectionIndex() == 0) {
-				// dateString += " " + time.getHours() + ":" +
-				// (time.getMinutes() < 10 ? "0" : "") + time.getMinutes() +
-				// ":00";
-				// formato += " HH:mm:ss";
-				// }
-
-				Date selectedData = Utils.convertStringToDate(dateString, formato);
-				item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), selectedData.toString() });
-				textInserimento.setText(dateString);
-//				SimpleExpression restr = null;
 				aggiungiRestrizione(textInserimento, tipoOperazione, tipoAssociazione, elencoAltriCampi, item, DATE);
 				((Control) e.getSource()).setEnabled(false);
 				textInserimento.setEnabled(false);
