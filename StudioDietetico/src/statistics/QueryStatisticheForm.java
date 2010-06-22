@@ -79,16 +79,13 @@ public class QueryStatisticheForm extends Composite {
 
 	public QueryStatisticheForm(Composite parent, int style) {
 		super(parent, style);
-		initialize(parent);
-	}
-
-	public void initialize(Composite parent) {
-		top = new Composite(parent, SWT.BORDER);
+		top = new Composite(this, SWT.BORDER);
 		GridData gdTop = new GridData();
 		gdTop.horizontalAlignment = SWT.FILL;
 		gdTop.verticalAlignment = SWT.FILL;
 		gdTop.grabExcessHorizontalSpace = true;
 		gdTop.grabExcessVerticalSpace = true;
+		gdTop.minimumHeight = 450;
 		top.setLayoutData(gdTop);
 		GridLayout glTop = new GridLayout();
 		glTop.numColumns = 4;
@@ -102,6 +99,23 @@ public class QueryStatisticheForm extends Composite {
 		button.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				executeQuery();
+				if(result == null || result.getRowNumber()==0){
+					// popup "non ci sono risultati"
+					final Shell noResults = new Shell();
+					noResults.setSize(new Point(300, 150));
+					Button okNoResults = new Button(noResults, SWT.NONE);
+					okNoResults.setText("chiudi");
+					okNoResults.setBounds(new Rectangle(100, 40, 100, 30));
+					Label etichettaNoResults = new Label(noResults, SWT.NONE);
+					etichettaNoResults.setBounds(new Rectangle(20, 20, 300, 50));
+					etichettaNoResults.setText("L'interrogazione non ha restituito risultati");
+					okNoResults.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+						public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+							noResults.close();
+						}
+					});
+					noResults.open();
+				}else{
 				// System.out.println(dynAlbero.keySet());
 				while (result.next()) {
 					if (result.get() instanceof Object[]) {
@@ -109,13 +123,15 @@ public class QueryStatisticheForm extends Composite {
 						String[] valori = new String[result.get().length];
 						int i = 0;
 						for (Object row : result.get()) {
-							valori[i] = row.toString();
+							valori[i] = (""+row).toString();
 							i++;
 						}
 						item.setText(valori);
 					}
 				}
-				treeEntity.setEnabled(false);
+				button.setEnabled(false);
+				}
+				
 				// System.out.println(selectedEntities.keySet());
 			}
 		});
@@ -130,13 +146,14 @@ public class QueryStatisticheForm extends Composite {
 			}
 
 		});
-		treeEntity = new Tree(top, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		treeEntity = new Tree(top, SWT.CHECK | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridData gdTree = new GridData();
 		gdTree.horizontalAlignment = SWT.FILL;
 		gdTree.verticalAlignment = SWT.FILL;
 		gdTree.grabExcessHorizontalSpace = true;
 		gdTree.grabExcessVerticalSpace = true;
 		gdTree.horizontalSpan = 2;
+		gdTree.minimumHeight = 250;
 		treeEntity.setLayoutData(gdTree);
 		treeEntity.setLayout(new GridLayout());
 		treeEntity.setHeaderVisible(true);
@@ -168,7 +185,7 @@ public class QueryStatisticheForm extends Composite {
 		gdTree1.grabExcessHorizontalSpace = true;
 		gdTree1.grabExcessVerticalSpace = true;
 		gdTree1.horizontalSpan = 2;
-		tableRisultati = new Table(top, SWT.SINGLE | SWT.FULL_SELECTION);
+		tableRisultati = new Table(top, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION);
 		tableRisultati.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		tableRisultati.setLinesVisible(true);
 		tableRisultati.setHeaderVisible(true);
@@ -350,32 +367,45 @@ public class QueryStatisticheForm extends Composite {
 	public void performChecking(TreeItem item) {
 		if (item.getChecked()) {
 			selectedEntities.put(item.getText().toLowerCase(), item.getText());
-		} else {
-			selectedEntities.remove(item.getText().toLowerCase());
-		}
-		for (TreeItem figlio : item.getItems()) {
-			if (!figlio.getText().substring(0, 1).equals(figlio.getText().substring(0, 1).toUpperCase())) {
-				String nome = figlio.getText();
-				if (item.getChecked()) {
-					figlio.setChecked(true);
-					if (projList == null) {
-						projList = Projections.projectionList();
-					}
-					// DynNode currentNode = dynAlbero.get(figlio);
-					// ricostruisci(currentNode);
-					// if (!(item == treeEntity.getTopItem())) {
-					System.out.println(getAttributePath(item));
-					if (figlio.getItems().length == 0) {
-						projList.add(Projections.property(getAttributePath(figlio)));
-						// } else {
-						// projList.add(Projections.property(currentNode.getTreeNode().getText()));
-						// }
-						TableColumn col = new TableColumn(tableRisultati, SWT.NONE);
-						col.setWidth(100);
-						col.setText(nome);
+			if (item.getItems().length == 0) {
+				if (projList == null) {
+					projList = Projections.projectionList();
+				}
+				projList.add(Projections.property(getAttributePath(item)));
+				// } else {
+				// projList.add(Projections.property(currentNode.getTreeNode().getText()));
+				// }
+				TableColumn col = new TableColumn(tableRisultati, SWT.NONE);
+				col.setWidth(100);
+				col.setText(item.getText());
+
+			}
+			else {
+				for (TreeItem figlio : item.getItems()) {
+					if (!figlio.getText().substring(0, 1).equals(figlio.getText().substring(0, 1).toUpperCase())) {
+						String nome = figlio.getText();
+						if (item.getChecked()) {
+							figlio.setChecked(true);
+							if (projList == null) {
+								projList = Projections.projectionList();
+							}
+							// DynNode currentNode = dynAlbero.get(figlio);
+							// ricostruisci(currentNode);
+							if (figlio.getItems().length == 0) {
+								projList.add(Projections.property(getAttributePath(figlio)));
+								// } else {
+								// projList.add(Projections.property(currentNode.getTreeNode().getText()));
+								// }
+								TableColumn col = new TableColumn(tableRisultati, SWT.NONE);
+								col.setWidth(100);
+								col.setText(nome);
+							}
+						}
 					}
 				}
 			}
+		} else {
+			selectedEntities.remove(item.getText().toLowerCase());
 		}
 	}
 
@@ -536,6 +566,9 @@ public class QueryStatisticheForm extends Composite {
 					// textInserimento.getText()));
 				}
 				((Control) eS.getSource()).setEnabled(false);
+				tipoAssociazione.setEnabled(false);
+				tipoOperazione.setEnabled(false);
+
 			}
 		};
 	}
@@ -598,6 +631,8 @@ public class QueryStatisticheForm extends Composite {
 					// textInserimento.getText()));
 				}
 				((Control) e.getSource()).setEnabled(false);
+				tipoAssociazione.setEnabled(false);
+				tipoOperazione.setEnabled(false);
 			}
 		};
 	}
@@ -658,6 +693,8 @@ public class QueryStatisticheForm extends Composite {
 					// textInserimento.getText()));
 				}
 				((Control) e.getSource()).setEnabled(false);
+				tipoAssociazione.setEnabled(false);
+				tipoOperazione.setEnabled(false);
 			}
 
 		};
@@ -869,18 +906,23 @@ public class QueryStatisticheForm extends Composite {
 
 	private String getAttributePath(TreeItem nodo) {
 		String path = "";
+		DynNode current = dynAlbero.get(nodo);
+		System.out.println(current.getIdMap());
 		if (nodo.getItems().length == 0) {
-			DynNode current = dynAlbero.get(nodo);
-			path = (current.getIdMap()).replace("_", ".").replace("RADICEALBERO.", "").replace(" ", "").toLowerCase();
+			if(current.getTreeNode().getParentItem().getText().replace(" ","").equalsIgnoreCase(filtroQuery.getClass().getSimpleName().toString()))
+				path = ((current.getIdMap()).substring(current.getIdMap().lastIndexOf("_")+1)).replace("RADICEALBERO.", "").replace(" ", "");
+			else{
+				path = (current.getIdMap()).replace("_", "s_").replace("_", ".").replace("RADICEALBERO.", "").replace(" ", "");
+			}
 		} else {
-			DynNode current = dynAlbero.get(nodo);
-			path = (current.getIdMap() + "s").replace("_", ".").replace("RADICEALBERO.", "").replace(" ", "").toLowerCase();
+			if(current.getTreeNode() == filtroQuery)
+				path = (current.getIdMap()).substring(current.getIdMap().lastIndexOf("_")+1).replace("RADICEALBERO.", "").replace(" ", "");
+			else
+			path = (current.getIdMap() + "s").replace("_", ".").replace("RADICEALBERO.", "").replace(" ", "");
 
 		}
-		System.out.println(path);
-		System.out.println(filtroQuery.getClass().getSimpleName());
-		path = path.replace(("hibernate." + filtroQuery.getClass().getCanonicalName() + ".").toLowerCase(), "");
-		path = path.replace((filtroQuery.getClass().getSimpleName().toLowerCase()+ "."), "");
+		path = path.replace(("hibernate." + filtroQuery.getClass().getCanonicalName() + "."), "");
+		path = path.replace((filtroQuery.getClass().getSimpleName() + "."), "");
 		System.out.println(path);
 		return path.trim();
 	}
