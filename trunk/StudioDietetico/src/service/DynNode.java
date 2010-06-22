@@ -16,9 +16,9 @@ public class DynNode {
 	public DynNode(TreeItem node) {
 		treeNode = node;
 		if (treeNode.getParentItem()!=null) {
-			idMap = treeNode.getParentItem().getText().concat("_").concat(treeNode.getText()).toUpperCase();
+			idMap = treeNode.getParentItem().getText().concat("_").concat(treeNode.getText());
 		} else {
-			idMap = "radiceAlbero".concat("_").concat(treeNode.getText()).toUpperCase();
+			idMap = "radiceAlbero".concat("_").concat(treeNode.getText());
 		}		
 	}	
 	

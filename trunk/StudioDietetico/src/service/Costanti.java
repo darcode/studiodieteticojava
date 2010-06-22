@@ -15,7 +15,7 @@ public class Costanti {
 			{ "Fattura", "hibernate.Fattura" },
 			{ "Ingrediente", "hibernate.Ingrediente" },
 			// {"Intervento","hibernate.Intervento"},
-			{ "Intolleranza o Allergia", "hibernate.Intolleranzaallergia" },
+			{ "Intolleranza Allergia", "hibernate.Intolleranzaallergia" },
 			{ "Malattia", "hibernate.Malattia" },
 			{ "Medico", "hibernate.Medico" },
 			// {"Misurazione","hibernate.Misurazione"},
