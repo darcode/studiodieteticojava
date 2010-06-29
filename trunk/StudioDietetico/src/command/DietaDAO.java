@@ -115,10 +115,10 @@ public class DietaDAO extends BaseDAO{
 
 	public ArrayList<StrutAlimento> getAlimentiPasto(Pasto pasto, Schemadietetico schema) {
 
-		/*		Criteria criteria = getSession().createCriteria(hibernate.Pasto.class);
-		criteria.add( Restrictions.eq("idPasto", pasto.getIdPasto()));
+		/*		Criteria mainCriteria = getSession().createCriteria(hibernate.Pasto.class);
+		mainCriteria.add( Restrictions.eq("idPasto", pasto.getIdPasto()));
 		begin();
-		List<Pasto> ris = (List<Pasto>)criteria.list();
+		List<Pasto> ris = (List<Pasto>)mainCriteria.list();
 		System.out.println(ris.size());
 		for (Iterator iter = ris.get(0).getCostituziones().iterator() ; iter.hasNext();) {
 			Costituzione pasto2 = (Costituzione) iter.next();
@@ -441,7 +441,7 @@ public class DietaDAO extends BaseDAO{
 	
 	public ArrayList<Dieta> getDiete(){
 		Criteria criteria = getSession().createCriteria(hibernate.Dieta.class);
-		//criteria.add( Restrictions.eq("idSpecificheDieta", idSpecificheDieta));
+		//mainCriteria.add( Restrictions.eq("idSpecificheDieta", idSpecificheDieta));
 		begin();
 		ArrayList<Dieta> ris = (ArrayList<Dieta>)criteria.list();
 		//System.out.println(ris.size());
@@ -455,7 +455,7 @@ public class DietaDAO extends BaseDAO{
 
 	public ArrayList<Specifichedieta> getSpecificheDieta() {
 		Criteria criteria = getSession().createCriteria(hibernate.Specifichedieta.class);
-		//criteria.add( Restrictions.eq("idSpecificheDieta", idSpecificheDieta));
+		//mainCriteria.add( Restrictions.eq("idSpecificheDieta", idSpecificheDieta));
 		begin();
 		ArrayList<Specifichedieta> ris = (ArrayList<Specifichedieta>)criteria.list();
 		//System.out.println(ris.size());
