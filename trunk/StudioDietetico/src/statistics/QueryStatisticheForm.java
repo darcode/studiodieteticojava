@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
@@ -34,6 +35,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -44,6 +46,8 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.impl.CriteriaImpl;
 import org.hibernate.impl.CriteriaImpl.Subcriteria;
+
+import common.GenericBean;
 
 import service.Costanti;
 import service.DynNode;
@@ -75,7 +79,7 @@ public class QueryStatisticheForm extends Composite {
 	private Object								filtroQuery;
 	private ScrollableResults					result;
 	private ProjectionList						projList;
-	private ArrayList<String> criteri = new ArrayList<String>();
+	private ArrayList<String>					criteri					= new ArrayList<String>();
 
 	public QueryStatisticheForm(Composite parent, int style) {
 		super(parent, style);
@@ -98,41 +102,44 @@ public class QueryStatisticheForm extends Composite {
 		button.setText("Esegui");
 		button.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				executeQuery();
-				if (result == null || result.getRowNumber() == 0 || !result.isFirst()) {
-					// popup "non ci sono risultati"
-					final Shell noResults = new Shell();
-					noResults.setSize(new Point(300, 150));
-					Button okNoResults = new Button(noResults, SWT.NONE);
-					okNoResults.setText("chiudi");
-					okNoResults.setBounds(new Rectangle(100, 40, 100, 30));
-					Label etichettaNoResults = new Label(noResults, SWT.NONE);
-					etichettaNoResults.setBounds(new Rectangle(20, 20, 300, 50));
-					etichettaNoResults.setText("L'interrogazione non ha restituito risultati");
-					okNoResults.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-						public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-							noResults.close();
-						}
-					});
-					noResults.open();
-				} else {
-					while (result.next()) {
-						if (result.get() instanceof Object[]) {
-							TableItem item = new TableItem(tableRisultati, SWT.NONE);
-							String[] valori = new String[result.get().length];
-							int i = 0;
-							for (Object row : result.get()) {
-								valori[i] = ("" + row).toString();
-								i++;
+				if (executeQuery()) {
+					if (result == null) {
+						// popup "non ci sono risultati"
+						noResults();
+					} else {
+						if(result.next()){
+							if (result.get() instanceof Object[]) {
+								TableItem item = new TableItem(tableRisultati, SWT.NONE);
+								String[] valori = new String[result.get().length];
+								int i = 0;
+								for (Object row : result.get()) {
+									valori[i] = ("" + row).toString();
+									i++;
+								}
+								item.setText(valori);
 							}
-							item.setText(valori);
+							while (result.next()) {
+								if (result.get() instanceof Object[]) {
+									TableItem item = new TableItem(tableRisultati, SWT.NONE);
+									String[] valori = new String[result.get().length];
+									int i = 0;
+									for (Object row : result.get()) {
+										valori[i] = ("" + row).toString();
+										i++;
+									}
+									item.setText(valori);
+								}
+								button.setEnabled(false);
+							}
+						}else{
+							noResults();
 						}
+						
 					}
-					button.setEnabled(false);
 				}
-
 				// System.out.println(selectedEntities.keySet());
 			}
+
 		});
 		Button filtra = new Button(top, SWT.NONE);
 		filtra.setText("Pulisci");
@@ -140,8 +147,14 @@ public class QueryStatisticheForm extends Composite {
 		filtra.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				tableRisultati.clearAll();
+				tableRisultati.removeAll();
 				for (TableColumn col : tableRisultati.getColumns())
 					col.dispose();
+				for(TreeItem item:treeEntity.getItems())
+					item.setChecked(false);
+				criteri.clear();
+				projList = null;
+				button.setEnabled(true);
 			}
 
 		});
@@ -381,6 +394,11 @@ public class QueryStatisticheForm extends Composite {
 				}
 
 			} else {
+				if (projList == null) {
+					projList = Projections.projectionList();
+				}
+				ricostruisci(dynAlbero.get(item));
+				// projList.add(Projections.property(getAttributePath(item)));
 				for (TreeItem figlio : item.getItems()) {
 					if (!figlio.getText().substring(0, 1).equals(figlio.getText().substring(0, 1).toUpperCase())) {
 						String nome = figlio.getText();
@@ -520,50 +538,8 @@ public class QueryStatisticheForm extends Composite {
 					// textInserimento.getText()));
 				} else {
 					// si costruisce a ritroso il percorso
-					ArrayList<String> ramo = new ArrayList<String>();
-					DynNode current = dynAlbero.get(item.getTreeNode().getParentItem());
-					; // turno
-					DynNode currentPadre = dynAlbero.get(current.getTreeNode().getParentItem()); // prestaziones
-					while (!current.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-						String currentNode = "";
-
-						Class currentClass = null;
-						try {
-							currentClass = Class.forName(currentPadre.getPathClass());
-						} catch (ClassNotFoundException e1) {
-
-							e1.printStackTrace();
-						}
-						Field currentFields[] = currentClass.getDeclaredFields();
-						ArrayList<Field> fieldClasse = new ArrayList<Field>();
-						for (int i = 0; i < currentFields.length; i++) {
-							fieldClasse.add(currentFields[i]);
-						}
-						while (fieldClasse.size() > 0) {
-							Field currField = fieldClasse.get(0);
-							// si becca se è un hashset
-							String matching = currField.getName().toLowerCase();
-							if (matching.contains(current.getTreeNode().getText().toLowerCase())) {
-								if (currField.getType().isInstance(new HashSet<Object>())) {
-									currentNode = current.getTreeNode().getText().toLowerCase().concat("s");
-								} else {
-									currentNode = current.getTreeNode().getText().toLowerCase();
-								}
-								ramo.add(currentNode);
-							}
-							fieldClasse.remove(currField);
-						}
-						current = dynAlbero.get(current.getTreeNode().getParentItem());
-						currentPadre = dynAlbero.get(currentPadre.getTreeNode().getParentItem());
-					}
-					ramo = Utils.inversione(ramo);
-					for (int i = 0; i < ramo.size(); i++) {
-						criteria = criteria.createCriteria(ramo.get(i));
-						aggiungiRestrizione(tipoOperazione, tipoAssociazione, item, DECIMAL);
-					}
-
-					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
-					// textInserimento.getText()));
+					ricostruisci(item);
+					aggiungiRestrizione(tipoOperazione, tipoAssociazione, item, DECIMAL);
 				}
 				((Control) eS.getSource()).setEnabled(false);
 				tipoAssociazione.setEnabled(false);
@@ -585,47 +561,8 @@ public class QueryStatisticheForm extends Composite {
 					// textInserimento.getText()));
 				} else {
 					// si costruisce a ritroso il percorso
-					ArrayList<String> ramo = new ArrayList<String>();
-					DynNode current = dynAlbero.get(item.getTreeNode().getParentItem());
-					; // turno
-					DynNode currentPadre = dynAlbero.get(current.getTreeNode().getParentItem()); // prestaziones
-					while (!current.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-						String currentNode = "";
-
-						Class currentClass = null;
-						try {
-							currentClass = Class.forName(currentPadre.getPathClass());
-						} catch (ClassNotFoundException e1) {
-							e1.printStackTrace();
-						}
-						Field currentFields[] = currentClass.getDeclaredFields();
-						ArrayList<Field> fieldClasse = new ArrayList<Field>();
-						for (int i = 0; i < currentFields.length; i++) {
-							fieldClasse.add(currentFields[i]);
-						}
-						while (fieldClasse.size() > 0) {
-							Field currField = fieldClasse.get(0);
-							// si becca se è un hashset
-							String matching = currField.getName().toLowerCase();
-							if (matching.contains(current.getTreeNode().getText().toLowerCase())) {
-								if (currField.getType().isInstance(new HashSet<Object>())) {
-									currentNode = current.getTreeNode().getText().toLowerCase().concat("s");
-								} else {
-									currentNode = current.getTreeNode().getText().toLowerCase();
-								}
-								ramo.add(currentNode);
-							}
-							fieldClasse.remove(currField);
-						}
-						current = dynAlbero.get(current.getTreeNode().getParentItem());
-						currentPadre = dynAlbero.get(currentPadre.getTreeNode().getParentItem());
-					}
-					ramo = Utils.inversione(ramo);
-					for (int i = 0; i < ramo.size(); i++) {
-						criteria = criteria.createCriteria(ramo.get(i));
-						aggiungiRestrizione(tipoOperazione, tipoAssociazione, item, STRING);
-					}
-
+					ricostruisci(item);
+					aggiungiRestrizione(tipoOperazione, tipoAssociazione, item, STRING);
 					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				}
@@ -646,47 +583,8 @@ public class QueryStatisticheForm extends Composite {
 					aggiungiRestrizione(tipoOperazione, tipoAssociazione, item, STRING);
 				} else {
 					// si costruisce a ritroso il percorso
-					ArrayList<String> ramo = new ArrayList<String>();
-					DynNode current = dynAlbero.get(item.getTreeNode().getParentItem());
-					; // turno
-					DynNode currentPadre = dynAlbero.get(current.getTreeNode().getParentItem()); // prestaziones
-					while (!current.getPathClass().equalsIgnoreCase(filtroQuery.getClass().getCanonicalName())) {
-						String currentNode = "";
-
-						Class currentClass = null;
-						try {
-							currentClass = Class.forName(currentPadre.getPathClass());
-						} catch (ClassNotFoundException e1) {
-							e1.printStackTrace();
-						}
-						Field currentFields[] = currentClass.getDeclaredFields();
-						ArrayList<Field> fieldClasse = new ArrayList<Field>();
-						for (int i = 0; i < currentFields.length; i++) {
-							fieldClasse.add(currentFields[i]);
-						}
-						while (fieldClasse.size() > 0) {
-							Field currField = fieldClasse.get(0);
-							// si becca se è un hashset
-							String matching = currField.getName().toLowerCase();
-							if (matching.contains(current.getTreeNode().getText().toLowerCase())) {
-								if (currField.getType().isInstance(new HashSet<Object>())) {
-									currentNode = current.getTreeNode().getText().toLowerCase().concat("s");
-								} else {
-									currentNode = current.getTreeNode().getText().toLowerCase();
-								}
-								ramo.add(currentNode);
-							}
-							fieldClasse.remove(currField);
-						}
-						current = dynAlbero.get(current.getTreeNode().getParentItem());
-						currentPadre = dynAlbero.get(currentPadre.getTreeNode().getParentItem());
-					}
-					ramo = Utils.inversione(ramo);
-					for (int i = 0; i < ramo.size(); i++) {
-						criteria = criteria.createCriteria(ramo.get(i));
-						aggiungiRestrizione(tipoOperazione, tipoAssociazione, item, STRING);
-					}
-
+					ricostruisci(item);
+					aggiungiRestrizione(tipoOperazione, tipoAssociazione, item, STRING);
 					// criteria.add(Restrictions.eq(item.getTreeNode().getText(),
 					// textInserimento.getText()));
 				}
@@ -722,14 +620,19 @@ public class QueryStatisticheForm extends Composite {
 		criteria = session.createCriteria(filtroQuery.getClass());
 	}
 
-;	private void executeQuery() {
+	;
+
+	private boolean executeQuery() {
 		// aggiungo le proiezioni
 		// creaProiezione();
 		try {
 			criteria.setProjection(projList);
 			result = criteria.scroll();
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			error();
+			return false;
 		}
 	}
 
@@ -898,12 +801,32 @@ public class QueryStatisticheForm extends Composite {
 			currentPadre = dynAlbero.get(currentPadre.getTreeNode().getParentItem());
 		}
 		ramo = Utils.inversione(ramo);
+		String alias = "";
 		for (int i = 0; i < ramo.size(); i++) {
-			String alias = ramo.get(i).replaceFirst(ramo.get(i).substring(0, 1), ramo.get(i).substring(0, 1).toLowerCase());
-			System.out.println(alias);
-			if(!criteri.contains(alias)){
-				criteria.createAlias(alias, alias);
-//				criteria.createCriteria(alias);
+			if (!"".equals(alias))
+				alias = alias + ".";
+			alias = alias + ramo.get(i).replaceFirst(ramo.get(i).substring(0, 1), ramo.get(i).substring(0, 1).toLowerCase());
+
+		}
+		String alias1 = alias;
+		if (!"".equals(alias)) {
+			try {
+				Field declaredField = Class.forName("hibernate." + item.getTreeNode().getParentItem().getText()).getDeclaredField(
+						item.getTreeNode().getText().substring(0, 1).toLowerCase() + item.getTreeNode().getText().substring(1));
+				if (declaredField.getType().equals(Set.class))
+					if (!"s".equals(alias.substring(alias.length() - 1)))
+						alias1 = alias + "s";
+				System.out.println(alias1);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (NoSuchFieldException e) {
+				e.printStackTrace();
+			}
+			if (!criteri.contains(alias)) {
+				criteria.createAlias(alias, alias1);
+				// criteria.createCriteria(alias);
 				criteri.add(alias);
 			}
 		}
@@ -916,21 +839,88 @@ public class QueryStatisticheForm extends Composite {
 			if (current.getTreeNode().getParentItem().getText().replace(" ", "").equalsIgnoreCase(filtroQuery.getClass().getSimpleName().toString()))
 				path = ((current.getIdMap()).substring(current.getIdMap().lastIndexOf("_") + 1)).replace("RADICEALBERO.", "").replace(" ", "");
 			else {
-				path = (current.getIdMap()).replace("_", "s_").replace(current.getIdMap().substring(0, 1), current.getIdMap().substring(0, 1).toLowerCase()).replace("_", ".").replace("RADICEALBERO.", "").replace(" ", "");
+				Field declaredField;
+				try {
+					declaredField = Class.forName("hibernate." + nodo.getParentItem().getText()).getDeclaredField(
+							nodo.getText().substring(0, 1).toLowerCase() + nodo.getText().substring(1));
+					if (declaredField.getType().equals(Set.class)) {
+						path = (current.getIdMap()).replace("_", "s_").replace(current.getIdMap().substring(0, 1),
+								current.getIdMap().substring(0, 1).toLowerCase()).replace("_", ".").replace("RADICEALBERO.", "").replace(" ", "");
+					} else {
+
+						path = (current.getIdMap().substring(0, 1).toLowerCase() + current.getIdMap().substring(1)).replace("_", ".").replace(
+								"RADICEALBERO.", "").replace(" ", "");
+					}
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 			}
+		} else {
+			if (current.getTreeNode() == filtroQuery)
+				path = (current.getIdMap()).substring(current.getIdMap().lastIndexOf("_") + 1).replace("RADICEALBERO.", "").replace(" ", "");
+			else {
+				Field declaredField;
+				try {
+					declaredField = Class.forName("hibernate." + nodo.getParentItem().getText()).getDeclaredField(nodo.getText().toLowerCase());
+					if (declaredField.getType().equals(Set.class)) {
+						path = (current.getIdMap() + "s").replace("_", ".").replace("RADICEALBERO.", "").replace(" ", "");
+					} else
+						path = (current.getIdMap()).replace("_", ".").replace("RADICEALBERO.", "").replace(" ", "");
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+
 		}
-		// else {
-		// if(current.getTreeNode() == filtroQuery)
-		// path =
-		// (current.getIdMap()).substring(current.getIdMap().lastIndexOf("_")+1).replace("RADICEALBERO.",
-		// "").replace(" ", "");
-		// else
-		// path = (current.getIdMap() + "s").replace("_",
-		// ".").replace("RADICEALBERO.", "").replace(" ", "");
-		//
-		// }
+		// metto la s al padre se c'è nei criteri
+		if (path.contains(".")) {
+			if (!criteri.contains(path.substring(0, path.lastIndexOf("."))))
+				path = path.replace(".", "s.");
+		}
 		path = path.replace(("hibernate." + filtroQuery.getClass().getCanonicalName() + "."), "");
 		path = path.replace((filtroQuery.getClass().getSimpleName() + "."), "");
 		return path.trim();
+	}
+
+	private void noResults() {
+		final Shell noResults = new Shell();
+		noResults.setSize(new Point(300, 150));
+		Button okNoResults = new Button(noResults, SWT.NONE);
+		okNoResults.setText("chiudi");
+		okNoResults.setBounds(new Rectangle(100, 40, 100, 30));
+		Label etichettaNoResults = new Label(noResults, SWT.NONE);
+		etichettaNoResults.setBounds(new Rectangle(20, 20, 300, 50));
+		etichettaNoResults.setText("L'interrogazione non ha restituito risultati");
+		okNoResults.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				noResults.close();
+			}
+		});
+		noResults.open();
+	}
+
+	private void error() {
+		final Shell noResults = new Shell();
+		noResults.setSize(new Point(300, 150));
+		Button okNoResults = new Button(noResults, SWT.NONE);
+		okNoResults.setText("chiudi");
+		okNoResults.setBounds(new Rectangle(100, 40, 100, 30));
+		Label etichettaNoResults = new Label(noResults, SWT.NONE);
+		etichettaNoResults.setBounds(new Rectangle(20, 20, 300, 50));
+		etichettaNoResults.setText("L'interrogazione non è ben posta");
+		okNoResults.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				noResults.close();
+			}
+		});
+		noResults.open();
 	}
 }
