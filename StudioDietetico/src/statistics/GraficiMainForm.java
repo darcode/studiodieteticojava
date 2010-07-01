@@ -1,6 +1,6 @@
 package statistics;
 
-import grafici.FattureBarChart;
+import grafici.StatisticheBarChart;
 import grafici.FatturePieChart;
 import grafici.FattureTimeSeriesChart;
 import grafici.MediciBarChart;
@@ -225,8 +225,8 @@ public class GraficiMainForm extends ListComposite {
 		// fatture
 		if (areaFunzionale == 0) {
 			if (comboFunzioni.getSelectionIndex() == 0) {
-				FattureBarChart chart = new FattureBarChart(comboFunzioni
-						.getText(), shell, SWT.BORDER, 0);
+//				StatisticheBarChart chart = new StatisticheBarChart(comboFunzioni
+//						.getText(), shell, SWT.BORDER, 0);
 			} else if (comboFunzioni.getSelectionIndex() == 1) {
 				FatturePieChart chart = new FatturePieChart(comboFunzioni
 						.getText(), shell, SWT.BORDER, 0);
