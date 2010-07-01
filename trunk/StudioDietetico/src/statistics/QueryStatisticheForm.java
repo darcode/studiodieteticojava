@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -161,7 +162,7 @@ public class QueryStatisticheForm extends Composite {
 				for (TreeItem item : dynAlbero.keySet()) {
 					item.setChecked(false);
 				}
-
+				criteria = QueryStatisticheForm.session.get().createCriteria(filtroQuery.getClass());
 				criteri.clear();
 				projList = null;
 				button.setEnabled(true);
@@ -884,8 +885,10 @@ public class QueryStatisticheForm extends Composite {
 				e.printStackTrace();
 			}
 			if (!criteri.contains(alias1)) {
-				criteria.createAlias(alias, alias1);
-				// criteria.createCriteria(alias);
+				if (alias1.lastIndexOf(".") != -1)
+					criteria.createAlias(alias, alias1.substring(alias1.lastIndexOf(".") + 1));
+				else
+					criteria.createAlias(alias, alias1);
 				criteri.add(alias1);
 			}
 		}
@@ -941,8 +944,15 @@ public class QueryStatisticheForm extends Composite {
 		}
 		// metto la s al padre se c'è nei criteri
 		if (path.contains(".")) {
-			if (!criteri.contains(path.substring(0, path.lastIndexOf("."))))
-				path = path.replace(".", "s.");
+			boolean mettiLaS = false;
+			Iterator<String> it = criteri.iterator();
+			while(it.hasNext()){
+				String alias = it.next();
+				if(alias.contains(path.substring(0, path.lastIndexOf("."))))
+					if(alias.contains(path.substring(0, path.lastIndexOf(".")) +"s"))
+					path = path.replace(".", "s.");					
+			}
+
 		}
 		path = path.replace(("hibernate." + filtroQuery.getClass().getCanonicalName() + "."), "");
 		path = path.replace((filtroQuery.getClass().getSimpleName() + "."), "");
