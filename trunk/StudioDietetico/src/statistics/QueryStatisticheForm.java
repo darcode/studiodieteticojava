@@ -1,10 +1,19 @@
 package statistics;
 
+import grafici.FatturePieChart;
+import grafici.StatisticheBarChart;
+import grafici.StatisticheBarChart3D;
+import grafici.StatisticheLineChart;
+import grafici.StatistichePieChart;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -35,19 +44,14 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
-import org.hibernate.impl.CriteriaImpl;
-import org.hibernate.impl.CriteriaImpl.Subcriteria;
-
-import common.GenericBean;
 
 import service.Costanti;
 import service.DynNode;
@@ -80,6 +84,10 @@ public class QueryStatisticheForm extends Composite {
 	private ScrollableResults					result;
 	private ProjectionList						projList;
 	private ArrayList<String>					criteri					= new ArrayList<String>();
+	private Combo								tipoGrafico				= null;
+	int											variabile				= 0;
+	int											valore					= 1;
+	private int									variabile2;
 
 	public QueryStatisticheForm(Composite parent, int style) {
 		super(parent, style);
@@ -92,7 +100,7 @@ public class QueryStatisticheForm extends Composite {
 		gdTop.minimumHeight = 450;
 		top.setLayoutData(gdTop);
 		GridLayout glTop = new GridLayout();
-		glTop.numColumns = 4;
+		glTop.numColumns = 7;
 		top.setLayout(glTop);
 		labelSelezioneEntita = new Label(top, SWT.NONE);
 		labelSelezioneEntita.setLayoutData(new GridData());
@@ -107,7 +115,7 @@ public class QueryStatisticheForm extends Composite {
 						// popup "non ci sono risultati"
 						noResults();
 					} else {
-						if(result.next()){
+						if (result.next()) {
 							if (result.get() instanceof Object[]) {
 								TableItem item = new TableItem(tableRisultati, SWT.NONE);
 								String[] valori = new String[result.get().length];
@@ -131,10 +139,10 @@ public class QueryStatisticheForm extends Composite {
 								}
 								button.setEnabled(false);
 							}
-						}else{
+						} else {
 							noResults();
 						}
-						
+
 					}
 				}
 				// System.out.println(selectedEntities.keySet());
@@ -143,28 +151,65 @@ public class QueryStatisticheForm extends Composite {
 		});
 		Button filtra = new Button(top, SWT.NONE);
 		filtra.setText("Pulisci");
-		filtra.setBounds(new Rectangle(500, 5, 44, 27));
+		filtra.setLayoutData(new GridData());
 		filtra.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				tableRisultati.clearAll();
 				tableRisultati.removeAll();
 				for (TableColumn col : tableRisultati.getColumns())
 					col.dispose();
-				for(TreeItem item:treeEntity.getItems())
+				for (TreeItem item : dynAlbero.keySet()) {
 					item.setChecked(false);
+				}
+
 				criteri.clear();
 				projList = null;
 				button.setEnabled(true);
+				for (Control cmp : cmpFiltri.getChildren())
+					cmp.dispose();
 			}
 
 		});
+		Button grafico = new Button(top, SWT.NONE);
+		grafico.setText("Grafico");
+		grafico.setLayoutData(new GridData());
+		grafico.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				if (tableRisultati.getItems().length == 0)
+					errorEsportazione();
+				else
+					apriShellVaribileGrafico();
+
+			}
+
+		});
+		Button esporta = new Button(top, SWT.NONE);
+		esporta.setText("Esporta Dati");
+		esporta.setLayoutData(new GridData());
+		esporta.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				if (tableRisultati.getItems().length == 0)
+					errorEsportazione();
+				else
+					esportaSuFile();
+
+			}
+
+		});
+		tipoGrafico = new Combo(top, SWT.NONE);
+		tipoGrafico.add("A Barre");
+		tipoGrafico.add("A Torta");
+		tipoGrafico.add("A Linee");
+		tipoGrafico.add("A Barre 3D");
+		tipoGrafico.select(0);
+		tipoGrafico.setLayoutData(new GridData());
 		treeEntity = new Tree(top, SWT.CHECK | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		GridData gdTree = new GridData();
 		gdTree.horizontalAlignment = SWT.FILL;
 		gdTree.verticalAlignment = SWT.FILL;
 		gdTree.grabExcessHorizontalSpace = true;
 		gdTree.grabExcessVerticalSpace = true;
-		gdTree.horizontalSpan = 2;
+		gdTree.horizontalSpan = 3;
 		gdTree.minimumHeight = 250;
 		treeEntity.setLayoutData(gdTree);
 		treeEntity.setLayout(new GridLayout());
@@ -196,9 +241,9 @@ public class QueryStatisticheForm extends Composite {
 		gdTree1.verticalAlignment = SWT.FILL;
 		gdTree1.grabExcessHorizontalSpace = true;
 		gdTree1.grabExcessVerticalSpace = true;
-		gdTree1.horizontalSpan = 2;
+		gdTree1.horizontalSpan = 4;
 		tableRisultati = new Table(top, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION);
-		tableRisultati.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		tableRisultati.setLayoutData(gdTree1);
 		tableRisultati.setLinesVisible(true);
 		tableRisultati.setHeaderVisible(true);
 		TreeColumn colFiltro = new TreeColumn(treeEntity, SWT.CENTER);
@@ -213,7 +258,7 @@ public class QueryStatisticheForm extends Composite {
 		gdFiltri.verticalAlignment = SWT.FILL;
 		gdFiltri.grabExcessHorizontalSpace = true;
 		gdFiltri.grabExcessVerticalSpace = true;
-		gdFiltri.horizontalSpan = 4;
+		gdFiltri.horizontalSpan = 7;
 		gdFiltri.minimumHeight = 300;
 		cmpFiltri.setLayoutData(gdFiltri);
 		GridLayout glFiltri = new GridLayout();
@@ -451,6 +496,8 @@ public class QueryStatisticheForm extends Composite {
 		CCombo cboTipoAssociazione = new CCombo(compFiltro, SWT.NONE);
 		cboTipoAssociazione.add("NESSUNA", 0);
 		cboTipoAssociazione.add("GROUP BY", 1);
+		cboTipoAssociazione.add("ORDER BY (ASC)", 2);
+		cboTipoAssociazione.add("ORDER BY (DESC)", 3);
 		cboTipoAssociazione.select(0);
 		Label etichettaOperazione = new Label(compFiltro, SWT.NONE);
 		etichettaOperazione.setText("Aggregazione:");
@@ -749,6 +796,18 @@ public class QueryStatisticheForm extends Composite {
 			projList.add(Projections.property(getAttributePath(item.getTreeNode())));
 			projList.add(Projections.groupProperty(getAttributePath(item.getTreeNode())));
 			break;
+		case 2:
+			// order by ASC
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " ORD ASC " });
+			projList.add(Projections.property(getAttributePath(item.getTreeNode())));
+			criteria.addOrder(Order.asc(getAttributePath(item.getTreeNode())));
+			break;
+		case 3:
+			// order by DESC
+			item.getTreeNode().setText(new String[] { item.getTreeNode().getText(), " ORD DESC " });
+			projList.add(Projections.property(getAttributePath(item.getTreeNode())));
+			criteria.addOrder(Order.desc(getAttributePath(item.getTreeNode())));
+			break;
 		}
 
 	}
@@ -824,10 +883,10 @@ public class QueryStatisticheForm extends Composite {
 			} catch (NoSuchFieldException e) {
 				e.printStackTrace();
 			}
-			if (!criteri.contains(alias)) {
+			if (!criteri.contains(alias1)) {
 				criteria.createAlias(alias, alias1);
 				// criteria.createCriteria(alias);
-				criteri.add(alias);
+				criteri.add(alias1);
 			}
 		}
 	}
@@ -922,5 +981,139 @@ public class QueryStatisticheForm extends Composite {
 			}
 		});
 		noResults.open();
+	}
+
+	private void errorEsportazione() {
+		final Shell noResults = new Shell();
+		noResults.setSize(new Point(300, 150));
+		Button okNoResults = new Button(noResults, SWT.NONE);
+		okNoResults.setText("chiudi");
+		okNoResults.setBounds(new Rectangle(100, 40, 100, 30));
+		Label etichettaNoResults = new Label(noResults, SWT.NONE);
+		etichettaNoResults.setBounds(new Rectangle(20, 20, 300, 50));
+		etichettaNoResults.setText("Risultato vuoto:Impossibile esportare.");
+		okNoResults.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				noResults.close();
+			}
+		});
+		noResults.open();
+	}
+
+	private void apriShellVaribileGrafico() {
+		// compGrafico.getChildren()[0].dispose();
+		final Shell shellColonne = new Shell();
+		shellColonne.setText("Seleziona la colonna Variabile (Contenuto STRINGA)");
+		shellColonne.setLayout(new GridLayout(1, false));
+		shellColonne.setLayoutData(new GridData(SWT.FILL));
+		shellColonne.setSize(500, 300);
+		final Combo colonna = new Combo(shellColonne, SWT.NONE);
+		for (TableColumn col : tableRisultati.getColumns())
+			colonna.add(col.getText());
+		Button ok = new Button(shellColonne, SWT.NONE);
+		ok.setText("OK");
+		ok.setBounds(new Rectangle(100, 40, 100, 30));
+
+		ok.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				variabile = colonna.getSelectionIndex();
+				if (tipoGrafico.getSelectionIndex() == 3)
+					apriShellVariabile2Grafico();
+				else
+					apriShellValoreGrafico();
+				shellColonne.close();
+			}
+		});
+		shellColonne.open();
+
+	}
+
+	private void apriShellValoreGrafico() {
+		// compGrafico.getChildren()[0].dispose();
+		final Shell shellColonne = new Shell();
+		shellColonne.setText("Seleziona la colonna Valore (Contenuto NUMERICO)");
+		shellColonne.setLayout(new GridLayout(1, false));
+		shellColonne.setLayoutData(new GridData(SWT.FILL));
+		shellColonne.setSize(500, 300);
+		final Combo colonna = new Combo(shellColonne, SWT.NONE);
+		for (TableColumn col : tableRisultati.getColumns())
+			colonna.add(col.getText());
+		Button ok = new Button(shellColonne, SWT.NONE);
+		ok.setText("OK");
+		ok.setBounds(new Rectangle(100, 40, 100, 30));
+		ok.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				valore = colonna.getSelectionIndex();
+				disegnaGrafico();
+				shellColonne.close();
+			}
+		});
+		shellColonne.open();
+
+	}
+
+	private void apriShellVariabile2Grafico() {
+		// compGrafico.getChildren()[0].dispose();
+		final Shell shellColonne = new Shell();
+		shellColonne.setText("Seleziona la colonna Seconda Varibile (Contenuto STRINGA)");
+		shellColonne.setLayout(new GridLayout(1, false));
+		shellColonne.setLayoutData(new GridData(SWT.FILL));
+		shellColonne.setSize(500, 300);
+		final Combo colonna = new Combo(shellColonne, SWT.NONE);
+		for (TableColumn col : tableRisultati.getColumns())
+			colonna.add(col.getText());
+		Button ok = new Button(shellColonne, SWT.NONE);
+		ok.setText("OK");
+		ok.setBounds(new Rectangle(100, 40, 100, 30));
+
+		ok.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				variabile2 = colonna.getSelectionIndex();
+				apriShellValoreGrafico();
+				shellColonne.close();
+			}
+		});
+		shellColonne.open();
+
+	}
+
+	private void disegnaGrafico() {
+		Shell shell = new Shell();
+		shell.setText(tipoGrafico.getText());
+		shell.setLayout(new GridLayout(1, false));
+		shell.setLayoutData(new GridData(SWT.FILL));
+		shell.setSize(1000, 550);
+		if (tipoGrafico.getSelectionIndex() == 0) {
+			StatisticheBarChart chart = new StatisticheBarChart(tableRisultati, shell, SWT.BORDER, variabile, valore);
+		} else if (tipoGrafico.getSelectionIndex() == 1) {
+			StatistichePieChart chart = new StatistichePieChart(tableRisultati, shell, SWT.BORDER, variabile, valore);
+		} else if (tipoGrafico.getSelectionIndex() == 2) {
+			StatisticheLineChart chart = new StatisticheLineChart(tableRisultati, shell, SWT.BORDER, variabile, valore);
+		} else if (tipoGrafico.getSelectionIndex() == 3) {
+			// bar chart 3D
+			StatisticheBarChart3D chart = new StatisticheBarChart3D(tableRisultati, shell, SWT.BORDER, variabile, variabile2, valore);
+		}
+		shell.open();
+	}
+
+	private void esportaSuFile() {
+		try {
+			File esportazioneDati = new File("C:\\esportazione_" + System.currentTimeMillis() + ".txt");
+			FileOutputStream out = new FileOutputStream(esportazioneDati);
+			for (TableColumn col : tableRisultati.getColumns()) {
+				out.write((col.getText().toUpperCase() + "\t").toString().getBytes());
+			}
+			for (TableItem item : tableRisultati.getItems()) {
+				for (int i = 0; i < tableRisultati.getColumnCount(); i++)
+					out.write((item.getText(i) + "\t").toString().getBytes());
+				out.write(("\n").toString().getBytes());
+			}
+			out.flush();
+			out.close();
+			String[] commands = { "cmd", "/c", esportazioneDati.getAbsolutePath() };
+			Runtime.getRuntime().exec(commands);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

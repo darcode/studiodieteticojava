@@ -18,7 +18,7 @@ public class GraficiComposite extends Composite {
 		Shell shell = new Shell(SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
 		MessageBox alert = new MessageBox(shell);
 		alert
-				.setMessage("Grafico non disponibile, seleziona un altro tipo di grafico");
+				.setMessage("Il grafico non ha prodotto risultati. Risottoporre correttamente le Variabili secondo i tipi indicati");
 		shell.open();
 	}
 }

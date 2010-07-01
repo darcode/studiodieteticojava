@@ -40,43 +40,31 @@
 
 package grafici;
 
-import hibernate.Tipologiavisita;
-
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.GradientPaint;
-import java.util.ArrayList;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
-import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-
-import command.FatturaDAO;
-import command.VisitaDAO;
 
 /**
  * A simple demonstration application showing how to create a bar chart.
  */
-public class FattureBarChart extends GraficiComposite {
+public class StatisticheBarChart3D extends GraficiComposite {
 
 	/**
 	 * 
@@ -90,10 +78,10 @@ public class FattureBarChart extends GraficiComposite {
 	 * @param title
 	 *            the frame title.
 	 */
-	public FattureBarChart(String title, Composite parent, int style, int tipo) {
+	public StatisticheBarChart3D(Table risultati, Composite parent, int style, int variabile1,int variabile2,int valore) {
 		super(parent, style);
 		try {
-			this.titolo = title;
+			this.titolo = risultati.getColumn(variabile1).getText().toUpperCase() + " - " + risultati.getColumn(variabile2).getText().toUpperCase() + " - " + risultati.getColumn(valore).getText().toUpperCase();
 			GridData gdThis = new GridData(SWT.FILL);
 			gdThis.horizontalAlignment = SWT.FILL;
 			gdThis.verticalAlignment = SWT.FILL;
@@ -110,8 +98,8 @@ public class FattureBarChart extends GraficiComposite {
 			cmp.setLayoutData(gdCmp);
 			cmp.setLayout(new GridLayout(1, false));
 
-			CategoryDataset dataset = createDataset(tipo);
-			JFreeChart chart = createChart(dataset);
+			CategoryDataset dataset = createDataset(risultati,variabile1,variabile2,valore);
+			JFreeChart chart = createChart(dataset,risultati,variabile1,variabile2,valore);
 			ChartPanel chartPanel = new ChartPanel(chart);
 			chartPanel.setFillZoomRectangle(true);
 			// chartPanel.setMouseWheelEnabled(true);
@@ -121,7 +109,7 @@ public class FattureBarChart extends GraficiComposite {
 			graphFrame.pack();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			alertGraficoNonDisp();
 		}
 	}
 
@@ -130,39 +118,13 @@ public class FattureBarChart extends GraficiComposite {
 	 * 
 	 * @return The dataset.
 	 */
-	private static CategoryDataset createDataset(int tipo) {
+	private static CategoryDataset createDataset(Table results, int variabile1,int variabile2,int valore) {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		// fatture per tipologlia visita per mese
-		if (tipo == 0) {
-			// Tipologia visita
-			dataset.addValue(FatturaDAO.getNumFattureMese(1), "Gennaio",
-					"Fattura");
-			dataset.addValue(FatturaDAO.getNumFattureMese(2), "Febbraio",
-					"Fattura");
-			dataset.addValue(FatturaDAO.getNumFattureMese(3), "Marzo",
-					"Fattura");
-			dataset.addValue(FatturaDAO.getNumFattureMese(4), "Aprile",
-					"Fattura");
-			dataset.addValue(FatturaDAO.getNumFattureMese(5), "Maggio",
-					"Fattura");
-			dataset.addValue(FatturaDAO.getNumFattureMese(6), "Giugno",
-					"Fattura");
-			dataset.addValue(FatturaDAO.getNumFattureMese(7), "Luglio",
-					"Fattura");
-			dataset.addValue(FatturaDAO.getNumFattureMese(8), "Agosto",
-					"Fattura");
-			dataset.addValue(FatturaDAO.getNumFattureMese(9), "Settembre",
-					"Fattura");
-			dataset.addValue(FatturaDAO.getNumFattureMese(10), "Ottobre",
-					"Fattura");
-			dataset.addValue(FatturaDAO.getNumFattureMese(11), "Novembre",
-					"Fattura");
-			dataset.addValue(FatturaDAO.getNumFattureMese(12), "Dicembre",
-					"Fattura");
-		} else {
-			alertGraficoNonDisp();
+		for(TableItem item:results.getItems()){
+			dataset.addValue(new Double(item.getText(valore)), item.getText(variabile1),
+					item.getText(variabile2));
 		}
-
+			
 		return dataset;
 
 	}
@@ -175,13 +137,13 @@ public class FattureBarChart extends GraficiComposite {
 	 * 
 	 * @return The chart.
 	 */
-	private static JFreeChart createChart(CategoryDataset dataset) {
+	private static JFreeChart createChart(CategoryDataset dataset, Table results, int variabile1,int variabile2,int valore) {
 
 		// create the chart...
-		JFreeChart chart = ChartFactory.createBarChart(titolo, // chart
+		JFreeChart chart = ChartFactory.createBarChart3D(titolo, // chart
 				// title
-				"", // domain axis label
-				"Occorrenze", // range axis label
+				results.getColumn(variabile2).getText().toUpperCase(), // domain axis label
+				results.getColumn(valore).getText().toUpperCase(), // range axis label
 				dataset, // data
 				PlotOrientation.VERTICAL, // orientation
 				true, // include legend
@@ -189,47 +151,18 @@ public class FattureBarChart extends GraficiComposite {
 				false // URLs?
 				);
 
-		// NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
+		final CategoryPlot plot = chart.getCategoryPlot();
+        final CategoryAxis axis = plot.getDomainAxis();
+        axis.setCategoryLabelPositions(
+            CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 8.0)
+        );
+        
+        final CategoryItemRenderer renderer = plot.getRenderer();
+        renderer.setItemLabelsVisible(true);
+        final BarRenderer r = (BarRenderer) renderer;
+        
+        return chart;
 
-		// set the background color for the chart...
-		chart.setBackgroundPaint(Color.white);
-
-		// get a reference to the plot for further customisation...
-		CategoryPlot plot = (CategoryPlot) chart.getPlot();
-
-		// ******************************************************************
-		// More than 150 demo applications are included with the JFreeChart
-		// Developer Guide...for more information, see:
-		//
-		// > http://www.object-refinery.com/jfreechart/guide.html
-		//
-		// ******************************************************************
-
-		// set the range axis to display integers only...
-		NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-
-		// disable bar outlines...
-		BarRenderer renderer = (BarRenderer) plot.getRenderer();
-		renderer.setDrawBarOutline(false);
-
-		// set up gradient paints for series...
-		GradientPaint gp0 = new GradientPaint(0.0f, 0.0f, Color.blue, 0.0f,
-				0.0f, new Color(0, 0, 64));
-		GradientPaint gp1 = new GradientPaint(0.0f, 0.0f, Color.green, 0.0f,
-				0.0f, new Color(0, 64, 0));
-		GradientPaint gp2 = new GradientPaint(0.0f, 0.0f, Color.red, 0.0f,
-				0.0f, new Color(64, 0, 0));
-		renderer.setSeriesPaint(0, gp0);
-		renderer.setSeriesPaint(1, gp1);
-		renderer.setSeriesPaint(2, gp2);
-
-		CategoryAxis domainAxis = plot.getDomainAxis();
-		domainAxis.setCategoryLabelPositions(CategoryLabelPositions
-				.createUpRotationLabelPositions(Math.PI / 12.0));
-		// OPTIONAL CUSTOMISATION COMPLETED.
-
-		return chart;
 
 	}
 
